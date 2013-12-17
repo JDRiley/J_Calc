@@ -1,0 +1,28 @@
+mouse_press -0.934 0.717
+char_press Dbl outside;
+char_press
+
+[Dbl count = -1, [] jitter[]->Dbl = [<-count:]] 
+	addender[Dbl i_x]->Dbl, Dbl if_clause, Dbl gcd_answer = [
+		outside->jitter:
+		Dbl answer:
+		answer->
+		if_clause->?(jitter = 0)
+			i_x:
+			-1
+		!?(count = 1)
+			i_x:
+			0
+		!?(count != jitter)
+			terminate
+		!gcd(i_x, jitter):
+		
+		assert(count = jitter):
+		
+		++[count : answer]
+
+		gcd_answer->answer
+		
+		<-answer
+	];
+char_press Dbl a = 4;

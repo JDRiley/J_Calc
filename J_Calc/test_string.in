@@ -1,0 +1,11 @@
+J_UI_String test_string(to_display_string(get_string_from_file("test_string.in")));
+	
+	int starting_text_box = 
+		calc_data->add_text_box(new_view, calc_data->Font_Indices::INPUT
+			, -0.95f, 0.95f
+			, 0.80f, 0.0f
+			, INPUT_FONT_SIZE, J_Color::Yellow, test_string
+			, J_Color::Clear, J_Color::Cyan.alpha(0.6f));
+
+	J_Text_Box_Shared_t text_box_ptr 
+		=  calc_data->get_text_box(starting_text_box);

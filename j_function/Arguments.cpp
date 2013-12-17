@@ -1,0 +1,150 @@
+#include "Arguments.h"
+//
+#include "j_function.h"
+
+//Algorithm
+#include <algorithm>
+#include <functional>
+//
+#include "j_function_factory.h"
+//
+#include <utility>
+using std::for_each; using std::mem_fn; using std::transform;
+
+namespace jomike{
+//Arguments Function
+Arguments::Arguments(){}
+
+const ex_array<J_UI_Char> sk_arg_delims = {','};
+static const Delimiter_Handler<J_UI_Char> sk_arg_delim(sk_arg_delims.begin()
+	, sk_arg_delims.end());
+
+Arguments::Arguments(const J_UI_String& irk_string){
+	auto start_pos = irk_string.begin();
+	J_UI_String::const_iterator end_pos;
+	while(start_pos < irk_string.end()){
+		j_symbol* new_arg = create_multi_j_symbol(start_pos, irk_string.end()
+			, &end_pos, sk_arg_delim);
+
+		push_back(*new_arg);
+		delete new_arg;
+		start_pos = end_pos;
+		if((start_pos != irk_string.end())){
+			assert(sk_arg_delim.is_delim(*start_pos));
+			++start_pos;
+			continue;
+		}
+
+		advance_white_space(&start_pos, irk_string.end());
+	}
+
+
+}
+
+J_UI_String::const_iterator	find_next_arg(J_UI_String::const_iterator i_start_pos
+	, J_UI_String::const_iterator i_end_pos){
+	const J_UI_Char k_arg_end_char(',');
+	J_UI_String::const_iterator end_arg_pos = i_start_pos;
+	
+	while(end_arg_pos < i_end_pos){
+		end_arg_pos = find(i_start_pos, i_end_pos, k_arg_end_char);
+
+		auto paren_pos = find(i_start_pos, i_end_pos, J_UI_Char('('));
+
+		if(end_arg_pos <= paren_pos){
+			//If they are equal it must be i_end_pos
+			assert((end_arg_pos < paren_pos) || (end_arg_pos == i_end_pos));
+			break;
+		}
+		i_start_pos = ++get_closing_parenthesis(paren_pos);
+	}
+
+	return end_arg_pos;
+	
+}
+
+
+
+/*Arguments(const Arguments&)*/
+Arguments::Arguments(const Arguments& irk_src):M_arg_symbols(irk_src.size()){
+	transform(irk_src.M_arg_symbols.begin(), irk_src.M_arg_symbols.end()
+		, M_arg_symbols.begin(), mem_fn(&j_symbol::get_copy));
+}
+
+/*Arguments(Arguments&&)*/
+Arguments::Arguments(Arguments&& rr_src){swap(rr_src);}
+
+Arguments::Arguments(j_size_t i_size){
+	
+	for(int i = 0; i < i_size; i++){
+		M_arg_symbols.push_back(new j_placeholder_symbol(i));
+	}
+}
+
+/*void swap(Arguments& ir_src)*/
+void Arguments::swap(Arguments& ir_src){M_arg_symbols.swap(ir_src.M_arg_symbols);}
+
+
+/*Arguments& operator=(const Arguments&)*/
+Arguments& Arguments::operator=(const Arguments& irk_src){
+	Arguments temp(irk_src);
+	swap(temp);
+	return *this;
+}
+
+/*Arguments& operator=(Arguments&&)*/
+Arguments& Arguments::operator=(Arguments&& rr_src){swap(rr_src); return *this;}
+
+/*~Arguments()*/
+Arguments::~Arguments(){
+	for_each(M_arg_symbols.begin(), M_arg_symbols.end()
+		, [](j_symbol* y_sym_ptr){delete y_sym_ptr;});
+}
+
+void Arguments::clear(){
+	Arguments empty_arguments;
+	swap(empty_arguments);
+}
+
+/*int size()const*/
+j_size_t Arguments::size()const{return M_arg_symbols.size();}
+
+/*void push_back(const j_symbol*)*/
+void Arguments::push_back(const j_symbol& i_sym){
+	M_arg_symbols.push_back(i_sym.get_copy());
+}
+
+/*void set_argument(int index, const j_symbol*)*/
+void Arguments::set_argument(j_size_t i_index, const j_symbol* i_symbol_ptr){
+	assert(i_index < size());
+
+	delete M_arg_symbols[i_index];
+	M_arg_symbols[i_index] = i_symbol_ptr->get_copy();
+
+}
+
+/*j_symbol** arguments()*/
+j_symbol* const* Arguments::arguments(){return M_arg_symbols.data();}
+
+/*const j_symbol* const* arguments()const*/
+const j_symbol* const* Arguments::arguments()const{return &M_arg_symbols[0];}
+
+/*const j_symbol& operator[](j_size_t i_index)*/
+j_symbol& Arguments::operator[](j_size_t i_index){return *M_arg_symbols[i_index];}
+
+/*const j_symbol& operator[](j_size_t i_index)const*/
+const j_symbol& Arguments::operator[](j_size_t i_index)const{return *M_arg_symbols[i_index];}
+
+bool Arguments::empty()const{
+	return M_arg_symbols.empty();
+}
+
+Arguments::const_iterator Arguments::begin()const{
+	return M_arg_symbols.begin();
+}
+
+Arguments::const_iterator Arguments::end()const{
+	return M_arg_symbols.end();
+}
+
+}

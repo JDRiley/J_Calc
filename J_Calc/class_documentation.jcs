@@ -1,0 +1,93 @@
+mouse_press -0.934 0.717
+char_press Dbl outside;
+char_press
+
+[Dbl count = -1, [] jitter[]->Dbl = [<-count:]] 
+	addender[Dbl i_x]->Dbl, Dbl if_clause, Dbl gcd_answer = [
+		
+		Dbl answer;
+		answer->
+		if_clause->?(jitter = 0)[
+			i_x:
+			-1
+		]!?(count = 1)[
+			i_x:
+			0
+		]!?(count != jitter)
+			terminate
+		!gcd(i_x, jitter):
+		
+		assert(count = jitter):
+		
+		++[count : answer]
+
+		gcd_answer->answer
+		
+		<-answer
+	];
+char_press Dbl a = 4;
+char_press a->addender(20);
+
+//Test_Class interface
+[void /*this disables the static scope*/] 
+	test_class[void]-> void
+	, [] test_class_function[]->Dbl = [<-5]
+	 = [
+		Dbl->void Member;
+	]
+
+//Structure Declaration
+[static members] a_structure[auto]->void
+	, Dbl name //legal to declare member variables publically if voided out
+	, Dbl place // and no function declarations
+	: [void];
+
+
+//This would be how you declare the class interface
+[Dbl count = -1, [] jitter[]->Dbl = [<-count:], /*This blank statement 
+	allows for other things to be added to the scope*/] 
+
+	addender[void]-> void
+	, access[Dbl if_clause]
+	, access[Dbl gcd_answer]
+	, access[Dbl size]
+	, [] virtual_function->Types =[void] // pure virtual function
+	, test_class[void]/test_class_function //partial inheritance
+	, [] addender[void]/protected_function[args]->Return_type
+	 :[
+		Dbl->void Member;
+		[]Dbl->size
+	]
+
+// An Addender Constructor. Construction has no name  really. so called void.
+[static objs for specific constructor] 
+	addender/void[Dbl i_x, Dbl i_y]->addender[void]/ = [
+	//Construction things
+]
+
+
+[it's own static objects] //public inheritance is the ->addender[void]/
+	derived_addender[void]->
+	void
+	, addender[void]/ void //unamed so just in scope
+	, &addender[void]/virtual_function[args]->Types :
+	, other derived addender stuff = [
+		Dbl->void Member;
+		/*
+		private inheritence would be this: (void here means it is derived later)
+		addender[void]/->void: 
+		or actual call
+		addender(i_x, i_y)/:
+		*/
+	]
+
+[] interface_class[void]->void
+	, interface items
+	= [void]
+
+keywords:
+dbl
+int
+access
+construct //for passing in language constructs. like macros
+construct asdf[Dbl i_x] = ?(i_x)[i_x]!i_x + 1:	
