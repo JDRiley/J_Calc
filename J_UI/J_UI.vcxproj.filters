@@ -69,6 +69,9 @@
     <ClInclude Include="J_Notification_Handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="j_cursor_management.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_UI_Controller.cpp">
@@ -120,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Notification_Handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_cursor_management.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

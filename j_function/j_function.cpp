@@ -28,7 +28,7 @@ using std::ifstream;using std::cref;using std::mem_fn;using std::plus;using std:
 using std::numeric_limits;using std::ostringstream;using std::endl; using std::upper_bound;
 using std::is_sorted; using std::greater; using std::less;using std::sort;using std::ceil; 
 using std::floor;using std::minus;using std::divides;using namespace std::placeholders;using std::plus;
-using std::ofstream; using std::copy;
+using std::ofstream; using std::copy; using std::map;
 using std::to_string;
 
 namespace jomike{
@@ -650,119 +650,14 @@ dbl_pair Cubic_Spline_Method::range()const{
 
 
 //Symbols*************************************************
-int s_symbol_ids = 0;
+
 
 //J_Symbol Functions--------------------------
 
-//Constructors
-j_symbol::j_symbol():M_ID(++s_symbol_ids){}
-
-j_symbol::j_symbol(const J_UI_String& irk_string):M_name(irk_string), M_ID(s_symbol_ids++){}
-
-
-//Destructor
-j_symbol::~j_symbol(){}
-
-/*const J_UI_String& name()const*/
-const J_UI_String& j_symbol::name()const{return M_name;}
-
-/*void set_name(const J_UI_String& )*/
-void j_symbol::set_name(const J_UI_String& irk_string){M_name = irk_string;}
-
-/*const J_UI_String& display_name()const*/
-J_UI_String j_symbol::get_display_name(){return M_name;}
-
-j_dbl j_symbol::value(const Arguments& i_args)const{
-	return get_value(i_args).value();
-}
-
-class Symbol_Joiner{
-public:
-	virtual Symbol_Joiner* get_copy()const = 0;
-private:
-};
-
-class Symbol_Add_Joiner : public Symbol_Joiner{
-public:
-	Symbol_Add_Joiner* get_copy()const override;
-private:
-};
-
-Symbol_Add_Joiner* Symbol_Add_Joiner::get_copy()const{return new Symbol_Add_Joiner(*this);}
-
-//j_composite_symbol******************************
-j_composite_symbol* j_composite_symbol::get_copy()const{return new j_composite_symbol(*this);}
-
-//Constructor
-j_composite_symbol::j_composite_symbol(){}
-
-/*j_composite_symbol(const j_composite_symbol&)*/
-j_composite_symbol::j_composite_symbol(const j_composite_symbol& irk_src): j_symbol(irk_src){
-	j_size_t src_size = irk_src.size();
-	M_symbol_joiners.resize(src_size);
-	M_symbols.resize(src_size);
-
-	transform(irk_src.M_symbol_joiners.begin(), irk_src.M_symbol_joiners.end()
-		, M_symbol_joiners.begin(), mem_fn(&Symbol_Joiner::get_copy));
 
 
 
-	transform(irk_src.M_symbols.begin(), irk_src.M_symbols.end(), M_symbols.begin()
-		, mem_fn(&j_symbol::get_copy));
-}
-/*j_value get_value(Arguments)const */
-j_value j_composite_symbol::derived_get_value(const Arguments& i_arguments)const{
-	//Assuming only plus joiner for now
-	
-	j_value value(0, J_Unit());
 
-	for(int i=0 ; i < M_symbols.size(); i++){
-		value += M_symbols[i]->get_value(i_arguments);
-	}
-
-	return value;
-}
-
-/*bool has_value()const*/
-bool j_composite_symbol::has_value()const{
-	return all_of(M_symbols.begin(), M_symbols.end(), mem_fn(&j_symbol::has_value));
-}
-
-J_UI_String j_composite_symbol::get_display_name(){
-	J_UI_String display_name;
-
-	if(has_value()){
-		display_name.push_back(' ');
-		return display_name + to_string(get_value(Arguments()).value());
-	}
-
-	for(auto symbol : M_symbols){
-		display_name.append(symbol->get_display_name()).push_back(' ');
-	}
-	return display_name;
-}
-
-
-/*j_composite_symbol* append(Join_Type, const j_symbol*)*/
-void j_composite_symbol::append(Join_Type i_join_type, const j_symbol& irk_symbol){
-	Symbol_Joiner* symbol_joiner_ptr;
-	switch(i_join_type){
-	case Join_Type::ADD:
-		symbol_joiner_ptr = new Symbol_Add_Joiner;
-		break;
-	case Join_Type::DIVIDE:
-		throw J_Argument_Error("divide joiner not implemented");
-		break;
-	case Join_Type::MULTIPLY:
-		throw J_Argument_Error("multiply joiner not implemented");
-		break;
-	case Join_Type::SUBTRACT:
-		throw J_Argument_Error("subtract joiner not implemented");
-		break;
-	}
-	M_symbol_joiners.push_back(symbol_joiner_ptr);
-	M_symbols.push_back(irk_symbol.get_copy());
-}
 
 /*void set_args(int index, Arguments)*/
 void j_symbol::set_args(const Arguments& i_args){
@@ -794,199 +689,22 @@ bool j_symbol::is_placeholder()const{ return false; }
 
 
 /*int size()const*/
-j_size_t j_composite_symbol::size()const{return M_symbols.size();}
-j_composite_symbol::Join_Type get_composite_symbol_join_type(J_UI_Char i_char){
-	j_composite_symbol::Join_Type join_type = j_composite_symbol::Join_Type::ERROR_TYPE;
-	switch(i_char.charcode()){
-	case '+': join_type = j_composite_symbol::Join_Type::ADD; break;
-
-	case '/': join_type = j_composite_symbol::Join_Type::DIVIDE; break;
-
-	case '*': join_type = j_composite_symbol::Join_Type::MULTIPLY; break;
-	case '-': join_type = j_composite_symbol::Join_Type::SUBTRACT; break;
-	default:
-		;
-	}
-	return join_type;
-}
-/*void clear()*/
-void j_composite_symbol::clear(){
-	j_size_t num_elems = size();
-	for(int i=0; i < num_elems; i++){
-		delete M_symbol_joiners[i];
-		delete M_symbols[i];
-	}
-	M_symbol_joiners.clear();
-	M_symbols.clear();
-
-}
 
 
 
-j_composite_symbol::~j_composite_symbol(){clear();}
-
-j_symbol& j_composite_symbol::operator[](j_size_t i_index){
-	assert(between_inclusive(i_index, J_SIZE_T_ZERO, M_symbols.size()));
-	return *M_symbols[i_index];
-}
-
-const j_symbol& j_composite_symbol::operator[](j_size_t i_index)const{
-	assert(between_inclusive(i_index, J_SIZE_T_ZERO, M_symbols.size()));
-	return *M_symbols[i_index];
-}
-
-//j_number_symbol****************************************
-
-//Constructors
-j_number_symbol::j_number_symbol(Dbl_t i_val):M_value_status(true), M_value(i_val){}
-
-j_number_symbol::j_number_symbol(const J_UI_String& irk_string)
-	:j_symbol(irk_string), M_value_status(false){}
-
-j_number_symbol* j_number_symbol::get_copy()const{return new j_number_symbol(*this);}
-
-/*bool has_value()const*/
-bool j_number_symbol::has_value()const{return M_value_status;}
-
-j_value j_number_symbol::derived_get_value(const Arguments& irk_args)const{
-	if(!M_value_status){
-		throw J_Value_Error("Number Symbol Has Invalid Value");
-	}
-
-	if(irk_args.size()){
-		throw J_Sym_Argument_Error("Too many arguments passed in");
-	}
-	return j_value(M_value, J_Unit());
-}
-
-/*const J_UI_String& get_display_name()*/
-J_UI_String j_number_symbol::get_display_name(){
-	J_UI_String display_name(name() + "->");
-	
-	if(has_value()){
-		display_name.push_back(' ');
-		return display_name + to_string(M_value);
-	}
-	return j_symbol::get_display_name();
-}
-
-/*void clear()*/
-void j_number_symbol::clear(){M_value_status = false; M_value = -1;}
 
 
-J_Sym_Argument_Error::J_Sym_Argument_Error(const char* const ik_message):J_Error(ik_message){}
-J_Value_Error::J_Value_Error(const char* const ik_message):J_Error(ik_message){}
-
-bool is_char_allowed(J_UI_Char i_char){
-	return (i_char.is_alpha_numeric() || (i_char == '_'));
-}
 
 
 //j_value***************************
 
-j_value::j_value(Dbl_t i_val, J_Unit i_units):M_value(i_val), M_units(i_units){}
-
-j_value& j_value::operator+=(const j_value& i_val){
-	//Need to do unit like things here
-	M_value += i_val.M_value;
-	return *this;
-}
-
-Dbl_t j_value::value()const{return M_value;}
 
 
-j_value GCD_Symbol::derived_get_value(const Arguments& i_args)const {
-	if(i_args.empty()){
-		return j_value(0, J_Unit());
-	}
 
 
-	j_llint answer = static_cast<j_llint>(i_args[0].value(Arguments()));
-
-	answer = accumulate(i_args.begin() + 1, i_args.end(), answer
-		, [](j_llint i_val, j_symbol* i_symbol){
-		return i_val + static_cast<j_llint>(i_symbol->value());
-		});
-
-	return j_value(static_cast<j_dbl>(answer), J_Unit());
-}
-
-GCD_Symbol* GCD_Symbol::get_copy()const {
-	return new GCD_Symbol;
-}
-
-J_UI_String GCD_Symbol::get_display_name(){
-	return "gcd";
-}
 
 
-void J_Routine_Wrapper_Symbol::clear(){
 
-}
-
-bool J_Routine_Wrapper_Symbol::has_value()const {
-	return true;
-}
-
-
-bool j_placeholder_symbol::is_placeholder()const {
-	return true;
-}
-
-j_placeholder_symbol::j_placeholder_symbol(j_size_t i_index):M_Placeholder_index(i_index){
-	assert(i_index >= J_SIZE_T_ZERO);
-}
-
-void j_placeholder_symbol::clear(){
-}
-
-bool j_placeholder_symbol::has_value()const {
-	return false;
-}
-
-j_value j_placeholder_symbol::derived_get_value(const Arguments&)const {
-	throw J_Argument_Error("Getting value of place holder symbol");
-
-}
-
-j_size_t j_placeholder_symbol::placeholder_index()const{
-	return M_Placeholder_index;
-}
-
-
-bool J_Routine_Symbol
-	::symbol_name_availability_status(const J_UI_String& irk_symbol_name){
-	return !M_scope_symbols.count(irk_symbol_name);
-}
-
-J_Routine_Symbol* J_Routine_Symbol::get_copy()const {
-	return new J_Routine_Symbol(*this);
-}
-
-void J_Routine_Symbol::clear(){
-	for(auto f_symbol_pair : M_scope_symbols){
-		f_symbol_pair.second->clear();
-	}
-}
-
-bool J_Routine_Symbol::has_value()const {
-	return all_of(M_scope_symbols.begin()
-		, M_scope_symbols.end()
-		, [](const Symbol_Cont_t::value_type& irk_pair){
-		return irk_pair.second->has_value();
-	});
-}
-
-void J_Routine_Symbol::add_scope_symbol(const j_symbol& irk_symbol){
-	assert(symbol_name_availability_status(irk_symbol.name()));
-	M_scope_symbols[irk_symbol.name()] = irk_symbol.get_copy();
-}
-
-jomike::j_value J_Routine_Symbol::derived_get_value(const Arguments&)const {
-
-	assert(!"The method or operation is not yet check.");
-	return j_value(0.0, J_Unit());
-}
 
 }
 

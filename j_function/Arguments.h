@@ -19,8 +19,12 @@ public:
 	Arguments();
 	Arguments(const Arguments&);
 	Arguments(j_size_t);
-	Arguments(const J_UI_String&);
+
 	Arguments(Arguments&&);
+
+	template<typename Iter>
+	Arguments(Iter i_first, Iter i_last);
+
 	Arguments& operator=(const Arguments&);
 	Arguments& operator=(Arguments&&);
 
@@ -49,6 +53,14 @@ public:
 private:
 	ex_array<j_symbol*> M_arg_symbols;
 };
+
+template<typename Iter>
+Arguments::Arguments(Iter i_first, Iter i_last){
+	while(i_first != i_last){
+		push_back(**i_first);
+		++i_first;
+	}
+}
 
 
 

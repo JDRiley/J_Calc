@@ -264,6 +264,9 @@
     <ClInclude Include="J_Calc_Fwd_Decl.h" />
     <ClInclude Include="J_Calc_Parser.h" />
     <ClInclude Include="J_Calc_View.h" />
+    <ClInclude Include="j_conditional_construct_symbol.h" />
+    <ClInclude Include="j_construct_symbol.h" />
+    <ClInclude Include="j_function_factory.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
   </ItemGroup>
@@ -274,6 +277,8 @@
     <ClCompile Include="J_Calc_Error.cpp" />
     <ClCompile Include="J_Calc_Parser.cpp" />
     <ClCompile Include="J_Calc_View.cpp" />
+    <ClCompile Include="j_conditional_construct_symbol.cpp" />
+    <ClCompile Include="j_function_factory.cpp" />
     <ClCompile Include="Line_Input.cpp" />
     <ClCompile Include="Math_Input_Box.cpp" />
   </ItemGroup>

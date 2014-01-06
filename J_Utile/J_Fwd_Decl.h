@@ -102,6 +102,11 @@ typedef std::pair<j_float, j_float> Pen_Pos_FL_t;
 	typedef std::weak_ptr<class_name> class_name##_Weak_t; \
 	typedef std::unique_ptr<class_name> class_name##_Unique_t;
 
+#define J_FWD_DECL_LOWER(class_name) class class_name;\
+	typedef std::shared_ptr<class_name> class_name##_shared_t; \
+	typedef std::weak_ptr<class_name> class_name##_weak_t; \
+	typedef std::unique_ptr<class_name> class_name##_unique_t;
+
 
 #define J_POINTER_DECL(class_name, ptr_typedef_name) class class_name;\
 	 typedef class_name* ptr_typedef_name; 

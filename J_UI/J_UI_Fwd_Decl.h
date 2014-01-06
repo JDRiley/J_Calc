@@ -59,7 +59,7 @@ J_FWD_DECL(J_UI_Object_Update_Callback)
 J_FWD_DECL(J_Cursor_Position)
 typedef struct J_Font_Face__* J_Font_Face;
 
-
+typedef int j_key_id_t;
 #ifdef WIN32
 
 /*! @name Key and button actions
@@ -245,7 +245,53 @@ typedef struct J_Font_Face__* J_Font_Face;
 /*! @brief If this bit is set one or more Super keys were held down.
  */
 #define J_MOD_SUPER           0x0008
+
+
+#define J_MOUSE_BUTTON_1         0
+#define J_MOUSE_BUTTON_2         1
+#define J_MOUSE_BUTTON_3         2
+#define J_MOUSE_BUTTON_4         3
+#define J_MOUSE_BUTTON_5         4
+#define J_MOUSE_BUTTON_6         5
+#define J_MOUSE_BUTTON_7         6
+#define J_MOUSE_BUTTON_8         7
+/*JTL Addition*/
+const j_key_id_t J_MOUSE_WHEEL_UP = 9;
+const j_key_id_t J_MOUSE_WHEEL_DOWN = 10;
+/*In JTL Addition*/
+
+#define J_MOUSE_BUTTON_LAST      J_MOUSE_WHEEL_DOWN /*JTL Addition Original: J_MOUSE_BUTTON_8*/
+#define J_MOUSE_BUTTON_LEFT      J_MOUSE_BUTTON_1
+#define J_MOUSE_BUTTON_RIGHT     J_MOUSE_BUTTON_2
+
+#define J_MOUSE_BUTTON_MIDDLE    J_MOUSE_BUTTON_3
+/*! @} */
+
+/*! @defgroup joysticks Joysticks
+ *  @ingroup input
+ *  @{ */
+#define J_JOYSTICK_1             0
+#define J_JOYSTICK_2             1
+#define J_JOYSTICK_3             2
+#define J_JOYSTICK_4             3
+#define J_JOYSTICK_5             4
+#define J_JOYSTICK_6             5
+#define J_JOYSTICK_7             6
+#define J_JOYSTICK_8             7
+#define J_JOYSTICK_9             8
+#define J_JOYSTICK_10            9
+#define J_JOYSTICK_11            10
+#define J_JOYSTICK_12            11
+#define J_JOYSTICK_13            12
+#define J_JOYSTICK_14            13
+#define J_JOYSTICK_15            14
+#define J_JOYSTICK_16            15
+#define J_JOYSTICK_LAST          J_JOYSTICK_16
+
 #endif
+
+
+
 
 }
 

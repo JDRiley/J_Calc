@@ -39,7 +39,10 @@ public:
 	void notify_text_string(j_uint text_box_id, const J_UI_Multi_String&);
 	void notify_text_cursor(j_uint obj_id, j_size_t cursor_pos);
 	void notify_text_cursor_color(j_uint obj_id, J_Color_RGBA<j_float>);
-
+	void notify_text_cursor_move_up(j_uint i_obj_id, j_size_t i_move_val);
+	void notify_text_cursor_move_down(j_uint i_obj_id, j_size_t i_move_val);
+	void notify_text_cursor_to_line_begin(j_uint i_obj_id);
+	void notify_text_cursor_to_line_end(j_uint i_obj_id);
 	void notify_cursor_visibility_status(j_uint i_text_box_id, bool i_status);
 
 	void notify_outline_visibility_status(j_uint obj_id, bool status);

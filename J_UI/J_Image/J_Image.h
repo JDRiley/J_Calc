@@ -60,7 +60,7 @@ struct J_Color_RGBA{
 		new_color.alpha(alpha());
 		return new_color;
 	}
-	J_Color_RGBA operator+(const J_Color_RGBA& i_color){
+	J_Color_RGBA operator+(const J_Color_RGBA& i_color)const{
 		J_Color_RGBA new_color;
 		for (int i = 0; i < M_data.size(); i++){
 			new_color.M_data[i] = M_data[i] + i_color.M_data[i];

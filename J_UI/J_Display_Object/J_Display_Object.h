@@ -23,6 +23,8 @@ public:
 	virtual void mouse_button_press(J_View_Shared_t, int i_button, int modifiers, Pen_Pos_FL_t);
 	virtual void mouse_button_release(J_View_Shared_t, int i_button, int modifiers, Pen_Pos_FL_t);
 
+	virtual void alert_cursor_pos(Pen_Pos_FL_t);
+
 	bool clickable_status()const;
 	void set_clickable_status(bool);
 	
@@ -63,6 +65,8 @@ public:
 
 	void set_box(const J_Rectangle&)override;
 
+	void set_x(j_float)override;
+	void set_y(j_float)override;
 	void set_width(j_float)override;
 	void set_height(j_float)override;
 	~J_Display_Box();

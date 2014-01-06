@@ -33,6 +33,9 @@
     <ClInclude Include="J_Gadget_Classes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ordered_pair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Utile.cpp">

@@ -9,6 +9,8 @@
 #include <J_Utile.h>
 //
 #include "../J_UI_Controller.h"
+//
+#include "../j_cursor_management.h"
 
 //
 #include "../J_Font_Manager.h"
@@ -54,6 +56,8 @@ namespace jomike{
 static Instance_Pointer<Contexts_Handler> s_contexts;
 
 const j_float FLOAT_DELTA = 0.0001f;
+const j_float K_LEFT_PADDING = 0.01f;
+
 const char* const DEFAULT_FONT_PATH_NAME 
 	= "J:\\JoMike Library\\J_FT_Text_Display\\Fonts\\times.ttf";
 
@@ -95,6 +99,64 @@ J_Text_Shader_Program::J_Text_Shader_Program(){
 
 
 
+class Text_Line_Order_Comp{
+public:
+	Text_Line_Order_Comp(j_float i_start_line, j_float i_line_size):M_line_size(i_line_size)
+		, M_starting_pos(i_start_line){}
+
+	bool operator()(const Pen_Pos_FL_t, const Pen_Pos_FL_t)const;
+private:
+	int get_line_index(j_float i_float)const;
+	j_float M_line_size;
+	j_float M_starting_pos;
+
+};
+
+int Text_Line_Order_Comp::get_line_index(j_float i_float)const{
+	int line_number = 0;
+
+	while( i_float < (M_starting_pos - line_number*M_line_size) - FLOAT_DELTA){
+		++line_number;
+	}
+
+	if(line_number){
+		return line_number;
+	}
+
+	if(i_float < M_starting_pos){
+		return line_number;
+	}
+
+	while(i_float >(M_starting_pos - line_number*M_line_size) - FLOAT_DELTA){
+		--line_number;
+	}
+
+	return line_number;
+}
+
+bool Text_Line_Order_Comp::operator()(const Pen_Pos_FL_t ik_left, const Pen_Pos_FL_t ik_right)const{
+	int compare_val = get_line_index(ik_right.second) - get_line_index(ik_left.second);
+	if(compare_val < 0){
+		return false;
+	}else if(compare_val > 0){
+		return true;
+	}else if((ik_right.first - ik_left.first) > 0){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+
+J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_obj_id)
+	:J_Display_Box(i_obj_id){}
+
+J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_object_id, j_uint i_id)
+	:J_Display_Box(i_object_id, i_id){}
+
+J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){}
+
+
 J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id): J_FT_Text_Display_Object(i_obj_id){
 	M_new_line_size = 30;
 	M_shader = new J_Text_Shader_Program;
@@ -120,7 +182,7 @@ void J_FT_Text_Display::recalculate_text_positions(){
 	j_size_t cursor_pos = M_cursor_pos;
 	J_UI_Multi_String cur_string(M_string);
 	set_string(cur_string);
-	set_cursor_pos(cursor_pos);
+	set_cursor_pos_no_scroll(cursor_pos);
 }
 
 void J_FT_Text_Display::init_cursor_vao(){
@@ -139,20 +201,63 @@ void J_FT_Text_Display::init_cursor_vao(){
 }
 
 void J_FT_Text_Display::set_cursor_pos(j_size_t i_pos){
-	M_cursor_pos = i_pos;
-	//assert(none_of(M_vao_buffer_ids.begin(), M_vao_buffer_ids.end(), bind(equal_to<j_uint>(),_1, M_cursor_buffer_id)));
-	glBindBuffer(GL_ARRAY_BUFFER, M_cursor_buffer_id);
+	assert(between_inclusive(i_pos, J_SIZE_T_ZERO, M_pen_poses.size() - 1));
+	M_last_set_cursor_pos = M_pen_poses[i_pos];
+	auto_scroll_window(i_pos);
 
-	std::array<j_float, 4> cursor_data
-		= {M_pen_poses[i_pos].first, M_pen_poses[i_pos].second
-		, M_pen_poses[i_pos].first,  M_pen_poses[i_pos].second 
-		+ to_y_screen(s_contexts->get_active_window(), M_new_line_size)
-	};
+	set_cursor_pos_no_scroll(i_pos);
 
-	glBufferSubData(GL_ARRAY_BUFFER, static_cast<GLintptr>(0), sizeof(cursor_data), cursor_data.data());
+}
+
+void J_FT_Text_Display::auto_scroll_window(j_size_t i_pos){
+	if(!auto_scrolling_status()){
+		return;
+	}
+	if(is_cursor_pos_in_view(i_pos)){
+		return;
+	}
+
+	auto pen_pos_y_lower = M_pen_poses[i_pos].second;
+	auto pen_pos_y_upper = M_pen_poses[i_pos].second + new_line_screen_size();
+
+	Pen_Pos_FL_t new_starting_pen_pos = M_pen_poses.front();
+	if(pen_pos_y_upper > y1()){
+		new_starting_pen_pos.second -= (pen_pos_y_upper - y1() + FLOAT_DELTA);
+		new_starting_pen_pos.second 
+			= max(new_starting_pen_pos.second, default_pen_pos().second);
+	} else{
+		assert(pen_pos_y_lower < y2());
+		new_starting_pen_pos.second += (y2() - pen_pos_y_lower + FLOAT_DELTA);
+	}
+	scroll_selection_boxes(0.0
+						   ,  new_starting_pen_pos.second - M_pen_poses.front().second);
+	set_starting_pen_pos(new_starting_pen_pos);
+}
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+void J_FT_Text_Display::set_starting_pen_pos(Pen_Pos_FL_t i_pen_pos){
+	auto cursor_pos = M_cursor_pos;
+	auto cur_string = M_string;
+	clear();
+	M_pen_poses.front() = i_pen_pos;
+	
+	
+	M_new_line_size = cur_string.empty() ? M_new_line_size
+		: max_element(cur_string.begin(), cur_string.end()
+		, [](const J_UI_String& yrk_left, const J_UI_String& yrk_right){
+		return (yrk_left.font_face()->new_line_size
+			< yrk_right.font_face()->new_line_size);
+	})->font_face()->new_line_size;
+
+
+	M_new_line_size = static_cast<int>(M_new_line_size*0.70);
+
+	for(const J_UI_String& f_string : cur_string){
+		add_string(f_string);
+	}
+	set_cursor_pos_no_scroll(cursor_pos);
+			
 }
 
 void J_FT_Text_Display::set_cursor_color(J_Color_RGBA<j_float> i_color){
@@ -162,6 +267,9 @@ void J_FT_Text_Display::set_cursor_color(J_Color_RGBA<j_float> i_color){
 }
 
 void J_FT_Text_Display::draw_cursor()const{
+	if(!is_cursor_pos_in_view(M_cursor_pos)){
+		return;
+	}
 	glUseProgram(M_shader->cursor_program_id());
 	glEnable(GL_BLEND); 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -172,8 +280,6 @@ void J_FT_Text_Display::draw_cursor()const{
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
-
-const j_float K_LEFT_PADDING = 0.01f;
 
 Pen_Pos_FL_t J_FT_Text_Display::default_pen_pos()const{
 	return Pen_Pos_FL_t(x1()+K_LEFT_PADDING, y1() 
@@ -211,39 +317,25 @@ void J_FT_Text_Display::clear_from(j_size_t i_pos){
 	
 	M_string.resize(i_pos);
 	if(M_cursor_pos > i_pos){
-		set_cursor_pos(i_pos);
+		set_cursor_pos_no_scroll(i_pos);
 	}
 }
 
 
-class Text_Line_Order_Comp{
-public:
-	Text_Line_Order_Comp(j_float i_start_line, j_float i_line_size):M_line_size(i_line_size)
-		, M_starting_pos(i_start_line){}
-
-	bool operator()(const Pen_Pos_FL_t, const Pen_Pos_FL_t)const;
-private:
-	int get_line_index(j_float i_float)const;
-	j_float M_line_size;
-	j_float M_starting_pos;
-
-};
-
 /*void J_FT_Text_Display::draw()const*/
 void J_FT_Text_Display::draw()const{
 	J_Display_Box::draw();
-
-	//auto start_pos = M_string.begin();
-	//auto end_pos = M_string.end();
-	//while(start_pos != end_pos){
-	//	draw_string(start_pos++);
-	//}
+	for(auto f_box : M_selection_boxes){
+		f_box->draw();
+	}
 
 
-	j_float y_size = to_y_screen(s_contexts->get_active_window(), M_new_line_size);
+	j_float y_size = new_line_screen_size();
+
 	auto start_view_pos = lower_bound(M_pen_poses.begin()
-		, M_pen_poses.end(), Pen_Pos_FL_t(x1(), y1())
-		, Text_Line_Order_Comp(y1(), y_size));
+		, M_pen_poses.end(), Pen_Pos_FL_t(x1(), default_pen_pos().second)
+		, Text_Line_Order_Comp(default_pen_pos().second
+		, y_size));
 
 	auto end_view_pos = lower_bound(M_pen_poses.begin()
 		, M_pen_poses.end(), Pen_Pos_FL_t(x2(), y2())
@@ -377,7 +469,7 @@ void J_FT_Text_Display::add_string(const J_UI_String& irk_string){
 		add_char(f_char);
 	}
 
-	set_cursor_pos(M_cursor_pos + static_cast<int>(irk_string.size()));
+	set_cursor_pos_no_scroll(M_cursor_pos + static_cast<int>(irk_string.size()));
 }
 
 void J_FT_Text_Display::insert_chars(j_size_t i_pos, const J_UI_String& irk_string){
@@ -535,11 +627,22 @@ void J_FT_Text_Display::delete_buffers_from(j_size_t i_pos){
 }
 
 void J_FT_Text_Display::mouse_button_press(J_View_Shared_t i_view, int i_button, int , Pen_Pos_FL_t i_pos){
-
+	
 	switch(i_button){
-	case J_LEFT_MOUSE_BUTTON:
+	case J_LEFT_MOUSE_BUTTON:{
+		M_selection_boxes.clear();
+		M_selection_start_cursor_pos = get_cursor_index(i_pos);
+		M_left_mouse_button_pressed_status = true;
+		set_cursor_pos(M_selection_start_cursor_pos);
 		J_UI_Controller::get_instance().notify_text_box_press(i_view, get_object_ID()
-			, get_cursor_index(i_pos));
+															, M_cursor_pos);
+}
+		break;
+	case J_MOUSE_WHEEL_UP:
+		scroll(lines_scrolled_per_tick());
+		break;
+	case J_MOUSE_WHEEL_DOWN:
+		scroll(-lines_scrolled_per_tick());
 		break;
 	default:
 		;
@@ -550,6 +653,8 @@ void J_FT_Text_Display::mouse_button_release(J_View_Shared_t, int i_button, int 
 
 	switch(i_button){
 	case J_LEFT_MOUSE_BUTTON:
+		M_left_mouse_button_pressed_status = false;
+		set_cursor_pos(get_cursor_index(i_pos));
 		J_UI_Controller::get_instance().notify_text_box_release(get_object_ID()
 			, get_cursor_index(i_pos));
 		break;
@@ -558,29 +663,6 @@ void J_FT_Text_Display::mouse_button_release(J_View_Shared_t, int i_button, int 
 	}
 }
 
-
-
-int Text_Line_Order_Comp::get_line_index(j_float i_float)const{
-	int line_number = 0;
-
-	while( i_float < (M_starting_pos - line_number*M_line_size) - FLOAT_DELTA){
-		++line_number;
-	}
-	return line_number;
-}
-
-bool Text_Line_Order_Comp::operator()(const Pen_Pos_FL_t ik_left, const Pen_Pos_FL_t ik_right)const{
-	int compare_val = get_line_index(ik_right.second) - get_line_index(ik_left.second);
-	if(compare_val < 0){
-		return false;
-	}else if(compare_val > 0){
-		return true;
-	}else if((ik_right.first - ik_left.first) > 0){
-		return true;
-	}else{
-		return false;
-	}
-}
 
 
 /*int get_cursor_index(Pen_Pos_FL_t)const*/
@@ -609,13 +691,193 @@ void J_FT_Text_Display::pop_back(){
 
 
 
-J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_obj_id)
-	:J_Display_Box(i_obj_id){}
+bool J_FT_Text_Display::cursor_visibility_status()const{
+	return M_cursor_visibility_status;
+}
 
-J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_object_id, j_uint i_id)
-	:J_Display_Box(i_object_id, i_id){}
+void J_FT_Text_Display::set_cursor_visibility_status(bool i_status){
+	M_cursor_visibility_status = i_status;
+}
 
-J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){}
+bool J_FT_Text_Display::auto_scrolling_status()const{
+	return M_auto_scrolling_status;
+}
+
+void J_FT_Text_Display::set_auto_scrolling_status(bool i_status){
+	M_auto_scrolling_status = i_status;
+}
+
+bool J_FT_Text_Display::is_cursor_pos_in_view(j_size_t i_pos)const {
+	auto y_bottom_pos = M_pen_poses[i_pos].second;
+	auto y_top_pos = y_bottom_pos + new_line_screen_size();
+	return is_y_inside(y_bottom_pos) && is_y_inside(y_top_pos);
+}
+
+j_float J_FT_Text_Display::new_line_screen_size()const{
+	return to_y_screen(s_contexts->get_active_window(), M_new_line_size);
+}
+
+void J_FT_Text_Display::move_cursor_line_pos_up(j_size_t i_move_val){
+	auto new_pen_pos = M_last_set_cursor_pos;
+	new_pen_pos.second += i_move_val*new_line_screen_size();
+	set_cursor_pos(get_cursor_index(new_pen_pos));
+	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
+	M_last_set_cursor_pos.first = new_pen_pos.first;
+
+	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
+														  , M_cursor_pos);
+}
+
+void J_FT_Text_Display::move_cursor_line_pos_down(j_size_t i_move_val){
+	auto new_pen_pos = M_last_set_cursor_pos;
+	new_pen_pos.second -= (i_move_val*new_line_screen_size() + FLOAT_DELTA);
+	set_cursor_pos(get_cursor_index(new_pen_pos));
+	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
+	M_last_set_cursor_pos.first = new_pen_pos.first;
+
+	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
+														  , M_cursor_pos);
+}
+
+void J_FT_Text_Display::move_cursor_to_line_begin(){
+	auto pen_pos = M_pen_poses[M_cursor_pos];
+	pen_pos.first = x1();
+	set_cursor_pos(min(get_cursor_index(pen_pos)+1, M_pen_poses.size()-1));
+	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
+														  , M_cursor_pos);
+}
+
+void J_FT_Text_Display::move_cursor_to_line_end(){
+	auto pen_pos = M_pen_poses[M_cursor_pos];
+	pen_pos.first = x2();
+	set_cursor_pos(get_cursor_index(pen_pos));
+	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
+														  , M_cursor_pos);
+}
+
+void J_FT_Text_Display::scroll(int i_scroll_val){
+	if(!i_scroll_val){
+		return;
+	}
+	
+	j_float scroll_size = -i_scroll_val*new_line_screen_size();
+	
+	if((scroll_size < 0) && M_pen_poses.front() == default_pen_pos()){
+		return;
+	}
+
+	if(scroll_size < 0){
+		j_float scroll_size_to_default 
+			= default_pen_pos().second - M_pen_poses.front().second;
+		scroll_size = max(scroll_size, scroll_size_to_default);
+	} else if(M_pen_poses.back().second > y2()){
+		return;
+	}else{
+		scroll_size = min(scroll_size, y2() - M_pen_poses.back().second);
+	}
+	auto new_starting_pen_pos = M_pen_poses.front();
+	new_starting_pen_pos.second += scroll_size;
+
+	set_starting_pen_pos(new_starting_pen_pos);
+	scroll_selection_boxes(0.0f, scroll_size);
+}
+
+int J_FT_Text_Display::lines_scrolled_per_tick(){
+	return 1;
+}
+
+void J_FT_Text_Display::set_cursor_pos_no_scroll(j_size_t i_pos){
+	M_cursor_pos = i_pos;
+	auto pen_pos_x = M_pen_poses[i_pos].first;
+	auto pen_pos_y = M_pen_poses[i_pos].second;
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, M_cursor_buffer_id);
+
+	std::array<j_float, 4> cursor_data
+		= {pen_pos_x, pen_pos_y
+		, pen_pos_x, pen_pos_y
+		+ new_line_screen_size()
+	};
+
+	glBufferSubData(GL_ARRAY_BUFFER, static_cast<GLintptr>(0), sizeof(cursor_data), cursor_data.data());
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void J_FT_Text_Display::alert_cursor_pos(Pen_Pos_FL_t i_pos){
+
+	if(!M_left_mouse_button_pressed_status){
+		return;
+	}
+	j_set_cursor_type(J_I_BEAM_CURSOR_ID);
+	j_size_t cursor_index = get_cursor_index(i_pos);
+	set_cursor_pos(cursor_index);
+	j_size_t low_bound = min(cursor_index, M_selection_start_cursor_pos);
+	j_size_t right_bound = max(cursor_index, M_selection_start_cursor_pos);
+
+
+
+	if(low_bound == right_bound){
+		M_selection_boxes.clear();
+		return;
+	}
+
+	int num_display_boxes = 0;
+	
+
+	auto cur_cursor_pos = low_bound;
+	while(cur_cursor_pos < right_bound){
+		J_Rectangle rectangle;
+		rectangle.set_box(M_pen_poses[cur_cursor_pos].first
+						  , M_pen_poses[cur_cursor_pos].first
+						  , M_pen_poses[cur_cursor_pos].second+ new_line_screen_size() 
+						  , M_pen_poses[cur_cursor_pos].second);
+
+		j_float end_x_pos = rectangle.x1();
+		while((cur_cursor_pos < right_bound)
+			  && (M_pen_poses[cur_cursor_pos].second == rectangle.y2())){
+			end_x_pos = M_pen_poses[cur_cursor_pos].first;
+			++cur_cursor_pos;
+		}
+		rectangle.set_x2(end_x_pos);
+
+		if(M_selection_boxes.size() <= num_display_boxes){
+			assert(M_selection_boxes.size() == num_display_boxes);
+
+			J_Display_Box_Shared_t display_box(
+				new J_Display_Box(0)
+				);
+			M_selection_boxes.push_back(display_box);
+		}
+		
+		set_selection_box_settings(M_selection_boxes[num_display_boxes]
+								   , rectangle);
+		
+		++num_display_boxes;
+	}
+	M_selection_boxes.resize(num_display_boxes);
+}
+
+void J_FT_Text_Display::set_selection_box_settings(J_Display_Box_Shared_t i_box
+												   , J_Rectangle i_rec)const{
+	i_rec.set_y(i_rec.y2() - 0.01f);
+	i_box->set_box(i_rec);
+	i_box->set_fill_visibility_status(true);
+	i_box->set_fill_color(J_BLUE*0.4f + J_RED*0.08f);
+	i_box->set_outline_color(J_WHITE);
+
+}
+
+void J_FT_Text_Display::scroll_selection_boxes(j_float i_x_scroll, j_float i_y_scroll){
+	for(auto f_box : M_selection_boxes){
+		f_box->set_x(f_box->x1() + i_x_scroll);
+		f_box->set_y(f_box->y2() + i_y_scroll);
+	}
+}
+
 
 
 J_FT_Text_Multi_State_Display::J_FT_Text_Multi_State_Display(j_uint i_obj_id)
@@ -723,17 +985,47 @@ void J_FT_Text_Multi_State_Display::set_outline_thickness(j_float i_float){
 	M_current_state->set_outline_thickness(i_float);
 }
 
-bool J_FT_Text_Display::cursor_visibility_status()const{
-	return M_cursor_visibility_status;
-}
-
-void J_FT_Text_Display::set_cursor_visibility_status(bool i_status){
-	M_cursor_visibility_status = i_status;
-}
-
 void J_FT_Text_Multi_State_Display::set_cursor_visibility_status(bool i_status){
 	M_current_state->set_cursor_visibility_status(i_status);
 
+}
+
+bool J_FT_Text_Multi_State_Display::auto_scrolling_status()const{
+	return M_current_state->auto_scrolling_status();
+
+}
+
+void J_FT_Text_Multi_State_Display::set_auto_scrolling_status(bool i_status){
+	M_current_state->set_auto_scrolling_status(i_status);
+}
+
+bool J_FT_Text_Multi_State_Display::is_cursor_pos_in_view(j_size_t i_pos)const {
+	return M_current_state->is_cursor_pos_in_view(i_pos);
+
+}
+
+void J_FT_Text_Multi_State_Display::move_cursor_line_pos_up(j_size_t i_move_val){
+	M_current_state->move_cursor_line_pos_up(i_move_val);
+}
+
+void J_FT_Text_Multi_State_Display::move_cursor_line_pos_down(j_size_t i_move_val){
+	M_current_state->move_cursor_line_pos_down(i_move_val);
+}
+
+void J_FT_Text_Multi_State_Display::move_cursor_to_line_begin(){
+	M_current_state->move_cursor_to_line_begin();
+}
+
+void J_FT_Text_Multi_State_Display::move_cursor_to_line_end(){
+	M_current_state->move_cursor_to_line_end();
+}
+
+void J_FT_Text_Multi_State_Display::scroll(int i_scroll_val){
+	M_current_state->scroll(i_scroll_val);
+}
+
+void J_FT_Text_Multi_State_Display::alert_cursor_pos(Pen_Pos_FL_t i_pos){
+	M_current_state->alert_cursor_pos(i_pos);
 }
 
 }

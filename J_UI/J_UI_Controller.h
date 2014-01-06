@@ -11,7 +11,6 @@ namespace jomike{
 
 class J_UI_Controller{
 public:
-	
 	void init(int argc, char** argv);
 	void initialize_text_data();
 	static J_UI_Controller& get_instance();
@@ -32,7 +31,11 @@ public:
 	virtual void notify_object_press(J_View_Shared_t, j_uint);
 	virtual void cursor_pos_input_cmd(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos);
 	j_dbl fps()const;
+	virtual void end_script_run();
 	virtual void resize_cmd(j_window_t, int width, int height);
+	int key_modifiers()const;
+
+	int current_key_modifiers()const;
 protected:
 	J_UI_Controller();
 	void add_cursor_pos_text_updater(J_Text_Box_Object_Shared_t
@@ -49,9 +52,10 @@ private:
 
 	typedef std::map<J_View_Shared_t, J_UI_Object_Weak_t> Active_UI_Obj_Cont_t;
 	Active_UI_Obj_Cont_t M_active_ui_objs;
-
+	bool M_script_run_flag = false;
 	J_Frame_Counter_Shared_t M_frame_counter;
-
+	
+	int M_last_key_modifiers;
 };
 
 

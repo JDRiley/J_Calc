@@ -193,7 +193,7 @@
       <CompileAsManaged>false</CompileAsManaged>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MinimalRebuild>false</MinimalRebuild>
-      <PreprocessorDefinitions>VS_2013;WIN32;VS_2013;_DEBUG;_USRDLL;WIN64;_WIN32_WINNT=0x0502;WIN64;_DEBUG;_CONSOLE;_WIN64_WINNT=0x0600;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;UNICODE;_UNICODE;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OEMRESOURCE;VS_2013;WIN32;VS_2013;_DEBUG;_USRDLL;WIN64;_WIN32_WINNT=0x0502;WIN64;_DEBUG;_CONSOLE;_WIN64_WINNT=0x0600;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;UNICODE;_UNICODE;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -262,7 +262,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;VS_2013;NOMINMAX;WIN32;GLEW_STATIC;GLEW_MX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>OEMRESOURCE;NDEBUG;VS_2013;WIN32;VS_2013;NOMINMAX;WIN32;GLEW_STATIC;GLEW_MX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
@@ -294,6 +294,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="j_cursor_management.h" />
     <ClInclude Include="J_Display_Image_Pane.h" />
     <ClInclude Include="J_Display_Object\J_Display_Object.h" />
     <ClInclude Include="J_Font_Manager.h" />
@@ -314,6 +315,7 @@
     <ClInclude Include="J_UI_Fwd_Decl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="j_cursor_management.cpp" />
     <ClCompile Include="J_Display_Image_Pane.cpp" />
     <ClCompile Include="J_Display_Object\J_Display_Object.cpp" />
     <ClCompile Include="J_Font_Manager.cpp" />

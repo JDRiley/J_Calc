@@ -198,6 +198,33 @@ void J_View::set_text_cursor(j_uint i_text_box_id, j_uint i_cursor_pos){
 	}
 }
 
+void J_View::set_text_cursor_line_pos_up(j_uint i_text_box_id, j_size_t i_move_val){
+	if(auto text_box = get_text_display(i_text_box_id)){
+		text_box->move_cursor_line_pos_up(i_move_val);
+	}
+}
+
+
+void J_View::set_text_cursor_line_pos_down(j_uint i_text_box_id, j_size_t i_move_val){
+	if(auto text_box = get_text_display(i_text_box_id)){
+		text_box->move_cursor_line_pos_down(i_move_val);
+	}
+}
+
+
+void J_View::set_text_cursor_line_begin(j_uint i_text_box_id){
+	if(auto text_box = get_text_display(i_text_box_id)){
+		text_box->move_cursor_to_line_begin();
+	}
+}
+
+void J_View::set_text_cursor_line_end(j_uint i_text_box_id){
+	if(auto text_box = get_text_display(i_text_box_id)){
+		text_box->move_cursor_to_line_end();
+	}
+}
+
+
 void J_View::set_text_cursor_color(j_uint i_text_box_id, J_Color_RGBA<j_float> i_color){
 	if(auto text_box = get_text_display(i_text_box_id)){
 		text_box->set_cursor_color(i_color);
@@ -247,14 +274,29 @@ j_uint J_View::mouse_button_press(J_View_Shared_t i_view, int i_button, int i_mo
 	s_controller->notify_object_press(shared_from_this(), disp_obj_ptr->get_object_ID());
 
 	switch(i_button){
-	case J_LEFT_MOUSE_BUTTON:
-		disp_obj_ptr->mouse_button_press(i_view, i_button, i_modifiers, i_pos);
+	case J_MOUSE_BUTTON_LEFT:
 		M_cur_clicked_obj = disp_obj_ptr;
 		break;
 	default:
 		;
 	}
+	disp_obj_ptr->mouse_button_press(i_view, i_button, i_modifiers, i_pos);
+
 	return disp_obj_ptr->get_ID();
+}
+
+void J_View::mouse_button_release(J_View_Shared_t i_view, int i_button, int i_modifiers, Pen_Pos_FL_t i_pos){
+
+	switch(i_button){
+	case J_LEFT_MOUSE_BUTTON:
+		if(M_cur_clicked_obj){
+			M_cur_clicked_obj->mouse_button_release(shared_from_this(), i_button, i_modifiers, i_pos);
+		}
+		break;
+	default:
+		;
+	}			
+	
 }
 
 void J_View::display_object_pressed(J_Display_Object_Shared_t, int , int 
@@ -267,21 +309,6 @@ J_Display_Object_Shared_t J_View::get_display_object_at_pos(Pen_Pos_FL_t i_pos){
 		}
 	}
 	return J_Display_Box_Shared_t();
-}
-
-void J_View::mouse_button_release( int i_button, int i_modifiers, Pen_Pos_FL_t i_pos){
-
-	switch(i_button){
-	case J_LEFT_MOUSE_BUTTON:
-		if(M_cur_clicked_obj){
-			M_cur_clicked_obj->mouse_button_release(shared_from_this(), i_button, i_modifiers, i_pos);
-			M_cur_clicked_obj.reset();
-		}
-		break;
-	default:
-		;
-	}			
-	
 }
 
 /*void open_window()*/
@@ -332,6 +359,9 @@ bool J_View::is_visible()const{
 void J_View::set_cursor_pos(int i_x, int i_y){
 	M_cursor_pos.first = get_x_coord(i_x);
 	M_cursor_pos.second = get_y_coord(i_y);
+	if(M_cur_clicked_obj){
+		M_cur_clicked_obj->alert_cursor_pos(M_cursor_pos);
+	}
 }
 
 void J_View::set_fill_visibility(j_uint i_disp_obj, bool i_status){
@@ -566,7 +596,8 @@ void J_View::remove_display_object(j_uint i_obj_id){
 
 }
 
+void J_View::notify_cursor_pos(Pen_Pos_FL_t){
 
-
+}
 
 }

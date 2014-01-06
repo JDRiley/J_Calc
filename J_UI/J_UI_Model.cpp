@@ -1,6 +1,6 @@
 #include "J_UI_Model.h"
 #include <J_Error.h>
-#include "J_FT_Text_Displayer/J_FT_Text_Display.h"
+
 #include "J_FT_Text_Displayer/J_Text_Box.h"
 #include "J_View.h"
 //
@@ -210,6 +210,34 @@ void J_UI_Model::notify_text_cursor(j_uint i_text_box_id, j_size_t i_cursor_pos)
 	for_each(M_views.begin(), M_views.end(), bind(&J_View::set_text_cursor, _1, i_text_box_id, i_cursor_pos));
 }
 
+void J_UI_Model::notify_text_cursor_move_up(j_uint i_obj_id, j_size_t i_move_val){
+	for(auto f_view : M_views){
+		f_view->set_text_cursor_line_pos_up(i_obj_id, i_move_val);
+	}
+
+}
+
+void J_UI_Model::notify_text_cursor_move_down(j_uint i_obj_id, j_size_t i_move_val){
+	for(auto f_view : M_views){
+		f_view->set_text_cursor_line_pos_down(i_obj_id, i_move_val);
+	}
+
+}
+
+
+void J_UI_Model::notify_text_cursor_to_line_begin(j_uint i_obj_id){
+	for(auto f_view : M_views){
+		f_view->set_text_cursor_line_begin(i_obj_id);
+	}
+}
+
+void J_UI_Model::notify_text_cursor_to_line_end(j_uint i_obj_id){
+	for(auto f_view : M_views){
+		f_view->set_text_cursor_line_end(i_obj_id);
+	}
+}
+
+
 void J_UI_Model::notify_text_cursor_color(j_uint i_text_box_id, J_Color_RGBA<j_float> i_color){
 	for_each(M_views.begin(), M_views.end(), bind(&J_View::set_text_cursor_color, _1, i_text_box_id, i_color));
 
@@ -372,8 +400,6 @@ j_dbl J_UI_Model::fps()const{
 	assert(M_frame_counter);
 	return M_frame_counter->fps();
 }
-
-
 
 
 Pen_Pos_FL_t screen_coords(j_window_t i_window, Pen_Pos_t pos);

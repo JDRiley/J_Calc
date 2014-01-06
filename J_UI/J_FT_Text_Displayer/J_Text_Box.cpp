@@ -96,11 +96,42 @@ void J_Text_Box::move_cursor(j_size_t i_amt){
 	
 }
 
+void J_Text_Box::move_cursor_up(j_size_t i_move_val){
+	s_model->notify_text_cursor_move_up(get_ID(), i_move_val);
+	set_cursor_on();
+}
+
+
+
+
+void J_Text_Box::move_cursor_down(j_size_t i_move_val){
+	s_model->notify_text_cursor_move_down(get_ID(), i_move_val);
+	set_cursor_on();
+}
+
+void J_Text_Box::move_cursor_begin_of_line(){
+	s_model->notify_text_cursor_to_line_begin(get_ID());
+}
+
+void J_Text_Box::move_cursor_end_of_line(){
+	s_model->notify_text_cursor_to_line_end(get_ID());
+}
+
+
+
+
 void J_Text_Box::set_cursor_pos(j_size_t i_cursor_pos){
 	assert(between_inclusive(i_cursor_pos, J_SIZE_T_ZERO, M_multi_string.size()));
 		
 	M_cursor_pos = i_cursor_pos;
 	s_model->notify_text_cursor(get_ID(), M_cursor_pos);
+	set_cursor_on();
+}
+
+void J_Text_Box::silent_set_cursor_pos(j_size_t i_cursor_pos){
+	assert(between_inclusive(i_cursor_pos, J_SIZE_T_ZERO, M_multi_string.size()));
+
+	M_cursor_pos = i_cursor_pos;
 	set_cursor_on();
 }
 
@@ -175,6 +206,9 @@ void standard_text_box_input_parser(J_Text_Box_Object_Shared_t i_text_box
 	case J_KEY_BACKSPACE:
 		i_text_box->backspace();
 		break;
+	case J_KEY_DELETE:
+		i_text_box->delete_char();
+		break;
 	case J_KEY_TAB:
 		i_text_box->insert_char('\t');
 		break;
@@ -187,8 +221,17 @@ void standard_text_box_input_parser(J_Text_Box_Object_Shared_t i_text_box
 	case J_KEY_RIGHT:
 		i_text_box->move_cursor(1);
 		break;
-	case J_KEY_DELETE:
-		i_text_box->delete_char();
+	case J_KEY_UP:
+		i_text_box->move_cursor_up(1);
+		break;
+	case J_KEY_DOWN:
+		i_text_box->move_cursor_down(1);
+		break;
+	case J_KEY_HOME:
+		i_text_box->move_cursor_begin_of_line();
+		break;
+	case J_KEY_END:
+		i_text_box->move_cursor_end_of_line();
 		break;
 	default:
 		;
@@ -319,6 +362,10 @@ void Multi_State_Text_Box::clear_string(){
 	M_current_text_box->clear_string();
 }
 
+void Multi_State_Text_Box::move_cursor(j_size_t i_move_val){
+	M_current_text_box->move_cursor(i_move_val);
+}
+
 bool Multi_State_Text_Box::insert_char(J_UI_Char i_char){
 	return M_current_text_box->insert_char(i_char);
 }
@@ -366,10 +413,6 @@ void Multi_State_Text_Box::set_left_click_off(){
 void Multi_State_Text_Box::update(){
 	J_Text_Box_Object::update();
 	M_current_text_box->update();
-}
-
-void Multi_State_Text_Box::move_cursor(j_size_t i_move_val){
-	M_current_text_box->move_cursor(i_move_val);
 }
 
 void Multi_State_Text_Box::key_input_cmd(j_window_t i_window
@@ -508,6 +551,31 @@ void Multi_State_Text_Box::set_cursor_visibility_status(bool i_status){
 bool Multi_State_Text_Box::cursor_visibility_status()const {
 	return M_current_text_box->cursor_visibility_status();
 }
+
+void Multi_State_Text_Box::move_cursor_up(j_size_t i_move_val){
+	M_current_text_box->move_cursor_up(i_move_val);
+}
+
+void Multi_State_Text_Box::move_cursor_down(j_size_t i_move_val){
+	M_current_text_box->move_cursor_down(i_move_val);
+}
+
+void Multi_State_Text_Box::silent_set_cursor_pos(j_size_t i_cursor_pos){
+	M_current_text_box->silent_set_cursor_pos(i_cursor_pos);
+}
+
+void Multi_State_Text_Box::move_cursor_begin_of_line(){
+	M_current_text_box->move_cursor_begin_of_line();
+}
+
+void Multi_State_Text_Box::move_cursor_end_of_line(){
+	M_current_text_box->move_cursor_end_of_line();
+}
+
+
+
+
+
 
 
 J_Text_Box_Shared_t J_Text_Box::shared_from_this(){

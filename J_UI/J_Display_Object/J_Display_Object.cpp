@@ -73,6 +73,10 @@ J_Display_Box::J_Display_Box(j_uint i_object_id, j_uint i_id)
 J_Display_Object::~J_Display_Object(){
 }
 
+void J_Display_Object::alert_cursor_pos(Pen_Pos_FL_t){
+
+}
+
 void J_Display_Box::set_box(j_float i_x1, j_float i_x2, j_float i_y1, j_float i_y2){
 	J_Rectangle::set_box(i_x1, i_y2, i_x2 - i_x1, i_y1 - i_y2);
 	gen_vaos();
@@ -160,6 +164,16 @@ void J_Display_Box::set_outline_color(const J_UI_Color& i_color){
 	M_shader->set_outline_color(i_color);
 }
 
+
+void J_Display_Box::set_x(j_float i_x){
+	J_Rectangle::set_x(i_x);
+	gen_vaos();
+}
+
+void J_Display_Box::set_y(j_float i_y){
+	J_Rectangle::set_y(i_y);
+	gen_vaos();
+}
 
 
 J_Display_Box::~J_Display_Box(){

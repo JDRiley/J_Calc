@@ -6,6 +6,9 @@
 #include "../J_UI_Object.h"
 //Container
 #include <ex_array.h>
+//
+#include <ordered_pair.h>
+//
 #include <J_UI/J_UI_String.h>
 
 //Utilities
@@ -57,8 +60,11 @@ public:
 
 	//Cursor Maintenance
 	virtual void move_cursor(j_size_t) = 0;
+	virtual void move_cursor_up(j_size_t) = 0;
+	virtual void move_cursor_down(j_size_t) = 0;
+	virtual void move_cursor_begin_of_line() = 0;
+	virtual void move_cursor_end_of_line() = 0;
 
-	
 	//Box Maintenance
 	virtual void set_left_bound() = 0;
 	virtual void set_right_bound() = 0;
@@ -96,7 +102,7 @@ public:
 
 	virtual void set_cursor_visibility_status(bool i_status) = 0;
 	virtual bool cursor_visibility_status()const = 0;
-
+	virtual void silent_set_cursor_pos(j_size_t i_cursor_pos) =0;
 	~J_Text_Box_Object();
 protected:
 	J_Text_Box_Object(const J_Rectangle&, j_uint);
@@ -125,7 +131,8 @@ public:
 	void set_cursor_color(const J_Color_RGBA<j_float>)override;
 	void set_string(const J_UI_String& irk_string)override;
 
-
+	void move_cursor_begin_of_line()override;
+	void move_cursor_end_of_line()override;
 
 	void set_left_click_on()override;
 	void set_left_click_off()override;
@@ -185,7 +192,9 @@ public:
 	void set_char_input_command(Char_Input_Cmd_Func_t i_command)override;
 
 	Multi_State_Text_Box_Shared_t shared_from_this();
-
+	virtual void move_cursor_up(j_size_t);
+	void silent_set_cursor_pos(j_size_t i_cursor_pos)override;
+	virtual void move_cursor_down(j_size_t);
 private:
 	ex_array<J_Text_Box_Shared_t> M_states;
 	J_Text_Box_Shared_t M_current_text_box;
@@ -194,6 +203,9 @@ private:
 #else
 	j_size_t M_current_state;
 	void default_initialization();
+
+
+
 #endif // VS_2013
 
 };
@@ -208,9 +220,7 @@ class J_Text_Box : public J_Text_Box_Object{
 		J_Text_Box(const J_Rectangle&
 			, const J_UI_Multi_String& i_string, j_uint i_ID);
 
-		
 
-		//void add_font_face(J_Font_Face);
 		//String Maintenance
 		void clear_string()override;
 		bool insert_char(J_UI_Char i_char)override;
@@ -253,6 +263,11 @@ class J_Text_Box : public J_Text_Box_Object{
 
 
 
+		void move_cursor_up(j_size_t)override;
+		void move_cursor_down(j_size_t)override;
+		void move_cursor_begin_of_line()override;
+		void move_cursor_end_of_line()override;
+
 
 		j_size_t get_cursor_pos()const override;
 
@@ -272,7 +287,7 @@ class J_Text_Box : public J_Text_Box_Object{
 		//String Accessory
 		const J_UI_Multi_String& get_string()const override;
 		void broadcast_current_state()const override;
-
+		void silent_set_cursor_pos(j_size_t i_cursor_pos);
 		void enable_blinking_cursor();
 		J_Text_Box_Shared_t shared_from_this();
 protected:
@@ -302,6 +317,9 @@ private:
 		void initialize();
 		J_Text_Cursor_Blinker_Updater_Shared_t M_blinker_updater;
 		J_Text_Box& operator=(const J_Text_Box&);
+		
+		
+		ordered_pair<j_size_t> M_selection;
 };
 
 

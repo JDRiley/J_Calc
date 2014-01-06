@@ -40,12 +40,16 @@ public:
 	virtual void resize(int width, int height);
 	virtual ~J_View();
 	virtual j_uint mouse_button_press(J_View_Shared_t, int button, int modifier, Pen_Pos_FL_t pos);
-	virtual void mouse_button_release(int button, int modifier, Pen_Pos_FL_t pos);
+	virtual void mouse_button_release(J_View_Shared_t i_view, int i_button, int i_modifiers, Pen_Pos_FL_t i_pos);
 	virtual int get_x_resolution()const;
 	virtual int get_y_resolution()const;
 	virtual bool should_close()const;
 	virtual void set_text_string(j_uint i_text_box_id, const J_UI_Multi_String&);
 	virtual void set_text_cursor(j_uint i_text_box_id, j_uint cursor_pos);
+	virtual void set_text_cursor_line_pos_up(j_uint i_text_box_id, j_size_t i_move_val);
+	virtual void set_text_cursor_line_pos_down(j_uint i_text_box_id, j_size_t i_move_val);
+	virtual void set_text_cursor_line_begin(j_uint i_text_box_id);
+	virtual void set_text_cursor_line_end(j_uint i_text_box_id);
 	virtual void set_text_cursor_color(j_uint i_text_box_id, J_Color_RGBA<j_float>);
 	virtual void set_cursor_visibility_status(j_uint i_text_box_id, bool i_status);
 	virtual void set_clickable_status(j_uint i_obj_id, bool i_status);
@@ -86,6 +90,7 @@ public:
 	virtual void remove_display_box(j_uint i_obj_id);
 	virtual void remove_display_object(j_uint i_obj_id);
 
+	virtual void notify_cursor_pos(Pen_Pos_FL_t);
 
 	virtual void clear();
 protected:

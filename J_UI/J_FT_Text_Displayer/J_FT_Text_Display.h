@@ -27,11 +27,18 @@ public:
 	virtual void set_cursor_visibility_status(bool i_status) = 0;
 	virtual void pop_back() = 0;
 	virtual void set_cursor_pos(j_size_t i_size) = 0;
+
+	virtual void move_cursor_line_pos_up(j_size_t i_move_val) = 0;
+	virtual void move_cursor_line_pos_down(j_size_t i_move_val) = 0;
+	virtual void move_cursor_to_line_begin() = 0;
+	virtual void move_cursor_to_line_end() = 0;
+
 	virtual void set_cursor_color(J_Color_RGBA<j_float>) = 0;
 	virtual j_size_t get_cursor_index(Pen_Pos_FL_t)const = 0;
-
-
-
+	virtual void scroll(int i_scroll_val)=0;
+	virtual bool auto_scrolling_status()const = 0;
+	virtual void set_auto_scrolling_status(bool) = 0;
+	virtual bool is_cursor_pos_in_view(j_size_t) const = 0;
 	~J_FT_Text_Display_Object();
 
 protected:
@@ -63,6 +70,8 @@ public:
 
 	void set_box(const J_Rectangle& irk_rec)override;
 
+	void alert_cursor_pos(Pen_Pos_FL_t i_pos);
+
 	j_size_t get_cursor_index(Pen_Pos_FL_t)const override;
 
 	void add_state();
@@ -80,6 +89,20 @@ public:
 
 	void set_cursor_visibility_status(bool i_status)override;
 
+	bool auto_scrolling_status()const override;
+
+	void set_auto_scrolling_status(bool)override;
+
+	bool is_cursor_pos_in_view(j_size_t)const override;
+
+	void move_cursor_line_pos_up(j_size_t i_move_val)override;
+
+	void move_cursor_line_pos_down(j_size_t i_move_val)override;
+
+	void move_cursor_to_line_begin()override;
+
+	virtual void move_cursor_to_line_end();
+	void scroll(int i_scroll_val)override;
 private:
 	ex_array<J_FT_Text_Display_Shared_t> M_text_states;
 	J_FT_Text_Display_Shared_t M_current_state;
@@ -105,6 +128,12 @@ public:
 	void alert_resize(int,int)override;
 	void pop_back()override;
 	void set_cursor_pos(j_size_t i_size)override;
+
+	void set_cursor_pos_no_scroll(j_size_t i_pos);
+
+	virtual void move_cursor_line_pos_up(j_size_t i_move_val);
+
+	virtual void move_cursor_line_pos_down(j_size_t i_move_val);
 	void set_cursor_color(J_Color_RGBA<j_float>)override;
 	void mouse_button_press(J_View_Shared_t, int i_button, int modifiers, Pen_Pos_FL_t)override;
 	void mouse_button_release(J_View_Shared_t, int i_button, int modifiers, Pen_Pos_FL_t)override;
@@ -115,6 +144,15 @@ public:
 	bool cursor_visibility_status()const;
 	bool M_cursor_visibility_status;
 
+	bool auto_scrolling_status()const;
+	void set_auto_scrolling_status(bool i_status);
+	
+	void alert_cursor_pos(Pen_Pos_FL_t);
+
+	bool is_cursor_pos_in_view(j_size_t i_pos)const override;
+	void move_cursor_to_line_begin()override;
+	void scroll(int i_scroll_val)override;
+	void move_cursor_to_line_end()override;
 	~J_FT_Text_Display();
 protected:
 	
@@ -125,7 +163,7 @@ private:
 	void J_FT_Text_Display::draw_pos(j_size_t i_pos)const;
 
 	void draw_string(J_UI_Multi_String::const_iterator)const;
-
+	
 	J_UI_Multi_String M_string;
 	ex_array<j_uint> M_vao_ids;
 	ex_array<j_uint> M_vao_buffer_ids;
@@ -140,20 +178,34 @@ private:
 	void draw_to_buffer(j_size_t index)const;
 	void draw_cursor()const;
 	Pen_Pos_FL_t default_pen_pos()const;
-
-	Pen_Pos_FL_t J_FT_Text_Display::calculate_pen_advance(
-		Pen_Pos_FL_t i_cur_pen, int i_advance)const;
+	int lines_scrolled_per_tick();
+	Pen_Pos_FL_t calculate_pen_advance(Pen_Pos_FL_t i_cur_pen, int i_advance)const;
 	void recalculate_text_positions();
 	void clear();
 	void clear_from(j_size_t pos);
-
+	void set_starting_pen_pos(Pen_Pos_FL_t);
 	void delete_vaos();
 	void delete_buffers();
 	void delete_vaos_from(j_size_t pos);
 	void delete_buffers_from(j_size_t pos);
 	void add_new_vao_and_vbo(int);
 	Pen_Pos_FL_t new_line_pen_pos(Pen_Pos_FL_t i_cur_pen)const;
+	j_float new_line_screen_size()const;
+	void auto_scroll_window(j_size_t i_pos);
+	void set_selection_box_settings(J_Display_Box_Shared_t, J_Rectangle)const;
+	void scroll_selection_boxes(j_float i_x_scroll, j_float i_y_scroll);
+	bool M_left_mouse_button_pressed_status = false;
+
+
+	Pen_Pos_FL_t M_last_set_cursor_pos = default_pen_pos();
+	
+	ex_array<J_Display_Box_Shared_t> M_selection_boxes;
+
 	j_uint Test_cursor_buffer;
+	bool M_auto_scrolling_status = true;
+	j_size_t M_selection_start_cursor_pos;
+
+
 };
 
 

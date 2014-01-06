@@ -42,6 +42,15 @@
     <ClInclude Include="Math_Input_Box.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="j_function_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_construct_symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_conditional_construct_symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp">
@@ -66,6 +75,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Math_Input_Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_function_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_conditional_construct_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

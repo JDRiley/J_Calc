@@ -294,6 +294,7 @@
     <ClInclude Include="j_limits.h" />
     <ClInclude Include="j_type.h" />
     <ClInclude Include="J_Utile.h" />
+    <ClInclude Include="ordered_pair.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Error.cpp" />

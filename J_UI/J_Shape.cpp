@@ -4,6 +4,9 @@
 #include <cassert>
 //
 #include <j_physical_constants.h>
+//
+#include <J_Utile.h>
+//
 #include <cmath>
 using std::pow; using std::sqrtf;
 namespace jomike{
@@ -77,7 +80,7 @@ J_Rectangle* J_Rectangle::get_copy()const{
 }
 
 void J_Rectangle::set_box(j_float i_x1, j_float i_x2, j_float i_y1, j_float i_y2){
-	if(!(i_y2 < i_y1) || !(i_x2 > i_x1)){
+	if(!(i_y2 <= i_y1) || !(i_x2 >= i_x1)){
 		throw J_Argument_Error("Invalid Args given to J_Rectangle set_box()");
 	}
 	M_x_pos = i_x1;
@@ -100,8 +103,7 @@ void J_Rectangle::set_center(j_float , j_float ){
 }
 
 bool J_Rectangle::is_inside(j_float i_x, j_float i_y)const{
-	bool answer =  (x1() <= i_x) && (x2() >= i_x) && (y1() >= i_y) && (y2() <= i_y);
-	return answer;
+	return is_x_inside(i_x) && is_y_inside(i_y);
 }
 
 j_float J_Rectangle::width()const{return M_width;}
@@ -126,6 +128,20 @@ void J_Rectangle::set_x(j_float i_x){
 
 void J_Rectangle::set_y(j_float i_y){
 	M_y_pos = i_y;
+}
+
+bool J_Rectangle::is_y_inside(j_float i_y)const{
+	return between_inclusive(i_y, y2(), y1());
+
+}
+
+bool J_Rectangle::is_x_inside(j_float i_x)const{
+	return between_inclusive(i_x, x1(), x2());
+
+}
+
+void J_Rectangle::set_x2(j_float end_x_pos){
+	set_width(end_x_pos - M_x_pos);
 }
 
 

@@ -1,7 +1,7 @@
 #ifndef J_FUNCTION_H
 #define J_FUNCTION_H
 
-#include <J_Fwd_Decl.h>
+#include "J_Symbol_Fwd_Decl.h"
 #include <j_numeric.h>
 #include <j_physical_constants.h>
 #include "math_base.h"
@@ -23,24 +23,13 @@
 #include <ctime>
 #include <cassert>
 #include <memory>
+#include "j_composite_symbol.h"
+#include "j_number_symbol.h"
+#include "j_placeholder_symbol.h"
 using namespace std::placeholders;
 
 namespace jomike{
 
-
-J_FWD_DECL(j_symbol)
-
-J_FWD_DECL(j_value)
-J_FWD_DECL(Symbol_Joiner)
-J_FWD_DECL(j_composite_symbol)
-typedef std::shared_ptr<j_value> J_Value_Shared_t;
-typedef std::shared_ptr<j_value> J_Value_Weak_t;
-
-typedef j_symbol_Shared_t J_Symbol_Shared_t;
-typedef j_symbol_Weak_t J_Symbol_Weak_t;
-typedef j_symbol_Unique_t J_Symbol_Unique_t;
-
-typedef j_composite_symbol_Unique_t J_Composite_Symbol_Unique_t;
 static Dbl_t gk_low = g_default_pair.first;
 static Dbl_t gk_high = g_default_pair.second;
 typedef ex_array<dbl_pair> Bounds_Cont_t;
@@ -392,269 +381,6 @@ private:
 	Joiner M_joiner;
 };
 
-//SYMBOLIC STOOFS**************************************
-
-struct J_Unit{
-	enum class Scalar_Unit{ONE, MOL};
-	enum class Time_Unit{SECONDS, MILLISECONDS, YEARS, MINUTES, HOURS};
-	enum class Distance_Unit{METERS, CENTIMETERS, MICROMETERS, ANGSTROMS};
-	enum class Mass_Unit{GRAMS, KILLIGRAMS, POUNDS, STONES};
-
-	Scalar_Unit M_scalar_unit;
-	Time_Unit M_time_unit;
-	Distance_Unit M_distance_unit;
-	Mass_Unit M_mass_unit;
-};
-
-
-
-class j_value{
-public:
-	//Constructors
-	j_value(Dbl_t, J_Unit);
-	const j_value& operator+(const j_value&)const;
-
-	Dbl_t value()const;
-
-	//Math
-	j_value& operator+=(const j_value&);
-private:
-	J_Unit M_units;
-	Dbl_t M_value;
-};
-
-
-class j_symbol{
-public:
-	j_symbol();
-	j_symbol(const J_UI_String&);
-	
-	//j_symbol(const j_symbol& irk_symbol);
-	
-	
-	//Copy Construction
-	virtual j_symbol* get_copy()const =0;
-
-	virtual j_value get_value(const Arguments& i_args = Arguments())const;
-	j_dbl value(const Arguments& i_args = Arguments())const;
-	virtual void clear() =0;
-	virtual bool has_value()const =0;
-	const J_UI_String& name()const;
-	void set_name(const J_UI_String&);
-	virtual J_UI_String get_display_name();
-	virtual void set_args(const Arguments&);
-	virtual void set_args(Arguments&&);
-	virtual ~j_symbol();
-
-	virtual bool is_placeholder()const;
-protected:
-	virtual j_value derived_get_value(const Arguments& i_args)const =0;
-private:
-	J_UI_String M_name;
-	const int M_ID;
-	Arguments M_arguments;
-};
-
-
-
-class j_composite_symbol : public j_symbol{
-public:
-	j_composite_symbol(const j_composite_symbol&);
-	j_composite_symbol();
-	
-	bool has_value()const override;
-	enum class Join_Type{ADD, MULTIPLY, DIVIDE, SUBTRACT, ERROR_TYPE};
-	void append(Join_Type, const j_symbol&);
-
-	j_size_t size()const;
-
-	J_UI_String get_display_name()override;
-	j_composite_symbol* get_copy()const override;
-
-	j_symbol& operator[](j_size_t i_index);
-
-	const j_symbol& operator[](j_size_t i_index)const;
-
-	//Destruction
-	~j_composite_symbol();
-	void clear()override;
-protected:
-	j_value derived_get_value(const Arguments&)const override;
-private:
-	ex_array<Symbol_Joiner*> M_symbol_joiners;
-	ex_array<j_symbol*> M_symbols;
-
-};
-
-
-j_composite_symbol::Join_Type get_composite_symbol_join_type(J_UI_Char i_char);
-
-class J_Sym_Argument_Error: public J_Error{
-public:
-	J_Sym_Argument_Error(const char * const ik_message = "invalid args");
-private:
-};
-
-class J_Value_Error: public J_Error{
-public:
-	J_Value_Error(const char * const ik_message = "NO Value in symbol");
-private:
-};
-
-
-//class j_number_symbol **************************
-class j_number_symbol : public j_symbol{
-public:
-	//Constructors
-	j_number_symbol(Dbl_t);
-	j_number_symbol(const J_UI_String&);
-
-	j_number_symbol* get_copy()const override;
-
-	//Status
-	bool has_value()const override;
-
-
-
-	J_UI_String get_display_name()override;
-
-	//Reset
-	void clear()override;
-protected:
-	j_value derived_get_value(const Arguments&)const override;
-private:
-	bool M_value_status;
-	Dbl_t M_value;
-};
-
-//To Do: Define these functions
-j_symbol* get_symbol(const J_UI_String&);
-
-j_symbol* get_reserved_symbol(const J_UI_String&);
-
-class j_symbolic_function : public j_function{
-public:
-	j_symbolic_function(const J_UI_String&);
-	j_symbolic_function* get_copy()const override;
-
-	const std::string& name();
-	void set_name(const std::string&);
-protected:
-
-private:
-	std::string M_name;
-	std::vector<J_Symbol_Weak_t> M_symbols_by_name;
-	
-};
-
-class j_placeholder_symbol : public j_symbol{
-public:
-	j_placeholder_symbol* get_copy()const override{
-		return new j_placeholder_symbol(*this);
-	}
-	bool has_value()const override;
-	void clear()override;
-	j_placeholder_symbol(j_size_t i_index);
-	bool is_placeholder()const override;
-	j_size_t placeholder_index()const;
-protected:
-	j_value derived_get_value(const Arguments& i_args)const override;
-private:
-	j_size_t M_Placeholder_index;
-};
-
-class J_Routine_Wrapper_Symbol : public j_symbol{
-public:
-	void clear()override;
-	bool has_value()const override;
-private:
-};
-
-J_FWD_DECL(J_Routine_Symbol)
-
-class J_Routine_Symbol : public j_symbol{
-public:
-
-	J_Routine_Symbol* get_copy()const override;
-
-	bool symbol_name_availability_status(const J_UI_String&);
-	j_symbol* get_scope_symbol(const J_UI_String&);
-	void add_scope_symbol(const j_symbol&);
-	void clear()override;
-	bool has_value()const override;
-protected:
-private:
-	typedef std::map<J_UI_String, j_symbol*> Symbol_Cont_t;
-	Symbol_Cont_t M_scope_symbols;
-	ex_array<std::string> M_statements;
-	j_value derived_get_value(const Arguments&)const override;
-};
-
-class GCD_Symbol : public J_Routine_Wrapper_Symbol{
-public:
-	GCD_Symbol* get_copy()const override;
-	J_UI_String get_display_name()override;
-protected:
-	j_value derived_get_value(const Arguments&)const override;
-private:
-};
-
-template<typename Binary_Function_t, typename Num_t = j_dbl>
-class Binary_Function_Chain_Symbol : public J_Routine_Wrapper_Symbol{
-public:
-	Binary_Function_Chain_Symbol(const Binary_Function_t&, const std::string&);
-	Binary_Function_Chain_Symbol* get_copy()const override;
-	J_UI_String get_display_name()override;
-protected:
-	j_value derived_get_value(const Arguments&)const override;
-private:
-	Binary_Function_t M_function;
-	J_UI_String M_name;
-};
-
-typedef
-Binary_Function_Chain_Symbol<j_llint(*)(j_llint, j_llint), j_llint>
-	LLint_Binary_Function_Symbol;
-
-template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
-j_value Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
-	::derived_get_value(const Arguments& irk_args)const{
-	if(irk_args.empty()){
-		return j_value(0, J_Unit());
-	}
-
-
-	Num_t answer = static_cast<j_llint>(irk_args[0].value(Arguments()));
-
-	answer = std::accumulate(irk_args.begin() + 1, irk_args.end(), answer
-		, [&](Num_t i_val, j_symbol* i_symbol){
-		return M_function(i_val, static_cast<Num_t>(i_symbol->value()));
-	});
-
-	return j_value(static_cast<j_dbl>(answer), J_Unit());
-}
-
-
-template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
-Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>* 
-	Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::get_copy()const {
-
-	return new Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>(*this);
-}
-
-
-template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
-J_UI_String Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::get_display_name(){
-	return M_name;
-}
-
-
-template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
-Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
-::Binary_Function_Chain_Symbol(const Binary_Function_t& irk_function
-	, const std::string& irk_name):M_function(irk_function), M_name(irk_name){
-	set_args(Arguments(2));
-}
 
 
 template<typename Joiner>
@@ -723,7 +449,7 @@ Dbl_t j_joining_function<Joiner>::eval(Dbl_t i_x)const{
 	return result;
 }
 
-bool is_char_allowed(J_UI_Char i_char);
+
 
 }
 

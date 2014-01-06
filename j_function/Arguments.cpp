@@ -5,8 +5,7 @@
 //Algorithm
 #include <algorithm>
 #include <functional>
-//
-#include "j_function_factory.h"
+
 //
 #include <utility>
 using std::for_each; using std::mem_fn; using std::transform;
@@ -15,53 +14,7 @@ namespace jomike{
 //Arguments Function
 Arguments::Arguments(){}
 
-const ex_array<J_UI_Char> sk_arg_delims = {','};
-static const Delimiter_Handler<J_UI_Char> sk_arg_delim(sk_arg_delims.begin()
-	, sk_arg_delims.end());
 
-Arguments::Arguments(const J_UI_String& irk_string){
-	auto start_pos = irk_string.begin();
-	J_UI_String::const_iterator end_pos;
-	while(start_pos < irk_string.end()){
-		j_symbol* new_arg = create_multi_j_symbol(start_pos, irk_string.end()
-			, &end_pos, sk_arg_delim);
-
-		push_back(*new_arg);
-		delete new_arg;
-		start_pos = end_pos;
-		if((start_pos != irk_string.end())){
-			assert(sk_arg_delim.is_delim(*start_pos));
-			++start_pos;
-			continue;
-		}
-
-		advance_white_space(&start_pos, irk_string.end());
-	}
-
-
-}
-
-J_UI_String::const_iterator	find_next_arg(J_UI_String::const_iterator i_start_pos
-	, J_UI_String::const_iterator i_end_pos){
-	const J_UI_Char k_arg_end_char(',');
-	J_UI_String::const_iterator end_arg_pos = i_start_pos;
-	
-	while(end_arg_pos < i_end_pos){
-		end_arg_pos = find(i_start_pos, i_end_pos, k_arg_end_char);
-
-		auto paren_pos = find(i_start_pos, i_end_pos, J_UI_Char('('));
-
-		if(end_arg_pos <= paren_pos){
-			//If they are equal it must be i_end_pos
-			assert((end_arg_pos < paren_pos) || (end_arg_pos == i_end_pos));
-			break;
-		}
-		i_start_pos = ++get_closing_parenthesis(paren_pos);
-	}
-
-	return end_arg_pos;
-	
-}
 
 
 

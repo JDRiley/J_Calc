@@ -94,6 +94,7 @@ void J_UI_Controller::char_input_cmd(j_window_t i_window, int i_charcode){
 }
 
 void J_UI_Controller::key_input_cmd(j_window_t i_window, int i_key, int i_scancode, int i_action, int i_modifiers){
+	M_last_key_modifiers = i_modifiers;
 	if(M_active_ui_objs[M_j_views[i_window]].expired()){
 		return;
 	}
@@ -104,18 +105,24 @@ void J_UI_Controller::key_input_cmd(j_window_t i_window, int i_key, int i_scanco
 
 void J_UI_Controller::mouse_button_cmd(j_window_t i_window, int i_mouse_key
 	, int i_action, int i_modifiers){
+	M_last_key_modifiers = i_modifiers;
 	auto found_pos = M_j_views.find(i_window);
 	assert(M_j_views.end() != found_pos);
 
 	J_View_Shared_t view = found_pos->second;
 	assert(view->get_window() == i_window);
-	if(J_PRESS != i_action){
-		return;
+	if(J_PRESS == i_action){
+		view->mouse_button_press(view, i_mouse_key
+								 , i_modifiers
+								 , s_model->cursor_pos(view).cursor_pos_fl());
+	} else if(J_RELEASE == i_action){
+		view->mouse_button_release(view, i_mouse_key
+								 , i_modifiers
+								 , s_model->cursor_pos(view).cursor_pos_fl());
 	}
 
 
-	view->mouse_button_press(view, i_mouse_key
-		, i_modifiers, s_model->cursor_pos(view).cursor_pos_fl());
+
 
 
 
@@ -137,11 +144,8 @@ void J_UI_Controller::notify_object_press(J_View_Shared_t i_view, j_uint i_obj_i
 	}
 
 	defocus_active_object(i_view->get_window());
-
+	M_active_ui_objs[i_view] = s_model->get_ui_object(i_obj_id);
 }
-
-
-
 
 
 void J_UI_Controller::notify_text_box_press(J_View_Shared_t i_view, j_uint i_text_obj_id
@@ -149,8 +153,13 @@ void J_UI_Controller::notify_text_box_press(J_View_Shared_t i_view, j_uint i_tex
 
 	assert(s_model->is_text_box_present(i_text_obj_id));
 	J_Text_Box_Object_Shared_t text_box = s_model->get_text_box(i_text_obj_id);
-	text_box->set_cursor_pos(i_cursor_index);
+	text_box->silent_set_cursor_pos(i_cursor_index);
 	//text_box->set_left_click_on();
+
+
+	if(!i_view){
+		return;
+	}
 
 	text_box->mouse_button_press(J_LEFT_MOUSE_BUTTON, J_PRESS
 		, s_model->cursor_pos(i_view).cursor_pos_fl());
@@ -166,7 +175,7 @@ void J_UI_Controller::notify_text_box_release(j_uint i_text_obj_id, j_size_t i_c
 	auto text_box = s_model->get_text_box(i_text_obj_id);
 
 	text_box->set_cursor_pos(i_cursor_index);
-	text_box->set_left_click_off();
+
 
 }
 
@@ -178,9 +187,28 @@ J_UI_Controller::J_UI_Controller(){
 	M_frame_counter = J_Frame_Counter_Shared_t(new J_Frame_Counter(5));
 }
 
+j_dbl cursor_update_time(){
+	return 1.0 / 60.0;
+}
+
 void J_UI_Controller::cursor_pos_input_cmd(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
+
+
 	assert(M_j_views.count(i_window));
-	s_model->set_cursor_pos(M_j_views[i_window], i_x_pos, i_y_pos);
+	auto view = M_j_views[i_window];
+	s_model->set_cursor_pos(view, i_x_pos, i_y_pos);
+
+	static 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
+		draw_timer(get_model_time, cursor_update_time);
+
+	if(!draw_timer.time_exceeded()){
+		return;
+	}
+
+	draw_timer.reset_timer();
+
+
+	view->set_cursor_pos(safe_int_cast(i_x_pos), safe_int_cast(i_y_pos));
 }
 
 J_FWD_DECL(Cursor_Pos_Updater)
@@ -234,7 +262,6 @@ void J_UI_Controller::defocus_active_object(j_window_t i_window){
 		return;
 	}
 	found_obj->second.lock()->set_focus_status(false);
-	found_obj->second.reset();
 }
 
 void J_UI_Controller::add_text_box_object(J_Text_Box_Object_Shared_t i_text_box_object
@@ -256,16 +283,19 @@ void J_UI_Controller::resize_cmd(j_window_t i_window, int i_width, int i_height)
 static void mouse_press_script_cmd(J_UI_Controller*, istream&);
 static void char_press_script_cmd(J_UI_Controller*, istream&);
 
-
+static void end_script_command(J_UI_Controller* i_controller, istream&){
+	i_controller->end_script_run();
+}
 
 void J_UI_Controller::run_script(const std::string& irk_file_name){
 	cerr << "\nSize of Ptr: " << sizeof(void*);
 	typedef  std::map<std::string, void(*)(J_UI_Controller*, istream&)>
 		Script_Command_Map_t;
-
+	M_script_run_flag = true;
 	static Script_Command_Map_t script_commands = {
 		{"mouse_press", mouse_press_script_cmd},
-		{"char_press", char_press_script_cmd}
+		{"char_press", char_press_script_cmd},
+		{"end", end_script_command}
 	};
 
 	ifstream file(irk_file_name);
@@ -301,11 +331,16 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 				draw_views();
 				draw_timer.reset_timer();
 			}
+
+			if(!M_script_run_flag){
+				break;
+			}
 		}
 	} catch(J_Syntax_Error& e){
 			e.print();
+			M_script_run_flag = false;
 	}
-	
+	M_script_run_flag = false;
 	cerr << "\nEnd Script Running" << endl;
 }
 
@@ -367,6 +402,14 @@ void J_UI_Controller::add_update_fps_updater(J_Text_Box_Object_Shared_t i_text_o
 	
 }
 
+void J_UI_Controller::end_script_run(){
+	M_script_run_flag = false;
+}
+
+int J_UI_Controller::current_key_modifiers()const{
+	return M_last_key_modifiers;
+}
+
 
 static j_dbl get_screen_pos_double(istream& ir_is){
 	j_dbl i_pos;
@@ -390,6 +433,8 @@ static void mouse_press_script_cmd(J_UI_Controller* i_controller, istream& ir_st
 	i_controller->mouse_button_cmd(window, J_LEFT_MOUSE_BUTTON, J_PRESS, 0);
 	i_controller->draw_views();
 }
+
+
 
 static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_stream){
 	static string total_string;

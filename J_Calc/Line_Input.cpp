@@ -102,18 +102,18 @@ void Line_Input::evaluate_output(){
 #if _DEBUG	
 	cerr << "\nInput_Str:" << M_input;
 #endif //_DEBUGS
-
-	gs_parser->convert_to_proper_math_input(&M_input);
+	J_UI_String input_string(M_input);
+	gs_parser->convert_to_proper_math_input(&input_string);
 
 	if(M_input.empty()){
 		return;
 	}
 
-
-
 	M_input.push_back(LINE_END_SYMBOL);
 
-	M_output = gs_parser->evaluate_math_input(M_input);
+	input_string.push_back(LINE_END_SYMBOL);
+
+	M_output = gs_parser->evaluate_math_input(input_string);
 	M_output.push_front(DEFAULT_OUTPUT_STRING[0]);
 	M_output.push_back(DEFAULT_OUTPUT_STRING[1]);
 	M_output.set_color(J_WHITE);

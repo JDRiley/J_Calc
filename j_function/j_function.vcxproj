@@ -220,17 +220,43 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Add_Symbol_Joiner.h" />
+    <ClInclude Include="Binary_Function_Chain_Symbol.h" />
+    <ClInclude Include="Boolean_Testers.h" />
+    <ClInclude Include="boolean_tester_array.h" />
+    <ClInclude Include="j_boolean_expression.h" />
+    <ClInclude Include="j_composite_symbol.h" />
+    <ClInclude Include="j_number_symbol.h" />
     <ClInclude Include="j_physical_constants.h" />
     <ClInclude Include="j_function.h" />
-    <ClInclude Include="j_function_factory.h" />
     <ClInclude Include="Arguments.h" />
+    <ClInclude Include="j_placeholder_symbol.h" />
+    <ClInclude Include="j_routine_symbol.h" />
+    <ClInclude Include="j_symbol.h" />
+    <ClInclude Include="j_symbol_containers.h" />
+    <ClInclude Include="J_Symbol_Fwd_Decl.h" />
+    <ClInclude Include="j_unit.h" />
+    <ClInclude Include="J_Unit_Symbol.h" />
+    <ClInclude Include="j_value.h" />
     <ClInclude Include="math_base.h" />
+    <ClInclude Include="Symbol_Joiner.h" />
+    <ClInclude Include="Unit_Converter.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Boolean_Testers.cpp" />
+    <ClCompile Include="j_boolean_expression.cpp" />
+    <ClCompile Include="j_composite_symbol.cpp" />
     <ClCompile Include="j_function.cpp" />
-    <ClCompile Include="j_function_factory.cpp" />
     <ClCompile Include="Arguments.cpp" />
+    <ClCompile Include="j_number_symbol.cpp" />
+    <ClCompile Include="j_placeholder_symbol.cpp" />
+    <ClCompile Include="j_routine_symbol.cpp" />
+    <ClCompile Include="j_symbol.cpp" />
+    <ClCompile Include="j_symbol_array.cpp" />
+    <ClCompile Include="j_unit.cpp" />
+    <ClCompile Include="j_value.cpp" />
     <ClCompile Include="math_base.cpp" />
+    <ClCompile Include="Unit_Converter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

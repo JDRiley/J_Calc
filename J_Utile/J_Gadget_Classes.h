@@ -8,6 +8,8 @@
 #include <functional>
 //
 #include <RB_Tree.h>
+//
+#include <initializer_list>
 namespace jomike{
 
 template<typename Val_t, typename Comp_t = std::less<Val_t>>
@@ -17,9 +19,17 @@ public:
 	Delimiter_Handler(Iter, Iter);
 	bool is_delim(Val_t)const;
 	void set_delim_status(const Val_t& irk_val, bool i_status);
+
+	template<typename St>
+	Delimiter_Handler(std::initializer_list<St> i_list);
 private:
 	RB_Tree<Val_t, Val_t, Comp_t> M_delims;
 };
+
+template<typename Val_t, typename Comp_t /*= std::less<Val_t>*/>
+template<typename St>
+Delimiter_Handler<Val_t, Comp_t>::Delimiter_Handler(std::initializer_list<St> i_list)
+	: Delimiter_Handler(i_list.begin(), i_list.end()){}
 
 template<typename Val_t, typename Comp_t>
 bool Delimiter_Handler<Val_t, Comp_t>::is_delim(Val_t i_val)const{

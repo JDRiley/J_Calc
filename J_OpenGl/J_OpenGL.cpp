@@ -264,6 +264,8 @@ j_dbl J_Frame_Counter::fps()const{return M_fps;}
 
 
 void j_view_port(int i_x, int i_y, int i_width, int i_height){
+	s_contexts_handler->get_active_context()->M_width = i_width;
+	s_contexts_handler->get_active_context()->M_height = i_height;
 	glViewport(i_x, i_y, i_width, i_height);
 }
 

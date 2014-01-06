@@ -6,11 +6,50 @@
 #include <J_Math.h>
 //Utilities
 #include <cassert>
+//
+#include <j_routine_symbol.h>
+//
+#include <Binary_Function_Chain_Symbol.h>
 using std::dynamic_pointer_cast;
 
 using std::string;
 
 namespace jomike{
+
+class GCD_Symbol : public j_routine_wrapper_symbol{
+public:
+	GCD_Symbol* get_copy()const override;
+	J_UI_String get_display_name()override;
+protected:
+	j_value derived_get_value(const Arguments&)const override;
+private:
+};
+
+j_value GCD_Symbol::derived_get_value(const Arguments& i_args)const {
+	if(i_args.empty()){
+		return j_value(0, J_Unit());
+	}
+
+
+	j_llint answer = static_cast<j_llint>(i_args[0].value(Arguments()));
+
+	answer = accumulate(i_args.begin() + 1, i_args.end(), answer
+		, [](j_llint i_val, j_symbol* i_symbol){
+		return i_val + static_cast<j_llint>(i_symbol->value());
+	});
+
+	return j_value(static_cast<j_dbl>(answer), J_Unit());
+}
+
+GCD_Symbol* GCD_Symbol::get_copy()const {
+	return new GCD_Symbol;
+}
+
+J_UI_String GCD_Symbol::get_display_name(){
+	return "gcd";
+}
+
+
 
 static void init_reserve_keywords(RB_Tree<J_UI_String>*);
 

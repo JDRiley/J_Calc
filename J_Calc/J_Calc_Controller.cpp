@@ -73,7 +73,7 @@ void key_callback(j_window_t i_window, int i_charcode, int, int, int);
 void window_close_callback(j_window_t i_window);
 void resize_callback(j_window_t i_window, int i_width, int i_height);
 void main_mouse_button_callback(j_window_t i_window, int i_mouse_button, int i_action, int i_modifiers);
-
+void scroll_callback(j_window_t, j_dbl, j_dbl);
 const j_dbl DRAW_REFRESH_TIME = 1.0 / 60.0;
 static j_dbl draw_refresh_time(){ return DRAW_REFRESH_TIME; }
 
@@ -144,10 +144,8 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 
 	add_update_fps_updater(update_fps_text_box);
 
-
 	s_calc_data->broadcast_current_state();
 }
-
 
 void J_Calc_Controller::initialize_font_faces(){
 	M_input_font_face
@@ -162,7 +160,7 @@ void J_Calc_Controller::execute(){
 #ifdef _DEBUG
 	run_script("test_script.jcs");
 #else
-	run_script("in_script.jcs");
+	run_script("test_script.jcs");
 #endif
 	j_block_execution(50);
 
@@ -227,6 +225,37 @@ void J_Calc_Controller::wait_events()const{
 
 //Call Backs***********************************************************************************
 
+J_Calc_Controller::~J_Calc_Controller(){
+	clear_all();
+	M_main_view.reset();
+	j_free_glfw();
+	delete M_input_font_face;
+	delete M_log_font_face;
+}
+
+void J_Calc_Controller::clear_all(){
+	J_UI_Controller::clear_all();
+	
+
+}
+
+void J_Calc_Controller::add_math_text_box(Math_Input_Box_Shared_t i_math_box
+	, J_View_Shared_t i_view){
+	i_view->add_text_display(i_math_box->get_ID());
+	s_calc_data->add_math_text_box(i_math_box);
+}
+
+void J_Calc_Controller::derived_init(int , char** ){
+	auto window = M_main_view->get_window();
+	glfwSetKeyCallback(window, key_callback);
+	glfwSetWindowCloseCallback(window, window_close_callback);
+	glfwSetWindowSizeCallback(window, resize_callback);
+	glfwSetCursorPosCallback(window, cursor_pos_callback);
+	glfwSetMouseButtonCallback(window, main_mouse_button_callback);
+	glfwSetCharCallback(window, char_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+}
+
 /*void main_mouse_button_callback(j_window_t , int , int , int )*/
 void main_mouse_button_callback(j_window_t i_window, int i_mouse_button, int i_action, int i_modifiers){
 	s_controller->mouse_button_cmd(i_window, i_mouse_button, i_action, i_modifiers);
@@ -263,36 +292,23 @@ void cursor_pos_callback(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
 	s_controller->cursor_pos_input_cmd(i_window, i_x_pos, i_y_pos);
 }
 
+void scroll_callback(j_window_t i_window, j_dbl i_x_scroll, j_dbl i_y_scroll){
+	/*Hot fix for the mouse wheel up commands. noted as JTL Additions*/
+	/*in the J_UI_Fwd_Decl.h header file*/
+	if(!i_y_scroll){
+		//Only Processing vertical scrolling events
+		(void)i_x_scroll; //Compiler warning ridding
+		return;
+	}
 
-
-J_Calc_Controller::~J_Calc_Controller(){
-	clear_all();
-	M_main_view.reset();
-	j_free_glfw();
-	delete M_input_font_face;
-	delete M_log_font_face;
-}
-
-void J_Calc_Controller::clear_all(){
-	J_UI_Controller::clear_all();
+	j_key_id_t wheel_button_key = i_y_scroll > 0 ? J_MOUSE_WHEEL_UP : J_MOUSE_WHEEL_DOWN;
 	
-
-}
-
-void J_Calc_Controller::add_math_text_box(Math_Input_Box_Shared_t i_math_box
-	, J_View_Shared_t i_view){
-	i_view->add_text_display(i_math_box->get_ID());
-	s_calc_data->add_math_text_box(i_math_box);
-}
-
-void J_Calc_Controller::derived_init(int , char** ){
-	auto window = M_main_view->get_window();
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetWindowCloseCallback(window, window_close_callback);
-	glfwSetWindowSizeCallback(window, resize_callback);
-	glfwSetCursorPosCallback(window, cursor_pos_callback);
-	glfwSetMouseButtonCallback(window, main_mouse_button_callback);
-	glfwSetCharCallback(window, char_callback);
+	int num_scrolls = abs(static_cast<int>(i_y_scroll));
+	int modifiers = s_controller->current_key_modifiers();
+	for(int i = 0; i < num_scrolls; i++){
+		s_controller->mouse_button_cmd(i_window, wheel_button_key, J_PRESS
+									   , modifiers);
+	}
 }
 
 
