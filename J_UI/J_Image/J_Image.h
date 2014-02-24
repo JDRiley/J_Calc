@@ -3,14 +3,16 @@
 #include "../../J_Utile/J_Fwd_Decl.h"
 
 #include <limits>
-
+//
 //Algorithm
 #include <algorithm>
+//
 #include <functional>
 
 //Containers
 #include <array>
-#include <vector>
+//
+#include <ex_array.h>
 
 
 namespace jomike{
@@ -116,8 +118,9 @@ public:
 	//Data Access
 	Data_t& at_index(size_t i_x, size_t i_y){return M_data[i_x*M_width*M_Channels + i_y];}
 	const Data_t* data()const{return M_data.data();}
+	const ex_array<Data_t>& get_array()const{ return M_data; }
 private:
-	std::vector<Data_t> M_data;
+	ex_array<Data_t> M_data;
 	J_Color_RGBA<j_float> M_color;
 	int M_width;
 	int M_height;
@@ -182,6 +185,7 @@ j_float byte_normalized(int_t i_val){
 	return static_cast<j_float>(i_val)/x;
 }
 
+j_ubyte_arr_t convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
 
 
 }

@@ -97,6 +97,11 @@ typedef std::pair<int,int> Pen_Pos_t;
 
 typedef std::pair<j_float, j_float> Pen_Pos_FL_t;
 
+#define J_STRUCT_FWD_DECL(class_name) struct class_name;\
+	typedef std::shared_ptr<class_name> class_name##_Shared_t; \
+	typedef std::weak_ptr<class_name> class_name##_Weak_t; \
+	typedef std::unique_ptr<class_name> class_name##_Unique_t;
+
 #define J_FWD_DECL(class_name) class class_name;\
 	typedef std::shared_ptr<class_name> class_name##_Shared_t; \
 	typedef std::weak_ptr<class_name> class_name##_Weak_t; \

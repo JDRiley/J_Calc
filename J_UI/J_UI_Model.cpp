@@ -9,8 +9,10 @@
 #include <J_Utile.h>
 //
 #include "J_Image_Pane.h"
-
-
+//
+#include "J_UI_Line.h"
+//
+#include "J_FT_Text_Displayer/Multi_State_Text_Box.h"
 //Algorithm
 #include <algorithm>
 #include <functional>
@@ -132,7 +134,7 @@ void J_UI_Model::remove_ui_object(j_uint i_obj_id){
 	assert(M_ui_objects.count(i_obj_id));
 	M_ui_objects.erase(i_obj_id);
 
-	notify_ui_box_removal(i_obj_id);
+	notify_ui_box_gone(i_obj_id);
 }
 
 void J_UI_Model::remove_box(j_uint i_obj_id){
@@ -140,7 +142,6 @@ void J_UI_Model::remove_box(j_uint i_obj_id){
 	assert(M_ui_boxes.count(i_obj_id));
 	
 	M_ui_boxes.erase(i_obj_id);
-	notify_ui_box_removal(i_obj_id);
 }
 
 void J_UI_Model::remove_text_box_object(j_uint i_obj_id){
@@ -186,11 +187,11 @@ J_UI_Circle_Shared_t J_UI_Model::get_ui_circle(j_uint i_id){
 
 void J_UI_Model::notify_text_box_removal(j_uint i_obj_id){
 	for(auto f_view : M_views){
-		f_view->remove_text_box(i_obj_id);
+		f_view->remove_text_display(i_obj_id);
 	}
 }
 
-void J_UI_Model::notify_ui_box_removal(j_uint i_obj_id){
+void J_UI_Model::notify_ui_box_gone(j_uint i_obj_id){
 	for(auto f_view : M_views){
 		f_view->remove_display_box(i_obj_id);
 	}
@@ -201,56 +202,6 @@ void J_UI_Model::notify_ui_object_removal(j_uint i_obj_id){
 		f_view->remove_display_object(i_obj_id);
 	}
 }
-
-void J_UI_Model::notify_text_string(j_uint i_text_box_id, const J_UI_Multi_String& irk_string){
-	for_each(M_views.begin(), M_views.end(), bind(&J_View::set_text_string, _1, i_text_box_id, irk_string));
-}
-
-void J_UI_Model::notify_text_cursor(j_uint i_text_box_id, j_size_t i_cursor_pos){
-	for_each(M_views.begin(), M_views.end(), bind(&J_View::set_text_cursor, _1, i_text_box_id, i_cursor_pos));
-}
-
-void J_UI_Model::notify_text_cursor_move_up(j_uint i_obj_id, j_size_t i_move_val){
-	for(auto f_view : M_views){
-		f_view->set_text_cursor_line_pos_up(i_obj_id, i_move_val);
-	}
-
-}
-
-void J_UI_Model::notify_text_cursor_move_down(j_uint i_obj_id, j_size_t i_move_val){
-	for(auto f_view : M_views){
-		f_view->set_text_cursor_line_pos_down(i_obj_id, i_move_val);
-	}
-
-}
-
-
-void J_UI_Model::notify_text_cursor_to_line_begin(j_uint i_obj_id){
-	for(auto f_view : M_views){
-		f_view->set_text_cursor_line_begin(i_obj_id);
-	}
-}
-
-void J_UI_Model::notify_text_cursor_to_line_end(j_uint i_obj_id){
-	for(auto f_view : M_views){
-		f_view->set_text_cursor_line_end(i_obj_id);
-	}
-}
-
-
-void J_UI_Model::notify_text_cursor_color(j_uint i_text_box_id, J_Color_RGBA<j_float> i_color){
-	for_each(M_views.begin(), M_views.end(), bind(&J_View::set_text_cursor_color, _1, i_text_box_id, i_color));
-
-}
-
-
-void J_UI_Model::notify_cursor_visibility_status(j_uint i_text_box_id, bool i_status){
-	for(auto f_view : M_views){
-		f_view->set_cursor_visibility_status(i_text_box_id, i_status);
-	}
-}
-
-
 
 void J_UI_Model::notify_char_delete(j_uint i_text_box_id, j_size_t i_pos){
 	assert(M_text_boxes.count(i_text_box_id));
@@ -264,10 +215,14 @@ void J_UI_Model::notify_erase_chars(j_uint i_text_box_id, j_size_t i_pos, j_size
 	for_each(M_views.begin(), M_views.end(), bind(&J_View::erase_chars, _1, i_text_box_id, i_pos, i_size));
 }
 
-void J_UI_Model::notify_char_add(j_uint i_text_box_id, j_size_t i_pos, J_UI_Char i_char){
+void J_UI_Model::notify_char_add(j_uint i_text_box_id, j_size_t i_index, const Pen_Pos_FL_t& i_pen_pos
+					 , const Bitmap_Metrics& i_metrics, const J_UI_Color& i_color
+					 , const j_ubyte* i_data){
 	assert(M_text_boxes.count(i_text_box_id));
 
-	for_each(M_views.begin(), M_views.end(), bind(&J_View::insert_char, _1, i_text_box_id, i_pos, i_char));
+	for(auto& view : M_views){
+		view->insert_char(i_text_box_id, i_index, i_pen_pos, i_metrics, i_color, i_data);
+	}
 }
 
 void J_UI_Model::notify_fill_visibility_status(j_uint i_disp_obj_id, bool i_status){
@@ -399,6 +354,103 @@ const J_Cursor_Position& J_UI_Model::cursor_pos(J_View_Shared_t i_view)const{
 j_dbl J_UI_Model::fps()const{
 	assert(M_frame_counter);
 	return M_frame_counter->fps();
+}
+
+void J_UI_Model
+	::notify_letter_box_rectangle(j_uint i_text_box_id
+								, j_size_t i_index , const Pen_Pos_FL_t& i_pen_pos
+								, const Bitmap_Metrics& i_metrics){
+		for(auto& view : M_views){
+			view->update_letter_box_rectangle(i_text_box_id, i_index
+											  , i_pen_pos, i_metrics);
+		}
+}
+
+void J_UI_Model::add_managed_display_object(j_uint i_obj_id, j_uint i_new_obj_id
+											, UI_Object_Types i_obj_type){
+	for(auto& view : M_views){
+		view->add_managed_display_object(i_obj_id, i_new_obj_id, i_obj_type);
+	}
+}
+
+void J_UI_Model::remove_managed_display_object(j_uint i_obj_id, UI_Object_Types i_obj_type){
+	for(auto view : M_views){
+		view->remove_managed_display_object(i_obj_id, i_obj_type);
+	}
+}
+
+void J_UI_Model::remove_image_pane(j_uint i_obj_id){
+	auto found_pos = M_image_panes.find(i_obj_id);
+	if(M_image_panes.end() == found_pos){
+		return;
+	}
+	M_image_panes.erase(found_pos);
+	remove_box(i_obj_id);
+}
+
+void J_UI_Model::remove_multi_state_text_box(j_uint i_obj_id){
+	auto found_pos = M_multi_text_boxes.find(i_obj_id);
+	if(M_multi_text_boxes.end() == found_pos){
+		return;
+	}
+	M_multi_text_boxes.erase(found_pos);
+	remove_text_box_object(i_obj_id);
+}
+
+void J_UI_Model::notify_line_data(j_uint i_line_id, const J_Line& i_line){
+	for(auto view : M_views){
+		view->update_line_data(i_line_id, i_line);
+	}
+}
+
+void J_UI_Model::add_ui_line(J_UI_Line_Shared_t i_line){
+	add_ui_object(i_line);
+	assert(!M_ui_lines.count(i_line->get_ID()));
+	M_ui_lines[i_line->get_ID()] = i_line;
+}
+
+void J_UI_Model::notify_letter_box_data(j_uint i_text_box_id, j_size_t i_index
+										,const Bitmap_Metrics& i_metrics
+										, const J_UI_Color& i_color
+										, const j_ubyte* i_data){
+	for(auto view : M_views){
+		view->update_letter_box_data(i_text_box_id, i_index, i_metrics, i_color, i_data);
+	}
+
+}
+
+void J_UI_Model::notify_text_string_size(j_uint i_obj_id, j_size_t i_size){
+	for(auto view : M_views){
+		view->update_text_string_size(i_obj_id, i_size);
+	}
+}
+
+void J_UI_Model::notify_letter_box_poses(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size, const Pen_Pos_FL_t* i_poses){
+	for(auto view : M_views){
+		view->update_letter_box_poses(i_text_box_id, i_pos, i_size, i_poses);
+	}
+}
+
+void J_UI_Model::notify_text_string_add(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size
+										, const Pen_Pos_FL_t* i_poses, Bitmap_Metrics** i_metrics
+										, const J_UI_Color& i_color
+										, const j_ubyte* const * i_datas){
+	for(auto view : M_views){
+		view->update_text_string_add(i_text_box_id, i_pos, i_size, i_poses, i_metrics
+									 , i_color, i_datas);
+	}
+}
+
+void J_UI_Model::notify_object_draw_position_before(j_uint i_object_id, j_uint i_before_id){
+	for(auto f_view : M_views){
+		f_view->position_before(i_object_id, i_before_id);
+	}
+}
+
+void J_UI_Model::notify_object_draw_position_after(j_uint i_object_id, j_uint i_after_id){
+	for(auto f_view : M_views){
+		f_view->position_after(i_object_id, i_after_id);
+	}
 }
 
 

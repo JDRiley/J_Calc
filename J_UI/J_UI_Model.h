@@ -29,29 +29,43 @@ public:
 	virtual void add_multi_state_text_box(Multi_State_Text_Box_Shared_t);
 	virtual void add_text_box_object(J_Text_Box_Object_Shared_t);
 	virtual void remove_text_box_object(j_uint);
+	virtual void remove_image_pane(j_uint i_obj_id);
+	virtual void remove_multi_state_text_box(j_uint i_obj_id);
 	virtual void add_box(J_UI_Box_Shared_t);
+	virtual void add_ui_line(J_UI_Line_Shared_t i_line);
 	virtual void add_image_pane(J_Image_Pane_Shared_t);
 	virtual void add_ui_object(J_UI_Object_Shared_t);
 	virtual void add_ui_circle(J_UI_Circle_Shared_t);
+	virtual void add_managed_display_object(j_uint i_obj_id, j_uint i_new_obj_id, UI_Object_Types i_obj_type);
+	virtual void remove_managed_display_object(j_uint i_obj_id, UI_Object_Types i_obj_type);
 	void notify_erase_chars(j_uint text_box_id, j_size_t pos, j_size_t size);
 	void notify_char_delete(j_uint text_box_id, j_size_t pos);
-	void notify_char_add(j_uint text_id, j_size_t pos, J_UI_Char i_char);
-	void notify_text_string(j_uint text_box_id, const J_UI_Multi_String&);
-	void notify_text_cursor(j_uint obj_id, j_size_t cursor_pos);
-	void notify_text_cursor_color(j_uint obj_id, J_Color_RGBA<j_float>);
-	void notify_text_cursor_move_up(j_uint i_obj_id, j_size_t i_move_val);
-	void notify_text_cursor_move_down(j_uint i_obj_id, j_size_t i_move_val);
-	void notify_text_cursor_to_line_begin(j_uint i_obj_id);
-	void notify_text_cursor_to_line_end(j_uint i_obj_id);
-	void notify_cursor_visibility_status(j_uint i_text_box_id, bool i_status);
+	void notify_char_add(j_uint text_id, j_size_t i_pos, const Pen_Pos_FL_t& i_pen_pos
+						 , const Bitmap_Metrics& i_metrics, const J_UI_Color& i_color
+						 , const j_ubyte* i_data);
+	void notify_letter_box_rectangle(j_uint i_text_box_id, j_size_t i_index
+									 , const Pen_Pos_FL_t& i_pen_pos, const Bitmap_Metrics& i_metrics);
 
+	void notify_text_string_add(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size, const Pen_Pos_FL_t* i_poses, Bitmap_Metrics** i_metrics, const J_UI_Color& i_color, const j_ubyte* const * i_datas);
+
+	void notify_letter_box_poses(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size
+								 , const Pen_Pos_FL_t* i_poses);
 	void notify_outline_visibility_status(j_uint obj_id, bool status);
 	void notify_fill_visibility_status(j_uint obj_id, bool status);
+	//
+	virtual void notify_text_string_size(j_uint i_obj_id, j_size_t i_size);
 
+	virtual void notify_object_draw_position_before(j_uint i_object_id, j_uint i_before_id);
+	virtual void notify_object_draw_position_after(j_uint i_object_id, j_uint i_after_id);
 	//Multi States
 	virtual void notify_multi_text_state(j_uint multi_state_text_id, j_size_t state);
 	virtual void notify_add_multi_text_state(j_uint);
+	virtual void notify_line_data(j_uint i_line_id, const J_Line& i_line);
 
+	virtual void notify_letter_box_data(j_uint i_text_box_id, j_size_t i_index 
+										,const Bitmap_Metrics& i_metrics
+										, const J_UI_Color& i_color
+										, const j_ubyte* i_data);
 
 	void notify_box_coordinates(j_uint i_obj_id, const J_Rectangle& i_rectangle);
 	void notify_fill_color(j_uint obj_id, const J_UI_Color& i_color);
@@ -85,7 +99,7 @@ public:
 	virtual void remove_ui_object(j_uint);
 
 	void notify_text_box_removal(j_uint);
-	void notify_ui_box_removal(j_uint);
+	void notify_ui_box_gone(j_uint);
 	void notify_ui_object_removal(j_uint);
 
 
@@ -118,6 +132,9 @@ private:
 	typedef std::map<j_uint, J_UI_Circle_Shared_t> J_UI_Circle_Cont_t;
 	J_UI_Circle_Cont_t M_ui_circles;
 
+	typedef std::map<j_uint, J_UI_Line_Shared_t> J_UI_Line_Cont_t;
+	J_UI_Line_Cont_t M_ui_lines;
+
 	typedef RB_Tree<J_View_Shared_t> J_View_Cont_t;
 	J_View_Cont_t M_views;
 
@@ -128,6 +145,7 @@ private:
 
 	typedef std::map<J_View_Shared_t, J_Cursor_Position_Shared_t> Cursor_Position_Cont_t;
 	Cursor_Position_Cont_t M_cursor_positions;
+
 
 
 	J_Frame_Counter_Shared_t M_frame_counter;

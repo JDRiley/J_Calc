@@ -131,7 +131,7 @@ typename std::enable_if<points_to_same_non_qualified_type<IterL, IterR>::value
 			static_cast<typename ptr_iterator<IterL, Container>::difference_type>(_i_lhs.base() - _i_rhs.base());
 }
 
-template<typename Iter, class Container, class Val_Type = J_Val_Type<typename Container::value_type>>
+template<typename Iter, class Val_Type, class Container>
 class node_iterator;
 
 template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>

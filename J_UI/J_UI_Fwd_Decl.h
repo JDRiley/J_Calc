@@ -19,12 +19,17 @@ typedef struct FT_LibraryRec_* FT_Library;
 #pragma comment(lib, "J_UI"J_LIB_APPEND)
 
 namespace jomike{
-
+enum class UI_Object_Types{
+	Line, Box, Text_Box_Object, Circle, Image_Pane, Multi_State_Text_Box
+};
 
 //copied from glfw change per library or build
 const int J_LEFT_MOUSE_BUTTON = 0;
 const int J_KEY_INTEGRAL = 105;
-
+J_STRUCT_FWD_DECL(Bitmap_Metrics)
+J_FWD_DECL(J_Display_Letter_Box)
+J_FWD_DECL(J_UI_Line)
+J_FWD_DECL(J_Line)
 J_FWD_DECL(J_Shape)
 J_FWD_DECL(J_Rectangle)
 J_FWD_DECL(J_View)
@@ -57,7 +62,9 @@ J_FWD_DECL(J_FT_Text_Display_Object)
 J_FWD_DECL(J_FT_Text_Multi_State_Display)
 J_FWD_DECL(J_UI_Object_Update_Callback)
 J_FWD_DECL(J_Cursor_Position)
-typedef struct J_Font_Face__* J_Font_Face;
+J_FWD_DECL(J_UI_Line)
+J_FWD_DECL(J_Display_Line)
+typedef class J_Font_Face__* J_Font_Face;
 
 typedef int j_key_id_t;
 #ifdef WIN32

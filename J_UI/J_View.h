@@ -31,32 +31,48 @@ public:
 	virtual void clear_window()const;
 	J_Context_Shared_t get_context();
 	j_window_t get_window()const;
+	virtual void add_display_line(j_uint i_line_id);
 	virtual void add_text_display(j_uint);
+	
 	virtual void add_display_box(j_uint);
 	virtual void add_image_pane(j_uint);
 	virtual void add_display_circle(j_uint);
 	virtual void add_multi_state_text_box(j_uint);
-
+	virtual void add_managed_display_object(j_uint i_obj_id, j_uint i_new_obj_id, UI_Object_Types i_obj_type);
+	virtual void remove_managed_display_object(j_uint i_obj_id, UI_Object_Types i_obj_type);
+	//
+	virtual void update_text_string_size(j_uint i_obj_id, j_size_t i_size);
 	virtual void resize(int width, int height);
 	virtual ~J_View();
 	virtual j_uint mouse_button_press(J_View_Shared_t, int button, int modifier, Pen_Pos_FL_t pos);
+	virtual j_uint mouse_button_press_n(J_View_Shared_t, int button
+										, int modifier, Pen_Pos_FL_t pos, int i_count);
 	virtual void mouse_button_release(J_View_Shared_t i_view, int i_button, int i_modifiers, Pen_Pos_FL_t i_pos);
 	virtual int get_x_resolution()const;
 	virtual int get_y_resolution()const;
 	virtual bool should_close()const;
-	virtual void set_text_string(j_uint i_text_box_id, const J_UI_Multi_String&);
-	virtual void set_text_cursor(j_uint i_text_box_id, j_uint cursor_pos);
-	virtual void set_text_cursor_line_pos_up(j_uint i_text_box_id, j_size_t i_move_val);
-	virtual void set_text_cursor_line_pos_down(j_uint i_text_box_id, j_size_t i_move_val);
-	virtual void set_text_cursor_line_begin(j_uint i_text_box_id);
-	virtual void set_text_cursor_line_end(j_uint i_text_box_id);
-	virtual void set_text_cursor_color(j_uint i_text_box_id, J_Color_RGBA<j_float>);
-	virtual void set_cursor_visibility_status(j_uint i_text_box_id, bool i_status);
+	void subscribe_cursor_updates(j_uint i_obj_id);
+	virtual void update_letter_box_rectangle(j_uint i_text_box_id, j_size_t i_index
+											 , const Pen_Pos_FL_t& i_rec
+											 , const Bitmap_Metrics& i_metrics);
+	virtual void update_letter_box_data(j_uint i_text_box_id, j_size_t i_index
+										, const Bitmap_Metrics& i_metrics
+										, const J_UI_Color& i_color
+										, const j_ubyte* i_data);
+
+
+	virtual void update_letter_box_poses(j_uint i_text_box_id, j_size_t i_pos
+										 , j_size_t i_size
+										 , const Pen_Pos_FL_t* i_poses);
+
+	virtual void update_text_string_add(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size, const Pen_Pos_FL_t* i_poses, Bitmap_Metrics** i_metrics, const J_UI_Color& i_color, const j_ubyte* const * i_datas);
 	virtual void set_clickable_status(j_uint i_obj_id, bool i_status);
 	virtual void delete_char(j_uint text_box_id, j_size_t pos);
 	virtual void erase_chars(j_uint text_box_id, j_size_t pos, j_size_t size);
-	virtual void insert_char(j_uint text_box_it, j_size_t pos, J_UI_Char i_char);
-	virtual void insert_chars(j_uint text_box_it, j_size_t pos, const J_UI_String&);
+	virtual void insert_char(j_uint i_text_box_id, j_size_t i_pos, const Pen_Pos_FL_t& i_pen_pos
+							 , const Bitmap_Metrics& i_metrics, const J_UI_Color& i_color
+							 , const j_ubyte* i_data);
+	
 	virtual bool is_visible()const;
 	virtual void set_cursor_pos(int,int);
 	virtual void set_fill_visibility(j_uint i_disp_obj, bool status);
@@ -67,6 +83,9 @@ public:
 	virtual void update_fill_color(j_uint, J_Color_RGBA<j_float>);
 	virtual void update_outline_color(j_uint, J_Color_RGBA<j_float> );
 	virtual void update_outline_thickness(j_uint, j_float);
+
+	//Line
+	virtual void update_line_data(j_uint i_obj_id, const J_Line& i_line);
 
 	//circle
 	virtual void update_circle_shape_data(j_uint i_circle_id, const J_Circle&);
@@ -86,11 +105,16 @@ public:
 	virtual void update_add_multi_text_state(j_uint i_multi_text_state_id);
 	virtual void update_multi_text_state(j_uint i_multi_state_text_id, j_size_t i_state);
 
-	virtual void remove_text_box(j_uint i_obj_id);
+	virtual void remove_text_display(j_uint i_obj_id);
 	virtual void remove_display_box(j_uint i_obj_id);
 	virtual void remove_display_object(j_uint i_obj_id);
-
-	virtual void notify_cursor_pos(Pen_Pos_FL_t);
+	virtual void remove_display_circle(j_uint i_obj_id);
+	virtual void remove_image_pane(j_uint i_obj_id);
+	virtual void remove_multi_state_text_box(j_uint i_obj_id);
+	virtual void remove_display_line(j_uint i_line_id);
+	virtual void position_after(j_uint i_front_pos_id, j_uint i_after_pos_id);
+	virtual void position_before(j_uint i_front_pos_id, j_uint i_before_pos_id);
+	bool is_display_object_present(j_uint i_obj_id)const;
 
 	virtual void clear();
 protected:
@@ -103,18 +127,26 @@ protected:
 	J_Display_Image_Pane_Shared_t get_image_pane(j_uint);
 	J_Display_Circle_Shared_t get_display_circle(j_uint i_obj_id);
 	J_FT_Text_Multi_State_Display_Shared_t get_multi_state_text_display(j_uint i_obj_id);
+	J_Display_Line_Shared_t get_display_line(j_uint i_obj_id);
+
 private:
 	j_int M_view_id;
 	J_Context_Shared_t M_context;
 
-	unsigned M_background_program_id;
 	
+	static std::map<UI_Object_Types, void(J_View::*)(j_uint)> Ms_add_object_functions;
+	static std::map<UI_Object_Types, void(J_View::*)(j_uint)> Ms_remove_object_functions;
+
 	std::map<j_uint, J_Display_Object_Shared_t> M_disp_objs_by_id;
 	std::map<j_uint, J_Display_Box_Shared_t> M_disp_boxes;
 	std::map<j_uint, J_FT_Text_Display_Object_Shared_t> M_text_displays;
 	std::map<j_uint, J_Display_Image_Pane_Shared_t> M_image_panes;
 	std::map<j_uint, J_Display_Circle_Shared_t> M_display_circles;
 	std::map<j_uint, J_FT_Text_Multi_State_Display_Shared_t> M_multi_state_text_boxes;
+	std::map<j_uint, J_Display_Line_Shared_t> M_display_lines;
+
+	RB_Tree<J_Display_Object_Weak_t,J_Display_Object_Weak_t
+		, std::owner_less<J_Display_Object_Weak_t>> M_objects_using_cursor_data;
 
 	virtual void add_text_display(J_FT_Text_Display_Object_Shared_t);
 	virtual void add_display_object(J_Display_Object_Shared_t);
@@ -135,7 +167,7 @@ private:
 	Pen_Pos_FL_t M_cursor_pos;
 
 
-
+	
 	void draw_background()const;
 };
 

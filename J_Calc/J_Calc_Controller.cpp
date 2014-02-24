@@ -25,7 +25,8 @@
 #include <J_UI/J_Font_Manager.h>
 //
 #include "Math_Input_Box.h"
-
+//
+#include <J_UI/J_Font_Face.h>
 
 //Algorithms
 #include <algorithm>
@@ -37,7 +38,7 @@ using std::lower_bound; using std::mem_fn;using std::ref;
 using namespace std::placeholders;
 
 //Containers
-using std::map; using std::vector;
+using std::map;
 
 
 //Facilities
@@ -86,7 +87,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	J_Calc_View_Shared_t new_view(new J_Calc_View(1400, 800, "J_Calc"));
 	M_main_view = new_view;
 	add_view(M_main_view);
-
+	M_main_view->make_active_context();
 
 	initialize_font_faces();
 
@@ -96,12 +97,14 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	);
 
 	add_math_text_box(main_text_box_ptr, M_main_view);
+	main_text_box_ptr->enable_blinking_cursor();
 	main_text_box_ptr->set_clickable_status(true);
 	main_text_box_ptr->set_read_only_status(false);
 	main_text_box_ptr->set_outline_and_fill_visibility_status(true);
+
 	main_text_box_ptr->set_colors(J_WHITE, J_CLEAR, J_CYAN);
 
-	main_text_box_ptr->enable_blinking_cursor();
+	M_main_view->subscribe_cursor_updates(main_text_box_ptr->get_ID());
 	main_text_box_ptr->set_cursor_pos(0);
 	J_Text_Box_Shared_t cursor_pos_box(
 			new J_Text_Box(J_Rectangle(0.50f, -1.0f, 0.50f, 0.1f)
@@ -156,13 +159,15 @@ void J_Calc_Controller::initialize_font_faces(){
 
 void J_Calc_Controller::execute(){
 	M_main_view->open_window();
-	draw_views();
+	
 #ifdef _DEBUG
 	run_script("test_script.jcs");
+	
 #else
 	run_script("test_script.jcs");
 #endif
-	j_block_execution(50);
+	draw_views();
+	j_block_execution(10);
 
 
 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
@@ -305,9 +310,10 @@ void scroll_callback(j_window_t i_window, j_dbl i_x_scroll, j_dbl i_y_scroll){
 	
 	int num_scrolls = abs(static_cast<int>(i_y_scroll));
 	int modifiers = s_controller->current_key_modifiers();
-	for(int i = 0; i < num_scrolls; i++){
-		s_controller->mouse_button_cmd(i_window, wheel_button_key, J_PRESS
-									   , modifiers);
+	if(num_scrolls > 1){
+		s_controller->mouse_button_cmd_n(i_window, wheel_button_key, J_PRESS, modifiers, num_scrolls);
+	} else{
+		s_controller->mouse_button_cmd(i_window, wheel_button_key, J_PRESS, modifiers);
 	}
 }
 

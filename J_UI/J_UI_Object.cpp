@@ -59,6 +59,16 @@ void J_UI_Object::mouse_button_press(int i_key, int i_modifiers, Pen_Pos_FL_t i_
 	M_mouse_press_callback(shared_from_this(), i_key, i_modifiers, i_pen_pos);
 }
 
+void J_UI_Object::mouse_button_press_n(int i_key, int i_modifiers
+									   , Pen_Pos_FL_t i_pen_pos, int i_count){
+	if(!M_mouse_press_callback){
+		return;
+	}
+	for(int i = 0; i < i_count; i++){
+		M_mouse_press_callback(shared_from_this(), i_key, i_modifiers, i_pen_pos);
+	}
+}
+
 void J_UI_Object::mouse_button_release(int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos){
 	if(!M_mouse_release_callback){
 		return;
@@ -95,7 +105,7 @@ void J_UI_Object::add_update_callback(J_UI_Object_Update_Callback_Shared_t i_cal
 
 void J_UI_Object::update(){
 	for(auto f_updater : M_update_callbacks){
-		f_updater->operator()(shared_from_this());
+		(*f_updater)(shared_from_this());
 	}
 }
 
@@ -112,6 +122,10 @@ bool J_UI_Object::focus_status()const{
 
 void J_UI_Object::add_focus_callback(Focus_Callback_Func_t i_callback){
 	M_focus_callbacks.push_back(i_callback);
+}
+
+void J_UI_Object::alert_cursor_pos(Pen_Pos_FL_t){
+
 }
 
 J_UI_Outline_Fill_Management::J_UI_Outline_Fill_Management(j_uint i_id):M_ID(i_id){}

@@ -16,6 +16,8 @@ public:
 	St& first();
 	St& second();
 
+	j_size_t diff_size()const;
+
 	const St& first()const;
 	const St& second()const;
 
@@ -24,10 +26,15 @@ public:
 
 private:
 	St M_datums_unordered[2];
-	St* M_first, M_second;
+	St* M_first, * M_second;
 
 	void set_pointers();
 };
+
+template<typename St, typename Comp_t /*= std::less<St>*/>
+j_size_t ordered_pair<St, Comp_t>::diff_size()const{
+	return second() - first();
+}
 
 template<typename St, typename Comp_t /*= std::less<St>*/>
 ordered_pair<St, Comp_t>::ordered_pair(){

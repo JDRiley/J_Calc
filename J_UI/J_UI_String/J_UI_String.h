@@ -155,6 +155,8 @@ public:
 
 	void white_space_normalize();
 
+	ex_array<Bitmap_Metrics*> metrics_array()const;
+	ex_array<const j_ubyte*> bitmap_data_array()const;
 private:
 	const static j_dbl S_DEFAULT_FRONT_BUFFER_RATIO;
 	J_UI_Char_Arr_t M_UI_Chars;
@@ -219,8 +221,8 @@ public:
 	J_UI_Multi_String& operator=(J_UI_Multi_String&&);
 
 	void swap(J_UI_Multi_String&);
-
-
+	const Bitmap_Metrics& bitmap_metric(j_size_t i_index)const;
+	int new_line_size()const;
 	void resize(j_size_t);
 	J_UI_Multi_String substr(j_size_t pos, j_size_t end = j_npos)const;
 
@@ -276,7 +278,7 @@ public:
 	typedef J_UI_String_Arr_t::iterator iterator;
 	typedef J_UI_String_Arr_t::const_iterator const_iterator;
 
-	j_uint texture_id_at_index(j_size_t index)const;
+
 
 	J_UI_Multi_String::const_iterator get_string_holding_index(j_size_t i_index)const;
 	J_UI_Multi_String::iterator get_string_holding_index(j_size_t i_index);
@@ -285,8 +287,8 @@ public:
 	J_UI_String::iterator at_pos(j_size_t);
 
 	//Accessors
-	J_UI_Char& operator[](j_size_t);
-	J_UI_Char operator[](j_size_t)const;
+	J_UI_Char& operator[](j_size_t i_index);
+	const J_UI_Char& operator[](j_size_t i_index)const;
 
 	J_UI_String& front();
 	const J_UI_String& front()const;
@@ -349,8 +351,11 @@ public:
 	char_const_iterator const_char_end()const;
 
 	bool operator<(const J_UI_Multi_String&)const;
+	std::pair<J_UI_String::const_iterator, J_UI_Multi_String::const_iterator> 
+		get_insert_pos(j_size_t i_index)const;
+
 	std::pair<J_UI_String::iterator, J_UI_Multi_String::iterator>
-		get_insert_pos(j_size_t i_index);
+		J_UI_Multi_String::get_insert_pos(j_size_t i_index);
 private:
 	J_UI_String_Arr_t M_strings;
 };

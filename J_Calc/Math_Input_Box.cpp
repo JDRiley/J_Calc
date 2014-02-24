@@ -11,6 +11,7 @@ using namespace std::placeholders; using std::dynamic_pointer_cast;
 
 //Utilities
 #include <cassert>
+//
 #include <vector>
 
 namespace jomike{
@@ -24,9 +25,9 @@ const char* DEFAULT_INPUT_STRING = "{}";
 
 //Constructors--------------------------------------------------
 Math_Input_Box::Math_Input_Box(const J_Rectangle& irk_rectangle
-	, const J_UI_Multi_String& irk_string):J_Text_Box(irk_rectangle, irk_string + DEFAULT_INPUT_STRING)
+	, const J_UI_Multi_String& irk_string):J_Text_Box(irk_rectangle, irk_string)
 	, M_line_inputs(1, Line_Input(0)){
-
+	insert_string_silent(0, irk_string.front() + DEFAULT_INPUT_STRING);
 	M_line_inputs.front().set_input_str(irk_string.std_str());
 	set_key_input_command(math_key_input_cmd);
 	set_char_input_command(math_box_char_input_cmd);

@@ -6,7 +6,7 @@
 
 
 namespace jtl = jomike;
-#if RELEASE_BUILD
+#if 0//RELEASE_BUILD
 
 int wWinMain(HINSTANCE , HINSTANCE , PTSTR  , int ){
 	int argc = 0;

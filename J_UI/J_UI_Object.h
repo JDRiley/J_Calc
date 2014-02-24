@@ -76,6 +76,7 @@ public:
 #if VS_2013
 	J_UI_Object& operator=(const J_UI_Object&) = delete;
 #endif
+	virtual void alert_cursor_pos(Pen_Pos_FL_t);
 	virtual void set_left_click_on();
 	virtual void set_left_click_off();
 	bool clickable_status()const;
@@ -83,6 +84,7 @@ public:
 	virtual void key_input_cmd(j_window_t, int charcode, int scancode, int action, int modifier);
 	virtual void char_input_cmd(j_window_t, int /*charcode*/){}
 	virtual void mouse_button_press(int,int, Pen_Pos_FL_t);
+	virtual void mouse_button_press_n(int, int, Pen_Pos_FL_t, int);
 	virtual void mouse_button_release(int,int, Pen_Pos_FL_t);
 	virtual void set_mouse_button_press_callback(Mouse_Press_Func_t);
 	virtual void set_mouse_button_release_callback(Mouse_Press_Func_t);

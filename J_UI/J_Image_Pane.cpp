@@ -64,11 +64,6 @@ Image_Format J_Image_Pane::input_format()const{
 	return M_format;
 }
 
-void J_Image_Pane::set_middle_line_color(J_UI_Color i_color){
-	M_middle_line_color = i_color;
-	s_model->notify_middle_line_color(get_ID(), M_middle_line_color);
-}
-
 
 
 }

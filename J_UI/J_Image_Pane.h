@@ -25,7 +25,6 @@ public:
 	void broadcast_current_state()const override;
 private:
 	Image_Format M_format;
-	J_UI_Color M_middle_line_color;
 	int M_width;
 	int M_height;
 };

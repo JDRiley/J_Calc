@@ -52,40 +52,10 @@ private:
 
 
 
-class J_FT_Char_Load_Error : public J_Error{
-public:
-	J_FT_Char_Load_Error(const char* const ik_message, j_ulint i_charcode
-		, int i_loadflag): J_Error(ik_message), M_charcode(i_charcode)
-		, M_load_flag(i_loadflag){}
-private:
-	j_ulint M_charcode;
-	int M_load_flag;
-
-};
-
-struct Bitmap_Metrics{
-	int width;
-	int height;
-	int left;
-	int underreach;
-	int advance_x;
-	int advance_y;
-	int new_line_size;
-	Bitmap_Metrics(int width, int height, int left, int underreach
-		, int advance_x, int advance_y);
-};
 
 
-struct J_Font_Face__{
-	int tab_distance;
-	int new_line_size;
-	ex_array<j_uint> M_texture_ids;
-	ex_array<Bitmap_Metrics> M_bitmap_metrics;
-	J_Font_Face__(J_Context_Shared_t i_context
-		, FT_Face i_face, int i_font_size, int i_render_mode);
-	~J_Font_Face__();
 
-};
+
 
 class J_FT_Init_Error : public J_Init_Error{
 public:

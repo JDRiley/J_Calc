@@ -2,10 +2,12 @@
 #define J_SHADER_PROGRAM_H
 
 #include "J_OpenGL_Fwd_Decl.h"
+//
 #include <J_Image.h>
-
+//
+#include <string>
 namespace jomike{
-
+const std::string SHADER_BASE_PATH = "J:/JoMike Library/J_OpenGl/Shaders/";
 /*j_uint load_vertex_shader*/
 /*
 	Loads a vertex shader and returns It's id.
@@ -83,6 +85,8 @@ private:
 	j_uint M_image_program_id, M_vert_shader_id, M_image_frag_id;
 	Image_Format M_format;
 };
+
+
 
 class J_GL_Circle_Shader : public J_GL_Shader_Program{
 public:

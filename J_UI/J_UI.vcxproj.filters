@@ -72,6 +72,27 @@
     <ClInclude Include="j_cursor_management.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_FT_Text_Displayer\Letter_Box_String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_FT_Text_Displayer\J_Display_Letter_Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_UI_Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Font_Face.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitmap_Metrics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Display_Object\J_Display_Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_FT_Text_Displayer\Multi_State_Text_Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_UI_Controller.cpp">
@@ -126,6 +147,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_cursor_management.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_FT_Text_Displayer\Letter_Box_String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_FT_Text_Displayer\J_Display_Letter_Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Font_Face.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bitmap_Metrics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Display_Object\J_Display_Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_UI_Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_FT_Text_Displayer\Multi_State_Text_Box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

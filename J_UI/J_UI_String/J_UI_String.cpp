@@ -2,6 +2,8 @@
 #include <J_String.h>
 #include <j_type.h>
 #include "../J_Font_Manager.h"
+//
+#include "../J_Font_Face.h"
 
 //Algorithm
 #include <algorithm>
@@ -12,6 +14,8 @@ using namespace std::placeholders;
 
 //Container
 using std::string; 
+
+using std::max_element;
 
 //IO Facilities
 #include <iostream>
@@ -36,6 +40,7 @@ static Instance_Pointer<J_Font_Manager> s_font_manager;
 const j_dbl J_UI_String::S_DEFAULT_FRONT_BUFFER_RATIO = 0.1;
 const J_Color_RGBA<j_float> DEFAULT_FONT_COLOR = J_Color::Black;
 const int DEFAULT_FONT_SIZE = 12;
+
 //Constructors
 
 /*
@@ -396,9 +401,6 @@ J_UI_Multi_String::J_UI_Multi_String(J_UI_Multi_String&& irr_source){
 	M_strings.swap(irr_source.M_strings);
 }
 
-j_uint J_UI_Multi_String::texture_id_at_index(j_size_t i_index)const{
-	return get_string_holding_index(i_index)->font_face()->M_texture_ids[at_pos(i_index)->charcode()];
-}
 
 J_UI_Multi_String::const_iterator J_UI_Multi_String::get_string_holding_index(j_size_t i_index)const{
 	j_size_t cur_size = 0;
@@ -477,8 +479,8 @@ J_UI_String::iterator J_UI_Multi_String::at_pos(j_size_t i_index){
 }
 
 
-pair<J_UI_String::iterator, J_UI_Multi_String::iterator>
-	J_UI_Multi_String::get_insert_pos(j_size_t i_index){
+std::pair<J_UI_String::const_iterator, J_UI_Multi_String::const_iterator> 
+	J_UI_Multi_String::get_insert_pos(j_size_t i_index)const{
 	j_size_t cur_size = 0;
 	auto string_it = M_strings.begin();
 
@@ -493,6 +495,25 @@ pair<J_UI_String::iterator, J_UI_Multi_String::iterator>
 
 	return make_pair(string_it->begin() + (i_index - cur_size), string_it);
 }
+
+
+std::pair<J_UI_String::iterator, J_UI_Multi_String::iterator>
+J_UI_Multi_String::get_insert_pos(j_size_t i_index){
+	j_size_t cur_size = 0;
+	auto string_it = M_strings.begin();
+
+	assert(i_index <= size());
+	assert(!M_strings.empty());
+
+	auto string_end_it = M_strings.end();
+	while((string_it != string_end_it) && ((cur_size + string_it->size()) < i_index)){
+		cur_size += string_it->size();
+		++string_it;
+	}
+
+	return make_pair(string_it->begin() + (i_index - cur_size), string_it);
+}
+
 
 J_UI_Multi_String::j_ui_char_iterator J_UI_Multi_String::insert
 	(j_size_t i_pos, J_UI_Char i_char){
@@ -539,8 +560,14 @@ void J_UI_Multi_String::resize(j_size_t i_size){
 	}
 }
 
-J_UI_Char J_UI_Multi_String::operator[](j_size_t i_pos)const{
-	return *at_pos(i_pos);
+
+
+J_UI_Char& J_UI_Multi_String::operator[](j_size_t i_index){
+	return *at_pos(i_index);
+}
+
+const J_UI_Char& J_UI_Multi_String::operator[](j_size_t i_index)const{
+	return *at_pos(i_index);
 }
 
 J_UI_String& J_UI_Multi_String::back(){
@@ -635,6 +662,22 @@ J_UI_String& J_UI_String::operator+=(const char* irk_string){
 	return *this;
 }
 
+ex_array<Bitmap_Metrics*> J_UI_String::metrics_array()const{
+	ex_array<Bitmap_Metrics*> the_metrics_array;
+	for(auto f_char : *this){
+		the_metrics_array.push_back(&font_face()->bitmap_metric(f_char.charcode()));
+	}
+	return the_metrics_array;
+}
+
+ex_array<const j_ubyte*> J_UI_String::bitmap_data_array()const{
+	ex_array<const j_ubyte*> the_bitmap_data_array;
+	for(auto f_char : *this){
+		the_bitmap_data_array.emplace_back(font_face()->get_data(f_char.charcode()));
+	}
+	return the_bitmap_data_array;
+}
+
 
 j_dbl read_double_and_advance(J_UI_String::const_iterator* i_string_pos, ptrdiff_t i_max_len){
 	auto string_pos = *i_string_pos;
@@ -677,6 +720,22 @@ J_UI_Multi_String J_UI_Multi_String::operator+(const char* irk_string)const{
 	J_UI_Multi_String new_string(*this);
 	new_string.M_strings.back() += irk_string;
 	return new_string;
+}
+
+int J_UI_Multi_String::new_line_size()const{
+	if(M_strings.empty()){
+		return 0;
+	}
+	return max_element(begin(), end()
+					   , [](const J_UI_String& yrk_left, const J_UI_String& yrk_right){
+		return (yrk_left.font_face()->new_line_size()
+				< yrk_right.font_face()->new_line_size());
+	})->font_face()->new_line_size();
+}
+
+const Bitmap_Metrics& J_UI_Multi_String::bitmap_metric(j_size_t i_index)const{
+	auto found_pos = get_insert_pos(i_index);
+	return found_pos.second->font_face()->bitmap_metric(found_pos.first->charcode());
 }
 
 }// namespace jomike

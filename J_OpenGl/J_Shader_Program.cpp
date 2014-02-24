@@ -12,7 +12,7 @@ using std::string;
 namespace jomike{
 //J_GL_Shader_Program Functions *************************************************************
 
-const string SHADER_BASE_PATH = "J:/JoMike Library/J_OpenGl/Shaders/";
+
 
 J_GL_Box_Shader::J_GL_Box_Shader(){
 	j_uint vert_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");

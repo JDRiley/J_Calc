@@ -82,8 +82,8 @@ void J_Display_Box::set_box(j_float i_x1, j_float i_x2, j_float i_y1, j_float i_
 	gen_vaos();
 }
 
-void J_Display_Box::set_box(const J_Rectangle& i_rectangle){
-	set_rectangle(i_rectangle);
+void J_Display_Box::set_rectangle(const J_Rectangle& i_rectangle){
+	J_Rectangle::set_rectangle(i_rectangle);
 	gen_vaos();
 }
 

@@ -63,8 +63,8 @@ public:
 	void set_outline_color(const J_UI_Color& i_color)override;
 	void alert_resize(int,int)override{}
 
-	void set_box(const J_Rectangle&)override;
 
+	void set_rectangle(const J_Rectangle& i_rectangle)override;
 	void set_x(j_float)override;
 	void set_y(j_float)override;
 	void set_width(j_float)override;

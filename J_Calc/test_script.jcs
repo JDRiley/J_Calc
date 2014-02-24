@@ -1,4 +1,5 @@
-mouse_press -0.934 0.717
+mouse_press -0.934 0.737
+mouse_release -0.934 0.737
 char_press Dbl outside;
 char_press 
 [Dbl count = -1, [] jitter[]->[Dbl void]{<-count:}] 
