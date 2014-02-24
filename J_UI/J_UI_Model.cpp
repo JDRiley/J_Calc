@@ -68,8 +68,8 @@ J_UI_Model::J_UI_Model(): M_frame_counter(new J_Frame_Counter(MODEL_FRAME_COUNTE
 
 void J_UI_Model::update(){
 	M_time = j_get_time();
-	for_each(make_pair_iter(M_ui_objects.begin())
-		,make_pair_iter(M_ui_objects.end())
+	for_each(M_ui_objects.begin()
+		,M_ui_objects.end()
 		, mem_fn(&J_UI_Object::update));
 	assert(M_frame_counter);
 	M_frame_counter->count_frame();
@@ -113,7 +113,8 @@ void J_UI_Model::add_image_pane(J_Image_Pane_Shared_t i_image_pane_ptr){
 
 	assert(!M_image_panes.count(i_image_pane_ptr->get_ID()));
 	M_image_panes[i_image_pane_ptr->get_ID()] = i_image_pane_ptr;
-
+	
+	
 }
 
 
@@ -316,7 +317,7 @@ void J_UI_Model::notify_clickable_status(j_uint i_obj_id, bool i_status){
 
 void J_UI_Model::broadcast_current_state()const{
 	for(auto obj_pair : M_ui_objects){
-		obj_pair.second->broadcast_current_state();	
+		obj_pair->broadcast_current_state();	
 	}
 }
 

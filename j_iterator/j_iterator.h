@@ -134,11 +134,17 @@ typename std::enable_if<points_to_same_non_qualified_type<IterL, IterR>::value
 template<typename Iter, class Val_Type, class Container>
 class node_iterator;
 
-template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
+//template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
+//typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
+//	, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type
+//	operator!=(const node_iterator<Iter, Val_TypeL, Container>& _lhs
+//				, const node_iterator<Iter, Val_TypeR, Container>& _rhs);
+
+template<typename Iter, typename Val_TypeL, typename Val_TypeR, typename Container>
 typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
 	, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type
 	operator!=(const node_iterator<Iter, Val_TypeL, Container>& _lhs
-				, const node_iterator<Iter, Val_TypeR, Container>& _rhs);
+	, const node_iterator<Iter, Val_TypeR, Container>& _rhs);
 
 template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
 typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
@@ -151,8 +157,9 @@ class node_iterator{
 public:
 	typedef typename Container::allocator_type::template rebind<Val_t>::other Val_Types;
 
-	typedef	node_iterator<Iter, Val_t, Container>	this_type;
-
+	typedef	node_iterator this_type;
+	typedef Iter iter_type;
+	typedef Container Cont_t;
 	typedef std::bidirectional_iterator_tag		iterator_category;
 	
 	typedef typename Val_t						value_type;
@@ -183,11 +190,21 @@ private:
 	friend class node_iterator<Iter, typename std::add_const<Val_t>::type, Container>;
 	friend class node_iterator<Iter, typename std::remove_const<Val_t>::type, Container>;
 
-	template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
+
+
+	friend Container;
+
+	//template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
+	//friend typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
+	//, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type 
+	//	operator!=(const node_iterator<Iter, Val_TypeL, Container>& _lhs
+	//, const node_iterator<Iter, Val_TypeR, Container>& _rhs);
+
+	template<typename Iter, typename Val_TypeL, typename Val_TypeR, typename Container>
 	friend typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
-	, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type 
-		operator!=(const node_iterator<Iter, Val_TypeL, Container>& _lhs
-	, const node_iterator<Iter, Val_TypeR, Container>& _rhs);
+		, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type
+		operator!=<iter_type, Val_TypeL, Val_TypeR, Cont_t>(const node_iterator<Iter, Val_TypeL, Container>& _lhs
+						   , const node_iterator<Iter, Val_TypeR, Container>& _rhs);
 
 	template<typename Iter, class Val_TypeL, class Val_TypeR, class Container>
 	friend typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type

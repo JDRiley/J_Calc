@@ -40,16 +40,18 @@ public:
 	typedef	const St*	const_pointer;
 	typedef Alloc_t allocator_type;
 
-	typedef node_iterator<typename RB_Tree<St, Key, Comp_t>::Node_t*, St, RB_Tree<St, Key, Comp_t>>
+	typedef RB_Tree this_type;
+
+	typedef node_iterator<typename this_type::Node_t*, St, this_type>
 		iterator;
 
-	typedef node_iterator<typename RB_Tree<St, Key, Comp_t>::Node_t*, const St, RB_Tree<St, Key, Comp_t>>
+	typedef node_iterator<typename this_type::Node_t*, const St, this_type>
 		const_iterator;
 
 	friend class iterator;
-	void erase(const Key&);
-	void erase(const_iterator i_pos);
-	void erase(const_iterator i_pos, const_iterator i_end);
+	j_size_t erase(const Key&);
+	iterator erase(const_iterator i_pos);
+	iterator erase(const_iterator i_pos, const_iterator i_end);
 	bool valid(){return false;}
 	void in_order_walk(std::ostream&);
 	/*Rotate Right Public*/
@@ -101,6 +103,8 @@ public:
 
 	const_iterator begin()const{return minimum();}
 	const_iterator end()const{return const_iterator(nullptr);}
+	const_iterator cbegin()const{ return const_iterator(minimum()); }
+	const_iterator cend()const{ return const_iterator(nullptr); }
 
 	iterator find(const Key& _ik_key);
 	const_iterator find(const Key& _ik_key)const;
@@ -487,17 +491,22 @@ void RB_Tree<St, Key, Comp_t, Alloc_t>::rb_transplant(Node_t* i_top_node, Node_t
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const Key& i_key){
+j_size_t RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const Key& i_key){
 	const_iterator pos = find(i_key);
-	assert(end() != pos);
+	if(end() == pos){
+		return 0;
+	}
 	erase(pos);
+	return 1;
 }
 
 /*Erase*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const_iterator i_pos){
-	Node_t* cur_node = find_node(*i_pos);
+typename RB_Tree<St, Key, Comp_t, Alloc_t>::iterator RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const_iterator i_pos){
+
+	Node_t* cur_node = i_pos.base();
 	assert(cur_node);
+	iterator iterator_to_return = ++iterator(cur_node);
 	Node_t* node_to_delete = cur_node;
 	Node_t* trailing_node = cur_node;
 	assert(trailing_node);
@@ -566,6 +575,23 @@ void RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const_iterator i_pos){
 	print_output();
 	--M_size;
 	//assert(proper_rb_tree());
+	return iterator_to_return;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+typename RB_Tree<St, Key, Comp_t, Alloc_t>::iterator RB_Tree<St, Key, Comp_t, Alloc_t>::erase(
+	const_iterator i_pos, const_iterator i_end_pos){
+	iterator iterator_to_return
+		= end() == i_end_pos ? end() : ++iterator(find_node(i_end_pos));
+
+	while(i_pos != i_end_pos){
+		i_pos = erase(i_pos);
+	}
+
+
+	return iterator_to_return;
+
+
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
@@ -832,7 +858,8 @@ typename RB_Tree<St, Key, Comp_t, Alloc_t>::const_iterator RB_Tree<St, Key, Comp
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-typename RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* RB_Tree<St, Key, Comp_t, Alloc_t>::find_node(const Key& irk_key)const{
+typename RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* RB_Tree<St, Key, Comp_t, Alloc_t>
+	::find_node(const Key& irk_key)const{
 	Node_t* cur_node = M_root;
 	while(cur_node && !equal(cur_node->data, irk_key)){
 		if(M_comp(irk_key, cur_node->data)){

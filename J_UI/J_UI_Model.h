@@ -9,6 +9,8 @@
 #include <J_Utile.h>
 #include <J_UI/J_UI_String.h>
 #include <RB_Tree.h>
+//
+#include <j_map.h>
 //Containers
 #include <map>
 
@@ -118,7 +120,7 @@ private:
 	
 	friend class Instance_Pointer<J_UI_Model>;
 
-	typedef std::map<j_uint, J_UI_Object_Shared_t> UI_Obj_Cont_t;
+	typedef j_map<j_uint, J_UI_Object_Shared_t> UI_Obj_Cont_t;
 	UI_Obj_Cont_t M_ui_objects;
 	typedef std::map<j_uint, J_Text_Box_Object_Shared_t> Text_Box_Cont_t;
 	Text_Box_Cont_t M_text_boxes;
