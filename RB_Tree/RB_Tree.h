@@ -19,11 +19,16 @@ namespace jomike{
 const char* const UNDEFINED_OPERATION = "Undefined Operation: ";
 class Bad_Tree_Op: public J_Error{
 	std::string M_message;
+
 public:
 	Bad_Tree_Op(const char* const ik_message = ""):J_Error(ik_message)
 		, M_message("###BAD_TREE_OPERATION###! ->" ){
 		M_message.append(ik_message);
 	};
+
+	const std::string& what(){
+		return M_message;
+	}
 };
 
 template<typename St, typename Key = St, class Comp_t = std::less<Key>, class Alloc_t = std::allocator<St>>
@@ -33,13 +38,12 @@ private:
 	typedef RB_Node__ Node_t;
 public:
 	typedef	St			value_type;
-	typedef	ptrdiff_t	difference_type;
+	typedef	std::ptrdiff_t	difference_type;
 	typedef	St& 		reference;
 	typedef const St&	const_reference;
 	typedef	St*  		pointer;
 	typedef	const St*	const_pointer;
 	typedef Alloc_t allocator_type;
-
 	typedef RB_Tree this_type;
 
 	typedef node_iterator<typename this_type::Node_t*, St, this_type>
@@ -48,7 +52,7 @@ public:
 	typedef node_iterator<typename this_type::Node_t*, const St, this_type>
 		const_iterator;
 
-	friend class iterator;
+
 	j_size_t erase(const Key&);
 	iterator erase(const_iterator i_pos);
 	iterator erase(const_iterator i_pos, const_iterator i_end);
@@ -59,7 +63,7 @@ public:
 		try{
 		rotate_right(pos.M_pos);
 		}catch(Bad_Tree_Op& e){
-			cerr << e.what() << std::endl;
+			std::cerr << e.what() << std::endl;
 		}
 	}
 	/*Rotate Left Public*/
@@ -67,7 +71,7 @@ public:
 		try{
 		rotate_left(pos.M_pos);
 		}catch(Bad_Tree_Op& e){
-			cerr << e.what();
+			std::cerr << e.what();
 		}
 	}
 	void color_red(iterator pos){
@@ -128,21 +132,33 @@ public:
 	bool count(const Key&)const;
 	/*Constructors*/
 	template<typename iter>
-	RB_Tree(iter, iter);
+	RB_Tree(iter i_pos, iter i_last):RB_Tree(){
+		while(i_pos != i_last){
+			insert(*i_pos++);
+		}
+	}
 	RB_Tree(const RB_Tree&);
-	RB_Tree(RB_Tree&&);
+	RB_Tree(RB_Tree&& irr_right);
 	RB_Tree();
+
+	RB_Tree(const std::initializer_list<St>& irk_list)
+		:RB_Tree(irk_list.begin(), irk_list.end()){}
 	/*Assignment*/
 	RB_Tree& operator=(const RB_Tree& irk_src){
 		RB_Tree temp(irk_src);
 		RB_Tree::swap(temp);
 		return *this;
 	}
+
+	RB_Tree& operator=(RB_Tree&& irr_src){
+		RB_Tree::swap(irr_src);
+		return *this;
+	}
 	/*Destructor*/
 	~RB_Tree();
 private:
-	friend class iterator;
-	friend class const_iterator;
+	friend iterator;
+	friend const_iterator;
 
 	typename allocator_type::template rebind<Node_t*>::other M_alloc;
 
@@ -291,7 +307,7 @@ int RB_Tree<St, Key, Comp_t, Alloc_t>::proper_rb_tree()const{
 		return true;
 
 	if(M_root->is_red()){
-		cerr << "Red Root! egad!" << std::endl;
+		std::cerr << "Red Root! egad!" << std::endl;
 		return false;
 	}
 
@@ -311,7 +327,7 @@ void RB_Tree<St, Key, Comp_t, Alloc_t>::sub_proper_rb_tree(Node_t* i_node, bool&
 		++ir_black_height;
 	}else{
 		if(i_node->left->is_red() || i_node->right->is_red()){
-			cerr << "Red on Red Action!!!" << std::endl;
+			std::cerr << "Red on Red Action!!!" << std::endl;
 			valid = false;
 			return;
 		}
@@ -321,7 +337,7 @@ void RB_Tree<St, Key, Comp_t, Alloc_t>::sub_proper_rb_tree(Node_t* i_node, bool&
 		valid = ((found_black_height == -1) || (found_black_height == (ir_black_height)));
 		if(!valid){
 			assert(found_black_height != ir_black_height);
-			cerr << "Differing Black Heights Calculated ! " << found_black_height << ' ' << ir_black_height << endl;
+			std::cerr << "Differing Black Heights Calculated ! " << found_black_height << ' ' << ir_black_height << std::endl;
 		}
 		found_black_height = ir_black_height;
 	}else{
