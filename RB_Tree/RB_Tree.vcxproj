@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="j_map.h" />
     <ClInclude Include="RB_Tree.h" />
   </ItemGroup>
   <ItemGroup>
