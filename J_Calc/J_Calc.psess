@@ -36,7 +36,7 @@
   </PostinstrumentEvent>
   <Binaries>
     <ProjBinary>
-      <Path>x64\Release\J_Calc.exe</Path>
+      <Path>x64\Debug\J_Calc_D.exe</Path>
       <ArgumentTimestamp>01/01/0001 00:00:00</ArgumentTimestamp>
       <Instrument>true</Instrument>
       <Sample>true</Sample>
@@ -48,7 +48,7 @@
       <LaunchProject>true</LaunchProject>
       <OverrideProjectSettings>false</OverrideProjectSettings>
       <LaunchMethod>Executable</LaunchMethod>
-      <ExecutablePath>x64\Release\J_Calc.exe</ExecutablePath>
+      <ExecutablePath>x64\Debug\J_Calc_D.exe</ExecutablePath>
       <StartupDirectory>.\</StartupDirectory>
       <Arguments>
       </Arguments>
@@ -67,23 +67,6 @@
       <ProjName>J_Calc</ProjName>
     </ProjBinary>
   </Binaries>
-  <Reports>
-    <Report>
-      <Path>J_Calc131215.vsp</Path>
-    </Report>
-    <Report>
-      <Path>J_Calc131215(1).vsp</Path>
-    </Report>
-    <Report>
-      <Path>J_Calc131215(2).vsp</Path>
-    </Report>
-    <Report>
-      <Path>J_Calc131215(3).vsp</Path>
-    </Report>
-    <Report>
-      <Path>J_Calc131215(4).vsp</Path>
-    </Report>
-  </Reports>
   <Launches>
     <ProjBinary>
       <Path>:PB:{8B9C5C74-AE07-4545-AE05-F3064467EA37}|J_Calc.vcxproj</Path>
