@@ -46,10 +46,10 @@ private:
 	typedef RB_Tree<J_Calc_View_Shared_t> Calc_J_View_Cont_t;
 
 	Calc_J_View_Cont_t M_calc_views;
-	typedef std::map<j_uint, Math_Input_Box_Shared_t> Math_Input_Box_Cont_t;
+	typedef j_map<j_uint, Math_Input_Box_Shared_t> Math_Input_Box_Cont_t;
 	Math_Input_Box_Cont_t M_math_input_boxes;
 	RB_Tree<J_UI_String> M_reserved_words;
-	typedef std::map<J_UI_String, j_symbol*> Symbol_Map_t;
+	typedef j_map<J_UI_String, j_symbol*> Symbol_Map_t;
 	Symbol_Map_t M_reserved_symbols;
 	Symbol_Map_t M_user_symbols;
 };

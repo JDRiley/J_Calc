@@ -51,6 +51,15 @@
     <ClInclude Include="j_conditional_construct_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FlexLexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Math_Lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp">
@@ -83,6 +92,9 @@
     <ClCompile Include="j_conditional_construct_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scanner.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers\jtl.natvis">
@@ -94,5 +106,19 @@
     <None Include="x64\AssertHappy\in_script.jcs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="scanner.l">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="parser.output">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="parser.y">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="scanner.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

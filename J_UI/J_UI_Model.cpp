@@ -316,8 +316,8 @@ void J_UI_Model::notify_clickable_status(j_uint i_obj_id, bool i_status){
 }
 
 void J_UI_Model::broadcast_current_state()const{
-	for(auto obj_pair : M_ui_objects){
-		obj_pair->broadcast_current_state();	
+	for(auto obj : M_ui_objects){
+		obj->broadcast_current_state();	
 	}
 }
 
@@ -349,7 +349,7 @@ void J_UI_Model::set_cursor_pos(J_View_Shared_t i_view, j_dbl i_x_pos, j_dbl i_y
 }
 
 const J_Cursor_Position& J_UI_Model::cursor_pos(J_View_Shared_t i_view)const{
-	return *(M_cursor_positions.find(i_view)->second);
+	return **M_cursor_positions.find(i_view);
 }
 
 j_dbl J_UI_Model::fps()const{

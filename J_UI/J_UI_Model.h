@@ -11,8 +11,7 @@
 #include <RB_Tree.h>
 //
 #include <j_map.h>
-//Containers
-#include <map>
+
 
 //Utilities
 #include <memory>
@@ -122,19 +121,20 @@ private:
 
 	typedef j_map<j_uint, J_UI_Object_Shared_t> UI_Obj_Cont_t;
 	UI_Obj_Cont_t M_ui_objects;
-	typedef std::map<j_uint, J_Text_Box_Object_Shared_t> Text_Box_Cont_t;
+
+	typedef j_map<j_uint, J_Text_Box_Object_Shared_t> Text_Box_Cont_t;
 	Text_Box_Cont_t M_text_boxes;
 
-	typedef std::map<j_uint, Multi_State_Text_Box_Shared_t> Multi_State_Text_Box_Cont_t;
+	typedef j_map<j_uint, Multi_State_Text_Box_Shared_t> Multi_State_Text_Box_Cont_t;
 	Multi_State_Text_Box_Cont_t M_multi_text_boxes;
 
-	typedef std::map<j_uint, J_UI_Box_Shared_t> J_UI_Box_Cont_t;
+	typedef j_map<j_uint, J_UI_Box_Shared_t> J_UI_Box_Cont_t;
 	J_UI_Box_Cont_t M_ui_boxes;
 
-	typedef std::map<j_uint, J_UI_Circle_Shared_t> J_UI_Circle_Cont_t;
+	typedef j_map<j_uint, J_UI_Circle_Shared_t> J_UI_Circle_Cont_t;
 	J_UI_Circle_Cont_t M_ui_circles;
 
-	typedef std::map<j_uint, J_UI_Line_Shared_t> J_UI_Line_Cont_t;
+	typedef j_map<j_uint, J_UI_Line_Shared_t> J_UI_Line_Cont_t;
 	J_UI_Line_Cont_t M_ui_lines;
 
 	typedef RB_Tree<J_View_Shared_t> J_View_Cont_t;
@@ -142,10 +142,10 @@ private:
 
 	
 
-	typedef std::map<j_uint, J_UI_Box_Shared_t> J_Image_Pane_Cont_t;
+	typedef j_map<j_uint, J_UI_Box_Shared_t> J_Image_Pane_Cont_t;
 	J_Image_Pane_Cont_t M_image_panes;
 
-	typedef std::map<J_View_Shared_t, J_Cursor_Position_Shared_t> Cursor_Position_Cont_t;
+	typedef j_map<J_View_Shared_t, J_Cursor_Position_Shared_t> Cursor_Position_Cont_t;
 	Cursor_Position_Cont_t M_cursor_positions;
 
 

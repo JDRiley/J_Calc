@@ -122,7 +122,7 @@ j_symbol* get_reserved_symbol(const J_UI_String& irk_string){
 
 j_symbol* J_Calc_Data::get_reserved_symbol(const J_UI_String& irk_string)const{
 	assert(is_reserved_symbol(irk_string));
-	return M_reserved_symbols.find(irk_string)->second;
+	return *M_reserved_symbols.find(irk_string);
 }
 
 bool J_Calc_Data::is_reserved_symbol(const J_UI_String& irk_src)const{return M_reserved_symbols.count(irk_src);}
@@ -149,7 +149,7 @@ j_symbol* J_Calc_Data::get_user_symbol(const J_UI_String& irk_string)const{
 		throw J_Argument_Error("No User Symbol with that name");
 	}
 
-	return M_user_symbols.find(irk_string)->second;
+	return *M_user_symbols.find(irk_string);
 }
 
 void J_Calc_Data::remove_user_symbol(const J_UI_String& irk_string){
@@ -186,13 +186,14 @@ void J_Calc_Data::clear_data(){
 	RB_Tree<J_UI_String>().swap(M_reserved_words);
 
 
-	for(auto f_pair : M_reserved_symbols){
-		delete f_pair.second;
+	for(auto f_reserve_symbol : M_reserved_symbols){
+		delete f_reserve_symbol;
 	}
 
-	for(auto f_pair : M_user_symbols){
-		delete f_pair.second;
+	for(auto f_user_symbol : M_user_symbols){
+		delete f_user_symbol;
 	}
+
 	Symbol_Map_t().swap(M_reserved_symbols);
 	Symbol_Map_t().swap(M_user_symbols);
 }
