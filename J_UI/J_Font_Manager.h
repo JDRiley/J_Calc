@@ -4,15 +4,14 @@
 #include "J_UI_Fwd_Decl.h"
 //
 #include <J_Utile.h>
-
+//
+#include <J_Error.h>
 //Containers
 
 //
 #include <ex_array.h>
 //
-#include <map>
-//
-#include <j_tree.h>
+#include <j_map.h>
 //
 #include <string>
 
@@ -42,7 +41,7 @@ private:
 
 	J_Context_Shared_t M_context;
 
-	typedef std::map<std::string, Font_Data_Shared_t>
+	typedef j_map<std::string, Font_Data_Shared_t>
 		Font_Face_Cont_t;
 
 	FT_Library M_FT_library = nullptr;

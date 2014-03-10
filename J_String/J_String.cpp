@@ -2,6 +2,8 @@
 #include <ex_array.h>
 #include <J_UI/J_UI_String.h>
 #include <j_type.h>
+//
+#include <J_Utile.h>
 //Algorithm
 #include <algorithm>
 

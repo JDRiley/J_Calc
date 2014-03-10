@@ -23,6 +23,8 @@ using std::cerr; using std::endl;
 #include <J_Utile.h>
 //
 #include "J_Font_Face.h"
+//
+#include <j_map.h>
 using std::string;
 
 namespace jomike{
@@ -41,7 +43,7 @@ public:
 	std::string name;
 	std::string filename;
 	FT_Face ft_face;
-	std::map<int, J_Font_Face> j_font_faces;
+	j_map<int, J_Font_Face> j_font_faces;
 	~Font_Data();
 };
 
@@ -61,7 +63,7 @@ J_Font_Manager::J_Font_Manager(){
 }
 
 Font_Data::~Font_Data(){
-	for_each(make_pair_iter(j_font_faces.begin()), make_pair_iter(j_font_faces.end())
+	for_each(j_font_faces.begin(), j_font_faces.end()
 		, [](J_Font_Face y_font_face){delete y_font_face;});
 	FT_Done_Face(ft_face);
 	ft_face = nullptr;

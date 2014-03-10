@@ -9,6 +9,8 @@
 #include "Bitmap_Metrics.h"
 //
 #include "J_Shape.h"
+//
+#include <J_Error.h>
 namespace jomike{
 class J_Font_Face__{
 public:

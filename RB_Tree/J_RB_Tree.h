@@ -445,93 +445,48 @@ private:
 
 }; //J_RB_Tree
 
+#define RB_NODE_T typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 class J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__{
 public:
-	enum class COLOR{RED, BLACK};
+	enum class COLOR{ RED, BLACK };
 
-	bool is_leaf()const{ return (!left() && !right()); };
+	bool is_leaf()const;
 
-	COLOR color()const{
-		return M_color;
-	}
+	COLOR color()const;
 
-	void set_color(COLOR i_color){
-		M_color = i_color;
-	}
+	void set_color(COLOR i_color);
+	void set_parent(RB_Node__* i_parent);
+	void set_right(RB_Node__* i_right);
+	void set_left(RB_Node__* i_left);
 
-	void set_parent(RB_Node__* i_parent){
-		M_parent = i_parent;
-	}
+	bool is_red()const;
+	bool is_black()const;
+	void color_black();
+	void color_red();
 
-	void set_right(RB_Node__* i_right){
-		M_right = i_right;
-	}
+	bool is_right()const;
+	bool is_left()const;
 
-	void set_left(RB_Node__* i_left){
-		M_left = i_left;
-	}
-
-	bool is_red()const{ return this ? (M_color == COLOR::RED) : false; }
-	bool is_black()const{ return !is_red(); }
-	void color_black(){ M_color = COLOR::BLACK; }
-	void color_red(){ M_color = COLOR::RED; }
-
-	bool is_right()const{ return (M_parent && (this == M_parent->right())); }
-	bool is_left()const{ return (M_parent && (this == M_parent->left())); }
-
-	RB_Node__* left()const{
-		return M_left;
-	}
-
-	RB_Node__* right()const{
-		return M_right;
-	}
-
-	RB_Node__* parent()const{
-		return M_parent;
-	}
+	RB_Node__* left()const;
+	RB_Node__* right()const;
+	RB_Node__* parent()const;
 
 
-	RB_Node__*& left(){
-		return M_left;
-	}
-
-	RB_Node__*& right(){
-		return M_right;
-	}
-
-	RB_Node__*& parent(){
-		return M_parent;
-	}
-
-	RB_Node__(const RB_Node__& irk_src):M_data(irk_src.M_data)
-		, M_color(irk_src.M_color){
-		M_left = M_right = M_parent = nullptr;
-	}
-
-	RB_Node__(RB_Node__&& irk_src):M_data(std::move(irk_src.M_data))
-		, M_color(irk_src.M_color){
-		M_left = M_right = M_parent = nullptr;
-	}
+	RB_Node__*& left();
+	RB_Node__*& right();
+	RB_Node__*& parent();
 
 
-	RB_Node__(const St&  irk_data):M_data(irk_data), M_color(COLOR::RED){
-		M_left = M_right = M_parent = nullptr;
-	}
+	RB_Node__(const RB_Node__& irk_src);
+	RB_Node__(RB_Node__&& irk_src);
+	RB_Node__(const St&  irk_data);
+	RB_Node__(St&& irr_data);
 
-	RB_Node__(St&& irr_data):M_data(std::move(irr_data)){
-		M_left = M_right = M_parent = nullptr;
-	}
+	St& data();
+	St& data()const;
 
-	St& data(){
-		return M_data;
-	}
-
-	St& data()const{
-		return M_data;
-	}
-	
 private:
 	St M_data;
 	COLOR M_color;
@@ -1605,6 +1560,122 @@ RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::cend()const{
 	return const_iterator(nullptr);
 }
 
+//RB_Tree_Node_Definitions------------------------------------------------------------
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::is_leaf()const{
+	return (!left() && !right());
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::COLOR
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::color()const{
+	return M_color;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::set_color(RB_NODE_T::COLOR i_color){
+	M_color = i_color;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::set_parent(RB_Node__* i_parent){
+	M_parent = i_parent;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::set_right(RB_Node__* i_right){
+	M_right = i_right;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::set_left(RB_Node__* i_left){
+	M_left = i_left;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::is_red()const{
+	return this ? (M_color == COLOR::RED) : false;
+}
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::is_black()const{
+	return !is_red();
+}
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::color_black(){ M_color = COLOR::BLACK; }
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::color_red(){ M_color = COLOR::RED; }
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::is_right()const{ return (M_parent && (this == M_parent->right())); }
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::is_left()const{ return (M_parent && (this == M_parent->left())); }
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T* J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::left()const{
+	return M_left;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T* J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::right()const{
+	return M_right;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T* J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::parent()const{
+	return M_parent;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T*& J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::left(){
+	return M_left;
+}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T*& J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::right(){
+	return M_right;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_NODE_T*& J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t::parent(){
+	return M_parent;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::RB_Node__(const RB_NODE_T& irk_src):M_data(irk_src.M_data)
+, M_color(irk_src.M_color){
+	M_left = M_right = M_parent = nullptr;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::RB_Node__(RB_NODE_T&& irk_src):M_data(std::move(irk_src.M_data))
+, M_color(irk_src.M_color){
+	M_left = M_right = M_parent = nullptr;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::RB_Node__(const St&  irk_data)
+:M_data(irk_data), M_color(COLOR::RED){
+	M_left = M_right = M_parent = nullptr;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::RB_Node__(St&& irr_data) : M_data(std::move(irr_data)){
+	M_left = M_right = M_parent = nullptr;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+St& J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::data(){
+	return M_data;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+St& J_RB_Tree<St, Key, Comp_t, Alloc_t>::RB_Node__::data()const{
+	return M_data;
+}
 
 }
 

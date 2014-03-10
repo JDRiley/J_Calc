@@ -23,7 +23,8 @@ using namespace std::placeholders;
 #include <fstream>
 //
 #include <J_Frame_Counter.h>
-
+//
+#include <sstream>
 using std::ifstream; using std::string; using std::cerr; using std::getline;
 using std::ostringstream; using std::setw; using std::istream; using std::endl;
 namespace jomike{

@@ -10,6 +10,10 @@
 //Algorithms
 #include <algorithm>
 #include <functional>
+//
+#include <iostream>
+//
+#include <sstream>
 using std::all_of; using std::bind; using std::equal_to;using std::mem_fn;
 using std::cerr;
 //Libraries
