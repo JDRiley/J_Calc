@@ -33,7 +33,7 @@
     <ClInclude Include="J_RB_Tree_Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RB_Tree.h">
+    <ClInclude Include="J_RB_Tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +44,7 @@
     <ClCompile Include="RB_Tree_Tester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RB_Tree.cpp">
+    <ClCompile Include="J_RB_Tree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

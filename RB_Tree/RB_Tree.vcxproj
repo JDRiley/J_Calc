@@ -192,12 +192,12 @@
     <ClInclude Include="J_RB_Tree_Error.h" />
     <ClInclude Include="j_tree.h" />
     <ClInclude Include="Pair_Key_Comparer.h" />
-    <ClInclude Include="RB_Tree.h" />
+    <ClInclude Include="J_RB_Tree.h" />
     <ClInclude Include="RB_Tree_Tester.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_map.cpp" />
-    <ClCompile Include="RB_Tree.cpp">
+    <ClCompile Include="J_RB_Tree.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="RB_Tree_Tester.cpp">
