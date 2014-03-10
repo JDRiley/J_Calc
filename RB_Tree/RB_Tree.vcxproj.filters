@@ -30,10 +30,10 @@
     <ClInclude Include="j_tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_RB_Tree.h">
+    <ClInclude Include="J_RB_Tree_Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_RB_Tree_Error.h">
+    <ClInclude Include="RB_Tree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,10 +41,10 @@
     <ClCompile Include="j_map.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="J_RB_Tree.cpp">
+    <ClCompile Include="RB_Tree_Tester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RB_Tree_Tester.cpp">
+    <ClCompile Include="RB_Tree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

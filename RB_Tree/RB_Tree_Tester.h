@@ -8,7 +8,7 @@
 #endif // !j_tree_TESTING
 
 
-#include "J_RB_Tree.h"
+#include "RB_Tree.h"
 
 
 namespace jomike{
