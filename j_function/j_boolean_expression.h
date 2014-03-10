@@ -11,8 +11,10 @@ namespace jomike{
 
 class j_boolean_expression : public j_symbol{
 public:
+	j_boolean_expression();
 	virtual bool has_value()const;
-	virtual j_symbol* get_copy()const;
+	j_boolean_expression* get_copy()const override;
+	j_boolean_expression* move_copy()override;
 	virtual void clear();
 private:
 	boolean_tester_array M_boolean_testers;

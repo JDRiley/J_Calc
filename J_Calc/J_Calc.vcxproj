@@ -264,6 +264,13 @@
       <Outputs>scanner.cc;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">scanner.h;scanner.l;</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="parser.h">
+      <AdditionalInputs>parser.h;parser.y;</AdditionalInputs>
+      <Command>win_bison -v -t --defines=y.tab.h -oparser.cc parser.y</Command>
+      <Message>win_bison -v -t --defines=y.tab.h -oparser.cc parser.y</Message>
+      <Outputs>y.tab.h;scanner.cc;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">scanner.h;scanner.l;</AdditionalInputs>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FlexLexer.h" />
@@ -280,7 +287,7 @@
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
     <ClInclude Include="Math_Lexer.h" />
-    <ClInclude Include="parser.h" />
+    <ClInclude Include="y.tab.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp" />

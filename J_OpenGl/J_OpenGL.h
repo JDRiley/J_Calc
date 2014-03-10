@@ -8,7 +8,7 @@
 #include <J_Utile.h> //For Instance Pointer
 
 #include <J_Image.h>
-#include <RB_Tree.h>
+#include <j_tree.h>
 
 namespace jomike{
 typedef struct GLEWContextStruct GLEWContext;
@@ -48,7 +48,7 @@ private:
 	
 	Contexts_Handler();
 	friend class Instance_Pointer<Contexts_Handler>;
-	typedef RB_Tree<J_Context_Shared_t> J_Context_Cont_t;
+	typedef j_tree<J_Context_Shared_t> J_Context_Cont_t;
 
 	//J_Context_Shared_t M_main_context;
 	J_Context_Shared_t M_active_context;

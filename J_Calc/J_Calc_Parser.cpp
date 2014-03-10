@@ -447,7 +447,7 @@ j_symbol* J_Calc_Math_Input_Parser
 			throw J_Syntax_Error("Unexpected Character Encountered");
 		}
 
-		new_symbol->set_name(symbol_name);
+		new_symbol->set_name(symbol_name.std_str());
 
 		return new_symbol;
 	} catch(J_Error& e){

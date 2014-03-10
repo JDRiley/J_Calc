@@ -19,6 +19,8 @@ public:
 
 	J_UI_String get_display_name()override;
 	j_composite_symbol* get_copy()const override;
+	j_composite_symbol* move_copy()override;
+
 
 	j_symbol& operator[](j_size_t i_index);
 

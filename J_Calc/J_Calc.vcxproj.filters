@@ -57,7 +57,7 @@
     <ClInclude Include="Math_Lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parser.h">
+    <ClInclude Include="y.tab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,6 +118,9 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="scanner.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="parser.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

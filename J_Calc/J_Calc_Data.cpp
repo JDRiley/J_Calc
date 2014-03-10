@@ -18,7 +18,9 @@ namespace jomike{
 
 class GCD_Symbol : public j_routine_wrapper_symbol{
 public:
+	GCD_Symbol(): j_routine_wrapper_symbol("gcd", Symbol_Types::INT){}
 	GCD_Symbol* get_copy()const override;
+	GCD_Symbol* move_copy()override;
 	J_UI_String get_display_name()override;
 protected:
 	j_value derived_get_value(const Arguments&)const override;
@@ -49,9 +51,13 @@ J_UI_String GCD_Symbol::get_display_name(){
 	return "gcd";
 }
 
+GCD_Symbol* GCD_Symbol::move_copy(){
+	return  new GCD_Symbol(std::move(*this));
+}
 
 
-static void init_reserve_keywords(RB_Tree<J_UI_String>*);
+
+static void init_reserve_keywords(j_tree<J_UI_String>*);
 
 J_UI_Model& J_UI_Model::get_instance(){
 	Instance_Pointer<J_Calc_Data> calc_data_ptr;
@@ -63,7 +69,7 @@ J_Calc_Data::J_Calc_Data(){
 	init_reserved_symbols();
 }
 
-void init_reserve_keywords(RB_Tree<J_UI_String>* ir_dest_set){
+void init_reserve_keywords(j_tree<J_UI_String>* ir_dest_set){
 	ir_dest_set->clear();
 	ir_dest_set->insert("Dbl");
 	ir_dest_set->insert("Alias");
@@ -183,7 +189,7 @@ void J_Calc_Data::clear_data(){
 
 	Calc_J_View_Cont_t().swap(M_calc_views);
 	Math_Input_Box_Cont_t().swap(M_math_input_boxes);
-	RB_Tree<J_UI_String>().swap(M_reserved_words);
+	j_tree<J_UI_String>().swap(M_reserved_words);
 
 
 	for(auto f_reserve_symbol : M_reserved_symbols){

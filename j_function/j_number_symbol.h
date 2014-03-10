@@ -12,7 +12,7 @@ public:
 	j_number_symbol(const J_UI_String&);
 
 	j_number_symbol* get_copy()const override;
-
+	j_number_symbol* move_copy()override;
 	//Status
 	bool has_value()const override;
 

@@ -8,7 +8,7 @@
 #include "J_Image/J_Image.h"
 #include <J_Utile.h>
 #include <J_UI/J_UI_String.h>
-#include <RB_Tree.h>
+#include <j_tree.h>
 //
 #include <j_map.h>
 
@@ -137,7 +137,7 @@ private:
 	typedef j_map<j_uint, J_UI_Line_Shared_t> J_UI_Line_Cont_t;
 	J_UI_Line_Cont_t M_ui_lines;
 
-	typedef RB_Tree<J_View_Shared_t> J_View_Cont_t;
+	typedef j_tree<J_View_Shared_t> J_View_Cont_t;
 	J_View_Cont_t M_views;
 
 	

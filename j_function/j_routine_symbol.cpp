@@ -1,5 +1,6 @@
 #include "j_routine_symbol.h"
 
+using std::string;
 
 using std::map; using std::function;
 using std::bind; using std::for_each;
@@ -11,6 +12,11 @@ void j_routine_wrapper_symbol::clear(){}
 
 bool j_routine_wrapper_symbol::has_value()const {
 	return true;
+}
+
+j_routine_wrapper_symbol::j_routine_wrapper_symbol(
+	const string& irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
+
 }
 
 bool j_routine_symbol
@@ -114,7 +120,20 @@ j_routine_symbol::j_routine_symbol(j_routine_symbol&& irr_src): j_symbol(irr_src
 	std::swap(M_return_symbol, irr_src.M_return_symbol);
 }
 
-j_routine_symbol::j_routine_symbol(){}
+j_routine_symbol::j_routine_symbol(
+	const string& irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
+
+}
+
+j_routine_symbol::j_routine_symbol() : j_symbol(Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+
+}
+
+
+
+j_routine_symbol* j_routine_symbol::move_copy(){
+	return  new j_routine_symbol(std::move(*this));
+}
 
 }
 

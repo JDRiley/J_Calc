@@ -9,7 +9,7 @@
 //
 #include <J_UI/J_UI_String.h>
 //
-#include <RB_Tree.h>
+#include <j_tree.h>
 
 namespace jomike{
 
@@ -24,7 +24,7 @@ public:
 };
 
 
-typedef RB_Tree<j_symbol*, J_UI_String
+typedef j_tree<j_symbol*, J_UI_String
 	, std::less<j_symbol*>, j_symbol_allocator> j_symbol_tree;
 
 typedef ex_array<j_symbol*, j_symbol_allocator> j_symbol_array;

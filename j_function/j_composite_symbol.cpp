@@ -17,7 +17,7 @@ namespace jomike{
 j_composite_symbol* j_composite_symbol::get_copy()const{ return new j_composite_symbol(*this); }
 
 //Constructor
-j_composite_symbol::j_composite_symbol(){}
+j_composite_symbol::j_composite_symbol():j_symbol(Symbol_Types::COMPOSITE){}
 
 /*j_composite_symbol(const j_composite_symbol&)*/
 j_composite_symbol::j_composite_symbol(const j_composite_symbol& irk_src): j_symbol(irk_src){
@@ -126,6 +126,10 @@ j_symbol& j_composite_symbol::operator[](j_size_t i_index){
 const j_symbol& j_composite_symbol::operator[](j_size_t i_index)const{
 	assert(between_inclusive(i_index, J_SIZE_T_ZERO, M_symbols.size()));
 	return *M_symbols[i_index];
+}
+
+j_composite_symbol* j_composite_symbol::move_copy(){
+	return  new j_composite_symbol(std::move(*this));
 }
 
 

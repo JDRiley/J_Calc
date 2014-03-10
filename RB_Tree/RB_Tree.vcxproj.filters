@@ -15,15 +15,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RB_Tree.h">
+    <ClInclude Include="j_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="j_map.h">
+    <ClInclude Include="RB_Tree_Tester.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_multi_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pair_Key_Comparer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_RB_Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_RB_Tree_Error.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RB_Tree.cpp">
+    <ClCompile Include="j_map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_RB_Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RB_Tree_Tester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

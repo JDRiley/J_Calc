@@ -8,9 +8,6 @@ namespace jomike{
 
 
 
-j_symbol* j_boolean_expression::get_copy()const{
-	return new j_boolean_expression(*this);
-}
 
 void j_boolean_expression::clear(){
 	assert(!"The method or operation is not implemented.");
@@ -38,6 +35,18 @@ j_value j_boolean_expression::derived_get_value(const Arguments& i_args)const{
 	}
 
 	return J_VALUE_TRUE_BOOLEAN;
+}
+
+j_boolean_expression* j_boolean_expression::move_copy(){
+	return  new j_boolean_expression(std::move(*this));
+}
+
+j_boolean_expression* j_boolean_expression::get_copy()const {
+	return new j_boolean_expression(*this);
+}
+
+j_boolean_expression::j_boolean_expression():j_symbol(Symbol_Types::BOOL){
+
 }
 
 }

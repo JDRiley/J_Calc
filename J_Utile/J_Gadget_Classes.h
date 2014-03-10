@@ -7,7 +7,7 @@
 //
 #include <functional>
 //
-#include <RB_Tree.h>
+#include <j_tree.h>
 //
 #include <initializer_list>
 namespace jomike{
@@ -23,7 +23,7 @@ public:
 	template<typename St>
 	Delimiter_Handler(std::initializer_list<St> i_list);
 private:
-	RB_Tree<Val_t, Val_t, Comp_t> M_delims;
+	j_tree<Val_t, Val_t, Comp_t> M_delims;
 };
 
 template<typename Val_t, typename Comp_t /*= std::less<Val_t>*/>

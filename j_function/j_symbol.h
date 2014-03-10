@@ -8,13 +8,15 @@
 #include "Arguments.h"
 //
 #include <J_UI\J_UI_String.h>
-
+#include "j_symbol_component.h"
+//
+#include "j_symbol_component.h"
 namespace jomike{
 
-class j_symbol{
+class j_symbol : public j_symbol_component{
 public:
-	j_symbol();
-	j_symbol(const J_UI_String&);
+	j_symbol(const J_UI_String& irk_name, Symbol_Types i_symbol_type);
+	j_symbol(Symbol_Types i_symbol_type = Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED);
 
 	//j_symbol(const j_symbol& irk_symbol);
 
@@ -27,19 +29,19 @@ public:
 	j_dbl value(const Arguments& i_args = Arguments())const;
 	virtual void clear() = 0;
 	virtual bool has_value()const = 0;
-	const J_UI_String& name()const;
-	void set_name(const J_UI_String&);
+
 	virtual J_UI_String get_display_name();
 	virtual void set_args(const Arguments&);
 	virtual void set_args(Arguments&&);
 	virtual ~j_symbol();
 
+	virtual Type_Syntax& type_syntax()const;
+
 	virtual bool is_placeholder()const;
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 private:
-	J_UI_String M_name;
-	const int M_ID;
+
 	Arguments M_arguments;
 };
 

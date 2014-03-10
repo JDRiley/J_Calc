@@ -192,8 +192,8 @@ public:
 	node_iterator& operator--(){ M_node = Container::previous_node(M_node); return *this; }
 	node_iterator operator--(int){ node_iterator temp(*this); --*this; return temp; }
 
-	reference operator*()const{ return M_node->data; }
-	pointer operator->()const{ return &M_node->data; }
+	reference operator*()const{ return M_node->data(); }
+	pointer operator->()const{ return &M_node->data(); }
 private:
 
 	Iter M_node;

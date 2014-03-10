@@ -7,7 +7,7 @@ using namespace jomike;
 int test(){
 	using std::string;
 	typedef std::pair<int, string> int_string_pair_t;
-	RB_Tree <
+	J_RB_Tree <
 		int_string_pair_t
 		, int
 		, Pair_Key_Comparer < int_string_pair_t

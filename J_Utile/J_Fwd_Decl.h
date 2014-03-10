@@ -1,7 +1,7 @@
 #ifndef J_FORWARD_DECLARATIONS
 #define J_FORWARD_DECLARATIONS
 
-#include <array>
+#include <cassert>
 
 #ifdef WIN32
 
@@ -58,7 +58,7 @@ static_assert(0, "No VLD Found");
 
 
 
-#pragma comment(lib, "J_Utile"J_LIB_APPEND)
+
 namespace jomike{}
 
 namespace jtl = jomike;
@@ -122,12 +122,6 @@ typedef std::pair<j_float, j_float> Pen_Pos_FL_t;
 
 //creates a lock_guard for a given mutex
 #define J_LOCK(lock) std::lock_guard<decltype(lock)> MD_LOCK_GUARD(lock)
-
-
-
-//template<typename St, int First_Dimension, int Second_Dimension>
-//using Multi_Array
-//= std::array<std::array<St, Second_Dimension>, First_Dimension >;
 
 
 }

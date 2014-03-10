@@ -9,9 +9,9 @@ namespace jomike{
 
 class j_placeholder_symbol : public j_symbol{
 public:
-	j_placeholder_symbol* get_copy()const override{
-		return new j_placeholder_symbol(*this);
-	}
+	j_placeholder_symbol* get_copy()const override;
+
+	j_placeholder_symbol* move_copy()override;
 	bool has_value()const override;
 	void clear()override;
 	j_placeholder_symbol(j_size_t i_index);

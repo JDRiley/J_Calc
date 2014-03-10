@@ -7,11 +7,12 @@ namespace jomike{
 //j_number_symbol****************************************
 
 //Constructors
-j_number_symbol::j_number_symbol(Dbl_t i_val):M_value_status(true), M_value(i_val){
+j_number_symbol::j_number_symbol(Dbl_t i_val)
+	: j_symbol(Symbol_Types::DOUBLE),M_value_status(true), M_value(i_val){
 }
 
 j_number_symbol::j_number_symbol(const J_UI_String& irk_string)
-	: j_symbol(irk_string), M_value_status(false){}
+	: j_symbol(irk_string, Symbol_Types::DOUBLE), M_value_status(false){}
 
 j_number_symbol* j_number_symbol::get_copy()const{ return new j_number_symbol(*this); }
 
@@ -42,6 +43,10 @@ J_UI_String j_number_symbol::get_display_name(){
 
 /*void clear()*/
 void j_number_symbol::clear(){ M_value_status = false; M_value = -1; }
+
+j_number_symbol* j_number_symbol::move_copy(){
+	return  new j_number_symbol(std::move(*this));
+}
 
 
 }

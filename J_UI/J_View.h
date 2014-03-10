@@ -6,7 +6,7 @@
 #include <J_OpenGL_Fwd_Decl.h>
 #include "J_Image/J_Image.h"
 #include "J_UI_String/J_UI_String.h"
-#include <RB_Tree.h>
+#include <j_tree.h>
 #include <ex_array.h>
 //Containers
 #include <map>
@@ -145,7 +145,7 @@ private:
 	std::map<j_uint, J_FT_Text_Multi_State_Display_Shared_t> M_multi_state_text_boxes;
 	std::map<j_uint, J_Display_Line_Shared_t> M_display_lines;
 
-	RB_Tree<J_Display_Object_Weak_t,J_Display_Object_Weak_t
+	j_tree<J_Display_Object_Weak_t,J_Display_Object_Weak_t
 		, std::owner_less<J_Display_Object_Weak_t>> M_objects_using_cursor_data;
 
 	virtual void add_text_display(J_FT_Text_Display_Object_Shared_t);

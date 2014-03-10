@@ -233,6 +233,7 @@
     <ClInclude Include="j_placeholder_symbol.h" />
     <ClInclude Include="j_routine_symbol.h" />
     <ClInclude Include="j_symbol.h" />
+    <ClInclude Include="j_symbol_component.h" />
     <ClInclude Include="j_symbol_containers.h" />
     <ClInclude Include="J_Symbol_Fwd_Decl.h" />
     <ClInclude Include="j_unit.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="j_routine_symbol.cpp" />
     <ClCompile Include="j_symbol.cpp" />
     <ClCompile Include="j_symbol_array.cpp" />
+    <ClCompile Include="j_symbol_component.cpp" />
     <ClCompile Include="j_unit.cpp" />
     <ClCompile Include="j_value.cpp" />
     <ClCompile Include="math_base.cpp" />
