@@ -494,68 +494,69 @@ private:
 	//friend typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator;
 	//friend typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::const_iterator;
 
+
 	RB_Node__* M_left;
 	RB_Node__* M_right;
 	RB_Node__* M_parent;
 };
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-template<class Func_obj>
-Func_obj J_RB_Tree<St, Key, Comp_t, Alloc_t>
-	::apply_internal(Func_obj i_func_obj, Node_t* i_node){
-	if(!i_node)
-		return i_func_obj;
-	i_func_obj(i_node->data());
-	i_func_obj = apply_internal(i_func_obj, i_node->left());
-	return apply_internal(i_func_obj, i_node->right());
-}
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree():M_root(nullptr), M_size(0){}
 
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::size()const{
-	return M_size;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::empty()const{
-	return !M_root;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::root(){
-	return iterator(M_root);
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::root()const{
-	return const_iterator(M_root);
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-template<class Func_obj>
-Func_obj J_RB_Tree<St, Key, Comp_t, Alloc_t>::apply(Func_obj i_func_obj){
-	return apply_internal(i_func_obj, M_root);
-}
-
-/*void clear()*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::clear(){
-	delete_nodes(M_root);
-	M_size = 0;
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(
+	const J_RB_Tree<St, Key, Comp_t, Alloc_t>& irk_right)
+	: M_size(irk_right.size()), M_comp(irk_right.M_comp){
 	M_root = nullptr;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::swap(J_RB_Tree& ir_src){
-		std::swap(M_root, ir_src.M_root);
-		std::swap(M_size, ir_src.M_size);
-
+	
+	copy_node(&M_root, irk_right.M_root, nullptr);
 
 #ifdef RB_TREE_DEBUG
-		std::swap(s_messages, ir_src.s_messages);
+	s_messages = irk_right.s_messages;
 #endif // RB_TREE_DEBUG
+
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::copy_node(
+	Node_t** i_dest_node, const Node_t*  irk_src, Node_t* i_parent_node){
+	if(!irk_src){
+		*i_dest_node = nullptr;
+		return;
 	}
 
+	*i_dest_node = new Node_t(*irk_src);
+
+	Node_t* dest_node = *i_dest_node;
+
+	dest_node->set_parent(i_parent_node);
+
+	copy_node(&dest_node->left(), irk_src->left(), *i_dest_node);
+	copy_node(&dest_node->right(), irk_src->right(), *i_dest_node);
+	
+}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(J_RB_Tree<St, Key, Comp_t, Alloc_t>&& irr_right){
+	M_size = 0; 
+	M_root = nullptr; 
+	s_messages = false;
+	swap(irr_right);
+}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(const std::initializer_list<St>& irk_list)
+	:J_RB_Tree(irk_list.begin(), irk_list.end()){}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+template<typename iter>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(iter i_pos, iter i_last):J_RB_Tree(){
+	assign(i_pos, i_last);
+}
 /*void assign(Iter, Iter)*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 template<typename Iter>
@@ -577,7 +578,6 @@ J_RB_Tree<St, Key, Comp_t, Alloc_t>& J_RB_Tree<St, Key, Comp_t, Alloc_t>
 	return *this;
 }
 
-/*J_RB_Tree& operator=(J_RB_Tree&&)*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 J_RB_Tree<St, Key, Comp_t, Alloc_t>& J_RB_Tree<St, Key, Comp_t, Alloc_t>
 	::operator=(
@@ -586,247 +586,23 @@ J_RB_Tree<St, Key, Comp_t, Alloc_t>& J_RB_Tree<St, Key, Comp_t, Alloc_t>
 	return *this;
 }
 
-/*Copy Node*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::copy_node(
-	Node_t** i_dest_node, const Node_t*  irk_src, Node_t* i_parent_node){
-	if(!irk_src){
-		*i_dest_node = nullptr;
-		return;
-	}
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::swap(J_RB_Tree& ir_src){
+		std::swap(M_root, ir_src.M_root);
+		std::swap(M_size, ir_src.M_size);
 
-	*i_dest_node = new Node_t(*irk_src);
-
-	Node_t* dest_node = *i_dest_node;
-
-	dest_node->set_parent(i_parent_node);
-
-	copy_node(&dest_node->left(), irk_src->left(), *i_dest_node);
-	copy_node(&dest_node->right(), irk_src->right(), *i_dest_node);
-	
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(
-	const J_RB_Tree<St, Key, Comp_t, Alloc_t>& irk_right)
-	: M_size(irk_right.size()), M_comp(irk_right.M_comp){
-	M_root = nullptr;
-	
-	copy_node(&M_root, irk_right.M_root, nullptr);
 
 #ifdef RB_TREE_DEBUG
-	s_messages = irk_right.s_messages;
+		std::swap(s_messages, ir_src.s_messages);
 #endif // RB_TREE_DEBUG
-
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-template<typename iter>
-J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(iter i_pos, iter i_last):J_RB_Tree(){
-	assign(i_pos, i_last);
-}
-/*Move Constructor*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(J_RB_Tree<St, Key, Comp_t, Alloc_t>&& irr_right){
-	M_size = 0; 
-	M_root = nullptr; 
-	s_messages = false;
-	swap(irr_right);
-}
-
-/*static Node_t* next_node(const Node_t*)*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* 
-	J_RB_Tree<St, Key, Comp_t, Alloc_t>::next_node(const Node_t* i_node){
-	assert(i_node);
-	if(i_node->right()){
-		return minimum(i_node->right());
-	}
-
-	while(i_node->is_right()){
-		i_node = i_node->parent();
-	}
-	
-	return i_node->parent();
-}
-
-/*static Node_t* decrement(const Node_t*)*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* 
-	J_RB_Tree<St, Key, Comp_t, Alloc_t>::previous_node(const Node_t* i_node){
-	assert(i_node);
-	if(i_node->left()){
-		return maximum(i_node->left());
-	}
-
-	while(i_node->is_left()){
-		i_node = i_node->parent();
-	}
-	
-	return i_node->parent();
 }
 
 
-
-#ifdef RB_TREE_DEBUG //************************************************************
-
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::set_messages(bool val){
-	s_messages = val;
-}
+std::pair<RB_TREE_ITERATOR, bool> 
+	J_RB_Tree<St, Key, Comp_t, Alloc_t>::insert(const St& irk_val){
 
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-static void J_RB_Tree<St, Key, Comp_t, Alloc_t>::reset_rotations(){
-	num_rotations = 0;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-static int J_RB_Tree<St, Key, Comp_t, Alloc_t>::get_rotations(){
-	return num_rotations;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_right_pub(iterator pos){
-		try{
-			rotate_right(pos.M_pos);
-		} catch(Bad_Tree_Op& e){
-			std::cerr << e.what() << std::endl;
-		}
-	}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_left_pub(iterator pos){
-	try{
-		rotate_left(pos.M_pos);
-	} catch(Bad_Tree_Op& e){
-		std::cerr << e.what();
-	}
-}
-
-/*void print_output()*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::print_output(){
-	if(s_messages){
-		std::cout << M_output_stream.str() << std::endl;
-	}
-	M_output_stream.str(std::string());
-}
-
-/*Proper RB Tree*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-int J_RB_Tree<St, Key, Comp_t, Alloc_t>::proper_rb_tree()const{
-	bool return_val = true;
-	int black_height = 0;
-	if(!M_root)
-		return true;
-
-	if(M_root->is_red()){
-		std::cerr << "Red Root! egad!" << std::endl;
-		return false;
-	}
-
-	int found_black_height = -1;
-	 sub_proper_rb_tree(M_root, return_val, black_height, found_black_height);
-	 if(return_val)
-		 return found_black_height;
-	 return 0;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::sub_proper_rb_tree(Node_t* i_node, bool& valid, int& ir_black_height, int& found_black_height)const{
-	if(!valid)
-		return;
-
-	if(!i_node->is_red()){
-		++ir_black_height;
-	}else{
-		if(i_node->left()->is_red() || i_node->right()->is_red()){
-			std::cerr << "Red on Red Action!!!" << std::endl;
-			valid = false;
-			return;
-		}
-	}
-
-	if(!i_node){
-		valid = ((found_black_height == -1) || (found_black_height == (ir_black_height)));
-		if(!valid){
-			assert(found_black_height != ir_black_height);
-			std::cerr << "Differing Black Heights Calculated ! " << found_black_height << ' ' << ir_black_height << std::endl;
-		}
-		found_black_height = ir_black_height;
-	}else{
-		sub_proper_rb_tree(i_node->left(), valid, ir_black_height, found_black_height);
-		sub_proper_rb_tree(i_node->right(), valid, ir_black_height, found_black_height);
-	}
-	if(!i_node->is_red()){
-		--ir_black_height;
-	}
-
-}
-
-
-/*in order_walk*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::in_order_walk(std::ostream& oos){
-	size_t pos = 0;
-	if(empty()){
-		return;
-	}
-	if(M_root->left())
-		in_order_walk(oos, M_root->left(), pos);
-
-	oos << M_root->data() << ' ';
-	++pos;
-	if(pos == size()){
-		oos << std::endl;
-		return;
-	}
-	if(M_root->right())
-		in_order_walk(oos, M_root->right(), pos);
-}
-
-/*in order walk helper*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::in_order_walk(std::ostream& oos, Node_t* i_node, size_t& ir_pos){
-	if(i_node->left())
-		in_order_walk(oos, i_node->left(), ir_pos);
-	oos << i_node->data() << ' ';
-	++ir_pos;
-	if(ir_pos == size()){
-		oos << std::endl;
-		return;
-	}
-	if(i_node->right())
-		in_order_walk(oos, i_node->right(), ir_pos);
-}
-
-/*Num rotations*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-int J_RB_Tree<St, Key, Comp_t, Alloc_t>::num_rotations = 0;
-
-
-#endif // RB_TREE_DEBUG
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree():M_root(nullptr), M_size(0){}
-
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-J_RB_Tree<St, Key, Comp_t, Alloc_t>::~J_RB_Tree(){
-	
-	delete_nodes(M_root);
-}
-
-/*Delete Nodes*/
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::delete_nodes(Node_t* i_node){
-	if(!i_node)
-		return;
-
-	delete_nodes(i_node->left());
-	delete_nodes(i_node->right());
-	delete i_node;
-		
+	return insert_core(new Node_t(irk_val));
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
@@ -836,14 +612,6 @@ std::pair<typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator, bool>
 	return insert_core(new Node_t(std::move(irr_val)));
 }
 
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-std::pair<RB_TREE_ITERATOR, bool> 
-	J_RB_Tree<St, Key, Comp_t, Alloc_t>::insert(const St& irk_val){
-
-	return insert_core(new Node_t(irk_val));
-}
-
-/*Insert Core*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 std::pair<RB_TREE_ITERATOR, bool> J_RB_Tree<St, Key, Comp_t, Alloc_t>
 	::insert_core(Node_t* i_new_node){
@@ -940,38 +708,6 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::fix_up(Node_t* i_node){
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rb_transplant(Node_t* i_top_node, Node_t* i_bottom_node){
-#ifdef RB_TREE_DEBUG
-	M_output_stream << "Transplanting Nodes! Top Node: " << i_top_node->data();
-
-	if(i_bottom_node){
-		M_output_stream << " Bottom Node: " << i_bottom_node->data();
-	}else{
-		M_output_stream << " null bottom node...";
-	}
-	M_output_stream << std::endl;
-#endif // RB_TREE_DEBUG
-	if(!i_top_node->parent()){
-#ifdef RB_TREE_DEBUG
-		M_output_stream << "New Root Node: " ;
-			if(i_bottom_node)
-				M_output_stream << i_bottom_node->data() << std::endl;
-			else {
-				M_output_stream << "null node" << std::endl;
-			}
-#endif // RB_TREE_DEBUG
-		M_root = i_bottom_node;
-	}else if(i_top_node->is_left()){
-		i_top_node->parent()->left() = i_bottom_node;
-	}else{
-		i_top_node->parent()->right() = i_bottom_node;
-	}
-	if(i_bottom_node){
-		i_bottom_node->parent() = i_top_node->parent();
-	}
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
 j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const Key& i_key){
 	auto key_range = equal_range(i_key);
 	
@@ -984,7 +720,7 @@ j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const Key& i_key){
 	return return_val;
 }
 
-/*Erase*/
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator 
 	J_RB_Tree<St, Key, Comp_t, Alloc_t>::erase(const_iterator i_pos){
@@ -1090,12 +826,37 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator
 
 
 
-template<typename St, typename Key /*= St*/, class Comp_t /*= std::less<Key>*/, class Alloc_t /*= std::allocator<St>*/>
-std::pair<RB_TREE_ITERATOR, RB_TREE_ITERATOR> 
-	RB_TREE_TEMPLATE::equal_range(const Key& irk_key){
-	return std::make_pair(lower_bound(irk_key), upper_bound(irk_key));
-}
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rb_transplant(Node_t* i_top_node, Node_t* i_bottom_node){
+#ifdef RB_TREE_DEBUG
+	M_output_stream << "Transplanting Nodes! Top Node: " << i_top_node->data();
 
+	if(i_bottom_node){
+		M_output_stream << " Bottom Node: " << i_bottom_node->data();
+	}else{
+		M_output_stream << " null bottom node...";
+	}
+	M_output_stream << std::endl;
+#endif // RB_TREE_DEBUG
+	if(!i_top_node->parent()){
+#ifdef RB_TREE_DEBUG
+		M_output_stream << "New Root Node: " ;
+			if(i_bottom_node)
+				M_output_stream << i_bottom_node->data() << std::endl;
+			else {
+				M_output_stream << "null node" << std::endl;
+			}
+#endif // RB_TREE_DEBUG
+		M_root = i_bottom_node;
+	}else if(i_top_node->is_left()){
+		i_top_node->parent()->left() = i_bottom_node;
+	}else{
+		i_top_node->parent()->right() = i_bottom_node;
+	}
+	if(i_bottom_node){
+		i_bottom_node->parent() = i_top_node->parent();
+	}
+}
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 void J_RB_Tree<St, Key, Comp_t, Alloc_t>::delete_fixup(Node_t* i_node){
@@ -1239,53 +1000,63 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::delete_fixup(Node_t* i_node, bool left
 	
 }
 
-/*Rotate Left*/
+/*void clear()*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_left(Node_t* i_node){
-#ifdef RB_TREE_DEBUG
-	if(s_messages){
-		M_output_stream <<"Rotating Left Node: " << i_node->data() << std::endl;
-	}
-#endif // RB_TREE_DEBUG
-	Node_t* trace_node = i_node->right();
-
-#ifdef RB_TREE_DEBUG
-	if(!trace_node){
-		throw Bad_Tree_Op("No Right Node!");
-	}
-#else
-	assert(trace_node);
-#endif // RB_TREE_DEBUG
-
-	i_node->right() = trace_node->left();
-	if(trace_node->left()){
-		trace_node->left()->parent() = i_node;
-	}
-	trace_node->parent() = i_node->parent();
-	if(!i_node->parent()){
-#ifdef RB_TREE_DEBUG
-		if(s_messages){
-			M_output_stream << "New Root Node: " << trace_node->data() << std::endl;
-		}
-#endif // RB_TREE_DEBUG
-		M_root = trace_node;
-	}else if(i_node->is_left()){
-		i_node->parent()->left() = trace_node;
-	}else{
-		i_node->parent()->right() = trace_node;
-	}
-	trace_node->left() = i_node;
-	i_node->parent() = trace_node;
-#ifdef RB_TREE_DEBUG
-	if(s_messages){
-		M_output_stream << "Rotation " << num_rotations << std::endl;
-	}
-	++num_rotations;
-#endif // RB_TREE_DEBUG
-	
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::clear(){
+	delete_nodes(M_root);
+	M_size = 0;
+	M_root = nullptr;
 }
 
-/*Rotate Right*/
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::begin(){
+	return iterator(minimum());
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::end(){
+	return iterator(nullptr);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::begin()const{
+	return const_iterator(minimum());
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::end()const{
+	return const_iterator(nullptr);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::cbegin()const{
+	return const_iterator(minimum());
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::cend()const{
+	return const_iterator(nullptr);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+template<class Func_obj>
+Func_obj J_RB_Tree<St, Key, Comp_t, Alloc_t>::apply(Func_obj i_func_obj){
+	return apply_internal(i_func_obj, M_root);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+template<class Func_obj>
+Func_obj J_RB_Tree<St, Key, Comp_t, Alloc_t>
+	::apply_internal(Func_obj i_func_obj, Node_t* i_node){
+	if(!i_node)
+		return i_func_obj;
+	i_func_obj(i_node->data());
+	i_func_obj = apply_internal(i_func_obj, i_node->left());
+	return apply_internal(i_func_obj, i_node->right());
+}
+
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_right(Node_t* i_node){
 #ifdef RB_TREE_DEBUG
@@ -1332,7 +1103,7 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_right(Node_t* i_node){
 }
 
 
-/*Find*/
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator J_RB_Tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key){
 	Node_t* found_node(find_node(irk_key));
@@ -1344,7 +1115,7 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator J_RB_Tree<St, Key, Comp_t
 }
 
 
-/*Find*/
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::const_iterator J_RB_Tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key)const{
 	Node_t* found_node(find_node(irk_key));
@@ -1393,24 +1164,6 @@ ENABLE_IF_ST_OR_KEY(Key_t, typename RB_TREE_TEMPLATE::Node_t*) J_RB_Tree<St, Key
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 template<typename Key_t>
 ENABLE_IF_ST_OR_KEY(Key_t, typename RB_TREE_TEMPLATE::Node_t*)
-	RB_TREE_TEMPLATE::upper_bound_node(const Key_t& irk_key)const{
-
-	Node_t* node = insert_pos_node(irk_key);
-	
-	if(!node){
-		return nullptr;
-	}
-
-	if(!M_comp(irk_key, node->data()) && !M_comp(node->data(), irk_key)){
-		return next_node(node);
-	}
-
-	return node;
-}
-
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-template<typename Key_t>
-ENABLE_IF_ST_OR_KEY(Key_t, typename RB_TREE_TEMPLATE::Node_t*)
 RB_TREE_TEMPLATE::insert_pos_node(const Key_t& irk_key)const{
 
 	Node_t* prev_node;
@@ -1448,23 +1201,17 @@ J_RB_Tree<St, Key, Comp_t, Alloc_t>::lower_bound(const Key& irk_key)const{
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_ITERATOR RB_TREE_TEMPLATE::upper_bound(const Key& irk_key){
+RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::upper_bound(const Key& irk_key){
 	return iterator(upper_bound_node(irk_key));
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR RB_TREE_TEMPLATE::upper_bound(const Key& irk_key)const{
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::upper_bound(const Key& irk_key)const{
 	return const_iterator(upper_bound_node(irk_key));
 }
 
 
 
-template<typename St, typename Key, typename Comp_t, class Alloc_t>
-template<typename Left_t, typename Right_t>
-ENABLE_IF_ST_OR_KEY(ENABLE_IF_ST_OR_KEY(Left_t, Right_t), bool)
-	J_RB_Tree<St, Key, Comp_t, Alloc_t>::equal(const Left_t& irk_data, const Right_t& irk_key)const{
-	return (!M_comp(irk_data, irk_key) && !M_comp(irk_key, irk_data));
-}
 
 /*Minimum*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
@@ -1518,7 +1265,35 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* J_RB_Tree<St, Key, Comp_t,
 }
 
 
-/*bool count(const Key&)const*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::root(){
+	return iterator(M_root);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::root()const{
+	return const_iterator(M_root);
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+template<typename Left_t, typename Right_t>
+ENABLE_IF_ST_OR_KEY(ENABLE_IF_ST_OR_KEY(Left_t, Right_t), bool)
+	J_RB_Tree<St, Key, Comp_t, Alloc_t>::equal(const Left_t& irk_data, const Right_t& irk_key)const{
+	return (!M_comp(irk_data, irk_key) && !M_comp(irk_key, irk_data));
+}
+		
+			
+	
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::size()const{
+	return M_size;
+}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::empty()const{
+	return !M_root;
+}
+
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::count(const Key& irk_key)const{
 	j_size_t return_val = 0;
@@ -1531,34 +1306,268 @@ j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::count(const Key& irk_key)const{
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::begin(){
-	return iterator(minimum());
+typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* 
+	J_RB_Tree<St, Key, Comp_t, Alloc_t>::next_node(const Node_t* i_node){
+	assert(i_node);
+	if(i_node->right()){
+		return minimum(i_node->right());
+	}
+
+	while(i_node->is_right()){
+		i_node = i_node->parent();
+	}
+	
+	return i_node->parent();
+}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::Node_t* 
+	J_RB_Tree<St, Key, Comp_t, Alloc_t>::previous_node(const Node_t* i_node){
+	assert(i_node);
+	if(i_node->left()){
+		return maximum(i_node->left());
+	}
+
+	while(i_node->is_left()){
+		i_node = i_node->parent();
+	}
+	
+	return i_node->parent();
+}
+
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+J_RB_Tree<St, Key, Comp_t, Alloc_t>::~J_RB_Tree(){
+	
+	delete_nodes(M_root);
+}
+
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::delete_nodes(Node_t* i_node){
+	if(!i_node)
+		return;
+
+	delete_nodes(i_node->left());
+	delete_nodes(i_node->right());
+	delete i_node;
+		
+}
+
+template<typename St, typename Key /*= St*/, class Comp_t /*= std::less<Key>*/, class Alloc_t /*= std::allocator<St>*/>
+std::pair<RB_TREE_ITERATOR, RB_TREE_ITERATOR> 
+	RB_TREE_TEMPLATE::equal_range(const Key& irk_key){
+	return std::make_pair(lower_bound(irk_key), upper_bound(irk_key));
+}
+
+
+/*Rotate Left*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_left(Node_t* i_node){
+#ifdef RB_TREE_DEBUG
+	if(s_messages){
+		M_output_stream <<"Rotating Left Node: " << i_node->data() << std::endl;
+	}
+#endif // RB_TREE_DEBUG
+	Node_t* trace_node = i_node->right();
+
+#ifdef RB_TREE_DEBUG
+	if(!trace_node){
+		throw Bad_Tree_Op("No Right Node!");
+	}
+#else
+	assert(trace_node);
+#endif // RB_TREE_DEBUG
+
+	i_node->right() = trace_node->left();
+	if(trace_node->left()){
+		trace_node->left()->parent() = i_node;
+	}
+	trace_node->parent() = i_node->parent();
+	if(!i_node->parent()){
+#ifdef RB_TREE_DEBUG
+		if(s_messages){
+			M_output_stream << "New Root Node: " << trace_node->data() << std::endl;
+		}
+#endif // RB_TREE_DEBUG
+		M_root = trace_node;
+	}else if(i_node->is_left()){
+		i_node->parent()->left() = trace_node;
+	}else{
+		i_node->parent()->right() = trace_node;
+	}
+	trace_node->left() = i_node;
+	i_node->parent() = trace_node;
+#ifdef RB_TREE_DEBUG
+	if(s_messages){
+		M_output_stream << "Rotation " << num_rotations << std::endl;
+	}
+	++num_rotations;
+#endif // RB_TREE_DEBUG
+	
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::end(){
-	return iterator(nullptr);
+template<typename Key_t>
+ENABLE_IF_ST_OR_KEY(Key_t, typename RB_TREE_TEMPLATE::Node_t*)
+	J_RB_Tree<St, Key, Comp_t, Alloc_t>::upper_bound_node(const Key_t& irk_key)const{
+
+	Node_t* node = insert_pos_node(irk_key);
+	
+	if(!node){
+		return nullptr;
+	}
+
+	if(!M_comp(irk_key, node->data()) && !M_comp(node->data(), irk_key)){
+		return next_node(node);
+	}
+
+	return node;
+}
+
+
+
+/*bool count(const Key&)const*/
+#ifdef RB_TREE_DEBUG //************************************************************
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::set_messages(bool val){
+	s_messages = val;
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::begin()const{
-	return const_iterator(minimum());
+static void J_RB_Tree<St, Key, Comp_t, Alloc_t>::reset_rotations(){
+	num_rotations = 0;
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::end()const{
-	return const_iterator(nullptr);
+static int J_RB_Tree<St, Key, Comp_t, Alloc_t>::get_rotations(){
+	return num_rotations;
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::cbegin()const{
-	return const_iterator(minimum());
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_right_pub(iterator pos){
+		try{
+			rotate_right(pos.M_pos);
+		} catch(Bad_Tree_Op& e){
+			std::cerr << e.what() << std::endl;
+		}
+	}
+
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_left_pub(iterator pos){
+	try{
+		rotate_left(pos.M_pos);
+	} catch(Bad_Tree_Op& e){
+		std::cerr << e.what();
+	}
+}
+
+/*void print_output()*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::print_output(){
+	if(s_messages){
+		std::cout << M_output_stream.str() << std::endl;
+	}
+	M_output_stream.str(std::string());
+}
+
+/*Proper RB Tree*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+int J_RB_Tree<St, Key, Comp_t, Alloc_t>::proper_rb_tree()const{
+	bool return_val = true;
+	int black_height = 0;
+	if(!M_root)
+		return true;
+
+	if(M_root->is_red()){
+		std::cerr << "Red Root! egad!" << std::endl;
+		return false;
+	}
+
+	int found_black_height = -1;
+	 sub_proper_rb_tree(M_root, return_val, black_height, found_black_height);
+	 if(return_val)
+		 return found_black_height;
+	 return 0;
 }
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
-RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::cend()const{
-	return const_iterator(nullptr);
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::sub_proper_rb_tree(Node_t* i_node, bool& valid, int& ir_black_height, int& found_black_height)const{
+	if(!valid)
+		return;
+
+	if(!i_node->is_red()){
+		++ir_black_height;
+	}else{
+		if(i_node->left()->is_red() || i_node->right()->is_red()){
+			std::cerr << "Red on Red Action!!!" << std::endl;
+			valid = false;
+			return;
+		}
+	}
+
+	if(!i_node){
+		valid = ((found_black_height == -1) || (found_black_height == (ir_black_height)));
+		if(!valid){
+			assert(found_black_height != ir_black_height);
+			std::cerr << "Differing Black Heights Calculated ! " << found_black_height << ' ' << ir_black_height << std::endl;
+		}
+		found_black_height = ir_black_height;
+	}else{
+		sub_proper_rb_tree(i_node->left(), valid, ir_black_height, found_black_height);
+		sub_proper_rb_tree(i_node->right(), valid, ir_black_height, found_black_height);
+	}
+	if(!i_node->is_red()){
+		--ir_black_height;
+	}
+
 }
+
+
+/*in order_walk*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::in_order_walk(std::ostream& oos){
+	size_t pos = 0;
+	if(empty()){
+		return;
+	}
+	if(M_root->left())
+		in_order_walk(oos, M_root->left(), pos);
+
+	oos << M_root->data() << ' ';
+	++pos;
+	if(pos == size()){
+		oos << std::endl;
+		return;
+	}
+	if(M_root->right())
+		in_order_walk(oos, M_root->right(), pos);
+}
+
+/*in order walk helper*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+void J_RB_Tree<St, Key, Comp_t, Alloc_t>::in_order_walk(std::ostream& oos, Node_t* i_node, size_t& ir_pos){
+	if(i_node->left())
+		in_order_walk(oos, i_node->left(), ir_pos);
+	oos << i_node->data() << ' ';
+	++ir_pos;
+	if(ir_pos == size()){
+		oos << std::endl;
+		return;
+	}
+	if(i_node->right())
+		in_order_walk(oos, i_node->right(), ir_pos);
+}
+
+/*Num rotations*/
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+int J_RB_Tree<St, Key, Comp_t, Alloc_t>::num_rotations = 0;
+
+
+#endif // RB_TREE_DEBUG
 
 //RB_Tree_Node_Definitions------------------------------------------------------------
 
