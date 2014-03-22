@@ -64,11 +64,11 @@ public:
 	typedef J_UI_Char_Arr_t::iterator iterator;
 	typedef J_UI_Char_Arr_t::const_iterator const_iterator;
 
-	typedef value_ptr_iterator<J_Char_t, iterator::pointer, J_UI_Char, J_UI_String, decltype(std::mem_fn(&J_UI_Char::charcode))> char_iterator;
+	typedef value_ptr_iterator<J_Char_t, iterator::pointer, J_UI_String, decltype(std::mem_fn(&J_UI_Char::charcode))> char_iterator;
 	//typedef value_ptr_iterator<int, iterator, J_UI_Char, J_UI_String, decltype(std::mem_fn(&J_UI_Char::font_id))> font_id_iterator;
 	//typedef value_ptr_iterator<int, iterator, J_UI_Char, J_UI_String, decltype(std::mem_fn(&J_UI_Char::color_id))> color_id_iterator;
 
-	typedef value_ptr_iterator<J_Char_t, const_iterator::pointer, J_UI_Char, J_UI_String, decltype(std::mem_fn(&J_UI_Char::charcode))> 
+	typedef value_ptr_iterator<J_Char_t, const_iterator::pointer, J_UI_String, decltype(std::mem_fn(&J_UI_Char::charcode))> 
 		char_const_iterator;
 	//typedef value_ptr_iterator<int, const_iterator, J_UI_Char, J_UI_String, decltype(std::mem_fn(&J_UI_Char::font_id))> 
 	//	font_id_const_iterator;
@@ -269,10 +269,10 @@ public:
 	typedef multi_string_iterator<J_UI_Char> j_ui_char_iterator;
 	typedef multi_string_iterator<const J_UI_Char> j_ui_char_const_iterator;
 
-	typedef value_ptr_iterator<J_Char_t, j_ui_char_iterator, J_UI_Char
+	typedef value_ptr_iterator<J_Char_t, j_ui_char_iterator
 		, J_UI_Multi_String, decltype(std::mem_fn(&J_UI_Char::charcode))> char_iterator;
 
-	typedef value_ptr_iterator<J_Char_t, j_ui_char_const_iterator, J_UI_Char, J_UI_Multi_String
+	typedef value_ptr_iterator<J_Char_t, j_ui_char_const_iterator, J_UI_Multi_String
 		, decltype(std::mem_fn(&J_UI_Char::charcode))> char_const_iterator;
 
 	typedef J_UI_String_Arr_t::iterator iterator;

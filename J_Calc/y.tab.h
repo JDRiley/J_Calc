@@ -46,46 +46,28 @@ extern int yydebug;
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     T_Void = 258,
-     T_Bool = 259,
-     T_Int = 260,
-     T_Double = 261,
-     T_String = 262,
-     T_Class = 263,
-     T_Null = 264,
-     T_Else = 265,
-     T_Extends = 266,
-     T_This = 267,
-     T_Interface = 268,
-     T_Implements = 269,
-     T_While = 270,
-     T_For = 271,
-     T_If = 272,
-     T_Return = 273,
-     T_Break = 274,
-     T_New = 275,
-     T_NewArray = 276,
-     T_Print = 277,
-     T_ReadInteger = 278,
-     T_ReadLine = 279,
-     T_Identifier = 280,
-     T_StringConstant = 281,
-     T_IntConstant = 282,
-     T_DoubleConstant = 283,
-     T_BoolConstant = 284,
-     T_Switch = 285,
-     T_Case = 286,
-     T_Default = 287,
-     T_Or = 288,
-     T_And = 289,
-     T_NotEqual = 290,
-     T_Equal = 291,
-     T_GreaterEqual = 292,
-     T_LessEqual = 293,
-     T_Decrem = 294,
-     T_Increm = 295,
-     NEGATION = 296,
-     T_Dims = 297
+     T_VOID = 258,
+     T_BOOL = 259,
+     T_INT = 260,
+     T_DOUBLE = 261,
+     T_STRING = 262,
+     T_NULL_PTR = 263,
+     T_LEFT_ARROW = 264,
+     T_IDENTIFIER = 265,
+     T_STRING_CONSTANT = 266,
+     T_INTEGER_CONSTANT = 267,
+     T_DOUBLE_CONSTANT = 268,
+     T_BOOLEAN_CONSTANT = 269,
+     T_OR = 270,
+     T_AND = 271,
+     T_NOT_EQUAL = 272,
+     T_EQUAL = 273,
+     T_GREATER_EQUAL = 274,
+     T_LESS_EQUAL = 275,
+     T_DECREMENT = 276,
+     T_INCREMENT = 277,
+     NEGATION = 278,
+     T_DIMENSIONS = 279
    };
 #endif
 
@@ -94,63 +76,22 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 63 "parser.y"
+#line 62 "parser.y"
 
-    int								integerConstant;
-    bool							boolConstant;
-    char*							stringConstant;
-
-    double							doubleConstant;
-	//Here this was char normally
-    jomike::Identifier_Name*		identifier; // +1 for terminating null
-    jomike::Declaration_Syntax*		declaration;
-    jomike::Declaration_List*		declaration_list;
-	jomike::Prototype_List*			prototype_list;
-	jomike::Prototype_Declaration*	prototype_declaration;
-	jomike::Program_Tree*			program_tree;
-	jomike::Variable_Syntax*		variable;
-	jomike::Type_Syntax*			type;
-	jomike::Type_Named*				type_named;
-	jomike::Statement_Syntax*		statement_syntax; 
-	jomike::Statement_Component*	statement_component;
-	jomike::Statement_List*			statement_list;
-	jomike::Statement_Block*		statement_block;
-	jomike::LValue_Expression*		lvalue;
-	jomike::Field_Access_Expression*field_access;
-	jomike::Expression*				expression;
-	jomike::Call_Expression*		call_expression;
-	jomike::Expression_List*		expression_list;
-	jomike::Prefix_Operator*		prefix_operator;
-	jomike::Named_Type_List*		named_type_list;
-	jomike::Expression_Wild*		expression_wild;
-	jomike::Field_List*				field_list;
-	jomike::Variable_Declaration*	variable_declaration;
-	jomike::Function_Declaration*	function_declaration;
+    jomike::J_UI_String*			identifier;
+    jomike::j_symbol_component*		symbol_component;
 
 
 /* Line 2058 of yacc.c  */
-#line 133 "y.tab.h"
+#line 87 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-typedef struct YYLTYPE
-{
-  int first_line;
-  int first_column;
-  int last_line;
-  int last_column;
-} YYLTYPE;
-# define yyltype YYLTYPE /* obsolescent; will be withdrawn */
-# define YYLTYPE_IS_DECLARED 1
-# define YYLTYPE_IS_TRIVIAL 1
-#endif
-
 extern YYSTYPE yylval;
-extern YYLTYPE yylloc;
+
 #ifdef YYPARSE_PARAM
 #if defined __STDC__ || defined __cplusplus
 int yyparse (void *YYPARSE_PARAM);

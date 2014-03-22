@@ -106,13 +106,13 @@
     <None Include="x64\AssertHappy\in_script.jcs">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="scanner.l">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="parser.output">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="parser.y">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="scanner.l">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

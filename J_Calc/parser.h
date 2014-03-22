@@ -1,15 +1,15 @@
 /* File: parser.h
- * --------------
- * This file provides constants and type definitions that will
- * are used and/or exported by the yacc-generated parser.
- */
+* --------------
+* This file provides constants and type definitions that will
+* are used and/or exported by the yacc-generated parser.
+*/
 
 #ifndef PARSER_H
 #define PARSER_H
 
-  // here we need to include things needed for the yylval union
-  // (types, classes, constants, etc.)
-  
+// here we need to include things needed for the yylval union
+// (types, classes, constants, etc.)
+
 #include "scanner.h"            
 
 // Next, we want to get the exported defines for the token codes and
@@ -22,7 +22,10 @@
 // Managing C headers can be such a mess! 
 
 
-
+//
+#include <J_Symbol_Fwd_Decl.h>
+//
+#include <J_UI/J_UI_String.h>
 #ifndef YYBISON                
 #include "y.tab.h"              
 #endif
@@ -34,7 +37,10 @@
 #define YYDEBUG 1
 #endif
 
-extern jomike::Program_Tree* g_program_tree;
+namespace jomike {
+extern j_symbol_component* g_input_line;
+}
+
 int yyparse();              // Defined in the generated y.tab.c file
 void InitParser();          // Defined in parser.y
 

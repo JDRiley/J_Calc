@@ -59,12 +59,13 @@ DOUBLE            ({INTEGER}"."{DIGIT}*{EXPONENT}?)
 BEG_STRING        (\"[^"\n]*)
 STRING            ({BEG_STRING}\")
 IDENTIFIER        ([a-zA-Z][a-zA-Z_0-9]*)
-OPERATOR          ([-+/*%=.,;!<>()[\]{}])
+OPERATOR          ([-+/*%=.,;!<>()[\]{}\?\:])
 BEG_COMMENT       ("/*")
 END_COMMENT       ("*/")
 SINGLE_COMMENT    ("//"[^\n]*)
 
-%%             /* BEGIN RULES SECTION */
+%%
+             /* BEGIN RULES SECTION */
 
 <COPY>.*               { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
@@ -89,85 +90,68 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
  /* --------------------- Keywords ------------------------------- */
-"int"               { return T_Int;         }
-"double"|"dbl"      { return T_Double;      }
-"bool"              { return T_Bool;        }
-"string"            { return T_String;      }
-"null"              { return T_Null;        }
-"while"             { return T_While;       }
-"for"               { return T_For;         }
-"break"             { return T_Break;       }
-
-
-":"                 { return ':';           }
+"int"				{ return T_INT;}
+"double"|"dbl"		{ return T_DOUBLE;      }
+"bool"				{ return T_BOOL;        }
+"string"			{ return T_STRING;      }
+"null_ptr"			{ return T_NULL_PTR;        }			
 
 
 
 
 
  /* -------------------- Operators ----------------------------- */
-"<="                { return T_LessEqual;   }
-">="                { return T_GreaterEqual;}
-"=="                { return T_Equal;       }
-"!="                { return T_NotEqual;    }
-"&&"                { return T_And;         }
-"||"                { return T_Or;          }
-
-\! {
-	yylval.prefix_operator 
-		= new Prefix_Operator(Prefix_Operators::NOT, yylloc);
-	return '!';
-}
+"<="                { return T_LESS_EQUAL;   }
+">="                { return T_GREATER_EQUAL;}
+"=="                { return T_EQUAL;       }
+"!="                { return T_NOT_EQUAL;    }
+"&&"                { return T_AND;         }
+"||"                { return T_OR;          }
 
 
 
-<<EOF>> {	
+<<EOF>> {
+	yylex_destroy();
 	return 0;
 }
 
-{OPERATOR}          { return yytext[0];     }
+{OPERATOR}          { return yytext[0];}
     
-"[]"                { return T_Dims;        }
+"[]"                { return T_DIMENSION;}
 
 
 
  /* -------------------- Constants ------------------------------ */
-"true"|"false"      { yylval.boolConstant = (yytext[0] == 't');
-                         return T_BoolConstant; }
-{INTEGER}           { yylval.integerConstant = strtol(yytext, NULL, 10);
-					yylval.expression 
-							= make_int_constant_expression(
-							yylval.integerConstant, yylloc);
-                         return T_IntConstant; }
-{HEX_INTEGER}       { yylval.integerConstant = strtol(yytext, NULL, 16);
-					yylval.expression 
-							= make_int_constant_expression(
-							yylval.integerConstant, yylloc);
-                         return T_IntConstant; }
-{DOUBLE}            { yylval.doubleConstant = atof(yytext);
-                         return T_DoubleConstant; }
-{STRING}            { yylval.stringConstant = yytext; 
-                         return T_StringConstant; }
-{BEG_STRING}        { ReportError::UntermString(yylloc, yytext); }
+"true" | "false"      {yylval.symbol_component*
+		= make_bool_symbol("t" == yytext[0] ? true : false, yylloc);
+	return T_BOOL_CONSTANT;}
+{INTEGER}           {	int val = strtol(yytext, NULL, 10);
+	yylval.symbol_component
+		= make_int_constant_expression(
+		val, yylloc);
+	return T_INTEGER_CONSTANT;}
+{HEX_INTEGER}       {int val = strtol(yytext, NULL, 16);
+	yylval.symbol_component
+		= make_int_constant_expression(
+		val, yylloc);
+	return T_INTEGER_CONSTANT;}
+{DOUBLE}            {int val = atof(yytext);
+	yylval.symbol_component
+		= make_double_number_symbol(val, yylloc);
+	return T_DOUBLE_CONSTANT;}
+{STRING}            {yylval.identifier = new J_UI_String(yytext);
+	return T_STRING_CONSTANT;}
+{BEG_STRING}        {assert(!"Unterminaned String");}
 
 
  /* -------------------- Identifiers --------------------------- */
-{IDENTIFIER}        { 
-					   int string_length = strlen(yytext);
-					   if (strlen(yytext) > MaxIdentLen)
-                         ReportError::LongIdentifier(yylloc, yytext);
-					   std::string identifier_str(yytext, yytext + strlen(yytext));
-
-					   identifier_str.resize(std::min(MaxIdentLen-1, string_length));
-					   yylval.identifier = new jomike::Identifier_Name(identifier_str, yylloc);
-                       return T_Identifier; }
-
+{IDENTIFIER}        {yylval.identifier = new jomike::J_UI_String(yytext);
+						return T_IDENTIFIER; }
 
  /* -------------------- Default rule (error) -------------------- */
-.                   { ReportError::UnrecogChar(yylloc, yytext[0]); }
+.                   { assert(!"Unrecognized Character"); }
 
 %%
-
 
 /* Function: InitScanner
  * ---------------------
@@ -181,8 +165,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
  * be helpful when debugging your scanner. Please be sure the variable is
  * set to false when submitting your final version.
  */
-void init_scanner()
-{
+void init_scanner(){
     PrintDebug("lex", "Initializing scanner");
     yy_flex_debug = false;
     BEGIN(N);
@@ -194,4 +177,11 @@ void init_scanner()
 const char *GetLineNumbered(int num) {
    if (num <= 0 || num > g_saved_lines.size()) return NULL;
    return g_saved_lines[num-1].c_str();
+}
+
+static void DoBeforeEachAction(){
+   yylloc.first_line = curLineNum;
+   yylloc.first_column = curColNum;
+   yylloc.last_column = curColNum + yyleng - 1;
+   curColNum += yyleng;
 }

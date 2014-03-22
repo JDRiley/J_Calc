@@ -33,6 +33,8 @@ public:
 	j_tree(j_tree&& irr_src):M_tree(std::move(irr_src.M_tree)){}
 	j_tree(const j_tree& irk_src);
 
+	j_tree& operator=(const j_tree& irr_tree);
+	j_tree& operator=(j_tree&& irr_tree);
 	
 
 	typedef typename Base_Tree_t::iterator iterator;
@@ -94,8 +96,21 @@ private:
 
 
 };
-template<typename St, typename Key, typename Comp_t /*= std::less\<St\>*/
-	, typename Alloc_t /*= std::allocator<std::pair<St, Key>>*/>
+
+template<typename St, typename Key, typename Comp_t, typename Alloc_t>
+j_tree<St, Key, Comp_t, Alloc_t>& j_tree<St, Key, Comp_t, Alloc_t>::operator=(j_tree&& irr_tree){
+	swap(irr_tree);
+	return *this;
+}
+
+template<typename St, typename Key, typename Comp_t, typename Alloc_t>
+j_tree<St, Key, Comp_t, Alloc_t>& j_tree<St, Key, Comp_t, Alloc_t>::operator=(const j_tree& irk_tree){
+	j_tree temp(irk_tree);
+	swap(temp);
+	return *this;
+}
+
+template<typename St, typename Key, typename Comp_t, typename Alloc_t>
 template<class Func_obj>
 Func_obj j_tree<St, Key, Comp_t, Alloc_t>::apply(Func_obj i_func_obj){
 	return M_tree.apply(i_func_obj);
@@ -103,8 +118,7 @@ Func_obj j_tree<St, Key, Comp_t, Alloc_t>::apply(Func_obj i_func_obj){
 
 
 
-template<typename St, typename Key, typename Comp_t /*= std::less\<St\>*/
-	, typename Alloc_t /*= std::allocator<std::pair<St, Key>>*/>
+template<typename St, typename Key, typename Comp_t, typename Alloc_t>
 void j_tree<St, Key, Comp_t, Alloc_t>::swap(j_tree<St, Key, Comp_t, Alloc_t>& ir_src){
 	M_tree.swap(ir_src.M_tree);
 }
@@ -146,9 +160,7 @@ typename j_tree<St, Key, Comp_t, Alloc_t>::insert_result_t
 			return insert_result_t(iter_pos, false);
 		}
 
-
-		auto pair = M_tree.insert(std::move(irr_val));
-		return insert_result_t(pair.first, pair.second);
+		return M_tree.insert(std::move(irr_val));
 }
 
 template<typename St, typename Key, typename Comp_t /*= std::less<St>*/

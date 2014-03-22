@@ -3,8 +3,11 @@
 
 #ifdef RB_TREE_DEBUG
 #include "J_RB_Tree_Error.h"
+//
 #include <iostream>
+//
 #include <sstream>
+//
 #include <string>
 #endif //RB_TREE_DEBUG
 
@@ -369,6 +372,7 @@ private:
 	friend const_iterator;
 
 //Members---------------------------------------------------------------------------------
+	
 	//Root element of tree.
 	Node_t* M_root;
 
@@ -494,7 +498,6 @@ private:
 	//friend typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator;
 	//friend typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::const_iterator;
 
-
 	RB_Node__* M_left;
 	RB_Node__* M_right;
 	RB_Node__* M_parent;
@@ -557,6 +560,7 @@ template<typename iter>
 J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(iter i_pos, iter i_last):J_RB_Tree(){
 	assign(i_pos, i_last);
 }
+
 /*void assign(Iter, Iter)*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 template<typename Iter>
@@ -672,7 +676,7 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::fix_up(Node_t* i_node){
 	while(i_node->parent()->is_red()){
 		if(i_node->parent()->is_left()){
 			trace_node = i_node->parent()->parent()->right();
-			if(trace_node && trace_node->is_red()){
+			if(trace_node->is_red()){
 				i_node->parent()->color_black();
 				trace_node->color_black();
 				i_node->parent()->parent()->color_red();
@@ -727,7 +731,8 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator
 
 	Node_t* cur_node = i_pos.base();
 	assert(cur_node);
-	iterator iterator_to_return = ++iterator(cur_node);
+	iterator iterator_to_return = ++iterator(cur_node); 
+	assert(iterator(next_node(cur_node)) == iterator_to_return);
 	Node_t* node_to_delete = cur_node;
 	Node_t* trailing_node = cur_node;
 	assert(trailing_node);
@@ -1102,8 +1107,6 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::rotate_right(Node_t* i_node){
 #endif // RB_TREE_DEBUG
 }
 
-
-
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator J_RB_Tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key){
 	Node_t* found_node(find_node(irk_key));
@@ -1113,8 +1116,6 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator J_RB_Tree<St, Key, Comp_t
 		return end();
 	}
 }
-
-
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::const_iterator J_RB_Tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key)const{
@@ -1210,9 +1211,6 @@ RB_TREE_CONST_ITERATOR J_RB_Tree<St, Key, Comp_t, Alloc_t>::upper_bound(const Ke
 	return const_iterator(upper_bound_node(irk_key));
 }
 
-
-
-
 /*Minimum*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator J_RB_Tree<St, Key, Comp_t, Alloc_t>::minimum(){
@@ -1294,6 +1292,7 @@ bool J_RB_Tree<St, Key, Comp_t, Alloc_t>::empty()const{
 	return !M_root;
 }
 
+/*bool count(const Key&)const*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::count(const Key& irk_key)const{
 	j_size_t return_val = 0;
@@ -1429,7 +1428,7 @@ ENABLE_IF_ST_OR_KEY(Key_t, typename RB_TREE_TEMPLATE::Node_t*)
 
 
 
-/*bool count(const Key&)const*/
+
 #ifdef RB_TREE_DEBUG //************************************************************
 
 template<typename St, typename Key, typename Comp_t, class Alloc_t>

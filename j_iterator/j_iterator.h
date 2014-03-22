@@ -22,7 +22,7 @@ public:
 	typedef std::ptrdiff_t				 	difference_type;
 	typedef typename traits_type::reference 	reference;
 	typedef typename traits_type::pointer   	pointer;
-
+	typedef Container container_type;
 	//From Pointer
 	ptr_iterator(const Iter& _i_pos): M_pos(_i_pos){}
 
@@ -181,7 +181,7 @@ public:
 	typedef value_type*						pointer;
 	typedef const value_type*	const_pointer;
 
-	node_iterator(Iter i_pos):M_node(i_pos){}
+	
 
 
 	node_iterator(const node_iterator<Iter, typename std::remove_const<Val_t>::type, Container>& irk_src)
@@ -195,13 +195,19 @@ public:
 	reference operator*()const{ return M_node->data(); }
 	pointer operator->()const{ return &M_node->data(); }
 private:
+	node_iterator(Iter i_pos):M_node(i_pos){}
 
 	Iter M_node;
+	//For allowing access to base() for copy construction
 	friend class node_iterator<Iter, typename std::add_const<Val_t>::type, Container>;
 	friend class node_iterator<Iter, typename std::remove_const<Val_t>::type, Container>;
 
+	/*For allowing access to .base() for the container to go from an iterator to a node	*/
+	/* Also for allowing access to the private node_iterator(Iter) constructor			*/
 	friend Container;
 
+
+	
 	template<typename Iter_t, typename Val_TypeL, typename Val_TypeR, typename Cont_t>
 	friend typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
 		, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type
@@ -213,22 +219,6 @@ private:
 		, typename std::remove_cv<Val_TypeR>::type>::value, bool>::type
 		operator==(const node_iterator<Iter_t, Val_TypeL, Cont_t>& _lhs
 		, const node_iterator<Iter_t, Val_TypeR, Cont_t>& _rhs);
-
-	template<typename IterL, class Val_TypeL, typename IterR, class Val_TypeR>
-	friend bool operator<(const node_iterator<IterL, Val_TypeL, Container>& _lhs
-							, const node_iterator<IterR, Val_TypeR, Container>& _rhs);
-
-	template<typename IterL, class Val_TypeL, typename IterR, class Val_TypeR>
-	friend bool operator<=(const node_iterator<IterL, Val_TypeL, Container>& _lhs
-							, const node_iterator<IterR, Val_TypeR, Container>& _rhs);
-
-	template<typename IterL, class Val_TypeL, typename IterR, class Val_TypeR>
-	friend bool operator<(const node_iterator<IterL, Val_TypeL, Container>& _lhs
-							, const node_iterator<IterR, Val_TypeR, Container>& _rhs);
-
-	template<typename IterL, class Val_TypeL, typename IterR, class Val_TypeR>
-	friend bool operator<=(const node_iterator<IterL, Val_TypeL, Container>& _lhs
-							, const node_iterator<IterR, Val_TypeR, Container>& _rhs);
 
 	Iter base(){ return M_node; }
 	const Iter base()const{ return M_node; }
@@ -249,7 +239,7 @@ typename std::enable_if<std::is_same<typename std::remove_cv<Val_TypeL>::type
 	operator==(const node_iterator<Iter, Val_TypeL, Container>& _lhs
 	, const node_iterator<Iter, Val_TypeR, Container>& _rhs){
 		return _lhs.base() == _rhs.base();
-	}
+}
 
 
 
@@ -301,16 +291,16 @@ PairIterator<Iter_t> make_pair_iter(Iter_t i_iter){
 }
 
 
-template<typename Ret_t, typename Iter, typename Val_t, typename Container, typename Func_t>
+template<typename Ret_t, typename Iter, typename Container, typename Func_t>
 class value_ptr_iterator : public ptr_iterator<Iter, Container>{
 public:
-	friend Container;
-	typedef Iter iterator_type;
-	typedef Ret_t						value_type;
-	typedef long long				 	difference_type;
-	typedef Ret_t&	reference;
-	typedef Ret_t*  	pointer;
-	typedef ptr_iterator<Iter, Container> M_base_t;
+	friend									Container;
+	typedef Iter							iterator_type;
+	typedef Ret_t							value_type;
+	typedef long long				 		difference_type;
+	typedef Ret_t&							reference;
+	typedef Ret_t*  						pointer;
+	typedef ptr_iterator<Iter, Container>	M_base_t;
 
 	using M_base_t::base;
 
@@ -318,8 +308,8 @@ public:
 		:ptr_iterator<Iter, Container>(i_pos), M_func(irk_func){}
 
 
-	value_ptr_iterator(const ptr_iterator<Iter, Container>& ir_src, const Func_t& i_func_obj)
-		:ptr_iterator<Iter, Container>(ir_src), M_func(i_func_obj){}
+	value_ptr_iterator(const ptr_iterator<Iter, Container>& irk_src, const Func_t& i_func_obj)
+		:ptr_iterator<Iter, Container>(irk_src), M_func(i_func_obj){}
 
 	value_ptr_iterator(const Func_t& irk_func):M_func(irk_func){}
 
@@ -333,12 +323,29 @@ public:
 		return value_ptr_iterator(get_base_iter() + i_pos, M_func);
 	}
 
+	value_ptr_iterator operator++(int){
+		value_ptr_iterator temp(*this);
+		++*this;
+		return temp;
+	}
+
+	value_ptr_iterator& operator++(){
+		M_base_t::operator++();
+		return *this;
+	}
 private:
 	using M_base_t::get_base_iter;
 	const Func_t M_func;
 };
 
-
+template<typename Ret_t, typename Ptr_Iterator_t, typename Func_t>
+value_ptr_iterator<Ret_t
+	, typename Ptr_Iterator_t::iterator_type, typename Ptr_Iterator_t::container_type
+	, Func_t> make_value_ptr_iterator(Ptr_Iterator_t i_iterator, Func_t i_func_obj){
+		return value_ptr_iterator<Ret_t//decltype(i_func_obj(Ptr_Iterator_t::value_type()))
+			, typename Ptr_Iterator_t::iterator_type, typename Ptr_Iterator_t::container_type
+			, Func_t>(i_iterator, i_func_obj);
+	}
 }
 
 #endif

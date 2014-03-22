@@ -57,6 +57,15 @@ void RB_Tree_Tester::multi_map_test()const{
 	return;
 }
 
+ex_array<int> range(int i_first_val, int i_num_vals){
+	ex_array<int> int_arr(i_num_vals);
+	int* data = int_arr.data();
+	for(int i = 0; i < i_num_vals; ++i, ++i_first_val){
+		data[i] = i_first_val;
+	}
+	return std::move(int_arr);
+}
+
 void RB_Tree_Tester::tree_test()const{
 	j_tree<int> tree;
 
@@ -69,12 +78,10 @@ void RB_Tree_Tester::tree_test()const{
 	assert(1 == erase_size);
 
 	assert(tree.empty());
-	const int num_to_test = 100;
-	ex_array<int> array_range;
+	const int num_to_test = 1000;
 
-	for(int i = 0; i < num_to_test; i++){
-		array_range.push_back(i);
-	}
+	ex_array<int> array_range(range(0, num_to_test));
+
 
 	random_shuffle(array_range.begin(), array_range.end());
 
