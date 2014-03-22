@@ -263,6 +263,18 @@
       <Message>win_flex -+ -d -oscanner.cc scanner.l</Message>
       <Outputs>scanner.cc;%(Outputs)</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">scanner.h;scanner.l;</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">win_flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">win_flex++ -d -oscanner.cc scanner.l</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">flex++ -d -oscanner.cc scanner.l</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_flex++ -d -oscanner.cc scanner.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_flex++ -d -oscanner.cc scanner.l</Message>
     </CustomBuild>
     <CustomBuild Include="parser.h">
       <AdditionalInputs>parser.h;parser.y;</AdditionalInputs>

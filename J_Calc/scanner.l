@@ -1,17 +1,19 @@
+
 /* File:  scanner.l
  * ----------------
  * Lex inupt file to generate the scanner for the compiler.
  */
 
-
-
 %{
 
 #include "scanner.h"
 #include "parser.h" // for token codes, yylval
-#include "Math_Lexer.h"
 #include <ex_array.h>
-
+#ifdef WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 
 using namespace jomike;
@@ -43,12 +45,13 @@ static void DoBeforeEachAction();
 %s N
 %x COPY COMM
 %option stack
-%option yyclass="jomike::math_lexer"
 
 /* Definitions
  * -----------
  * To make our rules more readable, we establish some definitions here.
  */
+
+
 
 DIGIT             ([0-9])
 HEX_DIGIT         ([0-9a-fA-F])
@@ -59,13 +62,12 @@ DOUBLE            ({INTEGER}"."{DIGIT}*{EXPONENT}?)
 BEG_STRING        (\"[^"\n]*)
 STRING            ({BEG_STRING}\")
 IDENTIFIER        ([a-zA-Z][a-zA-Z_0-9]*)
-OPERATOR          ([-+/*%=.,;!<>()[\]{}\?\:])
+OPERATOR          ([-+/*%=.,;!<>()[\]{}])
 BEG_COMMENT       ("/*")
 END_COMMENT       ("*/")
 SINGLE_COMMENT    ("//"[^\n]*)
 
 %%
-             /* BEGIN RULES SECTION */
 
 <COPY>.*               { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
@@ -185,3 +187,5 @@ static void DoBeforeEachAction(){
    yylloc.last_column = curColNum + yyleng - 1;
    curColNum += yyleng;
 }
+
+
