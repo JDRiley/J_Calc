@@ -31,7 +31,7 @@ public:
 	virtual void clear() = 0;
 	virtual bool has_value()const = 0;
 
-	virtual J_UI_String get_display_name();
+	J_UI_String get_display_name()override;
 	virtual void set_args(const Arguments&);
 	virtual void set_args(Arguments&&);
 	virtual ~j_symbol();

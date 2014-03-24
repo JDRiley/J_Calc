@@ -2,7 +2,8 @@
 #define MATH_PARSER_H
 
 #include "J_Calc_Fwd_Decl.h"
-
+//
+#include <J_Symbol_Fwd_Decl.h>
 //
 #include "math_parsing_unit.hh"
 
@@ -18,7 +19,7 @@ class Math_Parser{
 public:
 	Math_Parser();
 	token_t lex(semantic_t* yylval);
-	int parse(const std::string& irk_string);
+	j_symbol_component* parse(const std::string& irk_string);
 private:
 	Math_Lexer* M_lexer;
 };

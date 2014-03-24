@@ -46,6 +46,7 @@
 #include <J_Symbol_Fwd_Decl.h>
 
 #include "parser.h"
+#include "Math_Parser.h"
 #include <Constant_Symbol.h>
 
 using namespace jomike;
@@ -71,7 +72,7 @@ void delete_tokens(Args... i_ptrs){
 
 
 /* Line 279 of lalr1.cc  */
-#line 75 "math_parsing_unit.cc"
+#line 76 "math_parsing_unit.cc"
 
 
 #include "math_parsing_unit.hh"
@@ -79,7 +80,7 @@ void delete_tokens(Args... i_ptrs){
 /* User implementation prologue.  */
 
 /* Line 285 of lalr1.cc  */
-#line 83 "math_parsing_unit.cc"
+#line 84 "math_parsing_unit.cc"
 
 
 # ifndef YY_NULL
@@ -174,15 +175,16 @@ do {					\
 
 namespace yy {
 /* Line 353 of lalr1.cc  */
-#line 178 "math_parsing_unit.cc"
+#line 179 "math_parsing_unit.cc"
 
   /// Build a parser object.
-  Math_Parsing_Unit::Math_Parsing_Unit (jtl::Math_Parser* i_parser_yyarg)
+  Math_Parsing_Unit::Math_Parsing_Unit (jtl::j_symbol_component** i_symbol_ptr_yyarg, jtl::Math_Parser* i_parser_yyarg)
     :
 #if YYDEBUG
       yydebug_ (false),
       yycdebug_ (&std::cerr),
 #endif
+      i_symbol_ptr (i_symbol_ptr_yyarg),
       i_parser (i_parser_yyarg)
   {
   }
@@ -240,59 +242,59 @@ namespace yy {
       {
         case 10: /* T_IDENTIFIER */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).identifier);};
 /* Line 455 of lalr1.cc  */
-#line 247 "math_parsing_unit.cc"
+#line 249 "math_parsing_unit.cc"
         break;
       case 11: /* T_STRING_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 254 "math_parsing_unit.cc"
+#line 256 "math_parsing_unit.cc"
         break;
       case 12: /* T_INTEGER_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 261 "math_parsing_unit.cc"
+#line 263 "math_parsing_unit.cc"
         break;
       case 13: /* T_DOUBLE_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 268 "math_parsing_unit.cc"
+#line 270 "math_parsing_unit.cc"
         break;
       case 14: /* T_BOOL_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 275 "math_parsing_unit.cc"
+#line 277 "math_parsing_unit.cc"
         break;
       case 37: /* Input_Line */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).symbol_component);};
 /* Line 455 of lalr1.cc  */
-#line 282 "math_parsing_unit.cc"
+#line 284 "math_parsing_unit.cc"
         break;
       case 38: /* Expression */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).symbol_component);};
 /* Line 455 of lalr1.cc  */
-#line 289 "math_parsing_unit.cc"
+#line 291 "math_parsing_unit.cc"
         break;
       case 39: /* Constant_Expression */
 /* Line 455 of lalr1.cc  */
-#line 83 "parser.y"
+#line 85 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 296 "math_parsing_unit.cc"
+#line 298 "math_parsing_unit.cc"
         break;
 
 	default:
@@ -503,25 +505,25 @@ namespace yy {
       {
           case 2:
 /* Line 670 of lalr1.cc  */
-#line 146 "parser.y"
-    {(yyval.symbol_component) = g_input_line = (yysemantic_stack_[(1) - (1)].symbol_component); }
+#line 148 "parser.y"
+    {(yyval.symbol_component) = *i_symbol_ptr = (yysemantic_stack_[(1) - (1)].symbol_component)->get_copy(); }
     break;
 
   case 3:
 /* Line 670 of lalr1.cc  */
-#line 150 "parser.y"
+#line 152 "parser.y"
     {(yyval.symbol_component) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
     break;
 
   case 4:
 /* Line 670 of lalr1.cc  */
-#line 154 "parser.y"
+#line 156 "parser.y"
     {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
     break;
 
 
 /* Line 670 of lalr1.cc  */
-#line 525 "math_parsing_unit.cc"
+#line 527 "math_parsing_unit.cc"
       default:
         break;
       }
@@ -851,7 +853,7 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yyrline_[] =
   {
-         0,   146,   146,   150,   154
+         0,   148,   148,   152,   156
   };
 
   // Print the state stack on the debug stream.
@@ -941,9 +943,9 @@ namespace yy {
 
 } // yy
 /* Line 1141 of lalr1.cc  */
-#line 945 "math_parsing_unit.cc"
+#line 947 "math_parsing_unit.cc"
 /* Line 1142 of lalr1.cc  */
-#line 158 "parser.y"
+#line 160 "parser.y"
 
 
 /* The closing %% above marks the end of the Rules section and the beginning

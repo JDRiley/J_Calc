@@ -20,6 +20,7 @@
 #include <J_Symbol_Fwd_Decl.h>
 
 #include "parser.h"
+#include "Math_Parser.h"
 #include <Constant_Symbol.h>
 
 using namespace jomike;
@@ -47,6 +48,7 @@ void delete_tokens(Args... i_ptrs){
 %skeleton "lalr1.cc"
 %defines
 %define parser_class_name "Math_Parsing_Unit"
+%parse-param{jtl::j_symbol_component** i_symbol_ptr}
 %parse-param{jtl::Math_Parser* i_parser}
 %lex-param{jtl::Math_Parser* i_parser}
 
@@ -143,7 +145,7 @@ void delete_tokens(Args... i_ptrs){
 */
 
 Input_Line
-: Expression {$$ = g_input_line = $1; }
+: Expression {$$ = *i_symbol_ptr = $1->get_copy(); }
 ;
 
 Expression

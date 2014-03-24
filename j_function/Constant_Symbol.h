@@ -26,6 +26,8 @@ public:
 	void clear()override;
 	bool has_value()const override;
 
+	J_UI_String get_display_name()override;
+
 private:
 	int M_value;
 	J_Unit M_unit;

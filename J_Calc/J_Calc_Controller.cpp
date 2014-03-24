@@ -161,7 +161,7 @@ void J_Calc_Controller::execute(){
 	M_main_view->open_window();
 	
 #ifdef _DEBUG
-	run_script("test_script.jcs");
+	//run_script("test_script.jcs");
 	
 #else
 	run_script("test_script.jcs");

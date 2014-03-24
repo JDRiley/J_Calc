@@ -9,7 +9,8 @@ Constant_Symbol* make_bool_constant_symbol(bool i_val, const Lexer_Location& i_l
 }
 
 Constant_Symbol* make_int_constant_symbol(int i_val, const Lexer_Location& i_loc){
-	return new Int_Constant_Symbol(i_val, i_loc);
+	auto symbol =  new Int_Constant_Symbol(i_val, i_loc);
+	return symbol;
 }
 
 Constant_Symbol* make_double_constant_symbol(j_dbl i_val, const Lexer_Location& i_loc){

@@ -23,6 +23,9 @@
 #include <type_traits>
 //
 #include "j_conditional_construct_symbol.h"
+//
+#include "Math_Parser.h"
+
 using std::bind; using std::equal_to; using std::none_of;
 using namespace std::placeholders; using std::to_string;
 
@@ -106,6 +109,14 @@ get_conditional_construct(J_UI_Const_Iter*, J_UI_Const_Iter){
 static j_symbol* assign_symbol(j_symbol*, const J_UI_String&);
 
 J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_String& irk_string){
+
+	Math_Parser parser;
+	if(j_symbol_component*  new_symbol = parser.parse(irk_string.std_str())){
+		return new_symbol->get_display_name();
+	} else if(j_true){
+		return "Error";
+	}
+
 	auto string_pos = irk_string.begin();
 	
 	

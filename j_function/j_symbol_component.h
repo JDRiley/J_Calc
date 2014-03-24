@@ -28,7 +28,7 @@ public:
 	
 	void set_type(Symbol_Types i_symbol_type);
 	Symbol_Types symbol_type()const;
-
+	virtual J_UI_String get_display_name() = 0;
 	virtual ~j_symbol_component();
 private:
 	const int M_ID;

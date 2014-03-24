@@ -1,6 +1,6 @@
 #include "Constant_Symbol.h"
 
-
+using std::to_string;
 namespace jomike{
 
 Constant_Symbol::Constant_Symbol(
@@ -35,6 +35,10 @@ Int_Constant_Symbol* Int_Constant_Symbol::get_copy()const {
 Int_Constant_Symbol::Int_Constant_Symbol(int i_val, const Lexer_Location& i_loc)
 	:Constant_Symbol(Symbol_Types::INT, i_loc){
 	M_value = i_val;
+}
+
+jomike::J_UI_String Int_Constant_Symbol::get_display_name(){
+	return to_string(M_value);
 }
 
 

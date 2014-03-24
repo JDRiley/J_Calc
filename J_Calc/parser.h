@@ -49,7 +49,7 @@ J_FWD_DECL(Math_Parser)
 extern j_symbol_component* g_input_line;
 }
 
-int yyparse();              // Defined in the generated y.tab.c file
+         // Defined in the generated y.tab.c file
 void InitParser();          // Defined in parser.y
 
 #endif //PARSER_H
