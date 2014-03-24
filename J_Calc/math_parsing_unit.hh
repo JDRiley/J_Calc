@@ -31,15 +31,26 @@
    version 2.2 of Bison.  */
 
 /**
- ** \file y.tab.h
+ ** \file math_parsing_unit.hh
  ** Define the yy::parser class.
  */
 
 /* C++ LALR(1) parser skeleton written by Akim Demaille.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
+# define YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
 
+/* "%code requires" blocks.  */
+/* Line 33 of lalr1.cc  */
+#line 53 "parser.y"
+
+#include<J_UI/J_UI_String.h>
+#include "J_Calc_Fwd_Decl.h"
+#include <J_Symbol_Fwd_Decl.h>
+
+
+/* Line 33 of lalr1.cc  */
+#line 54 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -55,7 +66,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 59 "y.tab.h"
+#line 70 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -66,7 +77,7 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 65 "parser.y"
+#line 73 "parser.y"
 
     jomike::J_UI_String*			identifier;
     jomike::j_symbol_component*		symbol_component;
@@ -74,7 +85,7 @@ namespace yy {
 
 
 /* Line 33 of lalr1.cc  */
-#line 78 "y.tab.h"
+#line 89 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -115,7 +126,7 @@ namespace yy {
     typedef token::yytokentype token_type;
 
     /// Build a parser object.
-    Math_Parsing_Unit ();
+    Math_Parsing_Unit (jtl::Math_Parser* i_parser_yyarg);
     virtual ~Math_Parsing_Unit ();
 
     /// Parse.
@@ -276,12 +287,14 @@ namespace yy {
     static const unsigned int yyuser_token_number_max_;
     static const token_number_type yyundef_token_;
 
+    /* User arguments.  */
+    jtl::Math_Parser* i_parser;
   };
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 284 "y.tab.h"
+#line 297 "math_parsing_unit.hh"
 
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_MATH_PARSING_UNIT_HH_INCLUDED  */

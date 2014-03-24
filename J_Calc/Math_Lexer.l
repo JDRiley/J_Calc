@@ -1,20 +1,19 @@
-
 /* File:  scanner.l
  * ----------------
  * Lex inupt file to generate the scanner for the compiler.
  */
 
+
+
 %{
 
-#include "scanner.h"
+#include "Math_Lexer.h"
+#include <Constant_Symbol_Factory.h>
 #include "parser.h" // for token codes, yylval
+#include "Math_Lexer.h"
 #include <ex_array.h>
-#ifdef WIN32
-#include <io.h>
-#else
-#include <unistd.h>
-#endif
-
+#include <iostream>
+using std::cin; using std::cout; using std::cerr;
 
 using namespace jomike;
 #ifdef WIN32
@@ -29,9 +28,8 @@ using namespace jomike;
  */
 static int curLineNum, curColNum;
 static ex_array<std::string> g_saved_lines;
-
-static void DoBeforeEachAction(); 
-#define YY_USER_ACTION DoBeforeEachAction();
+ 
+#define YY_USER_ACTION pre_action_set_up();
 
 %}
 
@@ -45,13 +43,12 @@ static void DoBeforeEachAction();
 %s N
 %x COPY COMM
 %option stack
+%option yyclass="jomike::Math_Lexer" c++ noyywrap
 
 /* Definitions
  * -----------
  * To make our rules more readable, we establish some definitions here.
  */
-
-
 
 DIGIT             ([0-9])
 HEX_DIGIT         ([0-9a-fA-F])
@@ -62,12 +59,13 @@ DOUBLE            ({INTEGER}"."{DIGIT}*{EXPONENT}?)
 BEG_STRING        (\"[^"\n]*)
 STRING            ({BEG_STRING}\")
 IDENTIFIER        ([a-zA-Z][a-zA-Z_0-9]*)
-OPERATOR          ([-+/*%=.,;!<>()[\]{}])
+OPERATOR          ([-+/*%=.,;!<>()[\]{}\?\:])
 BEG_COMMENT       ("/*")
 END_COMMENT       ("*/")
 SINGLE_COMMENT    ("//"[^\n]*)
 
 %%
+             /* BEGIN RULES SECTION */
 
 <COPY>.*               { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
@@ -85,107 +83,87 @@ SINGLE_COMMENT    ("//"[^\n]*)
 {BEG_COMMENT}          { BEGIN(COMM); }
 <COMM>{END_COMMENT}    { BEGIN(N); }
 <COMM><<EOF>>          { assert(0);
-                         return 0; }
+                         return static_cast<token_t>(0); }
 <COMM>.                { /* ignore everything else that doesn't match */ }
 {SINGLE_COMMENT}       { /* skip to end of line for // comment */ }
 
 
 
  /* --------------------- Keywords ------------------------------- */
-"int"				{ return T_INT;}
-"double"|"dbl"		{ return T_DOUBLE;      }
-"bool"				{ return T_BOOL;        }
-"string"			{ return T_STRING;      }
-"null_ptr"			{ return T_NULL_PTR;        }			
+"int"				{ return token_t::T_INT;}
+"double"|"dbl"			{ return token_t::T_DOUBLE;      }
+"bool"				{ return token_t::T_BOOL;        }
+"string"			{ return token_t::T_STRING;      }
+"null_ptr"			{ return token_t::T_NULL_PTR;        }			
 
 
 
 
 
  /* -------------------- Operators ----------------------------- */
-"<="                { return T_LESS_EQUAL;   }
-">="                { return T_GREATER_EQUAL;}
-"=="                { return T_EQUAL;       }
-"!="                { return T_NOT_EQUAL;    }
-"&&"                { return T_AND;         }
-"||"                { return T_OR;          }
+"<="                { return token_t::T_LESS_EQUAL;   }
+">="                { return token_t::T_GREATER_EQUAL;}
+"=="                { return token_t::T_EQUAL;       }
+"!="                { return token_t::T_NOT_EQUAL;    }
+"&&"                { return token_t::T_AND;         }
+"||"                { return token_t::T_OR;          }
+
+
+
 
 
 
 <<EOF>> {
-	yylex_destroy();
-	return 0;
+	return static_cast<token_t>(0);
 }
 
-{OPERATOR}          { return yytext[0];}
+{OPERATOR}          { return static_cast<token_t>(yytext[0]);}
     
-"[]"                { return T_DIMENSION;}
+"[]"                { return token_t::T_DIMENSIONS;}
 
 
 
  /* -------------------- Constants ------------------------------ */
-"true" | "false"      {yylval.symbol_component*
-		= make_bool_symbol("t" == yytext[0] ? true : false, yylloc);
-	return T_BOOL_CONSTANT;}
-{INTEGER}           {	int val = strtol(yytext, NULL, 10);
-	yylval.symbol_component
-		= make_int_constant_expression(
-		val, yylloc);
-	return T_INTEGER_CONSTANT;}
+"true"|"false"      {yylval->constant_symbol
+	= make_bool_constant_symbol('t' == yytext[0] ? true : false, M_location);
+	return token_t::T_BOOL_CONSTANT;
+}
+{INTEGER}           {
+	int val = strtol(yytext, NULL, 10);
+	yylval->constant_symbol
+		= make_int_constant_symbol(
+		val, M_location);
+	return token_t::T_INTEGER_CONSTANT;
+}
 {HEX_INTEGER}       {int val = strtol(yytext, NULL, 16);
-	yylval.symbol_component
-		= make_int_constant_expression(
-		val, yylloc);
-	return T_INTEGER_CONSTANT;}
+	yylval->constant_symbol
+		= make_int_constant_symbol(
+		val, M_location);
+	return token_t::T_INTEGER_CONSTANT;}
 {DOUBLE}            {int val = atof(yytext);
-	yylval.symbol_component
-		= make_double_number_symbol(val, yylloc);
-	return T_DOUBLE_CONSTANT;}
-{STRING}            {yylval.identifier = new J_UI_String(yytext);
-	return T_STRING_CONSTANT;}
+	yylval->constant_symbol
+		= make_double_constant_symbol(val, M_location);
+	return token_t::T_DOUBLE_CONSTANT;}
+{STRING}            {yylval->constant_symbol = make_string_constant_symbol(yytext, M_location);
+	return token_t::T_STRING_CONSTANT;}
 {BEG_STRING}        {assert(!"Unterminaned String");}
 
 
  /* -------------------- Identifiers --------------------------- */
-{IDENTIFIER}        {yylval.identifier = new jomike::J_UI_String(yytext);
-						return T_IDENTIFIER; }
+{IDENTIFIER}        {yylval->identifier = new jomike::J_UI_String(yytext);
+						return token_t::T_IDENTIFIER; }
+
 
  /* -------------------- Default rule (error) -------------------- */
 .                   { assert(!"Unrecognized Character"); }
 
 %%
 
-/* Function: InitScanner
- * ---------------------
- * This function will be called before any calls to yylex().  It is designed
- * to give you an opportunity to do anything that must be done to initialize
- * the scanner (set global variables, configure starting state, etc.). One
- * thing it already does for you is assign the value of the global variable
- * yy_flex_debug that controls whether flex prints debugging information
- * about each token and what rule was matched. If set to false, no information
- * is printed. Setting it to true will give you a running trail that might
- * be helpful when debugging your scanner. Please be sure the variable is
- * set to false when submitting your final version.
- */
-void init_scanner(){
-    PrintDebug("lex", "Initializing scanner");
+
+void jomike::Math_Lexer::init_scanner(){
     yy_flex_debug = false;
     BEGIN(N);
     yy_push_state(COPY); // copy first line at start
-    curLineNum = 1;
-    curColNum = 1;
+    M_current_line = 1;
+    M_current_collumn = 1;
 }
-
-const char *GetLineNumbered(int num) {
-   if (num <= 0 || num > g_saved_lines.size()) return NULL;
-   return g_saved_lines[num-1].c_str();
-}
-
-static void DoBeforeEachAction(){
-   yylloc.first_line = curLineNum;
-   yylloc.first_column = curColNum;
-   yylloc.last_column = curColNum + yyleng - 1;
-   curColNum += yyleng;
-}
-
-

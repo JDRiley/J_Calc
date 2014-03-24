@@ -72,9 +72,9 @@ public:
 	bool empty()const;
 
 
-	iterator find(const St& irk_key);
+	iterator find(const Key& irk_key);
 
-	const_iterator find(const St& irk_key)const;
+	const_iterator find(const Key& irk_key)const;
 
 	iterator lower_bound(const St& irk_key);
 
@@ -125,14 +125,14 @@ void j_tree<St, Key, Comp_t, Alloc_t>::swap(j_tree<St, Key, Comp_t, Alloc_t>& ir
 
 
 template<typename St, typename Key, typename Comp_t, typename Alloc_t>
-J_TREE_CONST_ITERATOR j_tree<St, Key, Comp_t, Alloc_t>::find(const St& irk_key)const{
+J_TREE_CONST_ITERATOR j_tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key)const{
 	return M_tree.find(irk_key);
 }
 
 
 template<typename St, typename Key, typename Comp_t , typename Alloc_t>
 typename j_tree<St, Key, Comp_t, Alloc_t>::iterator 
-j_tree<St, Key, Comp_t, Alloc_t>::find(const St& irk_key){
+j_tree<St, Key, Comp_t, Alloc_t>::find(const Key& irk_key){
 	return M_tree.find(irk_key);
 }
 

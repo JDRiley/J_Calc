@@ -6,6 +6,8 @@
 //IO Facilities
 #include <iosfwd>
 
+#pragma comment(lib, "J_Utile"J_LIB_APPEND)
+
 namespace jomike{
 
 

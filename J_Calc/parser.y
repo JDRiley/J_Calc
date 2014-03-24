@@ -16,16 +16,16 @@
  * file inclusions or C++ variable declarations/prototypes that are needed
  * by your code here.
  */
-#include "scanner.h" // for yylex
+//#include "Math_Lexer.h" // for yylex
 #include <J_Symbol_Fwd_Decl.h>
 
 #include "parser.h"
-
+#include <Constant_Symbol.h>
 
 using namespace jomike;
 void yyerror(const char *msg); // standard error-handling routine
 
-j_symbol_component* g_input_line = nullptr;
+j_symbol_component* jtl::g_input_line = nullptr;
 
 template<typename... Args>
 void delete_tokens(Args... i_ptrs){
@@ -44,6 +44,17 @@ void delete_tokens(Args... i_ptrs){
 }
 
 %}
+%skeleton "lalr1.cc"
+%defines
+%define parser_class_name "Math_Parsing_Unit"
+%parse-param{jtl::Math_Parser* i_parser}
+%lex-param{jtl::Math_Parser* i_parser}
+
+%code requires{
+#include<J_UI/J_UI_String.h>
+#include "J_Calc_Fwd_Decl.h"
+#include <J_Symbol_Fwd_Decl.h>
+}
 
 /* The section before the first %% is the Definitions section of the yacc
  * input file. Here is where you declare tokens and types, add precedence
@@ -62,6 +73,7 @@ void delete_tokens(Args... i_ptrs){
 %union {
     jomike::J_UI_String*			identifier;
     jomike::j_symbol_component*		symbol_component;
+	jomike::Constant_Symbol*		constant_symbol;
 }
 
 %destructor {} <integer_constant>
@@ -85,10 +97,10 @@ void delete_tokens(Args... i_ptrs){
 %token							T_LEFT_ARROW
 
 %token	<identifier>			T_IDENTIFIER
-%token	<symbol_component>		T_STRING_CONSTANT 
-%token	<symbol_component>		T_INTEGER_CONSTANT
-%token	<symbol_component>		T_DOUBLE_CONSTANT
-%token	<symbol_component>		T_BOOLEAN_CONSTANT
+%token	<constant_symbol>		T_STRING_CONSTANT 
+%token	<constant_symbol>		T_INTEGER_CONSTANT
+%token	<constant_symbol>		T_DOUBLE_CONSTANT
+%token	<constant_symbol>		T_BOOL_CONSTANT
 
 //Operator Precence
 %right '='
@@ -119,9 +131,9 @@ void delete_tokens(Args... i_ptrs){
  * pp2: You'll need to add many of these of your own.
  */
  
- %type	<j_symbol_component>	Input_Line
- %type	<j_symbol_component>	Expression
- %type	<j_symbol_component>	Constant_Expression
+ %type	<symbol_component>	Input_Line
+ %type	<symbol_component>	Expression
+ %type	<constant_symbol>	Constant_Expression
 %%
 /* Rules
 * -----
@@ -151,20 +163,4 @@ Constant_Expression
  * This section is where you put definitions of helper functions.
  */
  
-/* Function: InitParser
- * --------------------
- * This function will be called before any calls to yyparse().  It is designed
- * to give you an opportunity to do anything that must be done to initialize
- * the parser (set global variables, configure starting state, etc.). One
- * thing it already does for you is assign the value of the global variable
- * yydebug that controls whether yacc prints debugging information about
- * parser actions (shift/reduce) and contents of state stack during parser.
- * If set to false, no information is printed. Setting it to true will give
- * you a running trail that might be helpful when debugging your parser.
- * Please be sure the variable is set to false when submitting your final
- * version.
- */
-void InitParser()
-{
-   yydebug = false;
-}
+

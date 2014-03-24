@@ -11,13 +11,25 @@ namespace jomike{
 
 class j_value{
 public:
+	j_value();
 	//Constructors
 	j_value(Dbl_t, J_Unit);
+	j_value(int, J_Unit);
+	j_value(bool, J_Unit);
+	j_value(const std::string&, J_Unit);
 	j_value(const j_value&, J_Unit);
+
+	enum class Value_Types{INTEGER, DOUBLE, BOOL, STRING};
 
 	const j_value& operator+(const j_value&)const;
 
-	Dbl_t value()const;
+	Dbl_t as_double()const;
+
+	int as_int()const;
+
+	bool as_bool()const;
+
+	const std::string& as_string()const;
 
 	bool value_status()const;
 
@@ -28,10 +40,30 @@ public:
 	bool operator!=(const j_value&)const;
 	bool is_convertible(J_Unit)const;
 	j_value& convert_units(J_Unit);
+
+	Value_Types type()const;
 private:
 	J_Unit M_units;
-	Dbl_t M_value;
-	bool M_value_status = false;
+	union Value_Union{
+		int int_val;
+		j_dbl dbl_val;
+		std::string* str_val;
+		bool bool_val;
+	} M_val;
+
+	template<class Operator_Class>
+	void binary_value_operation(
+		const j_value& i_right, Value_Union* i_value_union, const Operator_Class&);
+
+	template<typename Ret_t, typename Left_t, typename Operator_Class>
+	void binary_value_operation(
+		const Left_t& i_left, const j_value& i_right, Ret_t* i_destination
+		, const Operator_Class& i_func);
+	
+	Value_Types M_type;
+	bool M_has_value_status = false;
+
+
 };
 
 j_dbl unit_conversion(const j_value&, J_Unit);

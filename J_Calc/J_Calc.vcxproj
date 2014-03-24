@@ -257,35 +257,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="scanner.h">
-      <AdditionalInputs>scanner.h;scanner.l;scanner.cc</AdditionalInputs>
-      <Command>win_flex -+ -d -oscanner.cc scanner.l</Command>
-      <Message>win_flex -+ -d -oscanner.cc scanner.l</Message>
-      <Outputs>scanner.cc;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">scanner.h;scanner.l;</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex++ -d -oscanner.cc scanner.l</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">win_flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">win_flex++ -d -oscanner.cc scanner.l</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">flex++ -d -oscanner.cc scanner.l</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_flex++ -d -oscanner.cc scanner.l</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_flex++ -d -oscanner.cc scanner.l</Message>
-    </CustomBuild>
     <CustomBuild Include="parser.h">
       <AdditionalInputs>parser.h;parser.y;</AdditionalInputs>
-      <Command>win_bison -v -t --defines=y.tab.h -oparser.cc parser.y</Command>
-      <Message>win_bison -v -t --defines=y.tab.h -oparser.cc parser.y</Message>
-      <Outputs>y.tab.h;scanner.cc;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">scanner.h;scanner.l;</AdditionalInputs>
+      <Command>win_bison -v -t --defines=math_parser.tab.h -omath_parser.cc parser.y</Command>
+      <Message>win_bison -v -t --defines=math_parser.tab.h -omath_parser.cc parser.y</Message>
+      <Outputs>math_parser.tab.h;math_parser.cc;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="Math_Lexer.h">
+      <AdditionalInputs>Math_Lexer.h;Math_Lexer.l;</AdditionalInputs>
+      <Command>win_flex -d -oMath_YY_Lex.cpp Math_Lexer.l</Command>
+      <Message>win_flex -d -oMath_YY_Lex.cpp Math_Lexer.l</Message>
+      <Outputs>Math_YY_Lex.cpp;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FlexLexer.h" />
     <ClInclude Include="J_Calc_Controller.h" />
     <ClInclude Include="J_Calc_Data.h" />
     <ClInclude Include="J_Calc_Error.h" />
@@ -296,10 +281,11 @@
     <ClInclude Include="j_conditional_construct_symbol.h" />
     <ClInclude Include="j_construct_symbol.h" />
     <ClInclude Include="j_function_factory.h" />
+    <ClInclude Include="Lexer_Location.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
-    <ClInclude Include="Math_Lexer.h" />
-    <ClInclude Include="y.tab.h" />
+    <ClInclude Include="Math_Parser.h" />
+    <ClInclude Include="math_parsing_unit.hh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp" />
@@ -312,7 +298,17 @@
     <ClCompile Include="j_function_factory.cpp" />
     <ClCompile Include="Line_Input.cpp" />
     <ClCompile Include="Math_Input_Box.cpp" />
-    <ClCompile Include="scanner.cc">
+    <ClCompile Include="Math_Lexer.cpp" />
+    <ClCompile Include="Math_Parser.cc" />
+    <ClCompile Include="math_parsing_unit.cc">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <ClCompile Include="Math_YY_Lex.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
@@ -325,7 +321,7 @@
     <None Include="..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers\jtl.natvis" />
     <None Include="parser.output" />
     <None Include="parser.y" />
-    <None Include="scanner.l">
+    <None Include="Math_Lexer.l">
       <FileType>Document</FileType>
     </None>
     <None Include="test_script.jcs" />

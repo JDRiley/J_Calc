@@ -19,6 +19,10 @@ void j_symbol_component::set_name(const J_UI_String& irk_string){
 	M_name = irk_string;
 }
 
+j_symbol_component::~j_symbol_component(){
+
+}
+
 }
 
 

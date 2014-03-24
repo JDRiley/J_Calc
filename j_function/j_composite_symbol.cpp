@@ -36,10 +36,12 @@ j_composite_symbol::j_composite_symbol(const j_composite_symbol& irk_src): j_sym
 /*j_value get_value(Arguments)const */
 j_value j_composite_symbol::derived_get_value(const Arguments& i_arguments)const{
 	//Assuming only plus joiner for now
+	if(M_symbols.empty()){
+		return j_value(0.0, J_Unit());
+	}
+	j_value value = M_symbols[0]->get_value(i_arguments);
 
-	j_value value(0, J_Unit());
-
-	for(int i = 0; i < M_symbols.size(); i++){
+	for(int i = 1; i < M_symbols.size(); i++){
 		value += M_symbols[i]->get_value(i_arguments);
 	}
 
@@ -56,7 +58,7 @@ J_UI_String j_composite_symbol::get_display_name(){
 
 	if(has_value()){
 		display_name.push_back(' ');
-		return display_name + to_string(get_value(Arguments()).value());
+		return display_name + to_string(get_value(Arguments()).as_double());
 	}
 
 	for(auto symbol : M_symbols){

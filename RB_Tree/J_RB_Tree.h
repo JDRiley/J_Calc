@@ -12,7 +12,7 @@
 #endif //RB_TREE_DEBUG
 
 //
-#include <j_iterator.h>
+#include "j_iterator.h"
 
 
 
@@ -544,8 +544,12 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::copy_node(
 template<typename St, typename Key, typename Comp_t, class Alloc_t>
 J_RB_Tree<St, Key, Comp_t, Alloc_t>::J_RB_Tree(J_RB_Tree<St, Key, Comp_t, Alloc_t>&& irr_right){
 	M_size = 0; 
-	M_root = nullptr; 
+	M_root = nullptr;
+#ifdef RB_TREE_DEBUG
 	s_messages = false;
+#endif // RB_TREE_DEBUG
+
+	
 	swap(irr_right);
 }
 
@@ -748,7 +752,7 @@ typename J_RB_Tree<St, Key, Comp_t, Alloc_t>::iterator
 	bool is_y = false;
 	bool right = false;
 	Node_t* node_to_fixup;
-	Node_t::COLOR original_color = trailing_node->color();
+	typename Node_t::COLOR original_color = trailing_node->color();
 	Node_t* old_parent = nullptr;
 	if(!cur_node->left()){
 		node_to_fixup = cur_node->right();
@@ -1298,8 +1302,9 @@ j_size_t J_RB_Tree<St, Key, Comp_t, Alloc_t>::count(const Key& irk_key)const{
 	j_size_t return_val = 0;
 	auto range = equal_range(irk_key);
 
-	while(range.first++ != range.second){
+	while(range.first != range.second){
 		++return_val;
+		++range.first;
 	}
 	return return_val;
 }
@@ -1355,12 +1360,17 @@ void J_RB_Tree<St, Key, Comp_t, Alloc_t>::delete_nodes(Node_t* i_node){
 		
 }
 
-template<typename St, typename Key /*= St*/, class Comp_t /*= std::less<Key>*/, class Alloc_t /*= std::allocator<St>*/>
-std::pair<RB_TREE_ITERATOR, RB_TREE_ITERATOR> 
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+typename RB_TREE_TEMPLATE::range_t
 	RB_TREE_TEMPLATE::equal_range(const Key& irk_key){
 	return std::make_pair(lower_bound(irk_key), upper_bound(irk_key));
 }
 
+template<typename St, typename Key, typename Comp_t, class Alloc_t>
+typename RB_TREE_TEMPLATE::const_range_t
+RB_TREE_TEMPLATE::equal_range(const Key& irk_key)const{
+	return std::make_pair(lower_bound(irk_key), upper_bound(irk_key));
+}
 
 /*Rotate Left*/
 template<typename St, typename Key, typename Comp_t, class Alloc_t>

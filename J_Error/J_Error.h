@@ -5,6 +5,7 @@
 //
 #include <string>
 
+#pragma comment(lib, "J_Utile"J_LIB_APPEND)
 
 namespace jomike{};
 namespace jtl = jomike;

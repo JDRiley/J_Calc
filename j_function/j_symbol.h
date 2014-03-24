@@ -11,13 +11,14 @@
 #include "j_symbol_component.h"
 //
 #include "j_symbol_component.h"
+#include "Constant_Symbol_Factory.h"
 namespace jomike{
 
 class j_symbol : public j_symbol_component{
 public:
 	j_symbol(const J_UI_String& irk_name, Symbol_Types i_symbol_type);
 	j_symbol(Symbol_Types i_symbol_type = Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED);
-
+	
 	//j_symbol(const j_symbol& irk_symbol);
 
 
@@ -41,8 +42,8 @@ public:
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 private:
-
 	Arguments M_arguments;
+	Type_Syntax* M_type;
 };
 
 class J_Sym_Argument_Error : public J_Error{

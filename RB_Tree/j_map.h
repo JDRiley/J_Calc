@@ -33,7 +33,11 @@ public:
 	j_map(j_map&& irr_src):M_tree(std::move(irr_src.M_tree)){}
 	j_map(const j_map& irk_src);
 
-	
+	j_map& operator=(const j_map& irk_src);
+
+	j_map& operator=(j_map&& irv_source);
+
+
 
 	typedef PairIterator<typename Base_Tree_t::iterator> iterator;
 	typedef PairIterator<typename Base_Tree_t::const_iterator> const_iterator;
@@ -92,8 +96,25 @@ private:
 };
 
 
-template<typename Key_t, typename Value_t, typename Comp_t /*= std::less<Key_t>*/
-	, typename Alloc_t /*= std::allocator<std::pair<Key_t, Value_t>>*/>
+template<typename Key_t, typename Value_t, typename Comp_t , typename Alloc_t>
+j_map<Key_t, Value_t, Comp_t, Alloc_t>& j_map<Key_t, Value_t, Comp_t, Alloc_t>
+	::operator=(const j_map& irk_src){
+	j_map temp(irk_src);
+	swap(temp);
+	return *this;
+}
+
+	
+template<typename Key_t, typename Value_t, typename Comp_t , typename Alloc_t>
+j_map<Key_t, Value_t, Comp_t, Alloc_t>& j_map<Key_t, Value_t, Comp_t, Alloc_t>
+	::operator=(j_map&& irv_src){
+
+	swap(irv_src);
+	return *this;
+}
+
+
+template<typename Key_t, typename Value_t, typename Comp_t , typename Alloc_t>
 void j_map<Key_t, Value_t, Comp_t, Alloc_t>::swap(j_map<Key_t, Value_t, Comp_t, Alloc_t>& ir_src){
 	M_tree.swap(ir_src.M_tree);
 }
@@ -168,12 +189,12 @@ template<typename Key_t, typename Value_t, typename Comp_t /*= std::less<Key_t>*
 typename J_MAP_TEMPLATE::insert_result_t 
 	j_map<Key_t, Value_t, Comp_t, Alloc_t>::insert(const Key_t& irk_key, const Value_t& irk_val){
 	
-	auto found_pos = M_tree.find(irr_key);
+	auto found_pos = M_tree.find(irk_key);
 	if(M_tree.end() != found_pos){
 		return insert_result_t(found_pos, false);
 	}
 
-	return M_tree.insert(val_pair_t(irr_key, irr_val));
+	return M_tree.insert(val_pair_t(irk_key, irk_val));
 }
 
 template<typename Key_t, typename Value_t, typename Comp_t /*= std::less<Key_t>*/

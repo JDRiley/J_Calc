@@ -17,7 +17,8 @@ public:
 	j_symbol_component(Symbol_Types i_symbol_type
 					   , const J_UI_String& irk_name = J_UI_String("%Unnamed"));
 
-	virtual bool has_declaration(const std::string&)const;
+	
+
 	virtual j_symbol_component* get_copy()const = 0;
 	virtual j_symbol_component* move_copy() = 0;
 

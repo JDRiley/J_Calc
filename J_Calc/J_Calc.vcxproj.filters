@@ -51,13 +51,13 @@
     <ClInclude Include="j_conditional_construct_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FlexLexer.h">
+    <ClInclude Include="Lexer_Location.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Math_Lexer.h">
+    <ClInclude Include="Math_Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="y.tab.h">
+    <ClInclude Include="math_parsing_unit.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,7 +92,16 @@
     <ClCompile Include="j_conditional_construct_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scanner.cc">
+    <ClCompile Include="Math_Lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Math_YY_Lex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Math_Parser.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="math_parsing_unit.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -112,15 +121,15 @@
     <None Include="parser.y">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="scanner.l">
+    <None Include="Math_Lexer.l">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="scanner.h">
+    <CustomBuild Include="parser.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="parser.h">
+    <CustomBuild Include="Math_Lexer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

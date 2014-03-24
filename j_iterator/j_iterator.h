@@ -1,7 +1,7 @@
 #ifndef JITERATOR_H
 #define JITERATOR_H
 //
-#include <J_Fwd_Decl.h>
+#include "J_Fwd_Decl.h"
 //
 #include <iterator>
 //
@@ -182,7 +182,7 @@ public:
 	typedef const value_type*	const_pointer;
 
 	
-
+	node_iterator():M_node(){}
 
 	node_iterator(const node_iterator<Iter, typename std::remove_const<Val_t>::type, Container>& irk_src)
 		:M_node(irk_src.base()){}
@@ -196,6 +196,8 @@ public:
 	pointer operator->()const{ return &M_node->data(); }
 private:
 	node_iterator(Iter i_pos):M_node(i_pos){}
+
+
 
 	Iter M_node;
 	//For allowing access to base() for copy construction
@@ -254,7 +256,7 @@ public:
 	typedef const typename PairIter_t::value_type::second_type& reference;
 	typedef const typename PairIter_t::value_type::second_type* pointer;
 
-
+	PairIterator():M_iter(){}
 
 	PairIterator(PairIter_t i_iter):M_iter(i_iter){}
 
@@ -294,13 +296,13 @@ PairIterator<Iter_t> make_pair_iter(Iter_t i_iter){
 template<typename Ret_t, typename Iter, typename Container, typename Func_t>
 class value_ptr_iterator : public ptr_iterator<Iter, Container>{
 public:
-	friend									Container;
-	typedef Iter							iterator_type;
-	typedef Ret_t							value_type;
-	typedef long long				 		difference_type;
-	typedef Ret_t&							reference;
-	typedef Ret_t*  						pointer;
-	typedef ptr_iterator<Iter, Container>	M_base_t;
+	friend Container;
+	typedef Iter iterator_type;
+	typedef Ret_t						value_type;
+	typedef long long				 	difference_type;
+	typedef Ret_t&	reference;
+	typedef Ret_t*  	pointer;
+	typedef ptr_iterator<Iter, Container> M_base_t;
 
 	using M_base_t::base;
 
