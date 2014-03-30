@@ -1,5 +1,6 @@
 #include "j_routine_symbol.h"
-
+//
+#include "J_Symbol_Error.h"
 using std::string;
 
 using std::map; using std::function;
@@ -62,7 +63,7 @@ void j_routine_symbol::add_scope_symbol(const j_symbol& irk_symbol){
 
 void j_routine_symbol::add_arg_symbol(const j_symbol& irk_symbol){
 	if(M_arg_symbols.count(irk_symbol.name())){
-		throw J_Syntax_Error("Routine Symbol Already Has Argument with this name");
+		throw J_Symbol_Error("Routine Symbol Already Has Argument with this name");
 	}
 
 	M_arg_symbols[irk_symbol.name()] = irk_symbol.get_copy();

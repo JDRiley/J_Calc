@@ -393,7 +393,7 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 				break;
 			}
 		}
-	} catch(J_Syntax_Error& e){
+	} catch(J_Error& e){
 			e.print();
 			M_script_run_flag = false;
 	}

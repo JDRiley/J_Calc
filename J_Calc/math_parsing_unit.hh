@@ -42,15 +42,16 @@
 
 /* "%code requires" blocks.  */
 /* Line 33 of lalr1.cc  */
-#line 55 "parser.y"
+#line 56 "parser.y"
 
 #include<J_UI/J_UI_String.h>
 #include "J_Calc_Fwd_Decl.h"
 #include <J_Symbol_Fwd_Decl.h>
+#include "J_Calc_Data.h"
 
 
 /* Line 33 of lalr1.cc  */
-#line 54 "math_parsing_unit.hh"
+#line 55 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -66,7 +67,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 70 "math_parsing_unit.hh"
+#line 71 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -77,15 +78,19 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 75 "parser.y"
+#line 77 "parser.y"
 
     jomike::J_UI_String*			identifier;
     jomike::j_symbol_component*		symbol_component;
 	jomike::Constant_Symbol*		constant_symbol;
+	jomike::j_declaration*			declaration;
+	jomike::Type_Syntax*			type_syntax;
+	jomike::j_expression*			expression;
+	jomike::j_symbol*				symbol;
 
 
 /* Line 33 of lalr1.cc  */
-#line 89 "math_parsing_unit.hh"
+#line 94 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -104,21 +109,22 @@ namespace yy {
      T_STRING = 262,
      T_NULL_PTR = 263,
      T_LEFT_ARROW = 264,
-     T_IDENTIFIER = 265,
-     T_STRING_CONSTANT = 266,
-     T_INTEGER_CONSTANT = 267,
-     T_DOUBLE_CONSTANT = 268,
-     T_BOOL_CONSTANT = 269,
-     T_OR = 270,
-     T_AND = 271,
-     T_NOT_EQUAL = 272,
-     T_EQUAL = 273,
-     T_GREATER_EQUAL = 274,
-     T_LESS_EQUAL = 275,
-     T_DECREMENT = 276,
-     T_INCREMENT = 277,
-     NEGATION = 278,
-     T_DIMENSIONS = 279
+     T_RIGHT_ARROW = 265,
+     T_IDENTIFIER = 266,
+     T_STRING_CONSTANT = 267,
+     T_INTEGER_CONSTANT = 268,
+     T_DOUBLE_CONSTANT = 269,
+     T_BOOL_CONSTANT = 270,
+     T_OR = 271,
+     T_AND = 272,
+     T_NOT_EQUAL = 273,
+     T_EQUAL = 274,
+     T_GREATER_EQUAL = 275,
+     T_LESS_EQUAL = 276,
+     T_DECREMENT = 277,
+     T_INCREMENT = 278,
+     NEGATION = 279,
+     T_DIMENSIONS = 280
    };
 
     };
@@ -223,7 +229,7 @@ namespace yy {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const unsigned char yycheck_[];
+    static const signed char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -294,7 +300,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 298 "math_parsing_unit.hh"
+#line 304 "math_parsing_unit.hh"
 
 
 

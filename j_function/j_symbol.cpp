@@ -1,7 +1,9 @@
 #include "j_symbol.h"
+//
+#include "Type_Syntax.h"
 
-
-
+//
+#include "J_Symbol_Error.h"
 namespace jomike{
 static int s_symbol_ids = 0;
 
@@ -15,8 +17,7 @@ j_symbol::~j_symbol(){}
 
 
 
-/*const J_UI_String& display_name()const*/
-J_UI_String j_symbol::get_display_name(){ return name(); }
+
 
 j_dbl j_symbol::value(const Arguments& i_args)const{
 	return get_value(i_args).as_double();
@@ -37,6 +38,26 @@ Type_Syntax& j_symbol::type_syntax()const{
 	assert(M_type);
 	return *M_type;
 }
+
+void j_symbol::set_type_syntax(const Type_Syntax& irk_type_syntax){
+	delete M_type;
+	M_type = irk_type_syntax.get_copy();
+}
+
+void j_symbol::set_type_syntax(Type_Syntax* i_type_syntax){
+	M_type = i_type_syntax;
+}
+
+j_expression* j_symbol::as_expression(){
+	throw J_Error(name().std_str() + " cannot be used as an expression!");
+}
+
+void j_symbol::set_value(j_value /*i_value*/){
+	assert(!"Cannot Set Value of This type Symbol");
+}
+
+
+
 
 
 }

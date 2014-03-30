@@ -22,12 +22,13 @@
 #include "parser.h"
 #include "Math_Parser.h"
 #include <Constant_Symbol.h>
+#include "J_Calc_Data.h"
 
 using namespace jomike;
 void yyerror(const char *msg); // standard error-handling routine
 
 j_symbol_component* jtl::g_input_line = nullptr;
-
+static Instance_Pointer<J_Calc_Data> s_data;
 template<typename... Args>
 void delete_tokens(Args... i_ptrs){
 	j_symbol_component* pointers[] = {i_ptrs...};
@@ -56,6 +57,7 @@ void delete_tokens(Args... i_ptrs){
 #include<J_UI/J_UI_String.h>
 #include "J_Calc_Fwd_Decl.h"
 #include <J_Symbol_Fwd_Decl.h>
+#include "J_Calc_Data.h"
 }
 
 /* The section before the first %% is the Definitions section of the yacc
@@ -76,40 +78,46 @@ void delete_tokens(Args... i_ptrs){
     jomike::J_UI_String*			identifier;
     jomike::j_symbol_component*		symbol_component;
 	jomike::Constant_Symbol*		constant_symbol;
+	jomike::j_declaration*			declaration;
+	jomike::Type_Syntax*			type_syntax;
+	jomike::j_expression*			expression;
+	jomike::j_symbol*				symbol;
 }
 
-%destructor {} <integer_constant>
-%destructor {} <boolean_constant>
-%destructor {} <string_constant>
-%destructor {} <double_constant>
-%destructor {delete $$;} <*>
+%destructor{} <integer_constant>
+%destructor{} <boolean_constant>
+%destructor{} <string_constant>
+%destructor{} <double_constant>
+%destructor{delete $$;} <*>
 
 /* Tokens
- * ------
- * Here we tell yacc about all the token types that we are using.
- * Yacc will assign unique numbers to these and export the #define
- * in the generated y.tab.h header file.
- */
+* ------
+* Here we tell yacc about all the token types that we are using.
+* Yacc will assign unique numbers to these and export the #define
+* in the generated y.tab.h header file.
+*/
 
 
 
-%token							T_VOID T_BOOL T_INT T_DOUBLE T_STRING 
- 
-%token							T_NULL_PTR 
-%token							T_LEFT_ARROW
+
+
+%token							T_VOID T_BOOL T_INT T_DOUBLE T_STRING
+
+%token							T_NULL_PTR
+%token							T_LEFT_ARROW T_RIGHT_ARROW
 
 %token	<identifier>			T_IDENTIFIER
-%token	<constant_symbol>		T_STRING_CONSTANT 
+%token	<constant_symbol>		T_STRING_CONSTANT
 %token	<constant_symbol>		T_INTEGER_CONSTANT
 %token	<constant_symbol>		T_DOUBLE_CONSTANT
 %token	<constant_symbol>		T_BOOL_CONSTANT
 
 //Operator Precence
-%right '='
+%right T_LEFT_ARROW
 %left T_OR
 %left   T_AND
 %left T_EQUAL T_NOT_EQUAL
-%left   T_LESS_EQUAL T_GREATER_EQUAL  '>' '<' 
+%left   T_LESS_EQUAL T_GREATER_EQUAL  '>' '<'
 
 %left '+' '-'
 
@@ -122,38 +130,114 @@ void delete_tokens(Args... i_ptrs){
 %left T_DIMENSIONS
 
 /* Non-terminal types
- * ------------------
- * In order for yacc to assign/access the correct field of $$, $1, we
- * must to declare which field is appropriate for the non-terminal.
- * As an example, this first type declaration establishes that the DeclList
- * non-terminal uses the field named "declList" in the yylval union. This
- * means that when we are setting $$ for a reduction for DeclList ore reading
- * $n which corresponds to a DeclList nonterminal we are accessing the field
- * of the union named "declList" which is of type List<Decl*>.
- * pp2: You'll need to add many of these of your own.
- */
- 
- %type	<symbol_component>	Input_Line
- %type	<symbol_component>	Expression
- %type	<constant_symbol>	Constant_Expression
+* ------------------
+* In order for yacc to assign/access the correct field of $$, $1, we
+* must to declare which field is appropriate for the non-terminal.
+* As an example, this first type declaration establishes that the DeclList
+* non-terminal uses the field named "declList" in the yylval union. This
+* means that when we are setting $$ for a reduction for DeclList ore reading
+* $n which corresponds to a DeclList nonterminal we are accessing the field
+* of the union named "declList" which is of type List<Decl*>.
+* pp2: You'll need to add many of these of your own.
+*/
+
+%type	<symbol_component>	Input_Line
+%type	<expression>	Expression
+%type	<constant_symbol>	Constant_Expression
+%type	<declaration>		Declaration Variable_Declaration
+%type	<type_syntax>		Type
+%type	<symbol>			LValue Field_Access_Expression Assignment_Expression
 %%
 /* Rules
 * -----
 * All productions and actions should be placed between the start and stop
 * %% markers which delimit the Rules section.
-	 
 */
 
 Input_Line
-: Expression {$$ = *i_symbol_ptr = $1->get_copy(); }
+: Expression ';' {$$ = nullptr;  *i_symbol_ptr = $1->get_copy(); return true; }
+| Declaration ';' {
+	$$ = nullptr;
+	*i_symbol_ptr = $1->get_copy();
+
+	s_data->add_user_symbol($1);
+	return true;
+}
+;
+
+Declaration
+: Variable_Declaration {$$ = $1;}
+;
+
+Variable_Declaration
+: Type T_IDENTIFIER{$$ =  new Variable_Symbol($1, $2); }
+| Type T_IDENTIFIER T_RIGHT_ARROW Expression {
+	$$ = new Variable_Reference_Symbol($1, $2, $4); 
+}
+| Type T_IDENTIFIER T_LEFT_ARROW Expression {
+	$$ = new Variable_Symbol($1, $2, *$4);
+	delete_tokens($4);
+}
+;
+
+Type 
+: T_DOUBLE{$$ = make_double_type_syntax();}
+| T_INT{$$ = make_int_type_syntax();}
 ;
 
 Expression
-: Constant_Expression {$$ = $1; }
+: Assignment_Expression{
+	$$ = $1->as_expression();
+}
+| Constant_Expression{$$ = $1;}
+| LValue {
+	$$ = $1->as_expression();
+}
+| Expression '+' Expression { 
+	$$ = new Addition_Expression($1, $3);
+}
+| Expression '-' Expression { 
+	$$ = new Subtraction_Expression($1, $3);
+}
+| Expression '*' Expression { 
+	$$ = new Multiplication_Expression($1, $3);
+}
+| Expression '/' Expression { 
+	$$ = new Division_Expression($1, $3);
+}
+| '(' Expression ')' {$$ = $2;}
+	
+;
+
+Assignment_Expression
+: LValue T_LEFT_ARROW Expression {
+	$1->set_value($3->get_value());
+	$$ = $1;
+}
+;
+LValue
+: /*Expression '[' Expression ']' {
+	$$ = new Array_Access_Expression(*$1, *$3, @$);
+	delete_tokens($1, $3);
+}
+| */Field_Access_Expression {$$ = $1; }
+;
+Field_Access_Expression
+: T_IDENTIFIER {
+	$$ = s_data->get_symbol(*$1);
+	delete $1;
+}
+/*| Expression T_BACKSLASH T_Identifier {
+	$$ = new Field_Access_Expression($1, *$3);
+	delete_tokens($3);
+}*/
 ;
 
 Constant_Expression
-: T_INTEGER_CONSTANT {$$ = $1; }
+: T_INTEGER_CONSTANT {$$ = $1;}
+| T_DOUBLE_CONSTANT{$$ = $1;}
+| T_BOOL_CONSTANT{$$ = $1;}
+| T_STRING_CONSTANT{$$ = $1; }
 ;
 
 

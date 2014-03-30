@@ -30,26 +30,21 @@ public:
 	j_dbl value(const Arguments& i_args = Arguments())const;
 	virtual void clear() = 0;
 	virtual bool has_value()const = 0;
-
-	J_UI_String get_display_name()override;
+	virtual void set_value(j_value i_value);
+	J_UI_String get_display_name()override =0;
 	virtual void set_args(const Arguments&);
 	virtual void set_args(Arguments&&);
 	virtual ~j_symbol();
-
-	virtual Type_Syntax& type_syntax()const;
-
+	virtual j_expression* as_expression();
+	Type_Syntax& type_syntax()const;
+	void set_type_syntax(const Type_Syntax& irk_type_syntax);
+	void set_type_syntax(Type_Syntax* i_type_syntax);
 	virtual bool is_placeholder()const;
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 private:
 	Arguments M_arguments;
 	Type_Syntax* M_type;
-};
-
-class J_Sym_Argument_Error : public J_Error{
-public:
-	J_Sym_Argument_Error(const char * const ik_message = "invalid args");
-private:
 };
 
 

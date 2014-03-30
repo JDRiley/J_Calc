@@ -101,7 +101,9 @@ void J_Calc_Data::attach_view(J_View_Shared_t i_new_view){
 
 /*void add_user_symbol(J_Symbol_Shared_t)*/
 void J_Calc_Data::add_user_symbol(const j_symbol* i_symbol_ptr){
-	assert(!M_user_symbols.count(i_symbol_ptr->name()));
+	if(M_user_symbols.count(i_symbol_ptr->name())){
+		throw J_Syntax_Error("Symbol With This Name Already Exists");
+	}
 	M_user_symbols[i_symbol_ptr->name()] = i_symbol_ptr->get_copy();
 
 }
@@ -144,7 +146,7 @@ j_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
 	}else if(is_user_symbol(irk_string)){
 		return get_user_symbol(irk_string);
 	}else{
-		throw J_Argument_Error("No Symbol with that name");
+		throw J_Syntax_Error("No Symbol with that name");
 	}
 }
 

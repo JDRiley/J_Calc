@@ -161,10 +161,10 @@ void J_Calc_Controller::execute(){
 	M_main_view->open_window();
 	
 #ifdef _DEBUG
-	//run_script("test_script.jcs");
+	run_script("button_press.jcs");
 	
 #else
-	run_script("test_script.jcs");
+	run_script("button_press.jcs");
 #endif
 	draw_views();
 	j_block_execution(10);

@@ -23,6 +23,10 @@ j_symbol_component::~j_symbol_component(){
 
 }
 
+jomike::Symbol_Types j_symbol_component::symbol_type()const{
+	return M_type;
+}
+
 }
 
 

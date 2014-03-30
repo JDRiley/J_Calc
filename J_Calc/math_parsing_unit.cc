@@ -48,12 +48,13 @@
 #include "parser.h"
 #include "Math_Parser.h"
 #include <Constant_Symbol.h>
+#include "J_Calc_Data.h"
 
 using namespace jomike;
 void yyerror(const char *msg); // standard error-handling routine
 
 j_symbol_component* jtl::g_input_line = nullptr;
-
+static Instance_Pointer<J_Calc_Data> s_data;
 template<typename... Args>
 void delete_tokens(Args... i_ptrs){
 	j_symbol_component* pointers[] = {i_ptrs...};
@@ -72,7 +73,7 @@ void delete_tokens(Args... i_ptrs){
 
 
 /* Line 279 of lalr1.cc  */
-#line 76 "math_parsing_unit.cc"
+#line 77 "math_parsing_unit.cc"
 
 
 #include "math_parsing_unit.hh"
@@ -80,7 +81,7 @@ void delete_tokens(Args... i_ptrs){
 /* User implementation prologue.  */
 
 /* Line 285 of lalr1.cc  */
-#line 84 "math_parsing_unit.cc"
+#line 85 "math_parsing_unit.cc"
 
 
 # ifndef YY_NULL
@@ -175,7 +176,7 @@ do {					\
 
 namespace yy {
 /* Line 353 of lalr1.cc  */
-#line 179 "math_parsing_unit.cc"
+#line 180 "math_parsing_unit.cc"
 
   /// Build a parser object.
   Math_Parsing_Unit::Math_Parsing_Unit (jtl::j_symbol_component** i_symbol_ptr_yyarg, jtl::Math_Parser* i_parser_yyarg)
@@ -240,61 +241,103 @@ namespace yy {
 
     switch (yytype)
       {
-        case 10: /* T_IDENTIFIER */
+        case 11: /* T_IDENTIFIER */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).identifier);};
 /* Line 455 of lalr1.cc  */
-#line 249 "math_parsing_unit.cc"
+#line 250 "math_parsing_unit.cc"
         break;
-      case 11: /* T_STRING_CONSTANT */
+      case 12: /* T_STRING_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 256 "math_parsing_unit.cc"
+#line 257 "math_parsing_unit.cc"
         break;
-      case 12: /* T_INTEGER_CONSTANT */
+      case 13: /* T_INTEGER_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 263 "math_parsing_unit.cc"
+#line 264 "math_parsing_unit.cc"
         break;
-      case 13: /* T_DOUBLE_CONSTANT */
+      case 14: /* T_DOUBLE_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 270 "math_parsing_unit.cc"
+#line 271 "math_parsing_unit.cc"
         break;
-      case 14: /* T_BOOL_CONSTANT */
+      case 15: /* T_BOOL_CONSTANT */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 277 "math_parsing_unit.cc"
+#line 278 "math_parsing_unit.cc"
         break;
-      case 37: /* Input_Line */
+      case 40: /* Input_Line */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
         {delete ((*yyvaluep).symbol_component);};
 /* Line 455 of lalr1.cc  */
-#line 284 "math_parsing_unit.cc"
+#line 285 "math_parsing_unit.cc"
         break;
-      case 38: /* Expression */
+      case 41: /* Declaration */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
-        {delete ((*yyvaluep).symbol_component);};
+#line 91 "parser.y"
+        {delete ((*yyvaluep).declaration);};
 /* Line 455 of lalr1.cc  */
-#line 291 "math_parsing_unit.cc"
+#line 292 "math_parsing_unit.cc"
         break;
-      case 39: /* Constant_Expression */
+      case 42: /* Variable_Declaration */
 /* Line 455 of lalr1.cc  */
-#line 85 "parser.y"
+#line 91 "parser.y"
+        {delete ((*yyvaluep).declaration);};
+/* Line 455 of lalr1.cc  */
+#line 299 "math_parsing_unit.cc"
+        break;
+      case 43: /* Type */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
+        {delete ((*yyvaluep).type_syntax);};
+/* Line 455 of lalr1.cc  */
+#line 306 "math_parsing_unit.cc"
+        break;
+      case 44: /* Expression */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
+        {delete ((*yyvaluep).expression);};
+/* Line 455 of lalr1.cc  */
+#line 313 "math_parsing_unit.cc"
+        break;
+      case 45: /* Assignment_Expression */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
+        {delete ((*yyvaluep).symbol);};
+/* Line 455 of lalr1.cc  */
+#line 320 "math_parsing_unit.cc"
+        break;
+      case 46: /* LValue */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
+        {delete ((*yyvaluep).symbol);};
+/* Line 455 of lalr1.cc  */
+#line 327 "math_parsing_unit.cc"
+        break;
+      case 47: /* Field_Access_Expression */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
+        {delete ((*yyvaluep).symbol);};
+/* Line 455 of lalr1.cc  */
+#line 334 "math_parsing_unit.cc"
+        break;
+      case 48: /* Constant_Expression */
+/* Line 455 of lalr1.cc  */
+#line 91 "parser.y"
         {delete ((*yyvaluep).constant_symbol);};
 /* Line 455 of lalr1.cc  */
-#line 298 "math_parsing_unit.cc"
+#line 341 "math_parsing_unit.cc"
         break;
 
 	default:
@@ -505,25 +548,174 @@ namespace yy {
       {
           case 2:
 /* Line 670 of lalr1.cc  */
-#line 148 "parser.y"
-    {(yyval.symbol_component) = *i_symbol_ptr = (yysemantic_stack_[(1) - (1)].symbol_component)->get_copy(); }
+#line 158 "parser.y"
+    {(yyval.symbol_component) = nullptr;  *i_symbol_ptr = (yysemantic_stack_[(2) - (1)].expression)->get_copy(); return true; }
     break;
 
   case 3:
 /* Line 670 of lalr1.cc  */
-#line 152 "parser.y"
-    {(yyval.symbol_component) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
+#line 159 "parser.y"
+    {
+	(yyval.symbol_component) = nullptr;
+	*i_symbol_ptr = (yysemantic_stack_[(2) - (1)].declaration)->get_copy();
+
+	s_data->add_user_symbol((yysemantic_stack_[(2) - (1)].declaration));
+	return true;
+}
     break;
 
   case 4:
 /* Line 670 of lalr1.cc  */
-#line 156 "parser.y"
+#line 169 "parser.y"
+    {(yyval.declaration) = (yysemantic_stack_[(1) - (1)].declaration);}
+    break;
+
+  case 5:
+/* Line 670 of lalr1.cc  */
+#line 173 "parser.y"
+    {(yyval.declaration) =  new Variable_Symbol((yysemantic_stack_[(2) - (1)].type_syntax), (yysemantic_stack_[(2) - (2)].identifier)); }
+    break;
+
+  case 6:
+/* Line 670 of lalr1.cc  */
+#line 174 "parser.y"
+    {
+	(yyval.declaration) = new Variable_Reference_Symbol((yysemantic_stack_[(4) - (1)].type_syntax), (yysemantic_stack_[(4) - (2)].identifier), (yysemantic_stack_[(4) - (4)].expression)); 
+}
+    break;
+
+  case 7:
+/* Line 670 of lalr1.cc  */
+#line 177 "parser.y"
+    {
+	(yyval.declaration) = new Variable_Symbol((yysemantic_stack_[(4) - (1)].type_syntax), (yysemantic_stack_[(4) - (2)].identifier), *(yysemantic_stack_[(4) - (4)].expression));
+	delete_tokens((yysemantic_stack_[(4) - (4)].expression));
+}
+    break;
+
+  case 8:
+/* Line 670 of lalr1.cc  */
+#line 184 "parser.y"
+    {(yyval.type_syntax) = make_double_type_syntax();}
+    break;
+
+  case 9:
+/* Line 670 of lalr1.cc  */
+#line 185 "parser.y"
+    {(yyval.type_syntax) = make_int_type_syntax();}
+    break;
+
+  case 10:
+/* Line 670 of lalr1.cc  */
+#line 189 "parser.y"
+    {
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].symbol)->as_expression();
+}
+    break;
+
+  case 11:
+/* Line 670 of lalr1.cc  */
+#line 192 "parser.y"
+    {(yyval.expression) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
+    break;
+
+  case 12:
+/* Line 670 of lalr1.cc  */
+#line 193 "parser.y"
+    {
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].symbol)->as_expression();
+}
+    break;
+
+  case 13:
+/* Line 670 of lalr1.cc  */
+#line 196 "parser.y"
+    { 
+	(yyval.expression) = new Addition_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+}
+    break;
+
+  case 14:
+/* Line 670 of lalr1.cc  */
+#line 199 "parser.y"
+    { 
+	(yyval.expression) = new Subtraction_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+}
+    break;
+
+  case 15:
+/* Line 670 of lalr1.cc  */
+#line 202 "parser.y"
+    { 
+	(yyval.expression) = new Multiplication_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+}
+    break;
+
+  case 16:
+/* Line 670 of lalr1.cc  */
+#line 205 "parser.y"
+    { 
+	(yyval.expression) = new Division_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+}
+    break;
+
+  case 17:
+/* Line 670 of lalr1.cc  */
+#line 208 "parser.y"
+    {(yyval.expression) = (yysemantic_stack_[(3) - (2)].expression);}
+    break;
+
+  case 18:
+/* Line 670 of lalr1.cc  */
+#line 213 "parser.y"
+    {
+	(yysemantic_stack_[(3) - (1)].symbol)->set_value((yysemantic_stack_[(3) - (3)].expression)->get_value());
+	(yyval.symbol) = (yysemantic_stack_[(3) - (1)].symbol);
+}
+    break;
+
+  case 19:
+/* Line 670 of lalr1.cc  */
+#line 223 "parser.y"
+    {(yyval.symbol) = (yysemantic_stack_[(1) - (1)].symbol); }
+    break;
+
+  case 20:
+/* Line 670 of lalr1.cc  */
+#line 226 "parser.y"
+    {
+	(yyval.symbol) = s_data->get_symbol(*(yysemantic_stack_[(1) - (1)].identifier));
+	delete (yysemantic_stack_[(1) - (1)].identifier);
+}
+    break;
+
+  case 21:
+/* Line 670 of lalr1.cc  */
+#line 237 "parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
+    break;
+
+  case 22:
+/* Line 670 of lalr1.cc  */
+#line 238 "parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
+    break;
+
+  case 23:
+/* Line 670 of lalr1.cc  */
+#line 239 "parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
+    break;
+
+  case 24:
+/* Line 670 of lalr1.cc  */
+#line 240 "parser.y"
     {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
     break;
 
 
 /* Line 670 of lalr1.cc  */
-#line 527 "math_parsing_unit.cc"
+#line 719 "math_parsing_unit.cc"
       default:
         break;
       }
@@ -735,11 +927,14 @@ namespace yy {
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char Math_Parsing_Unit::yypact_ninf_ = -13;
+  const signed char Math_Parsing_Unit::yypact_ninf_ = -24;
   const signed char
   Math_Parsing_Unit::yypact_[] =
   {
-       -12,   -13,     1,   -13,   -13,   -13
+        -5,   -24,   -24,   -24,   -24,   -24,   -24,   -24,     0,     5,
+     -16,   -24,    11,     9,   -24,    22,   -24,   -24,     1,   -24,
+     -24,    20,     0,     0,     0,     0,   -24,     0,   -24,     0,
+       0,   -23,   -23,   -24,   -24,    16,    16,    16
   };
 
   /* YYDEFACT[S] -- default reduction number in state S.  Performed when
@@ -748,21 +943,24 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yydefact_[] =
   {
-         0,     4,     0,     2,     3,     1
+         0,     9,     8,    20,    24,    21,    22,    23,     0,     0,
+       0,     4,     0,     0,    10,    12,    19,    11,     0,     1,
+       3,     5,     0,     0,     0,     0,     2,     0,    17,     0,
+       0,    13,    14,    15,    16,    18,     7,     6
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yypgoto_[] =
   {
-       -13,   -13,   -13,   -13
+       -24,   -24,   -24,   -24,   -24,    -6,   -24,   -24,   -24,   -24
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yydefgoto_[] =
   {
-        -1,     2,     3,     4
+        -1,     9,    10,    11,    12,    13,    14,    15,    16,    17
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -772,14 +970,22 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yytable_[] =
   {
-         1,     5
+         1,     2,    18,    24,    25,    19,     3,     4,     5,     6,
+       7,     3,     4,     5,     6,     7,    31,    32,    33,    34,
+      20,    35,    21,    36,    37,    22,    23,    24,    25,    29,
+      30,    27,     8,    22,    23,    24,    25,     8,     0,    28,
+      22,    23,    24,    25,     0,    26
   };
 
   /* YYCHECK.  */
-  const unsigned char
+  const signed char
   Math_Parsing_Unit::yycheck_[] =
   {
-        12,     0
+         5,     6,     8,    26,    27,     0,    11,    12,    13,    14,
+      15,    11,    12,    13,    14,    15,    22,    23,    24,    25,
+      36,    27,    11,    29,    30,    24,    25,    26,    27,     9,
+      10,     9,    37,    24,    25,    26,    27,    37,    -1,    38,
+      24,    25,    26,    27,    -1,    36
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -787,7 +993,10 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yystos_[] =
   {
-         0,    12,    37,    38,    39,     0
+         0,     5,     6,    11,    12,    13,    14,    15,    37,    40,
+      41,    42,    43,    44,    45,    46,    47,    48,    44,     0,
+      36,    11,    24,    25,    26,    27,    36,     9,    38,     9,
+      10,    44,    44,    44,    44,    44,    44,    44
   };
 
 #if YYDEBUG
@@ -797,9 +1006,9 @@ namespace yy {
   Math_Parsing_Unit::yytoken_number_[] =
   {
          0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,    61,   270,   271,   272,   273,
-      62,    60,   274,   275,    43,    45,    42,    47,    37,    33,
-     276,   277,   278,    46,    91,   279
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+      62,    60,   275,   276,    43,    45,    42,    47,    37,    33,
+     277,   278,   279,    46,    91,   280,    59,    40,    41
   };
 #endif
 
@@ -807,14 +1016,18 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yyr1_[] =
   {
-         0,    36,    37,    38,    39
+         0,    39,    40,    40,    41,    42,    42,    42,    43,    43,
+      44,    44,    44,    44,    44,    44,    44,    44,    45,    46,
+      47,    48,    48,    48,    48
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
   const unsigned char
   Math_Parsing_Unit::yyr2_[] =
   {
-         0,     2,     1,     1,     1
+         0,     2,     2,     2,     1,     2,     4,     4,     1,     1,
+       1,     1,     1,     3,     3,     3,     3,     3,     3,     1,
+       1,     1,     1,     1,     1
   };
 
 #if YYDEBUG
@@ -824,13 +1037,15 @@ namespace yy {
   const Math_Parsing_Unit::yytname_[] =
   {
     "$end", "error", "$undefined", "T_VOID", "T_BOOL", "T_INT", "T_DOUBLE",
-  "T_STRING", "T_NULL_PTR", "T_LEFT_ARROW", "T_IDENTIFIER",
-  "T_STRING_CONSTANT", "T_INTEGER_CONSTANT", "T_DOUBLE_CONSTANT",
-  "T_BOOL_CONSTANT", "'='", "T_OR", "T_AND", "T_NOT_EQUAL", "T_EQUAL",
-  "'>'", "'<'", "T_GREATER_EQUAL", "T_LESS_EQUAL", "'+'", "'-'", "'*'",
-  "'/'", "'%'", "'!'", "T_DECREMENT", "T_INCREMENT", "NEGATION", "'.'",
-  "'['", "T_DIMENSIONS", "$accept", "Input_Line", "Expression",
-  "Constant_Expression", YY_NULL
+  "T_STRING", "T_NULL_PTR", "T_LEFT_ARROW", "T_RIGHT_ARROW",
+  "T_IDENTIFIER", "T_STRING_CONSTANT", "T_INTEGER_CONSTANT",
+  "T_DOUBLE_CONSTANT", "T_BOOL_CONSTANT", "T_OR", "T_AND", "T_NOT_EQUAL",
+  "T_EQUAL", "'>'", "'<'", "T_GREATER_EQUAL", "T_LESS_EQUAL", "'+'", "'-'",
+  "'*'", "'/'", "'%'", "'!'", "T_DECREMENT", "T_INCREMENT", "NEGATION",
+  "'.'", "'['", "T_DIMENSIONS", "';'", "'('", "')'", "$accept",
+  "Input_Line", "Declaration", "Variable_Declaration", "Type",
+  "Expression", "Assignment_Expression", "LValue",
+  "Field_Access_Expression", "Constant_Expression", YY_NULL
   };
 
 
@@ -838,7 +1053,13 @@ namespace yy {
   const Math_Parsing_Unit::rhs_number_type
   Math_Parsing_Unit::yyrhs_[] =
   {
-        37,     0,    -1,    38,    -1,    39,    -1,    12,    -1
+        40,     0,    -1,    44,    36,    -1,    41,    36,    -1,    42,
+      -1,    43,    11,    -1,    43,    11,    10,    44,    -1,    43,
+      11,     9,    44,    -1,     6,    -1,     5,    -1,    45,    -1,
+      48,    -1,    46,    -1,    44,    24,    44,    -1,    44,    25,
+      44,    -1,    44,    26,    44,    -1,    44,    27,    44,    -1,
+      37,    44,    38,    -1,    46,     9,    44,    -1,    47,    -1,
+      11,    -1,    13,    -1,    14,    -1,    15,    -1,    12,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -846,14 +1067,18 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yyprhs_[] =
   {
-         0,     0,     3,     5,     7
+         0,     0,     3,     6,     9,    11,    14,    19,    24,    26,
+      28,    30,    32,    34,    38,    42,    46,    50,    54,    58,
+      60,    62,    64,    66,    68
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   const unsigned char
   Math_Parsing_Unit::yyrline_[] =
   {
-         0,   148,   148,   152,   156
+         0,   158,   158,   159,   169,   173,   174,   177,   184,   185,
+     189,   192,   193,   196,   199,   202,   205,   208,   213,   223,
+     226,   237,   238,   239,   240
   };
 
   // Print the state stack on the debug stream.
@@ -897,9 +1122,9 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,    29,     2,     2,     2,    28,     2,     2,
-       2,     2,    26,    24,     2,    25,    33,    27,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      21,    15,    20,     2,     2,     2,     2,     2,     2,     2,
+      37,    38,    26,    24,     2,    25,    33,    27,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    36,
+      21,     2,    20,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,    34,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -920,7 +1145,8 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      16,    17,    18,    19,    22,    23,    30,    31,    32,    35
+      15,    16,    17,    18,    19,    22,    23,    30,    31,    32,
+      35
     };
     if ((unsigned int) t <= yyuser_token_number_max_)
       return translate_table[t];
@@ -929,23 +1155,23 @@ namespace yy {
   }
 
   const int Math_Parsing_Unit::yyeof_ = 0;
-  const int Math_Parsing_Unit::yylast_ = 1;
-  const int Math_Parsing_Unit::yynnts_ = 4;
+  const int Math_Parsing_Unit::yylast_ = 45;
+  const int Math_Parsing_Unit::yynnts_ = 10;
   const int Math_Parsing_Unit::yyempty_ = -2;
-  const int Math_Parsing_Unit::yyfinal_ = 5;
+  const int Math_Parsing_Unit::yyfinal_ = 19;
   const int Math_Parsing_Unit::yyterror_ = 1;
   const int Math_Parsing_Unit::yyerrcode_ = 256;
-  const int Math_Parsing_Unit::yyntokens_ = 36;
+  const int Math_Parsing_Unit::yyntokens_ = 39;
 
-  const unsigned int Math_Parsing_Unit::yyuser_token_number_max_ = 279;
+  const unsigned int Math_Parsing_Unit::yyuser_token_number_max_ = 280;
   const Math_Parsing_Unit::token_number_type Math_Parsing_Unit::yyundef_token_ = 2;
 
 
 } // yy
 /* Line 1141 of lalr1.cc  */
-#line 947 "math_parsing_unit.cc"
+#line 1173 "math_parsing_unit.cc"
 /* Line 1142 of lalr1.cc  */
-#line 160 "parser.y"
+#line 244 "parser.y"
 
 
 /* The closing %% above marks the end of the Rules section and the beginning

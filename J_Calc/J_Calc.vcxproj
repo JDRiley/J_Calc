@@ -258,13 +258,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="parser.h">
-      <AdditionalInputs>parser.h;parser.y;</AdditionalInputs>
-      <Command>win_bison -v -t --defines=math_parser.tab.h -omath_parser.cc parser.y</Command>
-      <Message>win_bison -v -t --defines=math_parser.tab.h -omath_parser.cc parser.y</Message>
-      <Outputs>math_parser.tab.h;math_parser.cc;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">math_parsing_init.hh;math_parsing_unit.cc;%(Outputs)</Outputs>
+      <AdditionalInputs>parser.y;</AdditionalInputs>
+      <Command>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
+      <Message>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
+      <Outputs>math_parsing_unit.cc;math_parsing_unit.hh%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="Math_Lexer.h">
       <AdditionalInputs>Math_Lexer.h;Math_Lexer.l;</AdditionalInputs>
@@ -322,6 +319,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers\jtl.natvis" />
+    <None Include="button_press.jcs" />
     <None Include="parser.output" />
     <None Include="parser.y" />
     <None Include="Math_Lexer.l">

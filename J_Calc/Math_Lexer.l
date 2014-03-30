@@ -107,6 +107,8 @@ SINGLE_COMMENT    ("//"[^\n]*)
 "!="                { return token_t::T_NOT_EQUAL;    }
 "&&"                { return token_t::T_AND;         }
 "||"                { return token_t::T_OR;          }
+"<-"                { return token_t::T_LEFT_ARROW;          }
+"->"                { return token_t::T_RIGHT_ARROW;          }
 
 
 
@@ -140,7 +142,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 		= make_int_constant_symbol(
 		val, M_location);
 	return token_t::T_INTEGER_CONSTANT;}
-{DOUBLE}            {int val = atof(yytext);
+{DOUBLE}            {j_dbl val = atof(yytext);
 	yylval->constant_symbol
 		= make_double_constant_symbol(val, M_location);
 	return token_t::T_DOUBLE_CONSTANT;}
@@ -155,7 +157,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
  /* -------------------- Default rule (error) -------------------- */
-.                   { assert(!"Unrecognized Character"); }
+.                   { std::cerr << "Unrecognized Character"; return token_t(0);}
 
 %%
 

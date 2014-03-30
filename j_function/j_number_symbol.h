@@ -1,11 +1,11 @@
 #ifndef J_NUMBER_SYMBOL_H
 #define J_NUMBER_SYMBOL_H
 
-#include "j_symbol.h"
+#include "Variable_Symbol.h"
 
 
 namespace jomike{
-class j_number_symbol : public j_symbol{
+class j_number_symbol : public Variable_Symbol{
 public:
 	//Constructors
 	j_number_symbol(Dbl_t);
@@ -24,7 +24,7 @@ protected:
 	j_value derived_get_value(const Arguments&)const override;
 private:
 	bool M_value_status;
-	Dbl_t M_value;
+	j_value M_value;
 };
 
 

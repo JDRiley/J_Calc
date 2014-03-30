@@ -40,6 +40,10 @@ j_placeholder_symbol* j_placeholder_symbol::move_copy(){
 	return  new j_placeholder_symbol(std::move(*this));
 }
 
+jomike::J_UI_String j_placeholder_symbol::get_display_name(){
+	return name();
+}
+
 
 
 }

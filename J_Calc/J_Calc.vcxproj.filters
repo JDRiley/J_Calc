@@ -124,6 +124,9 @@
     <None Include="Math_Lexer.l">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="button_press.jcs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser.h">

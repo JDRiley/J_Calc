@@ -47,7 +47,7 @@ private:
 
 class J_Syntax_Error : public J_Error{
 public:
-	J_Syntax_Error(const char* const ik_message);
+	J_Syntax_Error(const std::string& ik_message);
 };
 
 

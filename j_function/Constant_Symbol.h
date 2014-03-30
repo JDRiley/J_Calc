@@ -1,11 +1,11 @@
 #ifndef CONSTANT_SYMBOL_H
 #define CONSTANT_SYMBOL_H
 
-#include "j_symbol.h"
+#include "j_expression.h"
 
 
 namespace jomike{
-class Constant_Symbol : public j_symbol{
+class Constant_Symbol : public j_expression{
 public:
 	Constant_Symbol(Symbol_Types i_symbol_type, const Lexer_Location& i_loc);
 	
@@ -44,6 +44,8 @@ public:
 
 	Bool_Constant_Symbol* move_copy()override;
 
+	J_UI_String get_display_name()override;
+
 	void clear()override;
 	bool has_value()const override;
 
@@ -64,6 +66,8 @@ public:
 
 	Dbl_Constant_Symbol* move_copy()override;
 
+	J_UI_String get_display_name()override;
+
 	void clear()override;
 	bool has_value()const override;
 
@@ -81,6 +85,8 @@ public:
 	String_Constant_Symbol* get_copy()const override;
 
 	String_Constant_Symbol* move_copy()override;
+
+	J_UI_String get_display_name()override;
 
 	void clear()override;
 	bool has_value()const override;

@@ -16,9 +16,13 @@ public:
 	j_boolean_expression* get_copy()const override;
 	j_boolean_expression* move_copy()override;
 	virtual void clear();
+
+	J_UI_String get_display_name()override;
 private:
 	boolean_tester_array M_boolean_testers;
 	j_symbol_array M_symbols;
+
+
 
 	virtual j_value derived_get_value(const Arguments& i_args)const;
 

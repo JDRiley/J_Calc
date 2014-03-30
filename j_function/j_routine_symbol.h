@@ -25,7 +25,9 @@ public:
 	void clear()override;
 	bool has_value()const override;
 	void add_statement(const J_UI_String& irk_string);
-
+	J_UI_String get_display_name()override{
+		return name();
+	}
 	~j_routine_symbol();
 protected:
 	

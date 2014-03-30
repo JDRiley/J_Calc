@@ -49,6 +49,13 @@ j_boolean_expression::j_boolean_expression():j_symbol(Symbol_Types::BOOL){
 
 }
 
+J_UI_String j_boolean_expression::get_display_name(){
+	if(has_value()){
+		return get_value().to_str();
+	}
+	return name();
+}
+
 }
 
 
