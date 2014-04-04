@@ -22,6 +22,7 @@
 #include "parser.h"
 #include "Math_Parser.h"
 #include <Constant_Symbol.h>
+#include <cstdarg>
 #include "J_Calc_Data.h"
 
 using namespace jomike;
@@ -57,6 +58,10 @@ void delete_tokens(Args... i_ptrs){
 #include<J_UI/J_UI_String.h>
 #include "J_Calc_Fwd_Decl.h"
 #include <J_Symbol_Fwd_Decl.h>
+#include <Expression_List.h>
+#include <Call_Expression.h>
+#include <J_Symbol_Identifier.h>
+#include <Field_Access_Expression.h>
 #include "J_Calc_Data.h"
 }
 
@@ -75,12 +80,13 @@ void delete_tokens(Args... i_ptrs){
  *      attributes to your non-terminal symbols.
  */
 %union {
-    jomike::J_UI_String*			identifier;
+    jomike::J_Symbol_Identifier*	identifier;
     jomike::j_symbol_component*		symbol_component;
 	jomike::Constant_Symbol*		constant_symbol;
 	jomike::j_declaration*			declaration;
 	jomike::Type_Syntax*			type_syntax;
 	jomike::j_expression*			expression;
+	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
 }
 
@@ -88,7 +94,7 @@ void delete_tokens(Args... i_ptrs){
 %destructor{} <boolean_constant>
 %destructor{} <string_constant>
 %destructor{} <double_constant>
-%destructor{delete $$;} <*>
+//%destructor{delete $$;} <*>
 
 /* Tokens
 * ------
@@ -141,8 +147,9 @@ void delete_tokens(Args... i_ptrs){
 * pp2: You'll need to add many of these of your own.
 */
 
+%type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild
 %type	<symbol_component>	Input_Line
-%type	<expression>	Expression
+%type	<expression>		Expression Call 
 %type	<constant_symbol>	Constant_Expression
 %type	<declaration>		Declaration Variable_Declaration
 %type	<type_syntax>		Type
@@ -189,6 +196,9 @@ Expression
 : Assignment_Expression{
 	$$ = $1->as_expression();
 }
+| Call{
+	$$ = $1;
+}
 | Constant_Expression{$$ = $1;}
 | LValue {
 	$$ = $1->as_expression();
@@ -224,13 +234,47 @@ LValue
 ;
 Field_Access_Expression
 : T_IDENTIFIER {
-	$$ = s_data->get_symbol(*$1);
+	$$ = new Field_Access_Expression($1);
 	delete $1;
 }
 /*| Expression T_BACKSLASH T_Identifier {
 	$$ = new Field_Access_Expression($1, *$3);
 	delete_tokens($3);
 }*/
+;
+
+Call
+: T_IDENTIFIER '(' Expression_List_Wild ')' {
+	$$ = new Call_Expression($1, $3);
+	delete $1;
+}
+| Expression '.' T_IDENTIFIER '(' Expression_List_Wild ')' {
+	$$ = new Call_Expression(*$1, $3, $5);
+	delete_tokens($1, $5);
+	delete $3;
+}
+;
+Expression_List_Wild
+:	/*empty*/ {$$ = new Arguments;}
+| Expression_List {$$ = $1;}
+;
+
+Expression_List
+: Expression_List_Helper {
+	$$ = $1;
+}
+;
+Expression_List_Helper
+: Expression {
+	$$ = new Arguments;
+	$$->push_back(*$1);
+	delete_tokens($1);
+}
+| Expression_List_Helper ',' Expression {
+	$$ = $1;
+	$$->push_back(*$3);
+	delete_tokens($3);
+}
 ;
 
 Constant_Expression

@@ -1,5 +1,6 @@
 #include "Type_Syntax.h"
-
+//
+#include <J_UI/J_UI_String.h>
 
 namespace jomike{
 

@@ -8,10 +8,10 @@ namespace jomike{
 class Variable_Reference_Symbol : public j_declaration{
 public:
 	Variable_Reference_Symbol(
-		Type_Syntax* i_syntax, J_UI_String* i_identifier);
+		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier);
 
 	Variable_Reference_Symbol(
-		Type_Syntax* i_syntax, J_UI_String* i_identifier, j_expression* i_expression);
+		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression);
 
 	Variable_Reference_Symbol* move_copy()override;
 

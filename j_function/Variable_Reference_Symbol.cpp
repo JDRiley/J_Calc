@@ -35,14 +35,14 @@ void Variable_Reference_Symbol::clear(){
 }
 
 Variable_Reference_Symbol::Variable_Reference_Symbol(
-	Type_Syntax* i_syntax, J_UI_String* i_identifier)
-	:j_declaration(i_syntax,  *i_identifier){
+	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier)
+	:j_declaration(i_syntax,  i_identifier){
 	assert(0);
 }
 
 Variable_Reference_Symbol::Variable_Reference_Symbol(
-	Type_Syntax* i_syntax, J_UI_String* i_identifier, j_expression* i_expression)
-	: j_declaration(i_syntax, *i_identifier){
+	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression)
+	: j_declaration(i_syntax, i_identifier){
 	M_expression = i_expression;
 }
 

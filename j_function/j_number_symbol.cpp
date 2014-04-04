@@ -3,6 +3,8 @@
 #include "Type_Factory.h"
 //
 #include "J_Symbol_Error.h"
+//
+#include "J_Symbol_Identifier.h"
 using std::to_string;
 
 namespace jomike{
@@ -10,12 +12,14 @@ namespace jomike{
 
 //Constructors
 j_number_symbol::j_number_symbol(Dbl_t i_val)
-: Variable_Symbol(make_double_type_syntax(), new J_UI_String("#unnamed")),M_value_status(true)
+: Variable_Symbol(make_double_type_syntax(), new J_Symbol_Identifier(J_UI_String("#unnamed")))
+,M_value_status(true)
 	, M_value(j_value(i_val, J_Unit())){
 }
 
 j_number_symbol::j_number_symbol(const J_UI_String& irk_string)
-	: Variable_Symbol(make_double_type_syntax(), new J_UI_String(irk_string)), M_value_status(false){}
+	: Variable_Symbol(make_double_type_syntax(), new J_Symbol_Identifier(J_UI_String(irk_string)))
+	, M_value_status(false){}
 
 j_number_symbol* j_number_symbol::get_copy()const{ return new j_number_symbol(*this); }
 

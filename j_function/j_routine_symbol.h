@@ -10,7 +10,7 @@ namespace jomike{
 class j_routine_symbol : public j_symbol{
 public:
 	j_routine_symbol();
-	j_routine_symbol(const std::string& irk_name, Symbol_Types i_symbol_type);
+	j_routine_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
 	j_routine_symbol* get_copy()const override;
 	j_routine_symbol* move_copy()override;
 	j_routine_symbol(const j_routine_symbol&);
@@ -44,7 +44,7 @@ private:
 
 class j_routine_wrapper_symbol : public j_symbol{
 public:
-	j_routine_wrapper_symbol(const std::string& irk_name, Symbol_Types i_symbol_type);
+	j_routine_wrapper_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
 	void clear()override;
 	bool has_value()const override;
 private:

@@ -16,15 +16,19 @@ namespace jomike{
 
 class j_symbol : public j_symbol_component{
 public:
-	j_symbol(const J_UI_String& irk_name, Symbol_Types i_symbol_type);
+	j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
 	j_symbol(Symbol_Types i_symbol_type = Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED);
 	
 	//j_symbol(const j_symbol& irk_symbol);
 
 
 	//Copy Construction
-	virtual j_symbol* get_copy()const = 0;
+	j_symbol* get_copy()const override = 0;
 	virtual j_symbol* reduce()const;
+
+	const J_UI_String& name()const;
+
+	void set_name(const J_UI_String& irk_string);
 
 	virtual j_value get_value(const Arguments& i_args = Arguments())const;
 	j_dbl value(const Arguments& i_args = Arguments())const;
@@ -45,8 +49,10 @@ protected:
 private:
 	Arguments M_arguments;
 	Type_Syntax* M_type;
+	J_Symbol_Identifier* M_name;
 };
 
+j_symbol* get_j_symbol(const J_UI_String& irk_name);
 
 }
 

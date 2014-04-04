@@ -4,6 +4,8 @@
 
 //
 #include "J_Symbol_Error.h"
+//
+#include "J_Symbol_Identifier.h"
 namespace jomike{
 static int s_symbol_ids = 0;
 
@@ -27,8 +29,11 @@ j_symbol* j_symbol::reduce()const{
 	return get_copy();
 }
 
-j_symbol::j_symbol(const J_UI_String& irk_name, Symbol_Types i_symbol_type)
-	:j_symbol_component(i_symbol_type, irk_name){}
+j_symbol::j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
+	:j_symbol_component(i_symbol_type){
+	M_name = irk_name;
+	assert(M_name);
+}
 
 j_symbol::j_symbol(Symbol_Types i_symbol_type) : j_symbol_component(i_symbol_type){
 
@@ -48,8 +53,19 @@ void j_symbol::set_type_syntax(Type_Syntax* i_type_syntax){
 	M_type = i_type_syntax;
 }
 
+
+
+const J_UI_String& j_symbol::name()const{
+	return M_name->identifier_name();
+}
+
+void j_symbol::set_name(const J_UI_String& irk_string){
+	M_name->set_name(irk_string);
+}
+
+
 j_expression* j_symbol::as_expression(){
-	throw J_Error(name().std_str() + " cannot be used as an expression!");
+	throw J_Symbol_Error(name().std_str() + " cannot be used as an expression!");
 }
 
 void j_symbol::set_value(j_value /*i_value*/){

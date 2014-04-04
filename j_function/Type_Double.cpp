@@ -1,5 +1,6 @@
 #include "Type_Double.h"
-
+//
+#include <j_type.h>
 
 namespace jomike{
 

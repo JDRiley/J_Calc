@@ -42,16 +42,20 @@
 
 /* "%code requires" blocks.  */
 /* Line 33 of lalr1.cc  */
-#line 56 "parser.y"
+#line 57 "parser.y"
 
 #include<J_UI/J_UI_String.h>
 #include "J_Calc_Fwd_Decl.h"
 #include <J_Symbol_Fwd_Decl.h>
+#include <Expression_List.h>
+#include <Call_Expression.h>
+#include <J_Symbol_Identifier.h>
+#include <Field_Access_Expression.h>
 #include "J_Calc_Data.h"
 
 
 /* Line 33 of lalr1.cc  */
-#line 55 "math_parsing_unit.hh"
+#line 59 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -67,7 +71,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 71 "math_parsing_unit.hh"
+#line 75 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -78,19 +82,20 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 77 "parser.y"
+#line 82 "parser.y"
 
-    jomike::J_UI_String*			identifier;
+    jomike::J_Symbol_Identifier*	identifier;
     jomike::j_symbol_component*		symbol_component;
 	jomike::Constant_Symbol*		constant_symbol;
 	jomike::j_declaration*			declaration;
 	jomike::Type_Syntax*			type_syntax;
 	jomike::j_expression*			expression;
+	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
 
 
 /* Line 33 of lalr1.cc  */
-#line 94 "math_parsing_unit.hh"
+#line 99 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -229,7 +234,7 @@ namespace yy {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const signed char yycheck_[];
+    static const unsigned char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -250,7 +255,7 @@ namespace yy {
     /// For each rule, the index of the first RHS symbol in \a yyrhs_.
     static const unsigned char yyprhs_[];
     /// For each rule, its source line number.
-    static const unsigned char yyrline_[];
+    static const unsigned short int yyrline_[];
     /// For each scanner token number, its symbol number.
     static const unsigned short int yytoken_number_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
@@ -300,7 +305,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 304 "math_parsing_unit.hh"
+#line 309 "math_parsing_unit.hh"
 
 
 

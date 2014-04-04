@@ -3,6 +3,8 @@
 
 #include <J_Fwd_Decl.h>
 //
+#include "j_symbol_component.h"
+//
 #include <J_UI/J_UI_String.h>
 //
 #include <ex_array.h>
@@ -13,7 +15,7 @@ class j_symbol;
 
 
 
-class Arguments{
+class Arguments : public j_symbol_component{
 public:
 	//Constructors
 	Arguments();
@@ -32,6 +34,12 @@ public:
 	const j_symbol& operator[](j_size_t)const;
 
 	void clear();
+
+	Arguments* get_copy()const override;
+
+	Arguments* move_copy()override;
+
+	J_UI_String get_display_name()override;
 
 	//Destructor
 	~Arguments();
@@ -53,14 +61,6 @@ public:
 private:
 	ex_array<j_symbol*> M_arg_symbols;
 };
-
-template<typename Iter>
-Arguments::Arguments(Iter i_first, Iter i_last){
-	while(i_first != i_last){
-		push_back(**i_first);
-		++i_first;
-	}
-}
 
 
 

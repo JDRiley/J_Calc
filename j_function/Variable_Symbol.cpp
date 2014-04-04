@@ -25,14 +25,14 @@ j_value Variable_Symbol::derived_get_value(const Arguments& )const{
 	return M_value;
 }
 
-Variable_Symbol::Variable_Symbol(Type_Syntax* i_syntax, J_UI_String* i_identifier)
-	:j_declaration(i_syntax, *i_identifier){
+Variable_Symbol::Variable_Symbol(Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier)
+	:j_declaration(i_syntax, i_identifier){
 	
 }
 
 Variable_Symbol::Variable_Symbol(
-	Type_Syntax* i_syntax, J_UI_String* i_identifier, const j_expression& i_expression)
-	:j_declaration(i_syntax, *i_identifier){
+	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression)
+	:j_declaration(i_syntax, i_identifier){
 	assert(i_expression.has_value());
 	M_value = type_syntax().convert_value(i_expression.get_value());
 

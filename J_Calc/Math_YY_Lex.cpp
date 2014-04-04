@@ -1082,7 +1082,7 @@ YY_RULE_SETUP
 case 30:
 YY_RULE_SETUP
 #line 155 "Math_Lexer.l"
-{yylval->identifier = new jomike::J_UI_String(yytext);
+{yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
 						return token_t::T_IDENTIFIER; }
 	YY_BREAK
 /* -------------------- Default rule (error) -------------------- */

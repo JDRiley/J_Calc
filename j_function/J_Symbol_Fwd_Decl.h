@@ -16,6 +16,9 @@ J_FWD_DECL(Type_Syntax)
 J_STRUCT_FWD_DECL(Lexer_Location)
 J_FWD_DECL_LOWER(j_declaration)
 J_FWD_DECL(Value_Expression)
+J_FWD_DECL(Expression_List)
+J_FWD_DECL(Call_Expression)
+J_FWD_DECL(J_Symbol_Identifier)
 }
 
 #endif //J_SYMBOL_FWD_DECL_H

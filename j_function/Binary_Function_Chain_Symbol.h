@@ -73,7 +73,8 @@ J_UI_String Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::get_display_
 template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
 Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
 	::Binary_Function_Chain_Symbol(const Binary_Function_t& irk_function
-	, const std::string& irk_name): j_routine_wrapper_symbol(irk_name, CPP_To_Symbol_Type<Num_t>::type())
+	, const std::string& irk_name)
+	: j_routine_wrapper_symbol(new J_Symbol_Identifier(irk_name), CPP_To_Symbol_Type<Num_t>::type())
 	, M_function(irk_function), M_name(irk_name){
 		set_args(Arguments(2));
 	}

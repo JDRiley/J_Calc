@@ -25,12 +25,20 @@ Arguments::Arguments(const Arguments& irk_src):M_arg_symbols(irk_src.size()){
 }
 
 /*Arguments(Arguments&&)*/
-Arguments::Arguments(Arguments&& rr_src){swap(rr_src);}
+Arguments::Arguments(Arguments&& rr_src):j_symbol_component(Symbol_Types::ARGUMENTS){swap(rr_src);}
 
 Arguments::Arguments(j_size_t i_size){
 	
 	for(int i = 0; i < i_size; i++){
 		M_arg_symbols.push_back(new j_placeholder_symbol(i));
+	}
+}
+
+template<typename Iter>
+Arguments::Arguments(Iter i_first, Iter i_last){
+	while(i_first != i_last){
+		push_back(**i_first);
+		++i_first;
 	}
 }
 
@@ -98,6 +106,18 @@ Arguments::const_iterator Arguments::begin()const{
 
 Arguments::const_iterator Arguments::end()const{
 	return M_arg_symbols.end();
+}
+
+jomike::J_UI_String Arguments::get_display_name(){
+	return name();
+}
+
+Arguments* Arguments::move_copy(){
+	return  new Arguments(std::move(*this));
+}
+
+Arguments* Arguments::get_copy()const {
+	return new Arguments(*this);
 }
 
 }

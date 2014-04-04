@@ -225,9 +225,12 @@
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
     <ClInclude Include="Boolean_Testers.h" />
     <ClInclude Include="boolean_tester_array.h" />
+    <ClInclude Include="Call_Expression.h" />
     <ClInclude Include="Constant_Symbol_Factory.h" />
     <ClInclude Include="Constant_Symbol.h" />
     <ClInclude Include="Division_Expression.h" />
+    <ClInclude Include="Expression_List.h" />
+    <ClInclude Include="Field_Access_Expression.h" />
     <ClInclude Include="j_boolean_expression.h" />
     <ClInclude Include="j_composite_symbol.h" />
     <ClInclude Include="j_declaration.h" />
@@ -240,9 +243,13 @@
     <ClInclude Include="j_routine_symbol.h" />
     <ClInclude Include="j_symbol.h" />
     <ClInclude Include="j_symbol_component.h" />
+    <ClInclude Include="J_Symbol_Component_Allocator.h" />
+    <ClInclude Include="J_Symbol_Component_Array.h" />
     <ClInclude Include="j_symbol_containers.h" />
     <ClInclude Include="J_Symbol_Error.h" />
     <ClInclude Include="J_Symbol_Fwd_Decl.h" />
+    <ClInclude Include="j_symbol_component_list.h" />
+    <ClInclude Include="J_Symbol_Identifier.h" />
     <ClInclude Include="j_unit.h" />
     <ClInclude Include="J_Unit_Symbol.h" />
     <ClInclude Include="j_value.h" />
@@ -250,6 +257,7 @@
     <ClInclude Include="Multiplication_Expression.h" />
     <ClInclude Include="Subtraction_Expression.h" />
     <ClInclude Include="Symbol_Joiner.h" />
+    <ClInclude Include="Symbol_Types.h" />
     <ClInclude Include="Type_Double.h" />
     <ClInclude Include="Type_Factory.h" />
     <ClInclude Include="Type_Int.h" />
@@ -262,9 +270,11 @@
   <ItemGroup>
     <ClCompile Include="Addition_Expression.cpp" />
     <ClCompile Include="Boolean_Testers.cpp" />
+    <ClCompile Include="Call_Expression.cpp" />
     <ClCompile Include="Constant_Symbol.cpp" />
     <ClCompile Include="Constant_Symbol_Factory.cpp" />
     <ClCompile Include="Division_Expression.cpp" />
+    <ClCompile Include="Field_Access_Expression.cpp" />
     <ClCompile Include="j_boolean_expression.cpp" />
     <ClCompile Include="j_composite_symbol.cpp" />
     <ClCompile Include="j_declaration.cpp" />
@@ -277,7 +287,9 @@
     <ClCompile Include="j_symbol.cpp" />
     <ClCompile Include="j_symbol_array.cpp" />
     <ClCompile Include="j_symbol_component.cpp" />
+    <ClCompile Include="j_symbol_component_list.cpp" />
     <ClCompile Include="J_Symbol_Error.cpp" />
+    <ClCompile Include="J_Symbol_Identifier.cpp" />
     <ClCompile Include="j_unit.cpp" />
     <ClCompile Include="j_value.cpp" />
     <ClCompile Include="math_base.cpp" />

@@ -16,7 +16,7 @@ bool j_routine_wrapper_symbol::has_value()const {
 }
 
 j_routine_wrapper_symbol::j_routine_wrapper_symbol(
-	const string& irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
+	J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
 
 }
 
@@ -122,7 +122,7 @@ j_routine_symbol::j_routine_symbol(j_routine_symbol&& irr_src): j_symbol(irr_src
 }
 
 j_routine_symbol::j_routine_symbol(
-	const string& irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
+	J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type):j_symbol(irk_name, i_symbol_type){
 
 }
 

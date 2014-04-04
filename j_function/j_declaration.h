@@ -7,7 +7,7 @@
 namespace jomike{
 class j_declaration : public j_symbol{
 public:
-	j_declaration(Type_Syntax* i_type_syntax, const J_UI_String& irk_name);
+	j_declaration(Type_Syntax* i_type_syntax, J_Symbol_Identifier* irk_name);
 
 private:
 };

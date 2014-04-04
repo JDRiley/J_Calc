@@ -152,7 +152,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
  /* -------------------- Identifiers --------------------------- */
-{IDENTIFIER}        {yylval->identifier = new jomike::J_UI_String(yytext);
+{IDENTIFIER}        {yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
 						return token_t::T_IDENTIFIER; }
 
 

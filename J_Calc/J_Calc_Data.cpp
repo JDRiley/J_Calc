@@ -10,15 +10,22 @@
 #include <j_routine_symbol.h>
 //
 #include <Binary_Function_Chain_Symbol.h>
+//
+#include <J_Symbol_Identifier.h>
 using std::dynamic_pointer_cast;
 
 using std::string;
 
 namespace jomike{
 
+j_symbol* get_j_symbol(const J_UI_String& irk_name){
+	static Instance_Pointer<J_Calc_Data> s_data;
+	s_data->get_symbol(irk_name);
+}
+
 class GCD_Symbol : public j_routine_wrapper_symbol{
 public:
-	GCD_Symbol(): j_routine_wrapper_symbol("gcd", Symbol_Types::INT){}
+	GCD_Symbol(): j_routine_wrapper_symbol(new J_Symbol_Identifier("gcd"), Symbol_Types::INT){}
 	GCD_Symbol* get_copy()const override;
 	GCD_Symbol* move_copy()override;
 	J_UI_String get_display_name()override;
