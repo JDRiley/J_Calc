@@ -30,27 +30,27 @@ void yyerror(const char *msg); // standard error-handling routine
 
 j_symbol_component* jtl::g_input_line = nullptr;
 static Instance_Pointer<J_Calc_Data> s_data;
-template<typename... Args>
-void delete_tokens(Args... i_ptrs){
-	j_symbol_component* pointers[] = {i_ptrs...};
-#ifdef WIN32
-	for(auto f_pointer : pointers){
-		delete f_pointer;
-	}
-#else
-	int size = safe_int_cast(sizeof(pointers)/sizeof(Syntax_Tree_Component*));
-	for(int i=0; i < size; i++){
-		delete pointers[i];
-	}
-#endif
-
-}
+//template<typename... Args>
+//void delete_tokens(Args... i_ptrs){
+//	j_symbol_component* pointers[] = {i_ptrs...};
+//#ifdef WIN32
+//	for(auto f_pointer : pointers){
+//		delete f_pointer;
+//	}
+//#else
+//	int size = safe_int_cast(sizeof(pointers)/sizeof(Syntax_Tree_Component*));
+//	for(int i=0; i < size; i++){
+//		delete pointers[i];
+//	}
+//#endif
+//
+//}
 
 %}
 %skeleton "lalr1.cc"
 %defines
 %define parser_class_name "Math_Parsing_Unit"
-%parse-param{jtl::j_symbol_component** i_symbol_ptr}
+%parse-param{jtl::j_symbol** i_symbol_ptr}
 %parse-param{jtl::Math_Parser* i_parser}
 %lex-param{jtl::Math_Parser* i_parser}
 
@@ -63,6 +63,9 @@ void delete_tokens(Args... i_ptrs){
 #include <J_Symbol_Identifier.h>
 #include <Field_Access_Expression.h>
 #include "J_Calc_Data.h"
+#include <Arguments.h>
+#include <j_expression.h>
+#include "j_yy_stack.h"
 }
 
 /* The section before the first %% is the Definitions section of the yacc
@@ -90,10 +93,8 @@ void delete_tokens(Args... i_ptrs){
 	jomike::j_symbol*				symbol;
 }
 
-%destructor{} <integer_constant>
-%destructor{} <boolean_constant>
-%destructor{} <string_constant>
-%destructor{} <double_constant>
+
+
 //%destructor{delete $$;} <*>
 
 /* Tokens
@@ -148,12 +149,12 @@ void delete_tokens(Args... i_ptrs){
 */
 
 %type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild
-%type	<symbol_component>	Input_Line
-%type	<expression>		Expression Call 
+%type	<symbol>			Input_Line
+%type	<expression>		Expression Call Field_Access_Expression Assignment_Expression LValue
 %type	<constant_symbol>	Constant_Expression
 %type	<declaration>		Declaration Variable_Declaration
 %type	<type_syntax>		Type
-%type	<symbol>			LValue Field_Access_Expression Assignment_Expression
+		  
 %%
 /* Rules
 * -----
@@ -161,13 +162,19 @@ void delete_tokens(Args... i_ptrs){
 * %% markers which delimit the Rules section.
 */
 
-Input_Line
-: Expression ';' {$$ = nullptr;  *i_symbol_ptr = $1->get_copy(); return true; }
-| Declaration ';' {
-	$$ = nullptr;
-	*i_symbol_ptr = $1->get_copy();
 
+Input_Line
+: Expression ';' {
+	  
+	*i_symbol_ptr = $1;
+	
+	return true; 
+}
+| Declaration ';' {
+	
+	*i_symbol_ptr = $1->get_copy();
 	s_data->add_user_symbol($1);
+	
 	return true;
 }
 ;
@@ -177,13 +184,22 @@ Declaration
 ;
 
 Variable_Declaration
-: Type T_IDENTIFIER{$$ =  new Variable_Symbol($1, $2); }
+: Type T_IDENTIFIER{$$ =  new Variable_Symbol($1, $2);
+	
+	
+}
 | Type T_IDENTIFIER T_RIGHT_ARROW Expression {
 	$$ = new Variable_Reference_Symbol($1, $2, $4); 
+	
+	
+	
 }
 | Type T_IDENTIFIER T_LEFT_ARROW Expression {
 	$$ = new Variable_Symbol($1, $2, *$4);
-	delete_tokens($4);
+	
+	
+	$4.destroy();
+	
 }
 ;
 
@@ -194,28 +210,39 @@ Type
 
 Expression
 : Assignment_Expression{
-	$$ = $1->as_expression();
+	$$ = $1;
+	
 }
 | Call{
 	$$ = $1;
+	
 }
-| Constant_Expression{$$ = $1;}
+| Constant_Expression{
+	$$ = $1; 
+}
 | LValue {
-	$$ = $1->as_expression();
+	$$ = $1;
+	
 }
 | Expression '+' Expression { 
 	$$ = new Addition_Expression($1, $3);
 }
 | Expression '-' Expression { 
 	$$ = new Subtraction_Expression($1, $3);
+	
+	
 }
 | Expression '*' Expression { 
 	$$ = new Multiplication_Expression($1, $3);
+	
+	
 }
 | Expression '/' Expression { 
 	$$ = new Division_Expression($1, $3);
+	
+	
 }
-| '(' Expression ')' {$$ = $2;}
+| '(' Expression ')' {$$ = $2;  }
 	
 ;
 
@@ -223,6 +250,9 @@ Assignment_Expression
 : LValue T_LEFT_ARROW Expression {
 	$1->set_value($3->get_value());
 	$$ = $1;
+	
+	$3.destroy();
+	
 }
 ;
 LValue
@@ -235,7 +265,7 @@ LValue
 Field_Access_Expression
 : T_IDENTIFIER {
 	$$ = new Field_Access_Expression($1);
-	delete $1;
+	
 }
 /*| Expression T_BACKSLASH T_Identifier {
 	$$ = new Field_Access_Expression($1, *$3);
@@ -246,14 +276,16 @@ Field_Access_Expression
 Call
 : T_IDENTIFIER '(' Expression_List_Wild ')' {
 	$$ = new Call_Expression($1, $3);
-	delete $1;
+	
+	
 }
-| Expression '.' T_IDENTIFIER '(' Expression_List_Wild ')' {
-	$$ = new Call_Expression(*$1, $3, $5);
-	delete_tokens($1, $5);
-	delete $3;
-}
+//| Expression T_BACKSLASH T_IDENTIFIER '(' Expression_List_Wild ')' {
+//	$$ = new Call_Expression(*$1, $3, $5);
+//	delete_tokens($1, $5);
+//	delete $3;
+//}
 ;
+
 Expression_List_Wild
 :	/*empty*/ {$$ = new Arguments;}
 | Expression_List {$$ = $1;}
@@ -262,25 +294,29 @@ Expression_List_Wild
 Expression_List
 : Expression_List_Helper {
 	$$ = $1;
+	
 }
 ;
 Expression_List_Helper
 : Expression {
 	$$ = new Arguments;
-	$$->push_back(*$1);
-	delete_tokens($1);
+	$$->push_back($1);
+	
 }
 | Expression_List_Helper ',' Expression {
 	$$ = $1;
-	$$->push_back(*$3);
-	delete_tokens($3);
+	
+	$$->push_back($3);
+	
 }
 ;
 
 Constant_Expression
-: T_INTEGER_CONSTANT {$$ = $1;}
+: T_INTEGER_CONSTANT {
+	$$ = $1;
+}
 | T_DOUBLE_CONSTANT{$$ = $1;}
-| T_BOOL_CONSTANT{$$ = $1;}
+| T_BOOL_CONSTANT{$$ = $1;  }
 | T_STRING_CONSTANT{$$ = $1; }
 ;
 

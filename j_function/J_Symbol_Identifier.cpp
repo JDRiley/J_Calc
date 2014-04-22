@@ -10,9 +10,6 @@ J_Symbol_Identifier::J_Symbol_Identifier(const J_UI_String& irk_name)
 
 }
 
-J_UI_String J_Symbol_Identifier::get_display_name(){
-	return M_name;
-}
 
 J_Symbol_Identifier* J_Symbol_Identifier::move_copy(){
 	return  new J_Symbol_Identifier(std::move(*this));

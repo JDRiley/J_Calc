@@ -13,7 +13,7 @@ public:
 
 	Type_Double* move_copy()override;
 
-	j_value convert_value(const j_value& irk_val)override;
+	j_value convert_value(const j_value& irk_val)const override;
 private:
 };
 

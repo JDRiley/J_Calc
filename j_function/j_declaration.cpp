@@ -12,6 +12,14 @@ j_declaration::j_declaration(
 	set_type_syntax(i_type_syntax);
 }
 
+j_declaration::j_declaration(const j_declaration& irk_src) : j_symbol(irk_src){
+
+}
+
+j_declaration::~j_declaration(){
+
+}
+
 
 }
 

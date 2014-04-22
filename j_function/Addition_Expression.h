@@ -1,14 +1,15 @@
 #ifndef ADDITION_EXPRESSION_H
 #define ADDITION_EXPRESSION_H
 
-#include "j_expression.h"
+#include "Binary_Expression.h"
 
 
 namespace jomike{
-class Addition_Expression : public j_expression{
+class Addition_Expression : public Binary_Expression{
 public:
 	Addition_Expression(j_expression* i_left_expression, j_expression* i_right_expression);
 
+	Addition_Expression(const Addition_Expression&) = default;
 
 	Addition_Expression* get_copy()const override{
 		return new Addition_Expression(*this);
@@ -20,8 +21,7 @@ public:
 
 	bool has_value()const override;
 private:
-	j_expression* M_left_expression;
-	j_expression* M_right_expression;
+
 
 	j_value derived_get_value(const Arguments& i_args)const override;
 };

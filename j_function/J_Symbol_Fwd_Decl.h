@@ -19,6 +19,7 @@ J_FWD_DECL(Value_Expression)
 J_FWD_DECL(Expression_List)
 J_FWD_DECL(Call_Expression)
 J_FWD_DECL(J_Symbol_Identifier)
+J_FWD_DECL(Arguments)
 }
 
 #endif //J_SYMBOL_FWD_DECL_H

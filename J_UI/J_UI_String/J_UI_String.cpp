@@ -262,7 +262,10 @@ void white_space_normalize(J_UI_String* ir_string){
 	
 	normalized_str.swap(*ir_string);
 }
+J_UI_String operator+(const char* ik_chars, const J_UI_String& irk_string){
+	return J_UI_String(ik_chars) + irk_string;
 
+}
 
 /*LU_String lu_str()const*/
 LU_String J_UI_String::lu_str()const{return LU_String(const_char_begin(), const_char_end());}

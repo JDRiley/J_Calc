@@ -2,6 +2,8 @@
 
 //
 #include "j_value.h"
+//
+#include "Arguments.h"
 namespace jomike{
 
 Constant_Symbol::Constant_Symbol(
@@ -15,7 +17,7 @@ Constant_Symbol::Constant_Symbol(
 jomike::j_value Int_Constant_Symbol::derived_get_value(const Arguments& i_args)const {
 	assert(i_args.empty());
 	(void)i_args;
-	return j_value(M_value, M_unit);
+	return j_value(safe_long_long_cast(M_value), M_unit);
 }
 
 bool Int_Constant_Symbol::has_value()const {

@@ -8,6 +8,9 @@ namespace jomike{
 class Value_Expression : public j_expression{
 public:
 	Value_Expression(j_value i_value);
+
+
+
 	Value_Expression* get_copy()const override;
 	Value_Expression* move_copy()override;
 	bool has_value()const override;

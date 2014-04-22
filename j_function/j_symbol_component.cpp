@@ -15,6 +15,7 @@ j_symbol_component::j_symbol_component(
 }
 
 
+
 j_symbol_component::~j_symbol_component(){
 
 }

@@ -281,6 +281,7 @@
     <ClInclude Include="j_conditional_construct_symbol.h" />
     <ClInclude Include="j_construct_symbol.h" />
     <ClInclude Include="j_function_factory.h" />
+    <ClInclude Include="j_yy_stack.h" />
     <ClInclude Include="Lexer_Location.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />

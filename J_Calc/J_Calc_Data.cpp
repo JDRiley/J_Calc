@@ -1,6 +1,9 @@
 #include "J_Calc_Data.h"
+//
 #include "J_Calc_View.h"
+//
 #include <j_function.h>
+//
 #include "Math_Input_Box.h"
 //
 #include <J_Math.h>
@@ -12,15 +15,17 @@
 #include <Binary_Function_Chain_Symbol.h>
 //
 #include <J_Symbol_Identifier.h>
+//
+#include <Arguments.h>
 using std::dynamic_pointer_cast;
 
-using std::string;
+using std::string; using std::accumulate;
 
 namespace jomike{
 
 j_symbol* get_j_symbol(const J_UI_String& irk_name){
 	static Instance_Pointer<J_Calc_Data> s_data;
-	s_data->get_symbol(irk_name);
+	return s_data->get_symbol(irk_name);
 }
 
 class GCD_Symbol : public j_routine_wrapper_symbol{
@@ -36,7 +41,7 @@ private:
 
 j_value GCD_Symbol::derived_get_value(const Arguments& i_args)const {
 	if(i_args.empty()){
-		return j_value(0, J_Unit());
+		return j_value(0ll, J_Unit());
 	}
 
 
@@ -107,11 +112,12 @@ void J_Calc_Data::attach_view(J_View_Shared_t i_new_view){
 
 
 /*void add_user_symbol(J_Symbol_Shared_t)*/
-void J_Calc_Data::add_user_symbol(const j_symbol* i_symbol_ptr){
+void J_Calc_Data::add_user_symbol(j_symbol* i_symbol_ptr){
 	if(M_user_symbols.count(i_symbol_ptr->name())){
+		delete i_symbol_ptr;
 		throw J_Syntax_Error("Symbol With This Name Already Exists");
 	}
-	M_user_symbols[i_symbol_ptr->name()] = i_symbol_ptr->get_copy();
+	M_user_symbols[i_symbol_ptr->name()] = i_symbol_ptr;
 
 }
 
@@ -153,7 +159,7 @@ j_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
 	}else if(is_user_symbol(irk_string)){
 		return get_user_symbol(irk_string);
 	}else{
-		throw J_Syntax_Error("No Symbol with that name");
+		throw J_Syntax_Error("Symbol: " + irk_string.std_str() + " is undefined!");
 	}
 }
 

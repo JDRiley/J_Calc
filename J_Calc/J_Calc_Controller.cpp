@@ -210,6 +210,7 @@ void J_Calc_Controller::remove_view(j_window_t i_window){
 	J_UI_Controller::remove_view(i_window);
 
 	if(M_main_view->get_window() == i_window){
+		glfwSetCursorPosCallback(i_window, nullptr);
 		end_execute();
 	}
 

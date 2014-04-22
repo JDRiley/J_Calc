@@ -36,10 +36,12 @@ public:
 	Call_Expression(const Call_Expression& irk_source);
 
 	~Call_Expression();
+protected:
+	j_symbol* get_symbol()const;
 private:
 	mutable j_expression* M_base_expression = nullptr;
-	
-	Expression_List* M_args_list;
+	J_Symbol_Identifier* M_identifier;
+	Arguments* M_args_list;
 
 
 	j_value derived_get_value(const Arguments& i_args)const override;

@@ -8,6 +8,9 @@
 #include <J_Error.h>
 //
 #include "Symbol_Types.h"
+//
+//
+#include "j_numeric.h"
 namespace jomike{
 
 class j_value{
@@ -15,18 +18,18 @@ public:
 	j_value();
 	//Constructors
 	j_value(Dbl_t, J_Unit);
-	j_value(int, J_Unit);
+	j_value(j_llint, J_Unit);
 	j_value(bool, J_Unit);
 	j_value(const std::string&, J_Unit);
 	j_value(const j_value&, J_Unit);
 
-	enum class Value_Types{INTEGER, DOUBLE, BOOL, STRING, UNDEFINIED};
+	enum class Value_Types{LL_INTEGER, DOUBLE, BOOL, STRING, UNDEFINIED};
 
 	const j_value& operator+(const j_value&)const;
 
 	Dbl_t as_double()const;
 
-	int as_int()const;
+	j_llint as_llint()const;
 
 	bool as_bool()const;
 
@@ -36,6 +39,15 @@ public:
 
 	J_Unit units()const;
 	
+	template<typename Num_t>
+	Num_t as_type()const;
+
+	template<>
+	j_llint as_type<j_llint>()const{
+		return as_llint();
+	}
+	
+
 	std::string to_str()const;
 	Symbol_Types symbol_type()const;
 	//Math
@@ -52,7 +64,7 @@ public:
 private:
 	J_Unit M_units;
 	union Value_Union{
-		int int_val;
+		j_llint llint_val;
 		j_dbl dbl_val;
 		std::string* str_val;
 		bool bool_val;
@@ -89,8 +101,8 @@ public:
 private:
 };
 
-const j_value J_VALUE_TRUE_BOOLEAN = j_value(1, J_Unit(J_Unit_Types::BOOLEAN));
-const j_value J_VALUE_FALSE_BOOLEAN = j_value(0, J_Unit(J_Unit_Types::BOOLEAN));
+const j_value J_VALUE_TRUE_BOOLEAN = j_value(true, J_Unit(J_Unit_Types::BOOLEAN));
+const j_value J_VALUE_FALSE_BOOLEAN = j_value(false, J_Unit(J_Unit_Types::BOOLEAN));
 
 }
 

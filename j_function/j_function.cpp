@@ -659,34 +659,6 @@ dbl_pair Cubic_Spline_Method::range()const{
 
 
 
-/*void set_args(int index, Arguments)*/
-void j_symbol::set_args(const Arguments& i_args){
-	M_arguments = i_args;
-}
-
-/*void set_args(int index, Arguments)*/
-void j_symbol::set_args(Arguments&& i_args){
-	M_arguments.swap(i_args);
-}
-
-j_value j_symbol::get_value(const Arguments& i_args)const{
-	Arguments args(M_arguments);
-	for(int b = 0; b < args.size(); b++){
-		if(args[b].is_placeholder()){
-			j_placeholder_symbol* place_holder_symbol
-				= dynamic_cast<j_placeholder_symbol*>(&args[b]);
-
-			assert(place_holder_symbol);
-			j_size_t index = place_holder_symbol->placeholder_index();
-			assert(index < i_args.size());
-			args.set_argument(index, i_args.arguments()[index]);
-		}
-	}
-	return derived_get_value(args);
-}
-
-bool j_symbol::is_placeholder()const{ return false; }
-
 
 /*int size()const*/
 

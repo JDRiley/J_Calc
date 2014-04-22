@@ -130,6 +130,8 @@ SINGLE_COMMENT    ("//"[^\n]*)
 	= make_bool_constant_symbol('t' == yytext[0] ? true : false, M_location);
 	return token_t::T_BOOL_CONSTANT;
 }
+
+
 {INTEGER}           {
 	int val = strtol(yytext, NULL, 10);
 	yylval->constant_symbol
@@ -146,9 +148,15 @@ SINGLE_COMMENT    ("//"[^\n]*)
 	yylval->constant_symbol
 		= make_double_constant_symbol(val, M_location);
 	return token_t::T_DOUBLE_CONSTANT;}
-{STRING}            {yylval->constant_symbol = make_string_constant_symbol(yytext, M_location);
-	return token_t::T_STRING_CONSTANT;}
-{BEG_STRING}        {assert(!"Unterminaned String");}
+
+{STRING}            {
+	std::string string_val(yytext+1);
+	assert('"' == string_val.back());
+	string_val.pop_back();
+	yylval->constant_symbol = make_string_constant_symbol(string_val.c_str(), M_location);
+	return token_t::T_STRING_CONSTANT;
+}
+{BEG_STRING}        {throw J_Syntax_Error("Unterminaned String");}
 
 
  /* -------------------- Identifiers --------------------------- */

@@ -7,6 +7,8 @@
 #include "Add_Symbol_Joiner.h"
 //
 #include <string>
+//
+#include "Arguments.h"
 using std::mem_fn; using std::transform;
 using std::to_string;
 

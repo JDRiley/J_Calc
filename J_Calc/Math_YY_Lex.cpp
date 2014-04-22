@@ -558,8 +558,8 @@ static yyconst flex_int16_t yy_rule_linenum[32] =
     {   0,
        70,   75,   79,   80,   83,   84,   87,   88,   93,   94,
        95,   96,   97,  104,  105,  106,  107,  108,  109,  110,
-      111,  122,  124,  129,  133,  140,  145,  149,  151,  155,
-      160
+      111,  122,  124,  129,  135,  142,  147,  152,  159,  163,
+      168
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -1041,7 +1041,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 133 "Math_Lexer.l"
+#line 135 "Math_Lexer.l"
 {
 	int val = strtol(yytext, NULL, 10);
 	yylval->constant_symbol
@@ -1052,7 +1052,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 140 "Math_Lexer.l"
+#line 142 "Math_Lexer.l"
 {int val = strtol(yytext, NULL, 16);
 	yylval->constant_symbol
 		= make_int_constant_symbol(
@@ -1061,7 +1061,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 145 "Math_Lexer.l"
+#line 147 "Math_Lexer.l"
 {j_dbl val = atof(yytext);
 	yylval->constant_symbol
 		= make_double_constant_symbol(val, M_location);
@@ -1069,34 +1069,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 149 "Math_Lexer.l"
-{yylval->constant_symbol = make_string_constant_symbol(yytext, M_location);
-	return token_t::T_STRING_CONSTANT;}
+#line 152 "Math_Lexer.l"
+{
+	std::string string_val(yytext+1);
+	assert('"' == string_val.back());
+	string_val.pop_back();
+	yylval->constant_symbol = make_string_constant_symbol(string_val.c_str(), M_location);
+	return token_t::T_STRING_CONSTANT;
+}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 151 "Math_Lexer.l"
-{assert(!"Unterminaned String");}
+#line 159 "Math_Lexer.l"
+{throw J_Syntax_Error("Unterminaned String");}
 	YY_BREAK
 /* -------------------- Identifiers --------------------------- */
 case 30:
 YY_RULE_SETUP
-#line 155 "Math_Lexer.l"
+#line 163 "Math_Lexer.l"
 {yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
 						return token_t::T_IDENTIFIER; }
 	YY_BREAK
 /* -------------------- Default rule (error) -------------------- */
 case 31:
 YY_RULE_SETUP
-#line 160 "Math_Lexer.l"
+#line 168 "Math_Lexer.l"
 { std::cerr << "Unrecognized Character"; return token_t(0);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 162 "Math_Lexer.l"
+#line 170 "Math_Lexer.l"
 ECHO;
 	YY_BREAK
-#line 1100 "Math_YY_Lex.cpp"
+#line 1105 "Math_YY_Lex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2133,7 +2138,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 162 "Math_Lexer.l"
+#line 170 "Math_Lexer.l"
 
 
 

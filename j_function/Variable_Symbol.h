@@ -13,13 +13,9 @@ public:
 	Variable_Symbol(
 		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression);
 
-	Variable_Symbol* get_copy()const override{
-		return new Variable_Symbol(*this);
-	}
+	Variable_Symbol* get_copy()const override;
 
-	Variable_Symbol* move_copy()override{
-		return  new Variable_Symbol(std::move(*this));
-	}
+	Variable_Symbol* move_copy()override;
 
 	void clear()override;
 

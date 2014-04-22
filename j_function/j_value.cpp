@@ -2,14 +2,18 @@
 #include "Unit_Converter.h"
 //
 #include <j_type.h>
+//
+#include "J_Symbol_Error.h"
+//
+#include <cstdlib>
 using std::equal;
 using std::string;
 using std::to_string;
 namespace jomike{
 
-j_value::j_value(int i_val, J_Unit i_unit){
-	M_type = Value_Types::INTEGER;
-	M_val.int_val = i_val;
+j_value::j_value(j_llint i_val, J_Unit i_unit){
+	M_type = Value_Types::LL_INTEGER;
+	M_val.llint_val = i_val;
 	M_units = i_unit;
 	M_has_value_status = true;
 }
@@ -48,8 +52,8 @@ void j_value::binary_value_operation(
 	assert(j_value::Value_Types::STRING != i_right.type());
 
 		switch(right_type){
-		case j_value::Value_Types::INTEGER:
-			i_func(i_left, i_right.as_int(), i_destination);
+		case j_value::Value_Types::LL_INTEGER:
+			i_func(i_left, i_right.as_llint(), i_destination);
 			break;
 		case j_value::Value_Types::DOUBLE:
 			i_func(i_left, i_right.as_double(), i_destination);
@@ -72,9 +76,9 @@ void j_value::binary_value_operation(
 	const j_value& i_right, j_value::Value_Union* i_value_union
 	, const Operator_Class& i_func){
 	switch(M_type){
-	case Value_Types::INTEGER:
+	case Value_Types::LL_INTEGER:
 		binary_value_operation(
-			M_val.int_val, i_right, &i_value_union->int_val, i_func);
+			M_val.llint_val, i_right, &i_value_union->llint_val, i_func);
 		break;
 	case Value_Types::DOUBLE:
 		binary_value_operation(
@@ -99,9 +103,9 @@ void j_value::binary_value_operation_no_str_or_bool(
 	const j_value& i_right, j_value::Value_Union* i_value_union
 	, const Operator_Class& i_func){
 	switch(M_type){
-	case Value_Types::INTEGER:
+	case Value_Types::LL_INTEGER:
 		binary_value_operation(
-			M_val.int_val, i_right, &i_value_union->int_val, i_func);
+			M_val.llint_val, i_right, &i_value_union->llint_val, i_func);
 		break;
 	case Value_Types::DOUBLE:
 		binary_value_operation(
@@ -264,8 +268,33 @@ bool j_value::as_bool()const{
 	return M_val.bool_val;
 }
 
-int j_value::as_int()const{
-	return M_val.int_val;
+j_llint j_value::as_llint()const{
+
+	if(!M_has_value_status){
+		throw J_Symbol_Error("Value uninitialized");
+	}
+	switch(M_type){
+	case j_value::Value_Types::LL_INTEGER:
+		return M_val.llint_val;
+	case j_value::Value_Types::DOUBLE:
+		return static_cast<j_llint>(M_val.dbl_val);
+	case j_value::Value_Types::BOOL:
+		return M_val.bool_val ? 1ll : 0ll;
+	case j_value::Value_Types::STRING:{
+		if(M_val.str_val->empty()){
+			return 0ll;
+		}
+		char* str_pos = nullptr;
+		return std::strtoll(M_val.str_val->data(), &str_pos, 0);
+	}
+	case j_value::Value_Types::UNDEFINIED:
+		assert(!"Type Not Identified but declared to have value");
+	default:
+		assert(!"Unknown Type");
+		return 0ll;
+	}
+
+
 }
 
 Dbl_t j_value::as_double()const{
@@ -276,8 +305,8 @@ Dbl_t j_value::as_double()const{
 template<class Operator_Class>
 typename Operator_Class::return_type j_value::unary_value_operation(Operator_Class i_class)const{
 	switch(M_type){
-	case Value_Types::INTEGER:
-		return i_class(M_val.int_val);
+	case Value_Types::LL_INTEGER:
+		return i_class(M_val.llint_val);
 	case Value_Types::DOUBLE:
 		return i_class(M_val.dbl_val);
 	case Value_Types::BOOL:
@@ -321,7 +350,7 @@ std::string j_value::to_str()const{
 
 Symbol_Types j_value::symbol_type()const{
 	switch(M_type)	{
-	case Value_Types::INTEGER:
+	case Value_Types::LL_INTEGER:
 		return Symbol_Types::INT;
 	case Value_Types::DOUBLE:
 		return Symbol_Types::DOUBLE;

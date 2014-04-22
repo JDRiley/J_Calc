@@ -222,6 +222,7 @@
   <ItemGroup>
     <ClInclude Include="Addition_Expression.h" />
     <ClInclude Include="Add_Symbol_Joiner.h" />
+    <ClInclude Include="Binary_Expression.h" />
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
     <ClInclude Include="Boolean_Testers.h" />
     <ClInclude Include="boolean_tester_array.h" />
@@ -269,6 +270,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Addition_Expression.cpp" />
+    <ClCompile Include="Binary_Expression.cpp" />
     <ClCompile Include="Boolean_Testers.cpp" />
     <ClCompile Include="Call_Expression.cpp" />
     <ClCompile Include="Constant_Symbol.cpp" />

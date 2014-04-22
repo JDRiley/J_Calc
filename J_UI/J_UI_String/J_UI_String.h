@@ -168,6 +168,9 @@ private:
 #endif
 };
 
+J_UI_String operator+(const char* ik_chars, const J_UI_String& irk_string);
+
+
 template<typename Iter>
 void J_UI_String::insert(const_iterator i_pos, Iter i_first, Iter i_last){
 #if _DEBUG

@@ -1,36 +1,37 @@
 #include "Arguments.h"
 //
 #include "j_function.h"
-
+//
+#include "j_expression.h"
 //Algorithm
 #include <algorithm>
+//
 #include <functional>
-
+//
+#include "j_placeholder_symbol.h"
 //
 #include <utility>
+
 using std::for_each; using std::mem_fn; using std::transform;
 
 namespace jomike{
 //Arguments Function
-Arguments::Arguments(){}
+Arguments::Arguments():j_symbol_component(Symbol_Types::ARGUMENTS){}
 
 
 
 
 
-/*Arguments(const Arguments&)*/
-Arguments::Arguments(const Arguments& irk_src):M_arg_symbols(irk_src.size()){
-	transform(irk_src.M_arg_symbols.begin(), irk_src.M_arg_symbols.end()
-		, M_arg_symbols.begin(), mem_fn(&j_symbol::get_copy));
-}
+
 
 /*Arguments(Arguments&&)*/
-Arguments::Arguments(Arguments&& rr_src):j_symbol_component(Symbol_Types::ARGUMENTS){swap(rr_src);}
+Arguments::Arguments(Arguments&& irr_src)
+:j_symbol_component(std::move(irr_src)){}
 
-Arguments::Arguments(j_size_t i_size){
+Arguments::Arguments(j_size_t i_size): j_symbol_component(Symbol_Types::ARGUMENTS){
 	
 	for(int i = 0; i < i_size; i++){
-		M_arg_symbols.push_back(new j_placeholder_symbol(i));
+		M_arg_symbols.emplace_back(j_placeholder_symbol(i));
 	}
 }
 
@@ -40,6 +41,12 @@ Arguments::Arguments(Iter i_first, Iter i_last){
 		push_back(**i_first);
 		++i_first;
 	}
+}
+
+Arguments::Arguments(const Arguments& irk_right)
+	:j_symbol_component(irk_right)
+	, M_arg_symbols(irk_right.M_arg_symbols){
+
 }
 
 /*void swap(Arguments& ir_src)*/
@@ -57,10 +64,7 @@ Arguments& Arguments::operator=(const Arguments& irk_src){
 Arguments& Arguments::operator=(Arguments&& rr_src){swap(rr_src); return *this;}
 
 /*~Arguments()*/
-Arguments::~Arguments(){
-	for_each(M_arg_symbols.begin(), M_arg_symbols.end()
-		, [](j_symbol* y_sym_ptr){delete y_sym_ptr;});
-}
+Arguments::~Arguments(){}
 
 void Arguments::clear(){
 	Arguments empty_arguments;
@@ -71,12 +75,17 @@ void Arguments::clear(){
 j_size_t Arguments::size()const{return M_arg_symbols.size();}
 
 /*void push_back(const j_symbol*)*/
-void Arguments::push_back(const j_symbol& i_sym){
-	M_arg_symbols.push_back(i_sym.get_copy());
+void Arguments::push_back(const j_expression& i_sym){
+	M_arg_symbols.emplace_back(i_sym);
+}
+
+void Arguments::push_back(j_expression* i_symbol){
+	M_arg_symbols.emplace_back(i_symbol);
+	delete i_symbol;
 }
 
 /*void set_argument(int index, const j_symbol*)*/
-void Arguments::set_argument(j_size_t i_index, const j_symbol* i_symbol_ptr){
+void Arguments::set_argument(j_size_t i_index, const j_expression* i_symbol_ptr){
 	assert(i_index < size());
 
 	delete M_arg_symbols[i_index];
@@ -85,16 +94,16 @@ void Arguments::set_argument(j_size_t i_index, const j_symbol* i_symbol_ptr){
 }
 
 /*j_symbol** arguments()*/
-j_symbol* const* Arguments::arguments(){return M_arg_symbols.data();}
+j_expression* const* Arguments::arguments(){return M_arg_symbols.data();}
 
 /*const j_symbol* const* arguments()const*/
-const j_symbol* const* Arguments::arguments()const{return &M_arg_symbols[0];}
+const j_expression* const* Arguments::arguments()const{return &M_arg_symbols[0];}
 
 /*const j_symbol& operator[](j_size_t i_index)*/
-j_symbol& Arguments::operator[](j_size_t i_index){return *M_arg_symbols[i_index];}
+j_expression& Arguments::operator[](j_size_t i_index){return *M_arg_symbols[i_index];}
 
 /*const j_symbol& operator[](j_size_t i_index)const*/
-const j_symbol& Arguments::operator[](j_size_t i_index)const{return *M_arg_symbols[i_index];}
+const j_expression& Arguments::operator[](j_size_t i_index)const{return *M_arg_symbols[i_index];}
 
 bool Arguments::empty()const{
 	return M_arg_symbols.empty();
@@ -108,9 +117,6 @@ Arguments::const_iterator Arguments::end()const{
 	return M_arg_symbols.end();
 }
 
-jomike::J_UI_String Arguments::get_display_name(){
-	return name();
-}
 
 Arguments* Arguments::move_copy(){
 	return  new Arguments(std::move(*this));

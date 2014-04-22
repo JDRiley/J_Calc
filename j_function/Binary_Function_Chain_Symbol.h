@@ -41,18 +41,18 @@ template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
 j_value Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
 	::derived_get_value(const Arguments& irk_args)const{
 		if(irk_args.empty()){
-			return j_value(0, J_Unit());
+			return j_value(static_cast<Num_t>(0), J_Unit());
 		}
 
 
-		Num_t answer = static_cast<j_llint>(irk_args[0].value(Arguments()));
+		Num_t answer = irk_args[0].get_value().as_type<Num_t>();
 
 		answer = std::accumulate(irk_args.begin() + 1, irk_args.end(), answer
 			, [&](Num_t i_val, j_symbol* i_symbol){
-			return M_function(i_val, static_cast<Num_t>(i_symbol->value()));
+			return M_function(i_val, i_symbol->get_value().as_type<Num_t>());
 		});
 
-		return j_value(static_cast<j_dbl>(answer), J_Unit());
+		return j_value(answer, J_Unit());
 	}
 
 

@@ -50,6 +50,14 @@ void Variable_Symbol::set_value(j_value i_value){
 	M_value = type_syntax().convert_value(i_value);
 }
 
+Variable_Symbol* Variable_Symbol::get_copy()const {
+	return new Variable_Symbol(*this);
+}
+
+Variable_Symbol* Variable_Symbol::move_copy(){
+	return  new Variable_Symbol(std::move(*this));
+}
+
 }
 
 

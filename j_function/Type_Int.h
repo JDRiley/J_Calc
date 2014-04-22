@@ -12,6 +12,8 @@ public:
 	Type_Int* get_copy()const override;
 
 	Type_Int* move_copy()override;
+
+	j_value convert_value(const j_value& irk_val)const override;
 private:
 
 };

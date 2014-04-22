@@ -9,21 +9,24 @@
 //
 #include <J_UI/J_UI_String.h>
 //
-#include "math_parsing_unit.hh"
+#include "Math_Parser.h"
 //
 #include "Lexer_Location.h"
 //
 #include <ex_array.h>
 
 
-#define YY_DECL		\
-	yy::Math_Parsing_Unit::token_type\
-	Math_Lexer::yylex(yy::Math_Parsing_Unit::semantic_type* yylval)
-
-
-
 
 typedef yy::Math_Parsing_Unit::token_type token_t;
+typedef yy::Math_Parsing_Unit::semantic_type semantic_t;
+
+#define YY_DECL		\
+	token_t\
+	Math_Lexer::yylex(semantic_t* yylval)
+
+
+
+
 
 namespace jomike{
 class Math_Parser;
@@ -31,8 +34,8 @@ struct Lexer_Location;
 class Math_Lexer : public yyFlexLexer{
 public:
 	Math_Lexer();
-	yy::Math_Parsing_Unit::token_type
-		Math_Lexer::yylex(yy::Math_Parsing_Unit::semantic_type* yylval);
+	token_t
+		Math_Lexer::yylex(semantic_t* yylval);
 	void init_scanner();
 	void pre_action_set_up();
 	const std::string& get_line(j_size_t i_line)const;

@@ -12,9 +12,9 @@ bool j_placeholder_symbol::is_placeholder()const {
 }
 
 j_placeholder_symbol::j_placeholder_symbol(j_size_t i_index)
-:j_symbol(
-	new J_Symbol_Identifier(string("#") + std::to_string(i_index) + "_Placeholder")
-	, Symbol_Types::PLACEHOLDER), M_Placeholder_index(i_index){
+:j_expression(Symbol_Types::PLACEHOLDER,
+	new J_Symbol_Identifier(string("#") + std::to_string(i_index) + "_Placeholder"))
+	, M_Placeholder_index(i_index){
 	assert(i_index >= J_SIZE_T_ZERO);
 }
 

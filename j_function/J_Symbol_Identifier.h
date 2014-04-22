@@ -14,8 +14,8 @@ public:
 	J_Symbol_Identifier* get_copy()const override;
 	J_Symbol_Identifier* move_copy()override;
 
-	J_UI_String get_display_name()override;
-
+	J_Symbol_Identifier(const J_Symbol_Identifier&) = default;
+	
 	const J_UI_String& identifier_name()const;
 
 	void set_name(const J_UI_String& irk_name);

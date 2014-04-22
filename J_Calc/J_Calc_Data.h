@@ -23,7 +23,7 @@ public:
 	void attach_view(J_View_Shared_t)override;
 
 	//Symbol Management
-	void add_user_symbol(const j_symbol*);
+	void add_user_symbol(j_symbol*);
 	bool is_reserved_word(const J_UI_String&)const;
 	bool is_reserved_symbol(const J_UI_String&)const;
 
@@ -36,7 +36,7 @@ public:
 	j_symbol* get_reserved_symbol(const J_UI_String&)const;
 	~J_Calc_Data();
 	void clear_data()override;
-
+	
 	void remove_view(J_View_Shared_t i_view);
 private:
 	static J_Calc_Data& get_instance();

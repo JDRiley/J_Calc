@@ -6,8 +6,11 @@ namespace jomike{
 
 
 
-J_UI_String j_symbol_component_list::get_display_name(){
-	assert(!"List does not have display name");
+
+
+j_symbol_component_list::j_symbol_component_list()
+:j_symbol_component(Symbol_Types::LIST){
+
 }
 
 }

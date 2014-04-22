@@ -16,8 +16,6 @@ class j_symbol_component{
 public:
 	j_symbol_component(Symbol_Types i_symbol_type);
 
-	
-
 	virtual j_symbol_component* get_copy()const = 0;
 	virtual j_symbol_component* move_copy() = 0;
 
@@ -25,7 +23,7 @@ public:
 	
 	void set_type(Symbol_Types i_symbol_type);
 	Symbol_Types symbol_type()const;
-	virtual J_UI_String get_display_name() = 0;
+
 	virtual ~j_symbol_component();
 private:
 	const int M_ID;

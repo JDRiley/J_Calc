@@ -52,10 +52,13 @@
 #include <J_Symbol_Identifier.h>
 #include <Field_Access_Expression.h>
 #include "J_Calc_Data.h"
+#include <Arguments.h>
+#include <j_expression.h>
+#include "j_yy_stack.h"
 
 
 /* Line 33 of lalr1.cc  */
-#line 59 "math_parsing_unit.hh"
+#line 62 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -71,7 +74,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 75 "math_parsing_unit.hh"
+#line 78 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -82,7 +85,7 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 82 "parser.y"
+#line 85 "parser.y"
 
     jomike::J_Symbol_Identifier*	identifier;
     jomike::j_symbol_component*		symbol_component;
@@ -95,7 +98,7 @@ namespace yy {
 
 
 /* Line 33 of lalr1.cc  */
-#line 99 "math_parsing_unit.hh"
+#line 102 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -137,7 +140,7 @@ namespace yy {
     typedef token::yytokentype token_type;
 
     /// Build a parser object.
-    Math_Parsing_Unit (jtl::j_symbol_component** i_symbol_ptr_yyarg, jtl::Math_Parser* i_parser_yyarg);
+    Math_Parsing_Unit (jtl::j_symbol** i_symbol_ptr_yyarg, jtl::Math_Parser* i_parser_yyarg);
     virtual ~Math_Parsing_Unit ();
 
     /// Parse.
@@ -234,7 +237,7 @@ namespace yy {
     static const unsigned char yytable_[];
     static const signed char yytable_ninf_;
 
-    static const unsigned char yycheck_[];
+    static const signed char yycheck_[];
 
     /// For a state, its accessing symbol.
     static const unsigned char yystos_[];
@@ -299,13 +302,13 @@ namespace yy {
     static const token_number_type yyundef_token_;
 
     /* User arguments.  */
-    jtl::j_symbol_component** i_symbol_ptr;
+    jtl::j_symbol** i_symbol_ptr;
     jtl::Math_Parser* i_parser;
   };
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 309 "math_parsing_unit.hh"
+#line 312 "math_parsing_unit.hh"
 
 
 

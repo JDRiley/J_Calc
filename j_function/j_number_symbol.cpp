@@ -5,6 +5,8 @@
 #include "J_Symbol_Error.h"
 //
 #include "J_Symbol_Identifier.h"
+//
+#include "Arguments.h"
 using std::to_string;
 
 namespace jomike{

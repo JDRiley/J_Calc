@@ -60,6 +60,9 @@
     <ClInclude Include="math_parsing_unit.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="j_yy_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp">

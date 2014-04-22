@@ -8,10 +8,13 @@ namespace jomike{
 class j_expression : public j_symbol{
 public:
 	j_expression(Symbol_Types);
+	j_expression(Symbol_Types i_symbol_type, J_Symbol_Identifier* i_identifier);
 
 	j_expression* move_copy()override = 0;
 
 	j_expression* get_copy()const override = 0;
+
+	j_expression(const j_expression& irk_right);
 
 	void clear(){
 		assert(0);
@@ -19,12 +22,8 @@ public:
 	
 
 	j_expression* as_expression();
-	J_UI_String get_display_name()override{
-		if(has_value()){
-			return get_value().to_str();
-		}
-			return name();
-	}
+	J_UI_String get_display_name()override;
+	~j_expression();
 private:
 };
 

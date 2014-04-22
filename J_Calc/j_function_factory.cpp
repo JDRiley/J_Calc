@@ -312,30 +312,9 @@ J_UI_String::const_iterator get_closing_parenthesis(J_UI_String::const_iterator 
 }
 
 
-Arguments get_args_from_string(const J_UI_String& irk_string){
-	static const ex_array<J_UI_Char> sk_arg_delims = {','};
-	static const Delimiter_Handler<J_UI_Char> sk_arg_delim(sk_arg_delims.begin()
-		, sk_arg_delims.end());
-
-	auto start_pos = irk_string.begin();
-	Arguments args;
-	while(start_pos < irk_string.end()){
-		j_symbol* new_arg = create_multi_j_symbol(&start_pos, irk_string.end()
-			, sk_arg_delim);
-
-		args.push_back(*new_arg);
-		delete new_arg;
-
-		if((start_pos != irk_string.end())){
-			assert(sk_arg_delim.is_delim(*start_pos));
-			++start_pos;
-			continue;
-		}
-
-		advance_white_space(&start_pos, irk_string.end());
-	}
-
-	return args;
+Arguments get_args_from_string(const J_UI_String& /*irk_string*/){
+	assert(!"Deprecated");
+	return Arguments();
 }
 
 

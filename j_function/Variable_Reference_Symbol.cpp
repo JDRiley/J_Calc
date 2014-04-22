@@ -22,7 +22,7 @@ Variable_Reference_Symbol* Variable_Reference_Symbol::move_copy(){
 
 j_value Variable_Reference_Symbol::derived_get_value(const Arguments& )const {
 	assert(0);
-	return j_value(0, J_Unit());
+	return j_value(0ll, J_Unit());
 }
 
 bool Variable_Reference_Symbol::has_value()const {

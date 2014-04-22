@@ -10,13 +10,13 @@ class Type_Syntax : public j_symbol_component{
 public:
 	Type_Syntax(const std::string& irk_name, Symbol_Types i_symbol_type);
 
+	Type_Syntax(const Type_Syntax&) = default;
+
 	Type_Syntax* get_copy()const override = 0;
 
 	Type_Syntax* move_copy()override = 0;
 
-	J_UI_String get_display_name()override;
-
-	virtual j_value convert_value(const j_value& irk_val);
+	virtual j_value convert_value(const j_value& irk_val)const;
 
 private:
 	std::string M_type_name;

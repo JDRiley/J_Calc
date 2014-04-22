@@ -114,13 +114,23 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_String& irk
 	Math_Parser parser;
 	string error_string;
 	try{
-		if(j_symbol_component*  new_symbol 
+		if(j_symbol*  new_symbol 
 		   = parser.parse(irk_string.std_str() + ';')){
-			return new_symbol->get_display_name();
+			J_UI_String return_val;
+			if(new_symbol->has_value()){
+				return_val = new_symbol->get_value().to_str();
+			} else{
+				return_val = new_symbol->get_display_name();
+			}
+			delete new_symbol;
+			return return_val;
 		} else if(j_true){
 			return error_string;
 		}
 	} catch(J_Syntax_Error& er_error){
+		er_error.print();
+		return er_error.str();
+	} catch(J_Sym_Argument_Error& er_error){
 		er_error.print();
 		return er_error.str();
 	} catch(J_Symbol_Error& er_error){

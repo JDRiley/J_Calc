@@ -12,11 +12,8 @@ Type_Syntax::Type_Syntax(
 
 }
 
-jomike::J_UI_String Type_Syntax::get_display_name(){
-	return M_type_name;
-}
 
-jomike::j_value Type_Syntax::convert_value(const j_value& /*irk_val*/){
+jomike::j_value Type_Syntax::convert_value(const j_value& /*irk_val*/)const{
 	assert(!"Did Not implement conversion for this type");
 	return j_value();
 }

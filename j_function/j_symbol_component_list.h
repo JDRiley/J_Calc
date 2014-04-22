@@ -28,8 +28,6 @@ public:
 protected:
 	void add_syntax_component(const j_symbol_component& i_component);
 
-	J_UI_String get_display_name()override;
-
 private:
 	J_Symbol_Component_Array<j_symbol_component> M_components;
 

@@ -153,6 +153,9 @@
     <ClInclude Include="Symbol_Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Binary_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -258,6 +261,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Field_Access_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Binary_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
