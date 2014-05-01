@@ -155,8 +155,38 @@ private:
 	//Render Settings
 	void clear();
 	void clear_from(j_size_t pos);
-	bool M_changed_flag = true;
-	ex_array<J_Display_Letter_Box_Shared_t> M_letter_box_string;
+	mutable bool M_changed_flag = true;
+	
+	void alert_changed()const;
+	
+	class Modifier_Manger{
+	public:
+		typedef ex_array<J_Display_Letter_Box_Shared_t> Arr_t;
+		
+		Modifier_Manger(const std::function<void()>& irk_func);
+		Arr_t& operator*(){
+			M_notification_function();
+			return M_letter_box_arr;
+		}
+
+		Arr_t::value_type& operator[](j_size_t i_index){
+			return operator->()->operator[](i_index);
+		}
+
+		Arr_t* operator->(){
+			M_notification_function();
+			return &M_letter_box_arr;
+		}
+
+		const Arr_t* operator->()const{
+			M_notification_function();
+			return &M_letter_box_arr;
+		}
+	private:
+		Arr_t M_letter_box_arr;
+		std::function<void()> M_notification_function;
+	};
+	Modifier_Manger M_letter_box_string;
 	j_uint M_frame_buffer_id;
 	j_uint M_texture_buffer_id;
 	void render_frame_buffer()const;

@@ -50,7 +50,7 @@ using std::cerr; using std::endl;
 using std::mutex;
 using std::pair;
 
-
+using std::function;
 
 
 using std::lock_guard;
@@ -59,7 +59,21 @@ using std::lock_guard;
 namespace jomike{
 static Instance_Pointer<Contexts_Handler> s_contexts;
 
+class Modifier_Manger{
+	typedef ex_array<J_Display_Letter_Box_Shared_t> Arr_t;
+	Arr_t& operator*(){
+		M_notification_function();
+		return M_letter_box_arr;
+	}
 
+	Arr_t* operator->(){
+		M_notification_function();
+		return &M_letter_box_arr;
+	}
+private:
+	Arr_t M_letter_box_arr;
+	function<void()> M_notification_function;
+};
 
 const char* const DEFAULT_FONT_PATH_NAME 
 	= "J:\\JoMike Library\\J_FT_Text_Display\\Fonts\\times.ttf";
@@ -110,7 +124,8 @@ J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){
 }
 
 
-J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id) : J_FT_Text_Display_Object(i_obj_id){
+J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id) : J_FT_Text_Display_Object(i_obj_id)
+	, M_letter_box_string(bind(&J_FT_Text_Display::alert_changed, this)){
 	glGenFramebuffers(1, &M_frame_buffer_id);
 	glBindFramebuffer(GL_FRAMEBUFFER, M_frame_buffer_id);
 	glGenTextures(1, &M_texture_buffer_id);
@@ -135,8 +150,9 @@ J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id) : J_FT_Text_Display_Object
 
 
 J_FT_Text_Display::J_FT_Text_Display(j_uint i_object_id, j_uint i_id)
-	:J_FT_Text_Display_Object(i_object_id, i_id){
-	M_letter_box_string.set_front_buffer(0.0);
+	:J_FT_Text_Display_Object(i_object_id, i_id)
+	, M_letter_box_string(bind(&J_FT_Text_Display::alert_changed, this)){
+	M_letter_box_string->set_front_buffer(0.0);
 }
 
 
@@ -154,7 +170,7 @@ void J_FT_Text_Display::clear(){
 
 void J_FT_Text_Display::clear_from(j_size_t i_pos){
 	assert(i_pos >= 0);
-	M_letter_box_string.resize(i_pos);
+	M_letter_box_string->resize(i_pos);
 }
 
 
@@ -201,12 +217,12 @@ void J_FT_Text_Display::render_frame_buffer()const{
 	
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, M_frame_buffer_id);
 	
-	
-	j_uint x_size = x_pixels();
-	j_uint y_size = y_pixels();
-	const j_uint A_TOO_LARGE_NUMBER_OF_PIXELS = 1234222;
-	assert(y_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
-	assert(x_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
+	//
+	//j_uint x_size = x_pixels();
+	//j_uint y_size = y_pixels();
+	//const j_uint A_TOO_LARGE_NUMBER_OF_PIXELS = 1234222;
+	//assert(y_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
+	//assert(x_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
 
 	glViewport(0, 0, prev_width, prev_height);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -214,7 +230,7 @@ void J_FT_Text_Display::render_frame_buffer()const{
 
 	
 	auto start_view_pos
-		= lower_bound(M_letter_box_string.begin(), M_letter_box_string.end()
+		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
 		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y1(), 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y1() - i_right->y1();
@@ -229,7 +245,7 @@ void J_FT_Text_Display::render_frame_buffer()const{
 	});
 
 	auto end_view_pos 
-		= lower_bound(M_letter_box_string.begin(), M_letter_box_string.end()
+		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
 		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y2(), 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y2() - i_right->y2();
@@ -253,21 +269,22 @@ void J_FT_Text_Display::render_frame_buffer()const{
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	glViewport(0, 0, prev_width, prev_height);
+	M_changed_flag = false;
 }
 
 
 
 void J_FT_Text_Display::delete_char(j_size_t i_pos){
-	M_letter_box_string.erase(M_letter_box_string.begin() + i_pos);
+	M_letter_box_string->erase(M_letter_box_string->begin() + i_pos);
 }
 
 void J_FT_Text_Display::erase_chars(j_size_t i_pos, j_size_t i_size){
 	assert(i_pos >= 0);
 	assert(i_size >= 0);
-	assert( i_pos < M_letter_box_string.size());
-	assert(i_pos + i_size <= M_letter_box_string.size());
+	assert( i_pos < M_letter_box_string->size());
+	assert(i_pos + i_size <= M_letter_box_string->size());
 	
-	M_letter_box_string.erase(i_pos, i_size);
+	M_letter_box_string->erase(i_pos, i_size);
 }
 
 
@@ -287,7 +304,7 @@ void J_FT_Text_Display::add_letter_box(j_size_t i_index
 	new_letter_box->set_image_box(i_pen_pos, i_metrics);
 	new_letter_box->set_buffer_data(i_metrics, i_color, i_bitmap);
 
-	M_letter_box_string.insert(M_letter_box_string.begin() + i_index, new_letter_box);
+	M_letter_box_string->insert(M_letter_box_string->begin() + i_index, new_letter_box);
 
 
 
@@ -306,8 +323,8 @@ void J_FT_Text_Display::set_letter_box_data(j_size_t i_index
 }
 
 void J_FT_Text_Display::set_text_string_size(j_size_t i_size){
-	j_size_t initial_string_size = M_letter_box_string.size();
-	M_letter_box_string.resize(i_size);
+	j_size_t initial_string_size = M_letter_box_string->size();
+	M_letter_box_string->resize(i_size);
 	for(j_size_t i = initial_string_size; i < i_size; i++){
 		M_letter_box_string[i] = (J_Display_Letter_Box_Shared_t(new J_Display_Letter_Box));
 	}
@@ -317,7 +334,7 @@ void J_FT_Text_Display::set_letter_box_poses(j_size_t i_index
 											 , j_size_t i_size
 											 , const Pen_Pos_FL_t* i_poses){
 	
-	auto letter_pos_start = M_letter_box_string.begin() + i_index;
+	auto letter_pos_start = M_letter_box_string->begin() + i_index;
 
 	for(int i = 0; i < i_size; i++){
 		letter_pos_start[i]->set_pos(i_poses[i]);
@@ -329,7 +346,9 @@ void J_FT_Text_Display::insert_text_string(j_size_t i_pos, j_size_t i_size
 										   , Bitmap_Metrics** i_metrics
 										   , const J_UI_Color& i_color
 										   , const j_ubyte* const * i_datas){
-	ex_array<J_Display_Letter_Box_Shared_t> utility_cont;
+	static ex_array<J_Display_Letter_Box_Shared_t> utility_cont;
+	utility_cont.resize(0);
+	utility_cont.reserve(i_size);
 	for(int i = 0; i < i_size; i++){
 		J_Display_Letter_Box_Shared_t letter_box(new J_Display_Letter_Box(0));
 		const Bitmap_Metrics& metric = *(i_metrics[i]);
@@ -338,7 +357,7 @@ void J_FT_Text_Display::insert_text_string(j_size_t i_pos, j_size_t i_size
 
 		utility_cont.push_back(letter_box);
 	}
-	M_letter_box_string.insert(M_letter_box_string.begin() + i_pos
+	M_letter_box_string->insert(M_letter_box_string->begin() + i_pos
 							   , utility_cont.begin(), utility_cont.end());
 
 
@@ -355,6 +374,10 @@ j_uint J_FT_Text_Display::x_pixels()const{
 
 j_uint J_FT_Text_Display::y_pixels()const{
 	return ::jtl::y_pixels(s_contexts->get_active_window(), height());
+}
+
+void J_FT_Text_Display::alert_changed()const{
+	M_changed_flag = true;
 }
 
 
@@ -467,6 +490,11 @@ void J_FT_Text_Multi_State_Display::set_letter_box_poses(j_size_t i_index, j_siz
 
 void J_FT_Text_Multi_State_Display::insert_text_string(j_size_t i_pos, j_size_t i_size, const Pen_Pos_FL_t* i_poses, Bitmap_Metrics** i_metrics, const J_UI_Color& i_color, const j_ubyte* const * i_datas){
 	M_current_state->insert_text_string(i_pos, i_size, i_poses, i_metrics, i_color, i_datas);
+}
+
+
+J_FT_Text_Display::Modifier_Manger::Modifier_Manger(const std::function<void()>& irk_func):M_notification_function(irk_func){
+
 }
 
 }
