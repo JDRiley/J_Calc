@@ -297,6 +297,7 @@ void Cursor_Pos_Updater::operator()(J_UI_Object_Shared_t i_obj){
 	auto font_face = text_box->get_string().front().font_face();
 	auto color = text_box->get_string().front().color();
 	text_box->set_string(J_UI_String(o_str.str(), font_face, color));
+	//std::cout << "\n" << o_str.str() << std::endl;
 }
 
 void J_UI_Controller::add_cursor_pos_text_updater(J_Text_Box_Object_Shared_t i_text_obj

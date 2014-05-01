@@ -106,7 +106,9 @@ bool J_Rectangle::is_inside(j_float i_x, j_float i_y)const{
 	return is_x_inside(i_x) && is_y_inside(i_y);
 }
 
-j_float J_Rectangle::width()const{return M_width;}
+j_float J_Rectangle::width()const{
+	return M_width;
+}
 
 j_float J_Rectangle::height()const{return M_height;}
 

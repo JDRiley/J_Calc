@@ -105,14 +105,34 @@ J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_obj_id)
 J_FT_Text_Display_Object::J_FT_Text_Display_Object(j_uint i_object_id, j_uint i_id)
 	:J_Display_Box(i_object_id, i_id){}
 
-J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){}
+J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){
+	
+}
 
 
 J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id) : J_FT_Text_Display_Object(i_obj_id){
-	//M_new_line_size = 30;
-	//M_shader = new J_Text_Shader_Program;
-	//M_program_id = M_shader->program_id();
+	glGenFramebuffers(1, &M_frame_buffer_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, M_frame_buffer_id);
+	glGenTextures(1, &M_texture_buffer_id);
+	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	auto window = s_contexts->get_active_window();
+	j_uint width = get_x_res(window);
+	j_uint height = get_y_res(window);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
+	ex_array<j_ubyte> image_data(4 * width*height);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width,  height, GL_RGBA
+					, GL_UNSIGNED_BYTE, image_data.data());
+	glFramebufferTexture2D(
+		GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, M_texture_buffer_id, 0);
+	
+
+	glBindTexture(GL_TEXTURE_2D, 0u);
+
 }
+
+
 
 J_FT_Text_Display::J_FT_Text_Display(j_uint i_object_id, j_uint i_id)
 	:J_FT_Text_Display_Object(i_object_id, i_id){
@@ -142,6 +162,55 @@ void J_FT_Text_Display::clear_from(j_size_t i_pos){
 void J_FT_Text_Display::draw()const{
 	J_Display_Box::draw();
 
+	if(M_changed_flag){
+		render_frame_buffer();
+	}
+
+	assert(M_frame_buffer_id);
+
+	glBindFramebuffer(GL_DRAW_BUFFER, 0);
+
+	//j_uint dest_x1 = x_uns_pixel(window, x1());
+	//j_uint dest_x2 = x_uns_pixel(window, x2());
+
+	//j_uint dest_y1 = y_uns_pixel(window, y1());
+	//j_uint dest_y2 = y_uns_pixel(window, y2());
+	//glBlitFramebuffer(
+	//	0, 0, x_pixels(), y_pixels(), dest_x1
+	//	, dest_y1, dest_x2, dest_y2	
+	//	, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+
+	glUseProgram(image_shader_program_id());
+	glBindVertexArray(s_contexts->screen_box_vao());
+	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+
+
+
+}
+
+void J_FT_Text_Display::render_frame_buffer()const{
+	j_uint prev_width = get_x_res(s_contexts->get_active_window());
+	j_uint prev_height = get_y_res(s_contexts->get_active_window());;
+
+	
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, M_frame_buffer_id);
+	
+	
+	j_uint x_size = x_pixels();
+	j_uint y_size = y_pixels();
+	const j_uint A_TOO_LARGE_NUMBER_OF_PIXELS = 1234222;
+	assert(y_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
+	assert(x_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
+
+	glViewport(0, 0, prev_width, prev_height);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	j_clear();
 
 	
 	auto start_view_pos
@@ -180,7 +249,10 @@ void J_FT_Text_Display::draw()const{
 	while(start_view_pos != end_view_pos){
 		(*start_view_pos++)->draw();
 	}
+	
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	glViewport(0, 0, prev_width, prev_height);
 }
 
 
@@ -200,208 +272,10 @@ void J_FT_Text_Display::erase_chars(j_size_t i_pos, j_size_t i_size){
 
 
 
-
-//
-//void J_FT_Text_Display::mouse_button_press(J_View_Shared_t i_view, int i_button, int , Pen_Pos_FL_t i_pos){
-//	
-//	switch(i_button){
-//	case J_LEFT_MOUSE_BUTTON:{
-//		M_selection_boxes.clear();
-//		M_selection_start_cursor_pos = get_cursor_index(i_pos);
-//		M_left_mouse_button_pressed_status = true;
-//		set_cursor_pos(M_selection_start_cursor_pos);
-//		J_UI_Controller::get_instance().notify_text_box_press(i_view, get_object_ID()
-//															, M_cursor_pos);
-//}
-//		break;
-//	case J_MOUSE_WHEEL_UP:
-//		scroll(lines_scrolled_per_tick());
-//		break;
-//	case J_MOUSE_WHEEL_DOWN:
-//		scroll(-lines_scrolled_per_tick());
-//		break;
-//	default:
-//		;
-//	}
-//}
-//
-//void J_FT_Text_Display::mouse_button_release(J_View_Shared_t, int i_button, int , Pen_Pos_FL_t i_pos){
-//
-//	switch(i_button){
-//	case J_LEFT_MOUSE_BUTTON:
-//		M_left_mouse_button_pressed_status = false;
-//		set_cursor_pos(get_cursor_index(i_pos));
-//		J_UI_Controller::get_instance().notify_text_box_release(get_object_ID()
-//			, get_cursor_index(i_pos));
-//		break;
-//	default:
-//		;
-//	}
-//}
-
-
-
 void J_FT_Text_Display::pop_back(){
 
 	assert(!"The method or operation is not yet check.");
 }
-
-
-//
-//
-//bool J_FT_Text_Display::cursor_visibility_status()const{
-//	return M_cursor_visibility_status;
-//}
-//
-//void J_FT_Text_Display::set_cursor_visibility_status(bool i_status){
-//	M_cursor_visibility_status = i_status;
-//}
-//
-//
-//
-//void J_FT_Text_Display::move_cursor_line_pos_up(j_size_t i_move_val){
-//	auto new_pen_pos = M_last_set_cursor_pos;
-//	new_pen_pos.second += i_move_val*new_line_screen_size();
-//	set_cursor_pos(get_cursor_index(new_pen_pos));
-//	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
-//	M_last_set_cursor_pos.first = new_pen_pos.first;
-//
-//	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
-//														  , M_cursor_pos);
-//}
-
-//void J_FT_Text_Display::move_cursor_line_pos_down(j_size_t i_move_val){
-//	auto new_pen_pos = M_last_set_cursor_pos;
-//	new_pen_pos.second -= (i_move_val*new_line_screen_size() + FLOAT_DELTA);
-//	set_cursor_pos(get_cursor_index(new_pen_pos));
-//	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
-//	M_last_set_cursor_pos.first = new_pen_pos.first;
-//
-//	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
-//														  , M_cursor_pos);
-//}
-//
-//void J_FT_Text_Display::move_cursor_to_line_begin(){
-//	auto pen_pos = M_pen_poses[M_cursor_pos];
-//	pen_pos.first = x1();
-//	set_cursor_pos(min(get_cursor_index(pen_pos)+1, M_pen_poses.size()-1));
-//	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
-//														  , M_cursor_pos);
-//}
-//
-//void J_FT_Text_Display::move_cursor_to_line_end(){
-//	auto pen_pos = M_pen_poses[M_cursor_pos];
-//	pen_pos.first = x2();
-//	set_cursor_pos(get_cursor_index(pen_pos));
-//	J_UI_Controller::get_instance().notify_text_box_press(J_View_Shared_t(), get_object_ID()
-//														  , M_cursor_pos);
-//}
-//
-//void J_FT_Text_Display::scroll(int i_scroll_val){
-//	if(!i_scroll_val){
-//		return;
-//	}
-//	
-//	j_float scroll_size = -i_scroll_val*new_line_screen_size();
-//	
-//	if((scroll_size < 0) && M_pen_poses.front() == default_pen_pos()){
-//		return;
-//	}
-//
-//	if(scroll_size < 0){
-//		j_float scroll_size_to_default 
-//			= default_pen_pos().second - M_pen_poses.front().second;
-//		scroll_size = max(scroll_size, scroll_size_to_default);
-//	} else if(M_pen_poses.back().second > y2()){
-//		return;
-//	}else{
-//		scroll_size = min(scroll_size, y2() - M_pen_poses.back().second);
-//	}
-//	auto new_starting_pen_pos = M_pen_poses.front();
-//	new_starting_pen_pos.second += scroll_size;
-//
-//	set_starting_pen_pos(new_starting_pen_pos);
-//	scroll_selection_boxes(0.0f, scroll_size);
-//}
-//
-//int J_FT_Text_Display::lines_scrolled_per_tick(){
-//	return 1;
-//}
-//
-//void J_FT_Text_Display::set_cursor_pos_no_scroll(j_size_t i_pos){
-//	M_cursor_pos = i_pos;
-//	auto pen_pos_x = M_pen_poses[i_pos].first;
-//	auto pen_pos_y = M_pen_poses[i_pos].second;
-//
-//
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, M_cursor_buffer_id);
-//
-//	std::array<j_float, 4> cursor_data
-//		= {pen_pos_x, pen_pos_y
-//		, pen_pos_x, pen_pos_y
-//		+ new_line_screen_size()
-//	};
-//
-//	glBufferSubData(GL_ARRAY_BUFFER, static_cast<GLintptr>(0), sizeof(cursor_data), cursor_data.data());
-//
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//}
-//
-//void J_FT_Text_Display::alert_cursor_pos(Pen_Pos_FL_t i_pos){
-//
-//	if(!M_left_mouse_button_pressed_status){
-//		return;
-//	}
-//	j_set_cursor_type(J_I_BEAM_CURSOR_ID);
-//	j_size_t cursor_index = get_cursor_index(i_pos);
-//	set_cursor_pos(cursor_index);
-//	j_size_t low_bound = min(cursor_index, M_selection_start_cursor_pos);
-//	j_size_t right_bound = max(cursor_index, M_selection_start_cursor_pos);
-//
-//
-//
-//	if(low_bound == right_bound){
-//		M_selection_boxes.clear();
-//		return;
-//	}
-//
-//	int num_display_boxes = 0;
-//	
-//
-//	auto cur_cursor_pos = low_bound;
-//	while(cur_cursor_pos < right_bound){
-//		J_Rectangle rectangle;
-//		rectangle.set_box(M_pen_poses[cur_cursor_pos].first
-//						  , M_pen_poses[cur_cursor_pos].first
-//						  , M_pen_poses[cur_cursor_pos].second+ new_line_screen_size() 
-//						  , M_pen_poses[cur_cursor_pos].second);
-//
-//		j_float end_x_pos = rectangle.x1();
-//		while((cur_cursor_pos < right_bound)
-//			  && (M_pen_poses[cur_cursor_pos].second == rectangle.y2())){
-//			end_x_pos = M_pen_poses[cur_cursor_pos].first;
-//			++cur_cursor_pos;
-//		}
-//		rectangle.set_x2(end_x_pos);
-//
-//		if(M_selection_boxes.size() <= num_display_boxes){
-//			assert(M_selection_boxes.size() == num_display_boxes);
-//
-//			J_Display_Box_Shared_t display_box(
-//				new J_Display_Box(0)
-//				);
-//			M_selection_boxes.push_back(display_box);
-//		}
-//		
-//		set_selection_box_settings(M_selection_boxes[num_display_boxes]
-//								   , rectangle);
-//		
-//		++num_display_boxes;
-//	}
-//	M_selection_boxes.resize(num_display_boxes);
-//}
 
 void J_FT_Text_Display::add_letter_box(j_size_t i_index
 									   , const Pen_Pos_FL_t& i_pen_pos
@@ -414,6 +288,9 @@ void J_FT_Text_Display::add_letter_box(j_size_t i_index
 	new_letter_box->set_buffer_data(i_metrics, i_color, i_bitmap);
 
 	M_letter_box_string.insert(M_letter_box_string.begin() + i_index, new_letter_box);
+
+
+
 }
 
 void J_FT_Text_Display::set_letter_box_rectangle(j_size_t i_pos, const Pen_Pos_FL_t& i_pen_pos
@@ -465,6 +342,19 @@ void J_FT_Text_Display::insert_text_string(j_size_t i_pos, j_size_t i_size
 							   , utility_cont.begin(), utility_cont.end());
 
 
+}
+
+J_FT_Text_Display::~J_FT_Text_Display(){
+	glDeleteFramebuffers(1, &M_frame_buffer_id);
+	glDeleteRenderbuffers(1, &M_texture_buffer_id);
+}
+
+j_uint J_FT_Text_Display::x_pixels()const{
+	return ::jtl::x_pixels(s_contexts->get_active_window(), width());
+}
+
+j_uint J_FT_Text_Display::y_pixels()const{
+	return ::jtl::y_pixels(s_contexts->get_active_window(), height());
 }
 
 

@@ -7,7 +7,7 @@
 //Containers
 #include <array>
 #include <ex_array.h>
-#include "Letter_Box_String.h"
+
 #include <utility>
 //
 #include "../J_Font_Manager.h"
@@ -148,14 +148,20 @@ public:
 							, Bitmap_Metrics** i_metrics
 							, const J_UI_Color& i_color
 							, const j_ubyte* const * i_datas)override;
+	~J_FT_Text_Display();
 protected:
 	
 private:
 	//Render Settings
 	void clear();
 	void clear_from(j_size_t pos);
-
+	bool M_changed_flag = true;
 	ex_array<J_Display_Letter_Box_Shared_t> M_letter_box_string;
+	j_uint M_frame_buffer_id;
+	j_uint M_texture_buffer_id;
+	void render_frame_buffer()const;
+	j_uint x_pixels()const;
+	j_uint y_pixels()const;
 };
 
 

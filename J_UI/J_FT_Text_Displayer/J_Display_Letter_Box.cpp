@@ -93,6 +93,13 @@ void J_Display_Letter_Box::draw()const{
 	glUseProgram(0);
 }
 
+j_uint image_shader_program_id(){
+	j_uint program_id = s_image_shader->program_id();
+	assert(glIsProgram(program_id));
+	return program_id;
+}
+
+
 }
 
 

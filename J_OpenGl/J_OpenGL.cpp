@@ -18,9 +18,11 @@ using std::remove_if;
 #include <GLFW\glfw3.h>
 
 //Containers
+//
+#include <array>
 #include <string>
 
-using std::string; 
+using std::array;  using std::string;
 
 //IO Facilities 
 #include <fstream>
@@ -42,7 +44,11 @@ namespace chrono = std::chrono;
 
 static jtl::Instance_Pointer<jtl::Contexts_Handler> s_contexts_handler;
 
+
+
 namespace jomike{
+
+static void initialize_context(J_Context_Shared_t new_context);
 
 const int THREAD_WAIT_MS = 50;
 class J_Context{
@@ -51,11 +57,13 @@ public:
 	int M_width, M_height;
 	j_window_t M_window = nullptr;
 	GLEWContextStruct* M_context = nullptr;
+	j_uint M_screen_box_vao = 0;
 	~J_Context();
 
 };
 
 J_Context::~J_Context(){
+	glDeleteVertexArrays(1, &M_screen_box_vao);
 	delete M_context;
 	glfwDestroyWindow(M_window);
 }
@@ -158,7 +166,6 @@ void Contexts_Handler::move_main_context_to_here(){
 }
 
 
-
 J_Context_Shared_t Contexts_Handler::create_j_context(int i_width, int i_height
 													  , const char* const i_title
 													  , j_monitor_t i_monitor
@@ -195,9 +202,40 @@ J_Context_Shared_t Contexts_Handler::create_j_context(int i_width, int i_height
 	glEnable(GL_BLEND); 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	initialize_context(new_context);
+
+
 	return new_context;
 }
 
+void initialize_context(J_Context_Shared_t new_context){
+	std::array<j_float, 24> vertex_array_data = {
+		-1.0f, -1.0f, 0.0f, 1.0f
+		, 1.0f, -1.0f, 0.0f, 1.0f
+		, 1.0f, 1.0f, 0.0f, 1.0f
+		, -1.0f, 1.0f, 0.0f, 1.0f
+
+		, 0.0f, 0.0f
+		, 1.0f, 0.0f
+		, 1.0f, 1.0f
+		, 0.0f, 1.0f
+	};
+
+	j_uint vao_buffer_id;
+	glGenVertexArrays(1, &new_context->M_screen_box_vao);
+	glBindVertexArray(new_context->M_screen_box_vao);
+	glGenBuffers(1, &vao_buffer_id);
+	glBindBuffer(GL_ARRAY_BUFFER, vao_buffer_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_array_data)
+				 , vertex_array_data.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, nullptr);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, reinterpret_cast<void*>(sizeof(j_float)* 16));
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 j_window_t Contexts_Handler::get_window(J_Context_Shared_t i_context){
 	return i_context->M_window;
 }
@@ -276,6 +314,11 @@ void j_free_glfw(){
 j_float Contexts_Handler::ratio()const{
 	return static_cast<j_float>(M_active_context->M_width)/ M_active_context->M_height;
 }
+
+j_uint Contexts_Handler::screen_box_vao(){
+	return M_active_context->M_screen_box_vao;
+}
+
 void j_poll_events(){
 	glfwPollEvents();
 }
@@ -354,14 +397,28 @@ int get_x_res(J_Context_Shared_t i_context){
 int get_y_res(J_Context_Shared_t i_context){
 	return i_context->M_height;
 }
-
-
+j_uint x_uns_pixel(j_window_t i_window, j_dbl i_x_screen){
+	return safe_uns_cast(static_cast<int>((i_x_screen + 1.0f)*get_x_res(i_window) / 2.0f));
+}
+j_uint y_uns_pixel(j_window_t i_window, j_dbl i_y_screen){
+	return safe_uns_cast(static_cast<int>((1.0f - i_y_screen)*get_y_res(i_window) / 2.0f));
+}
 j_dbl get_x_pixel(j_window_t i_window, j_dbl i_x_screen){
 	return (i_x_screen + 1.0f)*get_x_res(i_window) / 2.0f;
 }
 j_dbl get_y_pixel(j_window_t i_window, j_dbl i_y_screen){
-	return -(i_y_screen - 1.0f)*get_y_res(i_window) / 2.0f;
+	return -(1.0f - i_y_screen)*get_y_res(i_window) / 2.0f;
 }
+
+j_uint x_pixels(j_window_t i_window, j_dbl i_x_screen){
+	return safe_uns_cast(static_cast<int>(i_x_screen / 2.0f*get_x_res(i_window)));
+}
+
+j_uint y_pixels(j_window_t i_window, j_dbl i_y_screen){
+	return safe_uns_cast(static_cast<int>(i_y_screen / 2.0f*get_y_res(i_window)));
+}
+
+
 /*j_float convert_x_coord(j_window_t, int)*/
 j_float convert_x_coord(j_window_t i_window, int i_x_pixel){
 	return -1.0f + to_x_screen(i_window, i_x_pixel);

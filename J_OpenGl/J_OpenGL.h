@@ -34,6 +34,7 @@ public:
 	static int get_width(J_Context_Shared_t);
 	static int get_height(J_Context_Shared_t);
 
+	j_uint screen_box_vao();
 	J_Context_Shared_t get_active_context();
 	j_context_t get_glew_context();
 	j_window_t get_active_window();
@@ -55,6 +56,7 @@ private:
 	j_context_t M_active_glew;
 	J_Context_Cont_t M_active_contexts;
 	J_Context_Cont_t M_contexts;
+
 
 };
 
@@ -116,6 +118,15 @@ j_float convert_y_coord(j_window_t, int i_y_pixel);
 
 j_dbl get_x_pixel(j_window_t i_window, j_dbl i_x_screen);
 j_dbl get_y_pixel(j_window_t i_window, j_dbl i_y_screen);
+
+j_uint x_uns_pixel(j_window_t i_window, j_dbl i_x_screen);
+j_uint y_uns_pixel(j_window_t i_window, j_dbl i_y_screen);
+
+j_uint x_pixels(j_window_t i_window, j_dbl i_x_screen);
+
+j_uint y_pixels(j_window_t i_window, j_dbl i_y_screen);
+
+
 
 j_float to_x_screen(j_window_t i_window, int i_x_pixel);
 j_float to_y_screen(j_window_t i_window, int i_y_pixel);

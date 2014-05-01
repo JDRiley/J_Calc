@@ -9,6 +9,8 @@
 
 namespace jomike{
 
+j_uint image_shader_program_id();
+
 class J_Display_Letter_Box : public J_Display_Box{
 public:
 	J_Display_Letter_Box(j_uint i_obj_id = 0);
@@ -16,6 +18,7 @@ public:
 	void set_image_box(const Pen_Pos_FL_t &i_pos, const Bitmap_Metrics &i_metrics);
 
 	void draw()const override;
+	void draw_to_frame_buffer(j_uint i_frame_buffer)const;
 	void set_buffer(const Pen_Pos_FL_t& i_pos, const Bitmap_Metrics& i_metrics
 					, const J_UI_Color& i_color, const j_ubyte* i_buffer);
 	void set_buffer_data(const Bitmap_Metrics& i_metrics, const J_UI_Color& i_color
