@@ -116,6 +116,8 @@ public:
 	J_FT_Text_Display(j_uint);
 	J_FT_Text_Display(j_uint i_object_id, j_uint i_id);
 
+	
+
 	//void add_font_face(J_Font_Face);
 
 	void add_letter_box(j_size_t i_index, const Pen_Pos_FL_t& i_pen_pos
@@ -156,7 +158,7 @@ private:
 	void clear();
 	void clear_from(j_size_t pos);
 	mutable bool M_changed_flag = true;
-	
+	void initialize_frame_buffer();
 	void alert_changed()const;
 	
 	class Modifier_Manger{

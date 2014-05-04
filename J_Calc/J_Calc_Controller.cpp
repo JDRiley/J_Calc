@@ -148,6 +148,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	add_update_fps_updater(update_fps_text_box);
 
 	s_calc_data->broadcast_current_state();
+	assert(!open_gl_error());
 }
 
 void J_Calc_Controller::initialize_font_faces(){

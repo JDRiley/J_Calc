@@ -126,24 +126,8 @@ J_FT_Text_Display_Object::~J_FT_Text_Display_Object(){
 
 J_FT_Text_Display::J_FT_Text_Display(j_uint i_obj_id) : J_FT_Text_Display_Object(i_obj_id)
 	, M_letter_box_string(bind(&J_FT_Text_Display::alert_changed, this)){
-	glGenFramebuffers(1, &M_frame_buffer_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, M_frame_buffer_id);
-	glGenTextures(1, &M_texture_buffer_id);
-	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
-	auto window = s_contexts->get_active_window();
-	j_uint width = get_x_res(window);
-	j_uint height = get_y_res(window);
+	initialize_frame_buffer();
 
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-	ex_array<j_ubyte> image_data(4 * width*height);
-
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width,  height, GL_RGBA
-					, GL_UNSIGNED_BYTE, image_data.data());
-	glFramebufferTexture2D(
-		GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, M_texture_buffer_id, 0);
-	
-
-	glBindTexture(GL_TEXTURE_2D, 0u);
 
 }
 
@@ -153,6 +137,10 @@ J_FT_Text_Display::J_FT_Text_Display(j_uint i_object_id, j_uint i_id)
 	:J_FT_Text_Display_Object(i_object_id, i_id)
 	, M_letter_box_string(bind(&J_FT_Text_Display::alert_changed, this)){
 	M_letter_box_string->set_front_buffer(0.0);
+
+	initialize_frame_buffer();
+
+
 }
 
 
@@ -177,15 +165,15 @@ void J_FT_Text_Display::clear_from(j_size_t i_pos){
 /*void J_FT_Text_Display::draw()const*/
 void J_FT_Text_Display::draw()const{
 	J_Display_Box::draw();
-
+	assert(!open_gl_error());
 	if(M_changed_flag){
 		render_frame_buffer();
 	}
 
 	assert(M_frame_buffer_id);
 
-	glBindFramebuffer(GL_DRAW_BUFFER, 0);
-
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	assert(!open_gl_error());
 	//j_uint dest_x1 = x_uns_pixel(window, x1());
 	//j_uint dest_x2 = x_uns_pixel(window, x2());
 
@@ -198,22 +186,31 @@ void J_FT_Text_Display::draw()const{
 
 
 	glUseProgram(image_shader_program_id());
-	glBindVertexArray(s_contexts->screen_box_vao());
+	assert(!open_gl_error());
 	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	assert(!open_gl_error());
+	glBindVertexArray(s_contexts->screen_box_vao());
+
+	assert(!open_gl_error());
+	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	assert(!open_gl_error());
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-
+	assert(!open_gl_error());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	assert(!open_gl_error());
 	glBindTexture(GL_TEXTURE_2D, 0);
+	assert(!open_gl_error());
 	glUseProgram(0);
+	assert(!open_gl_error());
 
-
+	assert(!open_gl_error());
 
 }
 
 void J_FT_Text_Display::render_frame_buffer()const{
 	j_uint prev_width = get_x_res(s_contexts->get_active_window());
 	j_uint prev_height = get_y_res(s_contexts->get_active_window());;
-
+	
 	
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, M_frame_buffer_id);
 	
@@ -270,6 +267,7 @@ void J_FT_Text_Display::render_frame_buffer()const{
 
 	glViewport(0, 0, prev_width, prev_height);
 	M_changed_flag = false;
+	assert(!open_gl_error());
 }
 
 
@@ -378,6 +376,27 @@ j_uint J_FT_Text_Display::y_pixels()const{
 
 void J_FT_Text_Display::alert_changed()const{
 	M_changed_flag = true;
+}
+
+void J_FT_Text_Display::initialize_frame_buffer(){
+	glGenFramebuffers(1, &M_frame_buffer_id);
+	glBindFramebuffer(GL_FRAMEBUFFER, M_frame_buffer_id);
+	glGenTextures(1, &M_texture_buffer_id);
+	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	auto window = s_contexts->get_active_window();
+	j_uint width = get_x_res(window);
+	j_uint height = get_y_res(window);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
+	ex_array<j_ubyte> image_data(4 * width*height, 0);
+
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA
+					, GL_UNSIGNED_BYTE, image_data.data());
+	glFramebufferTexture2D(
+		GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, M_texture_buffer_id, 0);
+
+
+	glBindTexture(GL_TEXTURE_2D, 0u);
 }
 
 

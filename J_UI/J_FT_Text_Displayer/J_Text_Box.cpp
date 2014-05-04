@@ -563,7 +563,7 @@ void J_Text_Box::notify_string_data()const{
 	for(auto& cur_string : M_multi_string){
 		J_Font_Face font_face = cur_string.font_face();
 		for(int i = 0; i < cur_string.size(); i++, index++){
-			auto& bitmap_metric
+			Bitmap_Metrics& bitmap_metric
 				= cur_string.font_face()->bitmap_metric(cur_string[i].charcode());
 
 			s_model->notify_letter_box_rectangle(get_ID(), index, M_pen_poses[index]

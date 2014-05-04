@@ -328,6 +328,7 @@ void J_View::draw()const{
 	draw_background();
 	for(auto f_obj : M_disp_objs){
 		f_obj->draw();
+		assert(!open_gl_error());
 	}
 
 	j_swap_buffers(M_context);

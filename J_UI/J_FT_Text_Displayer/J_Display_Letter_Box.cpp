@@ -45,9 +45,16 @@ Static_Image_Shader& Static_Image_Shader::get_instance(){
 static Instance_Pointer<Static_Image_Shader> s_image_shader;
 
 J_Display_Letter_Box
-	::J_Display_Letter_Box(j_uint i_obj_id):J_Display_Box(i_obj_id){}
+	::J_Display_Letter_Box(j_uint i_obj_id):J_Display_Box(i_obj_id), M_metric(0,0,0,0,0,0){
+	
+	glGenTextures(1, &M_texture_id);
+	glBindTexture(GL_TEXTURE_2D, M_texture_id);
+	assert(glIsTexture(M_texture_id));
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 void J_Display_Letter_Box::set_image_box(const Pen_Pos_FL_t &i_pos, const Bitmap_Metrics &i_metrics){
+	
 	auto window = s_contexts->get_active_window();
 	J_Rectangle rectangle;
 
@@ -59,20 +66,42 @@ void J_Display_Letter_Box::set_image_box(const Pen_Pos_FL_t &i_pos, const Bitmap
 }
 
 void J_Display_Letter_Box::set_buffer_data(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap){
-	ex_array<j_ubyte> colored_bitmap(convert_to_rgba32(i_width, i_height, i_color, i_bitmap));
+	M_colored_bitmap = convert_to_rgba32(i_width, i_height, i_color, i_bitmap);
 	
-	glUseProgram(s_image_shader->program_id());
+	assert(!open_gl_error());
 
-	glDeleteTextures(1, &M_texture_id);
-	glGenTextures(1, &M_texture_id);
-	glBindTexture(GL_TEXTURE_2D, M_texture_id);
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, i_width, i_height);
+	assert(M_texture_id);
+	
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, i_width, i_height, GL_RGBA
-					, GL_UNSIGNED_BYTE, colored_bitmap.data());
-	glUseProgram(0);
+	
+	assert(!open_gl_error());
+	assert(glIsTexture(M_texture_id));
+	
+	if((i_height != M_metric.height) || (i_width != M_metric.width)){
+		glDeleteTextures(1, &M_texture_id);
+		glGenTextures(1, &M_texture_id);
+		glBindTexture(GL_TEXTURE_2D, M_texture_id);
+		glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, i_width, i_height);
+		assert(!open_gl_error());
+		M_metric.height = i_height;
+		M_metric.width = i_width;
 
 
+	} else{
+		glBindTexture(GL_TEXTURE_2D, M_texture_id);
+	}
+
+	
+
+	if(i_height){
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, i_width, i_height, GL_RGBA
+						, GL_UNSIGNED_BYTE, M_colored_bitmap.data());
+	}
+	
+	assert(!open_gl_error());
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	assert(!open_gl_error());
 
 }
 
@@ -82,15 +111,20 @@ void J_Display_Letter_Box::set_buffer_data(const Bitmap_Metrics& i_metrics, cons
 
 void J_Display_Letter_Box::draw()const{
 	assert(glIsProgram(s_image_shader->program_id()));
-	glBindVertexArray(get_box_vao());
+	
 	glUseProgram(s_image_shader->program_id());
 
+	glBindVertexArray(get_box_vao());
 	glBindTexture(GL_TEXTURE_2D, M_texture_id);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
+}
+
+J_Display_Letter_Box::~J_Display_Letter_Box(){
+	glDeleteTextures(1, &M_texture_id);
 }
 
 j_uint image_shader_program_id(){

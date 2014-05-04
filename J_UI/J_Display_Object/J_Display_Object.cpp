@@ -104,6 +104,7 @@ void J_Display_Box::set_height(j_float i_height){
 j_uint J_Display_Box::get_box_vao()const{return M_box_vao_id;}
 
 void J_Display_Box::draw()const{
+	assert(!open_gl_error());
 	glBindVertexArray(M_box_vao_id);
 	if(fill_visibility_status()){
 		assert(glIsProgram(M_shader->box_program_id()));

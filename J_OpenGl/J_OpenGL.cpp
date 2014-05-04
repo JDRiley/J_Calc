@@ -10,7 +10,7 @@
 #include <functional>
 using std::bind;
 using std::mem_fn;
-using namespace std::placeholders;
+using namespace std::placeholders; using std::copy;
 using std::remove_if;
 
 //Libraries
@@ -20,14 +20,18 @@ using std::remove_if;
 //Containers
 //
 #include <array>
+//
+#include <j_map.h>
 #include <string>
 
 using std::array;  using std::string;
 
 //IO Facilities 
 #include <fstream>
+//
 #include <iostream>
-using std::cerr; using std::endl; using std::ifstream;
+
+using std::cerr; using std::cout; using std::endl;
 
 //Utilities
 #include <iterator>
@@ -35,7 +39,10 @@ using std::cerr; using std::endl; using std::ifstream;
 using std::accumulate;
 using std::istreambuf_iterator;
 using std::unique_ptr;
+using std::ostream_iterator;
 
+
+using std::to_string;
 #include <chrono>
 namespace chrono = std::chrono;
 #define BUFFER_OFFSET(x)  ((const void*) (x))
@@ -120,6 +127,7 @@ void Contexts_Handler::destroy(){
 
 
 j_window_t Contexts_Handler::get_active_window(){
+	assert(!open_gl_error());
 	return M_active_context->M_window;
 }
 
@@ -316,6 +324,7 @@ j_float Contexts_Handler::ratio()const{
 }
 
 j_uint Contexts_Handler::screen_box_vao(){
+	
 	return M_active_context->M_screen_box_vao;
 }
 
@@ -450,6 +459,50 @@ void j_set_cursor_pos(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
 	j_dbl x_pixel = get_x_pixel(i_window, i_x_pos);
 	j_dbl y_pixel = get_y_pixel(i_window, i_y_pos);
 	glfwSetCursorPos(i_window, x_pixel, y_pixel);
+}
+
+bool open_gl_error(){
+	ex_array<int> errors;
+
+	while(int error = glGetError()){
+		errors.push_back(error);
+	}
+
+	const j_map<int, string> sk_error_strings
+		= {
+		 {GL_INVALID_ENUM, "GL_INVALID_ENUM"}
+		, {GL_INVALID_VALUE, "GL_INVALID_VALUE"}
+		, {GL_INVALID_OPERATION, "GL_INVALID_OPERATION"}
+		, {GL_STACK_OVERFLOW, "GL_STACK_OVERFLOW"}
+		, {GL_STACK_UNDERFLOW, "GL_STACK_UNDERFLOW"}
+		, {GL_OUT_OF_MEMORY, "GL_OUT_OF_MEMORY"}
+		, {GL_INVALID_FRAMEBUFFER_OPERATION, "GL_INVALID_FRAMEBUFFER_OPERATION"}
+	};
+
+	if(!errors.empty()){
+
+
+		cout << "\nOpenGl Errors: \n";
+
+		transform(errors.begin(), errors.end(), ostream_iterator<string>(cout, ", ")
+			, [&](int y_error){
+				string num_string;
+				num_string.reserve(100);
+				num_string.append("(").append(to_string(y_error)).append(")").push_back(' ');
+				auto found_pos = sk_error_strings.find(y_error);
+				
+
+				if(sk_error_strings.end() == found_pos){
+					num_string += "Unnamed String";
+				} else{
+					num_string += *found_pos;
+				}
+				return num_string;
+		});
+		cout << endl;
+	}
+
+	return !errors.empty();
 }
 
 }

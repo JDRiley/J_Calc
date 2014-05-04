@@ -6,6 +6,8 @@
 #include "../J_Font_Manager.h"
 //
 #include "../J_Display_Object/J_Display_Object.h"
+//
+#include "../Bitmap_Metrics.h"
 
 namespace jomike{
 
@@ -25,8 +27,12 @@ public:
 						 , const j_ubyte* i_data);
 	
 	void set_buffer_data(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
+
+	~J_Display_Letter_Box();
 private:
 	j_uint M_texture_id = 0;
+	j_ubyte_arr_t M_colored_bitmap;
+	Bitmap_Metrics M_metric;
 };
 
 }
