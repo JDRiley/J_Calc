@@ -365,10 +365,13 @@
     <ClInclude Include="J_Frame_Counter.h" />
     <ClInclude Include="J_OpenGL.h" />
     <ClInclude Include="J_OpenGL_Fwd_Decl.h" />
+    <ClInclude Include="J_Open_GL.h" />
     <ClInclude Include="J_Shader_Program.h" />
+    <ClInclude Include="OpenGL_Enums.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_OpenGL.cpp" />
+    <ClCompile Include="J_Open_GL.cpp" />
     <ClCompile Include="J_Shader_Program.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,8 @@
 #include "../J_Font_Manager.h"
 //
 #include "J_Display_Letter_box.h" //Implement this here. something that'll hold each letter
-
+//
+#include <J_Open_GL.h>
 //Algorithms
 #include <algorithm>
 #include <functional>
@@ -41,13 +42,12 @@ using std::cerr; using std::endl;
 
 //Libraries
 
-//
-#include <gl\glew.h>
 
 //Utilities
 #include <cassert>
+//
 #include "../J_Display_Object/J_Display_Line.h"
-using std::mutex;
+
 using std::pair;
 
 using std::function;
@@ -58,6 +58,7 @@ using std::lock_guard;
 
 namespace jomike{
 static Instance_Pointer<Contexts_Handler> s_contexts;
+static J_Open_GL s_open_gl;
 
 class Modifier_Manger{
 	typedef ex_array<J_Display_Letter_Box_Shared_t> Arr_t;
@@ -173,7 +174,9 @@ void J_FT_Text_Display::draw()const{
 	assert(M_frame_buffer_id);
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	assert(!open_gl_error());
+
+
+
 	//j_uint dest_x1 = x_uns_pixel(window, x1());
 	//j_uint dest_x2 = x_uns_pixel(window, x2());
 
@@ -185,24 +188,23 @@ void J_FT_Text_Display::draw()const{
 	//	, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 
-	glUseProgram(image_shader_program_id());
-	assert(!open_gl_error());
-	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
-	assert(!open_gl_error());
-	glBindVertexArray(s_contexts->screen_box_vao());
+	s_open_gl.use_program(image_shader_program_id());
 
-	assert(!open_gl_error());
-	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
-	assert(!open_gl_error());
+	s_open_gl.bind_texture_2D(M_texture_buffer_id);
+
+	s_open_gl.bind_vertex_array(s_contexts->screen_box_vao());
+
+	s_open_gl.bind_texture_2D(M_texture_buffer_id);
+
+
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	assert(!open_gl_error());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	assert(!open_gl_error());
-	glBindTexture(GL_TEXTURE_2D, 0);
-	assert(!open_gl_error());
-	glUseProgram(0);
-	assert(!open_gl_error());
 
+	s_open_gl.bind_texture_2D(0);
+	
+	glUseProgram(0);
 	assert(!open_gl_error());
 
 }
