@@ -3,10 +3,15 @@
 
 
 #include "../J_UI/J_UI_Fwd_Decl.h"
+//
 #include <J_OpenGL_Fwd_Decl.h>
+//
 #include "J_Image/J_Image.h"
+//
 #include "J_UI_String/J_UI_String.h"
+//
 #include <j_tree.h>
+//
 #include <ex_array.h>
 //Containers
 #include <map>
@@ -32,9 +37,10 @@ public:
 	J_Context_Shared_t get_context();
 	j_window_t get_window()const;
 	virtual void add_display_line(j_uint i_line_id);
-	virtual void add_text_display(j_uint);
+	virtual void add_text_box(J_Text_Box_Shared_t i_text_box);
 	
-	virtual void add_display_box(j_uint);
+	virtual void add_ui_box(J_UI_Box_Shared_t i_ui_box);
+	virtual void add_ui_object(J_UI_Object_Shared_t);
 	virtual void add_image_pane(j_uint);
 	virtual void add_display_circle(j_uint);
 	virtual void add_multi_state_text_box(j_uint);
@@ -133,13 +139,11 @@ private:
 	j_int M_view_id;
 	J_Context_Shared_t M_context;
 
-	
-	static std::map<UI_Object_Types, void(J_View::*)(j_uint)> Ms_add_object_functions;
-	static std::map<UI_Object_Types, void(J_View::*)(j_uint)> Ms_remove_object_functions;
 
 	std::map<j_uint, J_Display_Object_Shared_t> M_disp_objs_by_id;
 	std::map<j_uint, J_Display_Box_Shared_t> M_disp_boxes;
-	std::map<j_uint, J_FT_Text_Display_Object_Shared_t> M_text_displays;
+	j_shared_ptr_tree<J_Text_Box> M_text_displays;
+
 	std::map<j_uint, J_Display_Image_Pane_Shared_t> M_image_panes;
 	std::map<j_uint, J_Display_Circle_Shared_t> M_display_circles;
 	std::map<j_uint, J_FT_Text_Multi_State_Display_Shared_t> M_multi_state_text_boxes;
@@ -148,9 +152,9 @@ private:
 	j_tree<J_Display_Object_Weak_t,J_Display_Object_Weak_t
 		, std::owner_less<J_Display_Object_Weak_t>> M_objects_using_cursor_data;
 
-	virtual void add_text_display(J_FT_Text_Display_Object_Shared_t);
-	virtual void add_display_object(J_Display_Object_Shared_t);
-	virtual void add_display_box(J_Display_Box_Shared_t);
+
+	
+	
 	virtual void add_display_circle(J_Display_Circle_Shared_t);
 	ex_array<J_Display_Object_Shared_t> M_disp_objs;
 	

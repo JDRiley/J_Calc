@@ -34,7 +34,7 @@ Static_Image_Shader::Static_Image_Shader():M_program_id(0){
 	glAttachShader(M_program_id, M_vert_shader_id);
 	glAttachShader(M_program_id, M_image_frag_id);
 	glLinkProgram(M_program_id);
-	enforce_program_status(M_program_id, GL_LINK_STATUS);
+	enforce_program_status(M_program_id, GL_Statuses::LINK_STATUS);
 }
 
 Static_Image_Shader& Static_Image_Shader::get_instance(){

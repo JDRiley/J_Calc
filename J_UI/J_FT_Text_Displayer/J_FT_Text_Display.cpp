@@ -92,24 +92,24 @@ private:
 };
 
 J_Text_Shader_Program::J_Text_Shader_Program(){
-	M_program_id = glCreateProgram();
+	M_program_id = s_open_gl.create_program();
 	
 	j_uint vert_shader_id = load_vertex_shader("Shaders/quad.vert");
 	j_uint frag_shader_id = load_fragment_shader("Shaders/quad_texture.frag");
 
-	glAttachShader(M_program_id, vert_shader_id);
-	glAttachShader(M_program_id, frag_shader_id);
-	glLinkProgram(M_program_id);
+	s_open_gl.attach_shader(M_program_id, vert_shader_id);
+	s_open_gl.attach_shader(M_program_id, frag_shader_id);
+	s_open_gl.link_program(M_program_id);
 
-	enforce_program_status(M_program_id, GL_LINK_STATUS);
+	enforce_program_status(M_program_id, GL_Statuses::LINK_STATUS);
 
-	M_cursor_program_id = glCreateProgram();
+	M_cursor_program_id = s_open_gl.create_program();
 	j_uint outline_shader_id = load_vertex_shader("Shaders/quad.vert");
 	j_uint outline_frag_shader_id = load_fragment_shader("Shaders/box_outline.frag");
 
-	glAttachShader(M_cursor_program_id, outline_shader_id);
-	glAttachShader(M_cursor_program_id, outline_frag_shader_id);
-	glLinkProgram(M_cursor_program_id);
+	s_open_gl.attach_shader(M_cursor_program_id, outline_shader_id);
+	s_open_gl.attach_shader(M_cursor_program_id, outline_frag_shader_id);
+	s_open_gl.link_program(M_cursor_program_id);
 
 	//cerr << "\n Shader Program ID: " << M_program_id << "*********************************************************";
 }
@@ -171,9 +171,9 @@ void J_FT_Text_Display::draw()const{
 		render_frame_buffer();
 	}
 
-	assert(M_frame_buffer_id);
+	assert(M_framebuffer.valid());
 
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object());
 
 
 
@@ -190,21 +190,21 @@ void J_FT_Text_Display::draw()const{
 
 	s_open_gl.use_program(image_shader_program_id());
 
-	s_open_gl.bind_texture_2D(M_texture_buffer_id);
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
 
 	s_open_gl.bind_vertex_array(s_contexts->screen_box_vao());
 
-	s_open_gl.bind_texture_2D(M_texture_buffer_id);
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
 
 
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	s_open_gl.draw_arrays(Array_Draw_Mode::TRIANGLE_FAN, 0, 4);
 	assert(!open_gl_error());
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, 0);
 	assert(!open_gl_error());
 
-	s_open_gl.bind_texture_2D(0);
+	s_open_gl.bind_texture_2D(J_GL_Texture::null_object());
 	
-	glUseProgram(0);
+	s_open_gl.use_program(0);
 	assert(!open_gl_error());
 
 }
@@ -214,7 +214,7 @@ void J_FT_Text_Display::render_frame_buffer()const{
 	j_uint prev_height = get_y_res(s_contexts->get_active_window());;
 	
 	
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, M_frame_buffer_id);
+	s_open_gl.bind_draw_framebuffer(M_framebuffer);
 	
 	//
 	//j_uint x_size = x_pixels();
@@ -223,8 +223,8 @@ void J_FT_Text_Display::render_frame_buffer()const{
 	//assert(y_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
 	//assert(x_size < A_TOO_LARGE_NUMBER_OF_PIXELS);
 
-	glViewport(0, 0, prev_width, prev_height);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	s_open_gl.viewport(0, 0, prev_width, prev_height);
+	s_open_gl.set_clear_color(0.0f, 0.0f, 0.0f, 0.0f);
 	j_clear();
 
 	
@@ -265,9 +265,9 @@ void J_FT_Text_Display::render_frame_buffer()const{
 		(*start_view_pos++)->draw();
 	}
 	
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object()); 
 
-	glViewport(0, 0, prev_width, prev_height);
+	s_open_gl.viewport(0, 0, prev_width, prev_height);
 	M_changed_flag = false;
 	assert(!open_gl_error());
 }
@@ -363,10 +363,7 @@ void J_FT_Text_Display::insert_text_string(j_size_t i_pos, j_size_t i_size
 
 }
 
-J_FT_Text_Display::~J_FT_Text_Display(){
-	glDeleteFramebuffers(1, &M_frame_buffer_id);
-	glDeleteRenderbuffers(1, &M_texture_buffer_id);
-}
+
 
 j_uint J_FT_Text_Display::x_pixels()const{
 	return ::jtl::x_pixels(s_contexts->get_active_window(), width());
@@ -381,24 +378,32 @@ void J_FT_Text_Display::alert_changed()const{
 }
 
 void J_FT_Text_Display::initialize_frame_buffer(){
-	glGenFramebuffers(1, &M_frame_buffer_id);
-	glBindFramebuffer(GL_FRAMEBUFFER, M_frame_buffer_id);
-	glGenTextures(1, &M_texture_buffer_id);
-	glBindTexture(GL_TEXTURE_2D, M_texture_buffer_id);
+	s_open_gl.bind_framebuffer(M_framebuffer);
+
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
 	auto window = s_contexts->get_active_window();
 	j_uint width = get_x_res(window);
 	j_uint height = get_y_res(window);
 
-	glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-	ex_array<j_ubyte> image_data(4 * width*height, 0);
+	s_open_gl.tex_storage_2D(
+		Texture_Target::TEXTURE_2D, 1
+		, GL_Sized_Internal_Formats::RGB8, width, height);
 
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA
-					, GL_UNSIGNED_BYTE, image_data.data());
-	glFramebufferTexture2D(
-		GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, M_texture_buffer_id, 0);
+	{
+		const ex_array<j_ubyte> image_data(4 * width*height, 0);
+
+		s_open_gl.tex_sub_image_2D_ubyte(
+			Texture_Target::TEXTURE_2D, 0, 0, 0, width, height
+			, GL_Pixel_Formats::RGBA, image_data.data());
+	}
 
 
-	glBindTexture(GL_TEXTURE_2D, 0u);
+	s_open_gl.attach_draw_framebuffer_texture_2D(
+		GL_Attachment_Points::COLOR_ATTACHMENT0
+		, Texture_Target::TEXTURE_2D, M_texture_render_buffer, 0);
+
+
+	s_open_gl.bind_texture_2D(J_GL_Texture::null_object());
 }
 
 

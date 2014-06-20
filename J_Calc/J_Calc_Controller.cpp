@@ -96,7 +96,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 		, J_UI_String(M_input_font_face, J_CYAN))
 	);
 
-	add_math_text_box(main_text_box_ptr, M_main_view);
+	M_main_view->add_text_box(main_text_box_ptr);
 	main_text_box_ptr->enable_blinking_cursor();
 	main_text_box_ptr->set_clickable_status(true);
 	main_text_box_ptr->set_read_only_status(false);
@@ -111,7 +111,8 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 			, J_UI_String("Cursor Box", M_log_font_face, J_WHITE))
 		);
 
-	add_text_box_object(cursor_pos_box, M_main_view);
+	M_main_view->add_text_box(cursor_pos_box);
+
 	cursor_pos_box->set_outline_and_fill_visibility_status(true);
 	cursor_pos_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 	add_cursor_pos_text_updater(cursor_pos_box, M_main_view);
@@ -120,7 +121,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 			, J_UI_String("Normal Mode", M_log_font_face, J_WHITE))
 		);
 
-	add_text_box_object(mode_text_box, M_main_view);
+	M_main_view->add_text_box(mode_text_box);
 	mode_text_box->set_outline_and_fill_visibility_status(true);
 	mode_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
@@ -129,7 +130,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 		, J_UI_String("Draw FPS", M_log_font_face, J_WHITE))
 		);
 
-	add_text_box_object(draw_fps_text_box, M_main_view);
+	M_main_view->add_text_box(draw_fps_text_box);
 	draw_fps_text_box->set_outline_and_fill_visibility_status(true);
 	draw_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
@@ -141,7 +142,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 		, J_UI_String("Update FPS", M_log_font_face, J_WHITE))
 		);
 
-	add_text_box_object(update_fps_text_box, M_main_view);
+	M_main_view->add_text_box(update_fps_text_box);
 	update_fps_text_box->set_outline_and_fill_visibility_status(true);
 	update_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
@@ -246,11 +247,7 @@ void J_Calc_Controller::clear_all(){
 
 }
 
-void J_Calc_Controller::add_math_text_box(Math_Input_Box_Shared_t i_math_box
-	, J_View_Shared_t i_view){
-	i_view->add_text_display(i_math_box->get_ID());
-	s_calc_data->add_math_text_box(i_math_box);
-}
+
 
 void J_Calc_Controller::derived_init(int , char** ){
 	auto window = M_main_view->get_window();

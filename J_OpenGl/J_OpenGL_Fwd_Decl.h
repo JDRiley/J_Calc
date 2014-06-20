@@ -11,8 +11,15 @@ typedef struct GLFWwindow* j_window_t;
 
 
 namespace jomike{
+
 J_FWD_DECL(J_Context)
+J_FWD_DECL(J_Open_GL)
 J_FWD_DECL(J_Frame_Counter)
+J_FWD_DECL(J_GL_Texture)
+J_FWD_DECL(J_GL_Object)
+J_FWD_DECL(J_GL_Texture_Render_Buffer)
+J_FWD_DECL(J_GL_Vertex_Array)
+J_FWD_DECL(J_GL_Framebuffer)
 }
 
 

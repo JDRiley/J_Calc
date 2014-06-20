@@ -8,6 +8,7 @@
 #include <J_Utile.h> //For Instance Pointer
 
 #include <J_Image.h>
+//
 #include <j_tree.h>
 
 namespace jomike{
@@ -34,7 +35,7 @@ public:
 	static int get_width(J_Context_Shared_t);
 	static int get_height(J_Context_Shared_t);
 
-	j_uint screen_box_vao();
+	const J_GL_Vertex_Array screen_box_vao();
 	J_Context_Shared_t get_active_context();
 	j_context_t get_glew_context();
 	j_window_t get_active_window();

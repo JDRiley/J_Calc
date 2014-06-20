@@ -27,7 +27,7 @@ Static_Text_Shader_Program::Static_Text_Shader_Program(){
 	glAttachShader(M_program_id, outline_shader_id);
 	glAttachShader(M_program_id, outline_frag_shader_id);
 	glLinkProgram(M_program_id);
-	enforce_program_status(M_program_id, GL_LINK_STATUS);
+	enforce_program_status(M_program_id, GL_Statuses::LINK_STATUS);
 	//cerr << "\n Shader Program ID: " << M_program_id << "*********************************************************";
 }
 

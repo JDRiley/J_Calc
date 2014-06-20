@@ -321,12 +321,7 @@ void J_UI_Controller::defocus_active_object(j_window_t i_window){
 	found_obj->second.lock()->set_focus_status(false);
 }
 
-void J_UI_Controller::add_text_box_object(J_Text_Box_Object_Shared_t i_text_box_object
-	, J_View_Shared_t i_view){
-	s_model->add_text_box_object(i_text_box_object);
-	i_view->add_text_display(i_text_box_object->get_ID());
 
-}
 
 void J_UI_Controller::resize_cmd(j_window_t i_window, int i_width, int i_height){
 	auto found_view_pos = M_j_views.find(i_window);

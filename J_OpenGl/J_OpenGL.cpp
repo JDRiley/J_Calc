@@ -3,6 +3,10 @@
 #include "J_Frame_Counter.h"
 //
 #include <J_String.h>
+//
+#include "J_GL_Objects.h"
+//
+#include "J_Open_GL.h"
 
 #define  J_GL_DEBUG 1
 #define PRINT_SHADER_SOURCE 0
@@ -56,7 +60,7 @@ static jtl::Instance_Pointer<jtl::Contexts_Handler> s_contexts_handler;
 namespace jomike{
 
 static void initialize_context(J_Context_Shared_t new_context);
-
+static J_Open_GL s_open_gl;
 const int THREAD_WAIT_MS = 50;
 class J_Context{
 public:
@@ -64,13 +68,13 @@ public:
 	int M_width, M_height;
 	j_window_t M_window = nullptr;
 	GLEWContextStruct* M_context = nullptr;
-	j_uint M_screen_box_vao = 0;
+	J_GL_Vertex_Array M_screen_box_vao;
 	~J_Context();
 
 };
 
 J_Context::~J_Context(){
-	glDeleteVertexArrays(1, &M_screen_box_vao);
+
 	delete M_context;
 	glfwDestroyWindow(M_window);
 }
@@ -230,8 +234,8 @@ void initialize_context(J_Context_Shared_t new_context){
 	};
 
 	j_uint vao_buffer_id;
-	glGenVertexArrays(1, &new_context->M_screen_box_vao);
-	glBindVertexArray(new_context->M_screen_box_vao);
+
+	s_open_gl.bind_vertex_array(new_context->M_screen_box_vao);
 	glGenBuffers(1, &vao_buffer_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vao_buffer_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_array_data)
@@ -323,7 +327,7 @@ j_float Contexts_Handler::ratio()const{
 	return static_cast<j_float>(M_active_context->M_width)/ M_active_context->M_height;
 }
 
-j_uint Contexts_Handler::screen_box_vao(){
+const J_GL_Vertex_Array Contexts_Handler::screen_box_vao(){
 	
 	return M_active_context->M_screen_box_vao;
 }

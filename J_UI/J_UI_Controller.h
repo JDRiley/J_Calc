@@ -18,7 +18,7 @@ public:
 	virtual void notify_text_box_press(J_View_Shared_t, j_uint text_obj_id, j_size_t cursor_index);
 	
 
-	virtual void add_text_box_object(J_Text_Box_Object_Shared_t, J_View_Shared_t);
+	
 	virtual void notify_cursor_pos(j_uint i_obj_id, Pen_Pos_FL_t i_pos);
 	virtual void char_input_cmd(j_window_t, int);
 	virtual void key_input_cmd(j_window_t, int charcode, int, int, int);

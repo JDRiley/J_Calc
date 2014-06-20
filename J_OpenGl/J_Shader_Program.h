@@ -3,6 +3,8 @@
 
 #include "J_OpenGL_Fwd_Decl.h"
 //
+#include "OpenGL_Enums.h"
+//
 #include <J_Image.h>
 //
 #include <string>
@@ -39,13 +41,13 @@ j_uint load_tessellation_evaluation_shader(const std::string&);
 /*
 Checks the given status of the given shader. Throws exception and prints on failure
 */
-void enforce_shader_status(j_uint shader_id, j_uint i_status);
+void enforce_shader_status(j_uint shader_id, GL_Statuses i_status);
 
 /*void enforce_program_status(GLenum)*/
 /*
 Checks the given status of the given shader. Throws exception and prints on failure
 */
-void enforce_program_status(j_uint program_id, j_uint i_status);
+void enforce_program_status(j_uint program_id, GL_Statuses i_status);
 
 
 

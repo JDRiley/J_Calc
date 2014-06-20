@@ -14,8 +14,16 @@ class j_tree_Tester;
 #define J_TREE_ITERATOR typename j_tree<St, Key, Comp_t, Alloc_t>::iterator
 #define J_TREE_CONST_ITERATOR typename j_tree<St, Key, Comp_t, Alloc_t>::const_iterator
 
-template<typename St, typename Key = St
-	, typename Comp_t = std::less<St>, typename Alloc_t = std::allocator<St>>
+template < typename St, typename Key = St
+	, typename Comp_t = std::less<St>, typename Alloc_t = std::allocator < St >>
+class j_tree;
+
+template<typename St>
+using j_shared_ptr_tree
+= j_tree<std::shared_ptr<St>, std::shared_ptr<St>, std::owner_less<std::shared_ptr<St>>>;
+
+
+template<typename St, typename Key, typename Comp_t, typename Alloc_t>
 class j_tree{
 private:
 	typedef J_RB_Tree<St, Key, Comp_t, Alloc_t> Base_Tree_t;

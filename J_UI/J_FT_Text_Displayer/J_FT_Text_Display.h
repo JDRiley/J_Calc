@@ -1,6 +1,9 @@
 #ifndef J_FT_TEXT_DISPLAY_H
 #define J_FT_TEXT_DISPLAY_H
 #include <J_Error.h>
+//
+#include <J_GL_Objects.h>
+//
 #include <J_Image.h>
 #include "../J_Display_Object/J_Display_Object.h"
 #include "../J_UI_String/J_UI_String.h"
@@ -189,8 +192,8 @@ private:
 		std::function<void()> M_notification_function;
 	};
 	Modifier_Manger M_letter_box_string;
-	j_uint M_frame_buffer_id;
-	j_uint M_texture_buffer_id;
+	J_GL_Framebuffer M_framebuffer;
+	J_GL_Texture_Render_Buffer M_texture_render_buffer;
 	void render_frame_buffer()const;
 	j_uint x_pixels()const;
 	j_uint y_pixels()const;

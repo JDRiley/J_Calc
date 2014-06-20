@@ -4,7 +4,7 @@
 //
 #include <J_OpenGl.h>
 //
-#include "J_FT_Text_Displayer\J_FT_Text_Display.h"
+#include "J_FT_Text_Displayer\J_Text_Box.h"
 //
 #include "J_Display_Object\J_Display_Object.h"
 //
@@ -54,25 +54,6 @@ static Instance_Pointer<Contexts_Handler> s_contexts;
 static Instance_Pointer<J_UI_Controller> s_controller;
 J_Context_Shared_t J_View::get_context(){return M_context;}
 
-map<UI_Object_Types, void(J_View::*)(j_uint)> J_View::Ms_add_object_functions
-	= {
-		{UI_Object_Types::Box, &J_View::add_display_box}
-		, {UI_Object_Types::Circle, &J_View::add_display_circle}
-		, {UI_Object_Types::Image_Pane, &J_View::add_image_pane}
-		, {UI_Object_Types::Text_Box_Object, &J_View::add_text_display}
-		, {UI_Object_Types::Line, &J_View::add_display_line}
-		, {UI_Object_Types::Multi_State_Text_Box, &J_View::add_multi_state_text_box}
-	};
-map<UI_Object_Types, void(J_View::*)(j_uint)> J_View::Ms_remove_object_functions
-	= {
-		{UI_Object_Types::Box, &J_View::remove_display_box}
-		, {UI_Object_Types::Circle, &J_View::remove_display_circle}
-		, {UI_Object_Types::Image_Pane, &J_View::remove_image_pane}
-		, {UI_Object_Types::Line, &J_View::remove_display_line}
-		, {UI_Object_Types::Text_Box_Object, &J_View::remove_text_display}
-		, {UI_Object_Types::Multi_State_Text_Box, &J_View::remove_multi_state_text_box}
-	};
-
 
 /*void make_active_context()*/
 void J_View::make_active_context()const{
@@ -121,25 +102,25 @@ J_View::J_View(int i_width, int i_height, const char* i_title
 }
 
 void J_View::add_display_object(J_Display_Object_Shared_t i_disp_obj_ptr){
-	if(M_disp_objs_by_id.count(i_disp_obj_ptr->get_object_ID())){
+	if(M_disp_objs_by_id.count(i_disp_obj_ptr->get_ID())){
 		throw(J_Error("Display Object with this ID already found"));
 	}
 
 	M_disp_objs.push_back(i_disp_obj_ptr);
-	M_disp_objs_by_id[i_disp_obj_ptr->get_object_ID()] = i_disp_obj_ptr;
+	M_disp_objs_by_id[i_disp_obj_ptr->get_ID()] = i_disp_obj_ptr;
 	assert(M_disp_objs.size() == safe_cast<j_size_t>(M_disp_objs_by_id.size()));
 }
 
 /*void add_text_display(j_uint, J_FT_Text_Display_Shared_t)*/
-void J_View::add_text_display(j_uint i_text_box_id){
+void J_View::add_text_box(J_Text_Box_Shared_t i_text_box){
 	Context_RAII context_saver;
 	make_active_context();
-	if(M_text_displays.count(i_text_box_id)){
+	if(M_text_displays.count(i_text_box)){
 		throw J_Argument_Error("View Already Has Text Box With This ID");
 	}
-	J_FT_Text_Display_Shared_t new_text_display(new J_FT_Text_Display(i_text_box_id));
-	add_display_box(new_text_display);
-	M_text_displays[i_text_box_id] = new_text_display;
+
+	add_ui_box(i_text_box);
+	M_text_displays.insert(i_text_box);
 }
 
 void J_View::add_image_pane(j_uint i_image_pane_id){
@@ -147,11 +128,11 @@ void J_View::add_image_pane(j_uint i_image_pane_id){
 		throw J_Argument_Error("View Already Has Image Box With This ID");
 	}
 	J_Display_Image_Pane_Shared_t new_image_pane(new J_Display_Image_Pane(i_image_pane_id));
-	add_display_box(new_image_pane);
+	add_ui_box(new_image_pane);
 	M_image_panes[i_image_pane_id] = new_image_pane;
 }
 
-void J_View::add_display_box(j_uint i_display_box_id){
+void J_View::add_ui_box(j_uint i_display_box_id){
 	if(M_disp_boxes.count(i_display_box_id)){
 		throw J_Argument_Error("View Already Has Text Box With This ID");
 	}
@@ -161,21 +142,15 @@ void J_View::add_display_box(j_uint i_display_box_id){
 	M_disp_boxes[i_display_box_id] = new_display_box;
 }
 
-void J_View::add_display_box(J_Display_Box_Shared_t i_display_box){
-	if(M_disp_boxes.count(i_display_box->get_object_ID())){
+void J_View::add_ui_box(J_UI_Box_Shared_t i_ui_box){
+	if(M_disp_boxes.count(i_ui_box->get_ID())){
 		throw J_Argument_Error("View Already Has Text Box With This ID");
 	}
-	add_display_object(i_display_box);
-	M_disp_boxes[i_display_box->get_object_ID()] = i_display_box;
+	add_display_object(i_ui_box);
+	M_disp_boxes[i_ui_box->get_ID()] = i_ui_box;
 }
 
-void J_View::add_text_display(J_FT_Text_Display_Object_Shared_t i_text_box){
-	if(M_text_displays.count(i_text_box->get_object_ID())){
-		throw J_Argument_Error("View Already Has Text Box With This ID");
-	}
-	add_display_box(i_text_box);
-	M_text_displays[i_text_box->get_object_ID()] = i_text_box;
-}
+
 
 void J_View::add_display_circle(j_uint i_display_circle_id){
 	if (M_display_circles.count(i_display_circle_id)){
@@ -188,11 +163,11 @@ void J_View::add_display_circle(j_uint i_display_circle_id){
 }
 
 void J_View::add_display_circle(J_Display_Circle_Shared_t i_display_circle){
-	if (M_display_circles.count(i_display_circle->get_object_ID())){
+	if (M_display_circles.count(i_display_circle->get_ID())){
 		throw J_Argument_Error("View Already Has Text Box With This ID");
 	}
 	add_display_object(i_display_circle);
-	M_display_circles[i_display_circle->get_object_ID()] = i_display_circle;
+	M_display_circles[i_display_circle->get_ID()] = i_display_circle;
 }
 
 void J_View::add_multi_state_text_box(j_uint i_multi_state_text_id){
@@ -204,7 +179,7 @@ void J_View::add_multi_state_text_box(j_uint i_multi_state_text_id){
 		new J_FT_Text_Multi_State_Display(i_multi_state_text_id)
 		);
 
-	add_text_display(new_text_display);
+	add_text_box(new_text_display);
 	M_multi_state_text_boxes[i_multi_state_text_id] = new_text_display;
 }
 
@@ -245,7 +220,7 @@ j_uint J_View::mouse_button_press(J_View_Shared_t i_view, int i_button, int i_mo
 		s_controller->notify_object_press(shared_from_this(), 0u, i_button, i_modifiers, i_pos);
 		return 0;
 	}
-	s_controller->notify_object_press(shared_from_this(), disp_obj_ptr->get_object_ID()
+	s_controller->notify_object_press(shared_from_this(), disp_obj_ptr->get_ID()
 									  , i_button, i_modifiers, i_pos);
 
 	switch(i_button){
@@ -267,7 +242,7 @@ j_uint J_View::mouse_button_press_n(J_View_Shared_t i_view, int i_button
 		s_controller->notify_object_press_n(shared_from_this(), 0u, i_button, i_modifiers, i_pos, i_count);
 		return 0;
 	}
-	s_controller->notify_object_press_n(shared_from_this(), disp_obj_ptr->get_object_ID()
+	s_controller->notify_object_press_n(shared_from_this(), disp_obj_ptr->get_ID()
 									  , i_button, i_modifiers, i_pos, i_count);
 
 	switch(i_button){
@@ -364,7 +339,7 @@ void J_View::set_cursor_pos(int i_x, int i_y){
 			continue;
 		}
 
-		s_controller->notify_cursor_pos(cursor_pos_objects.lock()->get_object_ID()
+		s_controller->notify_cursor_pos(cursor_pos_objects.lock()->get_ID()
 										, M_cursor_pos);
 	}
 
@@ -610,7 +585,7 @@ void J_View::remove_display_object(j_uint i_obj_id){
 	j_size_t prev_size = M_disp_objs.size();
 #endif // _DEBUG
 	M_disp_objs.remove_if([i_obj_id](J_Display_Object_Shared_t i_obj){
-		return i_obj->get_object_ID() == i_obj_id;
+		return i_obj->get_ID() == i_obj_id;
 	});
 
 #ifdef _DEBUG

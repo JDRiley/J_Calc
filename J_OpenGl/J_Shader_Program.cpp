@@ -1,8 +1,10 @@
 #include "J_Shader_Program.h"
+//
 #include <J_String.h>
 //Libraries
 #include <GL\glew.h>
-
+//
+#include "J_Open_GL.h"
 //Utilities
 #include <cassert>
 
@@ -13,7 +15,7 @@ namespace jomike{
 //J_GL_Shader_Program Functions *************************************************************
 
 
-
+static J_Open_GL s_open_gl;
 J_GL_Box_Shader::J_GL_Box_Shader(){
 	j_uint vert_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");
 	j_uint box_frag_id  = load_fragment_shader(SHADER_BASE_PATH + "box.frag");
@@ -23,13 +25,13 @@ J_GL_Box_Shader::J_GL_Box_Shader(){
 	glAttachShader(M_box_prog_id, vert_shader_id);
 	glAttachShader(M_box_prog_id, box_frag_id);
 	glLinkProgram(M_box_prog_id);
-	enforce_program_status(M_box_prog_id, GL_LINK_STATUS);
+	enforce_program_status(M_box_prog_id, GL_Statuses::LINK_STATUS);
 
 	M_outline_prog_id = glCreateProgram();
 	glAttachShader(M_outline_prog_id, vert_shader_id);
 	glAttachShader(M_outline_prog_id, outline_frag_id);
 	glLinkProgram(M_outline_prog_id);
-	enforce_program_status(M_outline_prog_id, GL_LINK_STATUS);
+	enforce_program_status(M_outline_prog_id, GL_Statuses::LINK_STATUS);
 }
 
 void J_GL_Box_Shader::set_fill_color(J_Color_RGBA<j_float> i_color){
@@ -65,7 +67,7 @@ Image_Shader_Program::Image_Shader_Program(Image_Format i_format):M_image_progra
 	glAttachShader(M_image_program_id, M_vert_shader_id);
 	glAttachShader(M_image_program_id, M_image_frag_id);
 	glLinkProgram(M_image_program_id);
-	enforce_program_status(M_image_program_id, GL_LINK_STATUS);
+	enforce_program_status(M_image_program_id, GL_Statuses::LINK_STATUS);
 }
 
 j_uint Image_Shader_Program::image_program_id()const{
@@ -82,7 +84,7 @@ void Image_Shader_Program::set_format(Image_Format i_format){
 	M_image_frag_id = load_fragment_shader(SHADER_BASE_PATH + get_image_shader_name(M_format));
 	glAttachShader(M_image_program_id, M_image_frag_id);
 	glLinkProgram(M_image_program_id);
-	enforce_program_status(M_image_program_id, GL_LINK_STATUS);
+	enforce_program_status(M_image_program_id, GL_Statuses::LINK_STATUS);
 }
 
 void Image_Shader_Program::set_middle_line_color(J_UI_Color i_color){
@@ -108,13 +110,13 @@ J_GL_Circle_Shader::J_GL_Circle_Shader(){
 	glAttachShader(M_circle_fill_prog_id, vert_shader_id);
 	glAttachShader(M_circle_fill_prog_id, fill_frag_id);
 	glLinkProgram(M_circle_fill_prog_id);
-	enforce_program_status(M_circle_fill_prog_id, GL_LINK_STATUS);
+	enforce_program_status(M_circle_fill_prog_id, GL_Statuses::LINK_STATUS);
 
 	M_circle_outine_prog_id = glCreateProgram();
 	glAttachShader(M_circle_outine_prog_id, vert_shader_id);
 	glAttachShader(M_circle_outine_prog_id, outline_frag_id);
 	glLinkProgram(M_circle_outine_prog_id);
-	enforce_program_status(M_circle_outine_prog_id, GL_LINK_STATUS);
+	enforce_program_status(M_circle_outine_prog_id, GL_Statuses::LINK_STATUS);
 }
 
 
@@ -237,9 +239,11 @@ void enforce_shader_status(j_uint i_shader_id, GLenum i_status){
 }
 
 /*void enforce_program_status(j_uint, GLenum)*/
-void enforce_program_status(j_uint i_program_id, GLenum i_status){
-	GLint program_status;
-	glGetProgramiv(i_program_id, i_status, &program_status);
+void enforce_program_status(j_uint i_program_id, GL_Statuses i_status){
+	GLint program_status = s_open_gl.get_program_info(i_program_id, i_status);
+
+
+	
 
 	if(program_status){
 		return;

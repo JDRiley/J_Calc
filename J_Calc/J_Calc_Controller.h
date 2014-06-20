@@ -67,7 +67,6 @@ private:
 	bool M_continue_flag;
 	void end_execute();
 
-	void add_math_text_box(Math_Input_Box_Shared_t, J_View_Shared_t);
 
 	J_Calc_View_Shared_t M_main_view;
 	void remove_view(j_window_t);
