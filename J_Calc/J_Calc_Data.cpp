@@ -71,10 +71,6 @@ GCD_Symbol* GCD_Symbol::move_copy(){
 
 static void init_reserve_keywords(j_tree<J_UI_String>*);
 
-J_UI_Model& J_UI_Model::get_instance(){
-	Instance_Pointer<J_Calc_Data> calc_data_ptr;
-	return *calc_data_ptr;
-}
 
 J_Calc_Data::J_Calc_Data(){
 	init_reserve_keywords(&M_reserved_words);
@@ -98,12 +94,8 @@ J_Calc_Data& J_Calc_Data::get_instance(){
 	return j_calc_data;
 }
 
-void J_Calc_Data::attach_view(J_View_Shared_t i_new_view){
-	auto view = dynamic_pointer_cast<J_Calc_View>(i_new_view);
-	assert(view);
-
-	J_UI_Model::attach_view(i_new_view);
-	bool inserted = M_calc_views.insert(view).second;
+void J_Calc_Data::attach_view(J_Calc_View_Shared_t i_new_view){
+	bool inserted = M_calc_views.insert(i_new_view).second;
 
 	if(!inserted){
 		throw J_Argument_Error("View Already A Member of J_Calc_Data");
@@ -121,14 +113,7 @@ void J_Calc_Data::add_user_symbol(j_symbol* i_symbol_ptr){
 
 }
 
-/*j_uint J_Calc_Data::add_math_text_box(a bunch of args)*/
-void J_Calc_Data::add_math_text_box(Math_Input_Box_Shared_t i_math_box){
 
-	assert(!M_math_input_boxes.count(i_math_box->get_ID()));
-	M_math_input_boxes[i_math_box->get_ID()] = i_math_box;
-
-	add_text_box_object(i_math_box);
-}
 
 static Instance_Pointer<J_Calc_Data> s_calc_data;
 bool is_reserved_symbol(const J_UI_String& irk_src){
@@ -200,29 +185,17 @@ bool J_Calc_Data::symbol_name_availability_status(const J_UI_String& irk_string)
 J_Calc_Data::~J_Calc_Data(){clear_data();}
 
 void J_Calc_Data::clear_data(){
-	J_UI_Model::clear_data();
-
-	Calc_J_View_Cont_t().swap(M_calc_views);
-	Math_Input_Box_Cont_t().swap(M_math_input_boxes);
-	j_tree<J_UI_String>().swap(M_reserved_words);
-
-
-	for(auto f_reserve_symbol : M_reserved_symbols){
-		delete f_reserve_symbol;
-	}
+	M_calc_views.clear();
 
 	for(auto f_user_symbol : M_user_symbols){
 		delete f_user_symbol;
 	}
 
-	Symbol_Map_t().swap(M_reserved_symbols);
-	Symbol_Map_t().swap(M_user_symbols);
+	M_user_symbols.clear();
 }
 
-void J_Calc_Data::remove_view(J_View_Shared_t i_view){
-	J_Calc_View_Shared_t calc_view = dynamic_pointer_cast<J_Calc_View>(i_view);
-	assert(calc_view);
-	M_calc_views.erase(calc_view);
+void J_Calc_Data::remove_view(J_Calc_View_Shared_t i_view){
+	M_calc_views.erase(i_view);
 }
 
 void J_Calc_Data::init_reserved_symbols(){

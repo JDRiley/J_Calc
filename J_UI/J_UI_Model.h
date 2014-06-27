@@ -16,7 +16,7 @@
 //Utilities
 #include <memory>
 
-
+#error deprecated
 
 namespace jomike{
 

@@ -91,7 +91,7 @@ void J_UI_Controller::char_input_cmd(j_window_t i_window, int i_charcode){
 	if(M_active_ui_objs[M_j_views[i_window]].expired()){
 		return;
 	}
-	M_active_ui_objs[M_j_views[i_window]].lock()->char_input_cmd(i_window, i_charcode);
+	M_j_views[i_window]->char_input_cmd(i_charcode);
 }
 
 void J_UI_Controller::key_input_cmd(j_window_t i_window, int i_key, int i_scancode, int i_action, int i_modifiers){

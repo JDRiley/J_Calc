@@ -1,8 +1,6 @@
 #include "J_Text_Box.h"
 //
-#include "../J_UI_Model.h"
-//
-#include "../../J_Utile/J_Utile.h"
+#include <J_Utile.h>
 //Algorithms
 #include <algorithm>
 //
@@ -17,11 +15,22 @@
 #include <J_OpenGL.h>
 //
 #include "../J_UI_Line.h"
-
+//
+#include "../J_UI.h"
+//
+#include "J_UI_Letter_Box.h"
 using std::any_of; using std::bind; using std::equal_to; using std::mem_fn; using std::not1;
 using std::remove_if; using std::transform; using std::static_pointer_cast;
 using std::dynamic_pointer_cast; using std::max; using std::min; using std::mem_fn;
 using std::function;
+using namespace std::placeholders;
+
+//
+#include <algorithm>
+//
+#include <functional>
+
+using std::mem_fn; using std::bind; using std::for_each; using std::transform;
 using namespace std::placeholders;
 
 //Containers
@@ -33,7 +42,7 @@ using std::cerr;
 
 namespace jomike{
 
-static Instance_Pointer<J_UI_Model> s_model;
+
 static Instance_Pointer<Contexts_Handler> s_contexts;
 const j_float FLOAT_DELTA = 0.0001f;
 const j_float K_LEFT_PADDING = 0.01f;
@@ -144,18 +153,20 @@ public:
 private:
 	const int M_ID;
 	static j_dbl get_blink_rate(int i_id);
-	typedef decltype(std::bind(&J_UI_Model::time, (J_UI_Model*)0)) Time_Retrieval_t;
+	typedef decltype(std::bind(&J_UI::time, (J_UI_Model*)0)) Time_Retrieval_t;
 	typedef
 		decltype(std::bind(&J_Text_Cursor_Blinker_Updater::get_blink_rate
 		, J_INT_ZERO)) Rate_Retrieval_t;
 
 	J_Duration_Tester<Time_Retrieval_t, Rate_Retrieval_t> M_timer;
 
-	static ex_array<j_dbl> S_blink_rates;
+	static ex_array<j_dbl> Ms_blink_rates;
 };
 
 J_Text_Box::J_Text_Box(const J_Rectangle& irk_rec_pos, const J_UI_Multi_String& irk_string)
-	: J_Text_Box_Object(irk_rec_pos), M_multi_string(irk_string), M_cursor_pos(static_cast<int>(M_multi_string.size()))
+	: J_Text_Box_Object(irk_rec_pos), M_multi_string(irk_string)
+	, M_letter_box_string(bind(&J_Text_Box::alert_changed, this))
+	, M_cursor_pos(static_cast<int>(M_multi_string.size()))
 {
 	
 	initialize();
@@ -164,37 +175,36 @@ J_Text_Box::J_Text_Box(const J_Rectangle& irk_rec_pos, const J_UI_Multi_String& 
 
 J_Text_Box::J_Text_Box(const J_Rectangle& irk_rec_pos, const J_UI_Multi_String& irk_string
 	, j_uint i_id)
-: J_Text_Box_Object(irk_rec_pos, i_id), M_multi_string(irk_string), M_cursor_pos(static_cast<int>(M_multi_string.size()))
+	:J_Text_Box_Object(irk_rec_pos, i_id)
+	, M_multi_string(irk_string)
+	, M_letter_box_string(bind(&J_Text_Box::alert_changed, this))
+	, M_cursor_pos(static_cast<int>(M_multi_string.size()))
 {
 	initialize();
 }
 
 void J_Text_Box::initialize(){
-	
-	M_left_click_is_on = false;
+
 	M_text_state = Text_Flags::SCROLL;
 	M_cursor_line = J_UI_Line_Shared_t(
 		new J_UI_Line(default_pen_pos().first, default_pen_pos().second
 		, default_pen_pos().first, default_pen_pos().second + new_line_screen_size())
 		);
 
-	s_model->add_managed_display_object(get_ID()
-										, M_cursor_line->get_ID()
-										, UI_Object_Types::Line);
 
-	s_model->add_ui_line(M_cursor_line);
 	M_cursor_line->set_fill_visibility_status(true);
 	M_cursor_line->set_fill_color(J_CLEAR);
 	enable_default_key_char_processing();
+
 	M_pen_poses.resize(1);
 	M_pen_poses.front() = default_pen_pos();
 	recalculate_letter_poses();
-	s_model->notify_text_string_size(get_ID(), M_multi_string.size());
+
 	M_selection.set_first_unordered_elem(M_cursor_pos);
 	M_selection.set_second_unordered_elem(M_cursor_pos);
 }
 
-void J_Text_Box::key_input_cmd(j_window_t , int i_key, int i_scancode, int i_action, int i_modifiers){
+void J_Text_Box::key_input_cmd(int i_key, int i_scancode, int i_action, int i_modifiers){
 	if(!M_key_input_command){
 		return;
 	}
@@ -202,12 +212,14 @@ void J_Text_Box::key_input_cmd(j_window_t , int i_key, int i_scancode, int i_act
 	M_key_input_command(shared_from_this(), i_key, i_scancode, i_action, i_modifiers);
 }
 
-void J_Text_Box::char_input_cmd(j_window_t, int i_charcode){
+void J_Text_Box::char_input_cmd(int i_charcode){
 	if(read_only_status()){
 		return;
 	}
 
-	M_char_input_command(shared_from_this(), i_charcode);
+	if(M_char_input_command){
+		M_char_input_command(shared_from_this(), i_charcode);
+	}
 }
 
 /*void set_read_only_status(bool)*/
@@ -233,7 +245,20 @@ const J_UI_Multi_String& J_Text_Box::get_string()const{
 }
 
 void J_Text_Box::change_color_at_pos(int i_pos, J_UI_Color i_color){
-	M_multi_string.get_string_holding_index(i_pos)->set_color(i_color);
+	auto string_it = M_multi_string.get_string_holding_index(i_pos);
+	string_it->set_color(i_color);
+
+	Pen_Pos_t indices_of_string = M_multi_string.get_string_indices(string_it);
+
+	for(int i = indices_of_string.first; i < indices_of_string.second; ++i){
+		J_Char_t char_chode = M_multi_string[i].charcode();
+		J_Font_Face font_face = string_it->font_face();
+		int char_width = font_face->bitmap_metric(char_chode).width;
+		int char_height = font_face->bitmap_metric(char_chode).height;
+		const j_ubyte* bitmap_data = font_face->get_data(char_chode);
+		M_letter_box_string[i]->set_buffer_data(char_width, char_height, i_color, bitmap_data);
+	}
+
 	assert(!"This needs to be implemented");
 }
 
@@ -301,7 +326,6 @@ void J_Text_Box::enable_blinking_cursor(){
 		= J_Text_Cursor_Blinker_Updater_Shared_t(new J_Text_Cursor_Blinker_Updater);
 
 	add_update_callback(M_blinker_updater);
-	s_model->add_managed_display_object(get_ID(), get_cursor_line_id(), UI_Object_Types::Line);
 }
 
 void J_Text_Box::calculate_remaining_letter_poses(){
@@ -314,10 +338,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
 			->bitmap_metric(charcode);
 
-		if('\n' == charcode){
-			M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
-			continue;
-		}
+		
 
 		auto window = s_contexts->get_active_window();
 
@@ -326,9 +347,9 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 
 		j_float x_start, y_start;
 
-
-
-		if((M_pen_poses.back().first + width) > x2()){
+		if('\n' == charcode){
+			M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
+		}else if((M_pen_poses.back().first + width) > x2()){
 			Pen_Pos_FL_t new_pos(new_line_pen_pos(M_pen_poses.back()));
 			x_start = new_pos.first;
 			y_start = new_pos.second;
@@ -341,6 +362,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 				, bitmap_metric.advance_x));
 		}
 
+		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric);
 	}
 }
 
@@ -537,7 +559,7 @@ J_Line J_Text_Box::get_cursor_line(const Pen_Pos_FL_t& i_pen_pos)const{
 }
 
 void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)const{
-
+	assert(!"This needs to be removed");
 	ex_array<Pen_Pos_FL_t> pen_poses(M_pen_poses.begin() + i_pos, M_pen_poses.end());
 	for(j_size_t i = i_pos; i < M_pen_poses.size(); i++){
 		auto char_pos = M_multi_string.get_insert_pos(i);
@@ -553,37 +575,47 @@ void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)cons
 			-= to_y_screen(s_contexts->get_active_window(), underreach);
 	}
 
-	s_model->notify_letter_box_poses(get_ID(), i_pos, M_multi_string.size() - i_pos
-									 , pen_poses.data());
+	//s_model->notify_letter_box_poses(get_ID(), i_pos, M_multi_string.size() - i_pos
+	//								 , pen_poses.data());
 }
 
-void J_Text_Box::notify_string_data()const{
-	s_model->notify_text_string_size(get_ID(), M_multi_string.size());
-	int index = 0;
-	for(auto& cur_string : M_multi_string){
-		J_Font_Face font_face = cur_string.font_face();
-		for(int i = 0; i < cur_string.size(); i++, index++){
-			Bitmap_Metrics& bitmap_metric
-				= cur_string.font_face()->bitmap_metric(cur_string[i].charcode());
-
-			s_model->notify_letter_box_rectangle(get_ID(), index, M_pen_poses[index]
-												 , bitmap_metric);
-			s_model->notify_letter_box_data(get_ID(), index, bitmap_metric, cur_string.color()
-											, font_face->get_data(cur_string[i].charcode()));
-
-		}
-	}
-}
+//void J_Text_Box::notify_string_data()const{
+//	s_model->notify_text_string_size(get_ID(), M_multi_string.size());
+//	int index = 0;
+//	for(auto& cur_string : M_multi_string){
+//		J_Font_Face font_face = cur_string.font_face();
+//		for(int i = 0; i < cur_string.size(); i++, index++){
+//			Bitmap_Metrics& bitmap_metric
+//				= cur_string.font_face()->bitmap_metric(cur_string[i].charcode());
+//
+//			s_model->notify_letter_box_rectangle(get_ID(), index, M_pen_poses[index]
+//												 , bitmap_metric);
+//			s_model->notify_letter_box_data(get_ID(), index, bitmap_metric, cur_string.color()
+//											, font_face->get_data(cur_string[i].charcode()));
+//
+//		}
+//	}
+//}
 
 void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_String& irk_string){
 	auto insert_pos = M_multi_string.get_insert_pos(i_index);
+	M_multi_string.insert(i_index, irk_string);
+	J_UI_Color color = irk_string.color();
+	J_Font_Face font_face = irk_string.font_face();
 
-	insert_pos.second->insert(insert_pos.first, irk_string.begin(), irk_string.end());
+	for(int i = 0; i < irk_string.size(); i++){
+		J_Char_t char_code = irk_string[i].charcode();
+		J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
+		new_letter_box->set_buffer_data(font_face->bitmap_metric(char_code)
+										, color, font_face->get_data(char_code));
+		auto iterator = M_letter_box_string->insert(
+			M_letter_box_string->begin() + i_index + i, new_letter_box);
 
+	}
 
 	M_pen_poses.resize(i_index+1);
-	calculate_remaining_letter_poses();
 
+	calculate_remaining_letter_poses();
 
 	set_cursor_pos_no_scroll(i_index + irk_string.size());
 
@@ -597,7 +629,7 @@ void J_Text_Box::mouse_button_press(int i_button, int , Pen_Pos_FL_t i_pos){
 		set_cursor_pos(get_cursor_index(i_pos));
 		M_selection.set_first_unordered_elem(M_cursor_pos);
 		M_selection.set_second_unordered_elem(M_cursor_pos);
-		M_left_mouse_button_pressed_status = true;
+		set_left_click_on();
 		}
 		break;
 	case J_MOUSE_WHEEL_UP:
@@ -619,7 +651,7 @@ void J_Text_Box::mouse_button_press_n(int i_button, int, Pen_Pos_FL_t i_pos, int
 								 set_cursor_pos(get_cursor_index(i_pos));
 								 M_selection.set_first_unordered_elem(M_cursor_pos);
 								 M_selection.set_second_unordered_elem(M_cursor_pos);
-								 M_left_mouse_button_pressed_status = true;
+								 set_left_click_on()
 	}
 		break;
 	case J_MOUSE_WHEEL_UP:
@@ -637,7 +669,7 @@ void J_Text_Box::mouse_button_release(int i_button, int , Pen_Pos_FL_t i_pos){
 
 	switch(i_button){
 	case J_LEFT_MOUSE_BUTTON:
-		M_left_mouse_button_pressed_status = false;
+		set_left_click_off();
 		set_cursor_pos(get_cursor_index(i_pos));
 		break;
 	default:
@@ -671,15 +703,17 @@ bool J_Text_Box::insert_char(J_UI_Char i_char){
 
 	auto& cur_pen_pos = M_pen_poses[M_cursor_pos];
 
-	s_model->notify_char_add(get_ID(), M_cursor_pos, cur_pen_pos, bitmap_metrics
-							 , cur_string.color()
-							 , cur_string.font_face()->get_data(i_char.charcode()));
+	J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
+	new_letter_box->set_image_box(cur_pen_pos, bitmap_metrics);
+	new_letter_box->set_buffer_data(
+		bitmap_metrics, cur_string.color()
+		, cur_string.font_face()->get_data(i_char.charcode()));
+
+
 
 	M_pen_poses.resize(M_cursor_pos+1);
 
 	calculate_remaining_letter_poses();
-	notify_letter_box_poses(M_cursor_pos+1);
-
 
 	
 	set_cursor_pos(M_cursor_pos + 1);
@@ -1056,7 +1090,7 @@ void numeric_entry_char_input_cmd(J_Text_Box_Object_Shared_t i_text_box, int i_c
 
 static int s_cursor_blinker_ids = 0;
 
-ex_array<j_dbl> J_Text_Cursor_Blinker_Updater::S_blink_rates;
+ex_array<j_dbl> J_Text_Cursor_Blinker_Updater::Ms_blink_rates;
 
 void J_Text_Cursor_Blinker_Updater::operator()(J_UI_Object_Shared_t i_obj){
 	auto text_box
@@ -1071,24 +1105,24 @@ void J_Text_Cursor_Blinker_Updater::operator()(J_UI_Object_Shared_t i_obj){
 }
 
 j_dbl J_Text_Cursor_Blinker_Updater::blink_rate()const{
-	return S_blink_rates[M_ID];
+	return Ms_blink_rates[M_ID];
 }
 
 void J_Text_Cursor_Blinker_Updater::set_blink_rate(j_dbl i_rate){
-	S_blink_rates[M_ID] = i_rate;
+	Ms_blink_rates[M_ID] = i_rate;
 }
 
 J_Text_Cursor_Blinker_Updater::J_Text_Cursor_Blinker_Updater()
 	:M_ID(++s_cursor_blinker_ids), M_timer(bind(&J_UI_Model::time, &*s_model)
 	, bind(&J_Text_Cursor_Blinker_Updater::get_blink_rate, M_ID)){
-	if(M_ID >= S_blink_rates.size()){
-		S_blink_rates.resize(M_ID + 1);
+	if(M_ID >= Ms_blink_rates.size()){
+		Ms_blink_rates.resize(M_ID + 1);
 	}
-	S_blink_rates[M_ID] = DEFAULT_CURSOR_REFESH_TIME;
+	Ms_blink_rates[M_ID] = DEFAULT_CURSOR_REFESH_TIME;
 }
 
 j_dbl J_Text_Cursor_Blinker_Updater::get_blink_rate(int i_id){
-	return S_blink_rates[i_id];
+	return Ms_blink_rates[i_id];
 }
 
 void J_Text_Cursor_Blinker_Updater::reset_timer(){
@@ -1096,4 +1130,9 @@ void J_Text_Cursor_Blinker_Updater::reset_timer(){
 }
 
 }
+
+void J_Text_Box::alert_changed(){
+	M_changed_flag = true;
+}
+
 

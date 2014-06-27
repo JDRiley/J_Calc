@@ -8,39 +8,6 @@
 #include <J_Shader_Program.h>
 namespace jomike{
 
-class Static_Text_Shader_Program{
-public:
-	static Static_Text_Shader_Program& get_instance();
-	int program_id();
-private:
-	Static_Text_Shader_Program();
-	int M_program_id;
-};
-
-static Instance_Pointer<Static_Text_Shader_Program> s_line_shader;
-
-Static_Text_Shader_Program::Static_Text_Shader_Program(){
-	M_program_id = glCreateProgram();
-	j_uint outline_shader_id = load_vertex_shader("Shaders/quad.vert");
-	j_uint outline_frag_shader_id = load_fragment_shader("Shaders/box_outline.frag");
-
-	glAttachShader(M_program_id, outline_shader_id);
-	glAttachShader(M_program_id, outline_frag_shader_id);
-	glLinkProgram(M_program_id);
-	enforce_program_status(M_program_id, GL_Statuses::LINK_STATUS);
-	//cerr << "\n Shader Program ID: " << M_program_id << "*********************************************************";
-}
-
-int Static_Text_Shader_Program::program_id(){
-	return M_program_id;
-}
-
-Static_Text_Shader_Program& Static_Text_Shader_Program::get_instance(){
-	static Static_Text_Shader_Program shader;
-	return shader;
-}
-
-
 
 J_Display_Line::J_Display_Line(j_uint i_obj_id):J_Display_Object(i_obj_id){
 	init_vao();

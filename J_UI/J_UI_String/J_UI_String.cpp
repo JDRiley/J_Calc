@@ -741,5 +741,18 @@ const Bitmap_Metrics& J_UI_Multi_String::bitmap_metric(j_size_t i_index)const{
 	return found_pos.second->font_face()->bitmap_metric(found_pos.first->charcode());
 }
 
+jomike::Pen_Pos_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)const{
+	int index = 0;
+	auto string_pos = begin();
+
+	while(i_pos != string_pos){
+		index += i_pos->size();
+		++i_pos;
+	}
+
+
+	return Pen_Pos_t(index, index + i_pos->size());
+}
+
 }// namespace jomike
 

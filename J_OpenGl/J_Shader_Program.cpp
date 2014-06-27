@@ -5,6 +5,8 @@
 #include <GL\glew.h>
 //
 #include "J_Open_GL.h"
+//
+#include "J_OpenGL.h"
 //Utilities
 #include <cassert>
 
@@ -59,9 +61,9 @@ static string get_image_shader_name(Image_Format i_format){
 	}
 }
 
-Image_Shader_Program::Image_Shader_Program(Image_Format i_format):M_image_program_id(0){
+Image_Shader_Program::Image_Shader_Program(Image_Format ):M_image_program_id(0){
 	M_vert_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");
-	M_image_frag_id = load_fragment_shader(SHADER_BASE_PATH + get_image_shader_name(i_format));
+	M_image_frag_id = load_fragment_shader(SHADER_BASE_PATH + "quad_image.frag");
 
 	M_image_program_id = glCreateProgram();
 	glAttachShader(M_image_program_id, M_vert_shader_id);
@@ -70,7 +72,7 @@ Image_Shader_Program::Image_Shader_Program(Image_Format i_format):M_image_progra
 	enforce_program_status(M_image_program_id, GL_Statuses::LINK_STATUS);
 }
 
-j_uint Image_Shader_Program::image_program_id()const{
+j_uint Image_Shader_Program::program_id()const{
 	return M_image_program_id;
 }
 
@@ -257,6 +259,29 @@ void enforce_program_status(j_uint i_program_id, GL_Statuses i_status){
 	std::cerr << "\nProgram Link Fail:\n" << log << std::endl;
 	assert(!"Could Not Link Program!");
 
+}
+
+J_GL_Line_Shader::J_GL_Line_Shader(){
+	M_program_id = glCreateProgram();
+	j_uint outline_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");
+	j_uint outline_frag_shader_id = load_fragment_shader(SHADER_BASE_PATH + "box_outline.frag");
+
+	glAttachShader(M_program_id, outline_shader_id);
+	glAttachShader(M_program_id, outline_frag_shader_id);
+	glLinkProgram(M_program_id);
+	enforce_program_status(M_program_id, GL_Statuses::LINK_STATUS);
+	//cerr << "\n Shader Program ID: " << M_program_id << "*********************************************************";
+}
+
+int J_GL_Line_Shader::program_id(){
+	return M_program_id;
+}
+
+void J_GL_Line_Shader::set_fill_color(const J_UI_Color& i_color){
+	int uniform_loc = glGetUniformLocation(program_id(), "u_outline_color");
+	assert(-1 != uniform_loc);
+	glProgramUniform4fv(program_id(), uniform_loc, 1, i_color.M_data.data());
+	assert(!open_gl_error());
 }
 
 

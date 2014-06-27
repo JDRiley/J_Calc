@@ -5,7 +5,7 @@
 #include "../J_Image/J_Image.h"
 #include "../J_Shape.h"
 
-
+#error deprecated
 namespace jomike{
 
 class J_Display_Object : public J_Outline_Fill_Management, public virtual J_Shape{
@@ -61,7 +61,7 @@ public:
 	void set_box(j_float , j_float, j_float , j_float )override;
 	void set_fill_color(const J_UI_Color& i_color)override;
 	void set_outline_color(const J_UI_Color& i_color)override;
-	void alert_resize(int,int)override{}
+	
 
 
 	void set_rectangle(const J_Rectangle& i_rectangle)override;

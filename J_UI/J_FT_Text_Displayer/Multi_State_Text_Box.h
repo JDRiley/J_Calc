@@ -40,8 +40,8 @@ public:
 	void move_cursor(j_size_t)override;
 	void alert_cursor_pos(Pen_Pos_FL_t i_pos)override;
 	//UI Functionality
-	void key_input_cmd(j_window_t, int charcode, int scancode, int action, int modifier)override;
-	void char_input_cmd(j_window_t, int charcode)override;
+	void key_input_cmd(int charcode, int scancode, int action, int modifier)override;
+	void char_input_cmd(int charcode)override;
 
 	//Box Maintenance
 	void set_left_bound()override;

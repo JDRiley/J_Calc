@@ -1,26 +1,24 @@
 #ifndef J_CALC_DATA_H
 #define J_CALC_DATA_H
-#include <J_UI\J_UI_Model.h>
-#include "J_Calc_Fwd_Decl.h"
 
+#include "J_Calc_Fwd_Decl.h"
+//
+#include <J_UI\J_UI_String.h>
 //Containers
 #include <j_tree.h>
-
+//
+#include <j_map.h>
 namespace jomike{
 
 
-class J_Calc_Data : public J_UI_Model{
+class J_Calc_Data{
 public:
 	
-
-	//Box Management
-	void add_math_text_box(Math_Input_Box_Shared_t i_math_box);
-
 	//Function Management
 	void add_anonymous_function(j_function*);
 
 	//View Management
-	void attach_view(J_View_Shared_t)override;
+	void attach_view(J_Calc_View_Shared_t);
 
 	//Symbol Management
 	void add_user_symbol(j_symbol*);
@@ -35,9 +33,9 @@ public:
 	//Gets
 	j_symbol* get_reserved_symbol(const J_UI_String&)const;
 	~J_Calc_Data();
-	void clear_data()override;
+	void clear_data();
 	
-	void remove_view(J_View_Shared_t i_view);
+	void remove_view(J_Calc_View_Shared_t i_view);
 private:
 	static J_Calc_Data& get_instance();
 	J_Calc_Data();
@@ -46,8 +44,7 @@ private:
 	typedef j_tree<J_Calc_View_Shared_t> Calc_J_View_Cont_t;
 
 	Calc_J_View_Cont_t M_calc_views;
-	typedef j_map<j_uint, Math_Input_Box_Shared_t> Math_Input_Box_Cont_t;
-	Math_Input_Box_Cont_t M_math_input_boxes;
+
 	j_tree<J_UI_String> M_reserved_words;
 	typedef j_map<J_UI_String, j_symbol*> Symbol_Map_t;
 	Symbol_Map_t M_reserved_symbols;

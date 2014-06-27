@@ -81,14 +81,15 @@ void Multi_State_Text_Box::update(){
 	M_current_text_box->update();
 }
 
-void Multi_State_Text_Box::key_input_cmd(j_window_t i_window
-											, int i_charcode, int i_scancode, int i_action, int i_modifiers){
-	M_current_text_box->key_input_cmd(i_window, i_charcode, i_scancode, i_action
+void Multi_State_Text_Box::key_input_cmd(
+	int i_charcode, int i_scancode, int i_action, int i_modifiers){
+
+	M_current_text_box->key_input_cmd(i_charcode, i_scancode, i_action
 										, i_modifiers);
 }
 
-void Multi_State_Text_Box::char_input_cmd(j_window_t i_window, int i_charcode){
-	M_current_text_box->char_input_cmd(i_window, i_charcode);
+void Multi_State_Text_Box::char_input_cmd(int i_charcode){
+	M_current_text_box->char_input_cmd(i_charcode);
 }
 
 void Multi_State_Text_Box::set_left_bound(){

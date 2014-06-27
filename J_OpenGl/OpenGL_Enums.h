@@ -158,6 +158,37 @@ enum class GL_Attachment_Points{
 	, DEPTH_STENCIL_ATTACHMENT
 };
 
+enum class GL_Draw_Types{
+	STATIC
+	, DYNAMIC
+};
+
+enum class GL_Types{
+
+	BYTE
+	, UNSIGNED_BYTE
+	, SHORT
+	, UNSIGNED_SHORT
+	, INT
+	, UNSIGNED_INT
+	, HALF_FLOAT
+	, FLOAT
+	, DOUBLE
+	, FIXED
+	, INT_2_10_10_10_REV
+	, UNSIGNED_INT_2_10_10_10_REV
+	, UNSIGNED_INT_10F_11F_11F_REV
+
+};
+
+enum class Texture_Wrap_Type{
+	CLAMP_TO_EDGE
+	, CLAMP_TO_BORDER
+	, MIRRORED_REPEAT
+	, REPEAT
+	, MIRROR_CLAMP_TO_EDGE
+};
+
 }
 
 #endif //OPEN_GL_ENUMS_H

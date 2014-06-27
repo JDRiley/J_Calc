@@ -36,14 +36,14 @@ public:
 	virtual void clear_window()const;
 	J_Context_Shared_t get_context();
 	j_window_t get_window()const;
-	virtual void add_display_line(j_uint i_line_id);
-	virtual void add_text_box(J_Text_Box_Shared_t i_text_box);
+	virtual void add_display_line(J_UI_Line_Shared_t i_line_id);
+	virtual void add_text_box(J_Text_Box_Object_Shared_t i_text_box);
 	
 	virtual void add_ui_box(J_UI_Box_Shared_t i_ui_box);
 	virtual void add_ui_object(J_UI_Object_Shared_t);
 	virtual void add_image_pane(j_uint);
-	virtual void add_display_circle(j_uint);
-	virtual void add_multi_state_text_box(j_uint);
+	virtual void add_ui_circle(J_UI_Circle_Shared_t);
+	virtual void add_multi_state_text_box(Multi_State_Text_Box_Shared_t );
 	virtual void add_managed_display_object(j_uint i_obj_id, j_uint i_new_obj_id, UI_Object_Types i_obj_type);
 	virtual void remove_managed_display_object(j_uint i_obj_id, UI_Object_Types i_obj_type);
 	//
@@ -57,7 +57,7 @@ public:
 	virtual int get_x_resolution()const;
 	virtual int get_y_resolution()const;
 	virtual bool should_close()const;
-	void subscribe_cursor_updates(j_uint i_obj_id);
+	void subscribe_cursor_updates(J_UI_Object_Weak_t i_ui_obj);
 	virtual void update_letter_box_rectangle(j_uint i_text_box_id, j_size_t i_index
 											 , const Pen_Pos_FL_t& i_rec
 											 , const Bitmap_Metrics& i_metrics);
@@ -123,6 +123,8 @@ public:
 	bool is_display_object_present(j_uint i_obj_id)const;
 
 	virtual void clear();
+
+	virtual void char_input_cmd(j_uint i_charcode);
 protected:
 	J_Display_Object_Shared_t get_display_object_at_pos(Pen_Pos_FL_t);
 	virtual void display_object_pressed(J_Display_Object_Shared_t, int action, int modifiers
@@ -140,23 +142,24 @@ private:
 	J_Context_Shared_t M_context;
 
 
-	std::map<j_uint, J_Display_Object_Shared_t> M_disp_objs_by_id;
+	j_shared_ptr_tree<J_UI_Object> M_ui_objects;
 	std::map<j_uint, J_Display_Box_Shared_t> M_disp_boxes;
-	j_shared_ptr_tree<J_Text_Box> M_text_displays;
+	j_shared_ptr_tree<J_Text_Box_Object> M_text_box_objects;
 
 	std::map<j_uint, J_Display_Image_Pane_Shared_t> M_image_panes;
 	std::map<j_uint, J_Display_Circle_Shared_t> M_display_circles;
 	std::map<j_uint, J_FT_Text_Multi_State_Display_Shared_t> M_multi_state_text_boxes;
 	std::map<j_uint, J_Display_Line_Shared_t> M_display_lines;
 
-	j_tree<J_Display_Object_Weak_t,J_Display_Object_Weak_t
-		, std::owner_less<J_Display_Object_Weak_t>> M_objects_using_cursor_data;
+	j_tree<J_UI_Object_Weak_t,J_UI_Object_Weak_t
+		, std::owner_less<J_UI_Object_Weak_t>> M_objects_using_cursor_data;
 
 
 	
-	
-	virtual void add_display_circle(J_Display_Circle_Shared_t);
-	ex_array<J_Display_Object_Shared_t> M_disp_objs;
+
+
+	virtual void add_ui_circle(J_Display_Circle_Shared_t);
+	ex_array<J_UI_Object_Shared_t> M_ui_object_stack;
 	
 	j_float get_x_coord(int i_x_pos){
 		return 2.0f*i_x_pos/get_x_resolution()-1.0f;
@@ -167,7 +170,7 @@ private:
 	}
 
 
-	J_Display_Object_Shared_t M_cur_clicked_obj;
+	J_UI_Object_Weak_t M_focused_object;
 	Pen_Pos_FL_t M_cursor_pos;
 
 

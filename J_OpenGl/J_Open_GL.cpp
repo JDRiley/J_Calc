@@ -14,6 +14,16 @@ namespace jomike{
 
 static J_Open_GL s_open_gl;
 
+static int get_gl_enum(GL_Buffer_Targets i_target){
+	return buffer_targets_array[static_cast<int>(i_target)];
+}
+
+static int get_gl_enum(Texture_Target i_target){
+	return texture_map_array[static_cast<int>(i_target)];
+}
+static int get_gl_enum(Texture_Wrap_Type i_wrap_type){
+	return texture_wrap_type_array[static_cast<int>(i_wrap_type)];
+}
 
 
 void J_Open_GL::bind_texture(Texture_Target i_target, const J_GL_Texture& irk_texture_id){
@@ -82,8 +92,8 @@ void J_Open_GL::draw_arrays(Array_Draw_Mode i_draw_mode, int i_first, int i_coun
 	assert(!open_gl_error());
 }
 
-void J_Open_GL::bind_buffer(GL_Buffer_Targets i_target, j_uint i_buffer_id){
-	glBindBuffer(buffer_targets_array[static_cast<int>(i_target)], i_buffer_id);
+void J_Open_GL::bind_buffer(GL_Buffer_Targets i_target, const J_GL_Buffer& irk_buffer_id){
+	glBindBuffer(buffer_targets_array[static_cast<int>(i_target)], irk_buffer_id.get_ID());
 	assert(!open_gl_error());
 }
 
@@ -124,7 +134,6 @@ void J_Open_GL::attach_read_framebuffer_texture_2D(
 	assert(!open_gl_error());
 }
 
-
 void J_Open_GL::attach_draw_framebuffer_texture_2D(
 	GL_Attachment_Points i_attatchment_point, Texture_Target i_tex_target
 	, const J_GL_Texture_Render_Buffer& irk_frame_renderbuffer, int i_level){
@@ -136,7 +145,72 @@ void J_Open_GL::attach_draw_framebuffer_texture_2D(
 		assert(!open_gl_error());
 }
 
+void J_Open_GL::buffer_data(
+	GL_Buffer_Targets i_buffer_target, std::size_t i_size, const j_float* i_data, GL_Draw_Types i_draw_type){
+	
+	glBufferData(
+		get_gl_enum(i_buffer_target)
+		, sizeof(j_float)*i_size, i_data, draw_types_array[static_cast<int>(i_draw_type)]);
+	assert(!open_gl_error());
+}
 
+void J_Open_GL::vertix_attribute_pointer(
+	int i_index, int i_size, GL_Types i_data_type, bool i_normalized, int i_stride, int i_offset){
+
+	glVertexAttribPointer(i_index, i_size, gl_types_array[ static_cast<int>(i_data_type)]
+						  , i_normalized, i_stride, reinterpret_cast<void*>(i_offset));
+
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::enable_vertex_attribute_array(int i_index){
+	glEnableVertexAttribArray(i_index);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::debind_program(){
+	glUseProgram(0);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::line_width(j_float i_thickness){
+	glLineWidth(i_thickness);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::debind_buffer(GL_Buffer_Targets i_buffer_target){
+	glBindBuffer(get_gl_enum(i_buffer_target), 0);
+}
+
+void J_Open_GL::debind_vertex_array(){
+	glBindVertexArray(0);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::buffer_sub_data(GL_Buffer_Targets i_target, int i_offset, int i_size, const j_float* i_data){
+	glBufferSubData(get_gl_enum(i_target), static_cast<GLintptr>(i_offset), sizeof(j_float)*i_size, i_data);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::debind_texture(Texture_Target i_target){
+	glBindTexture(get_gl_enum(i_target), 0);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::texture_wrap_s(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type){
+	glTexParameteri(get_gl_enum(i_target), GL_TEXTURE_WRAP_S, get_gl_enum(i_texture_wrap_type));
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::texture_wrap_r(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type){
+	glTexParameteri(get_gl_enum(i_target), GL_TEXTURE_WRAP_R, get_gl_enum(i_texture_wrap_type));
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::texture_wrap_t(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type){
+	glTexParameteri(get_gl_enum(i_target), GL_TEXTURE_WRAP_T, get_gl_enum(i_texture_wrap_type));
+	assert(!open_gl_error());
+}
 
 
 }

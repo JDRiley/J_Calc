@@ -1,16 +1,21 @@
 #ifndef J_TEXT_H
 #define J_TEXT_H
 
-#include "../J_Image/J_Image.h"
+
 #include "../J_UI_Fwd_Decl.h"
-#include "../J_UI_Object.h"
+//
+#include "../J_UI_Box.h"
+//
+#include <J_Image.h>
+
 //Container
 #include <ex_array.h>
 //
 #include <ordered_pair.h>
 //
 #include <J_UI/J_UI_String.h>
-
+//
+#include <J_Gadget_Classes.h>
 //Utilities
 #include <memory>
 #include <utility>
@@ -155,8 +160,8 @@ public:
 	void move_cursor(j_size_t)override;
 
 	//UI Functionality
-	void key_input_cmd(j_window_t, int charcode, int scancode, int action, int modifier)override;
-	void char_input_cmd(j_window_t, int i_charcode)override;
+	void key_input_cmd(int charcode, int scancode, int action, int modifier)override;
+	void char_input_cmd(int i_charcode)override;
 
 	//Box Maintenance
 	void set_left_bound()override;
@@ -208,6 +213,7 @@ public:
 
 	bool auto_scrolling_status()const override;
 	void set_auto_scrolling_status(bool i_status)override;
+	void alert_changed();
 
 	void alert_cursor_pos(Pen_Pos_FL_t i_pos)override;
 protected:
@@ -217,50 +223,69 @@ protected:
 	j_size_t selection_start()const;
 	j_size_t selection_end()const;
 private:
-	int M_text_state;
-	J_UI_Multi_String M_multi_string;
+	
 		
 
 
-	int M_new_line_size = 30;
+	
 	void set_cursor_on();
-	Key_Input_Cmd_Func_t M_key_input_command;
-	Char_Input_Cmd_Func_t M_char_input_command;
+	
 
 
 	void notify_string_data()const;
-	bool M_left_click_is_on;
+
 	void scroll_selection_boxes(j_float i_x_scroll, j_float i_y_scroll);
-	bool M_saved_outline_visibility_status;
+
 	void initialize();
 	J_Text_Cursor_Blinker_Updater_Shared_t M_blinker_updater;
 	J_Text_Box& operator=(const J_Text_Box&);
 	void calculate_remaining_letter_poses();
-	ordered_pair<j_size_t> M_selection;
-	ex_array<Pen_Pos_FL_t> M_pen_poses;
-	j_size_t M_cursor_pos;
-	J_UI_Line_Shared_t M_cursor_line;
+	
+	
 	Pen_Pos_FL_t default_pen_pos()const;
 	Pen_Pos_FL_t new_line_pen_pos(Pen_Pos_FL_t i_cur_pen)const;
 	j_float new_line_screen_size()const;
 	Pen_Pos_FL_t calculate_pen_advance(Pen_Pos_FL_t i_cur_pen
 									, int i_advance)const;
-	bool M_left_mouse_button_pressed_status = false;
+	
 	void set_starting_pen_pos(Pen_Pos_FL_t i_pen_pos);
 	void add_string(const J_UI_String& irk_string);
 	j_size_t get_cursor_index(Pen_Pos_FL_t i_pen_pos)const;
 
-
+	
 	void scroll(int i_scroll_val);
-	//j_size_t M_selection_start_cursor_pos;
-	bool M_auto_scrolling_status = true;
-	ex_array<J_UI_Box_Shared_t> M_selection_boxes;
+
+	
 	int lines_scrolled_per_tick()const;
 	void set_selection_box_settings(J_UI_Box_Shared_t i_box)const;
 	J_Line get_cursor_line(const Pen_Pos_FL_t& M_pen_poses)const;
 	void clear_selection_boxes();
 	void set_selection_box_visibility_statuses();
+	
+
+	int M_text_state;
+	mutable bool M_changed_flag = true;
+	bool M_auto_scrolling_status = true;
+
+	int M_new_line_size = 30;
+
+	J_UI_Multi_String M_multi_string;
+	Array_Modifier_Manger<ex_array<J_UI_Letter_Box_Shared_t>> M_letter_box_string;
+	ex_array<J_UI_Box_Shared_t> M_selection_boxes;
+	ex_array<Pen_Pos_FL_t> M_pen_poses;
+
 	Pen_Pos_FL_t M_last_set_cursor_pos;
+	j_size_t M_cursor_pos;
+	J_UI_Line_Shared_t M_cursor_line;
+
+	ordered_pair<j_size_t> M_selection;
+	
+
+	J_GL_Framebuffer M_framebuffer;
+	J_GL_Texture_Render_Buffer M_texture_render_buffer;
+	Key_Input_Cmd_Func_t M_key_input_command;
+	Char_Input_Cmd_Func_t M_char_input_command;
+
 };
 
 

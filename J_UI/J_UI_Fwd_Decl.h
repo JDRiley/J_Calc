@@ -27,7 +27,7 @@ enum class UI_Object_Types{
 const int J_LEFT_MOUSE_BUTTON = 0;
 const int J_KEY_INTEGRAL = 105;
 J_STRUCT_FWD_DECL(Bitmap_Metrics)
-J_FWD_DECL(J_Display_Letter_Box)
+J_FWD_DECL(J_UI_Letter_Box)
 J_FWD_DECL(J_UI_Line)
 J_FWD_DECL(J_Line)
 J_FWD_DECL(J_Shape)

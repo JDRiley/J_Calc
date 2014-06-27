@@ -2,7 +2,8 @@
 #define J_SHAPE_H
 
 #include <J_Fwd_Decl.h>
-
+//
+#include "J_Image.h"
 
 namespace jomike{
 
@@ -35,17 +36,21 @@ public:
 	virtual void set_fill_visibility_status(bool);
 	virtual void set_outline_thickness(j_float);
 	void set_outline_and_fill_visibility_status(bool);
+
+	virtual void set_fill_color(const J_UI_Color& i_color);
+	virtual void set_outline_color(const J_UI_Color& i_color);
+	const J_UI_Color& fill_color()const;
+	const J_UI_Color& outline_color()const;
 private:
-#if VS_2013
+
 	j_float M_outline_thickness = 1.0f;
 	bool M_outline_visibility_status = false;
 	bool M_fill_visibility_status = false;
-#else
-	j_float M_outline_thickness;
-	bool M_outline_visibility_status;
-	bool M_fill_visibility_status;
-	void default_initialization();
-#endif
+	J_UI_Color M_fill_color;
+	J_UI_Color M_outline_color;
+
+	virtual void derived_set_fill_color();
+	virtual void derived_set_outline_color();
 };
 
 class J_Rectangle : public virtual J_Shape{

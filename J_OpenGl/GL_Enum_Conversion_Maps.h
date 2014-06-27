@@ -173,6 +173,40 @@ static int gl_attachment_points_arrary[]
 	, GL_DEPTH_STENCIL_ATTACHMENT
 };
 
+const static int draw_types_array[]
+= {
+	GL_STATIC_DRAW
+	, GL_DYNAMIC_DRAW
+};
+
+const static int gl_types_array[]
+= {
+	GL_BYTE
+	, GL_UNSIGNED_BYTE
+	, GL_SHORT
+	, GL_UNSIGNED_SHORT
+	, GL_INT
+	, GL_UNSIGNED_INT
+	, GL_HALF_FLOAT
+	, GL_FLOAT
+	, GL_DOUBLE
+	, GL_FIXED
+	, GL_INT_2_10_10_10_REV
+	, GL_UNSIGNED_INT_2_10_10_10_REV
+	, GL_UNSIGNED_INT_10F_11F_11F_REV
+};
+
+const static int texture_wrap_type_array[]
+= {
+	GL_CLAMP_TO_EDGE
+	, GL_CLAMP_TO_BORDER
+	, GL_MIRRORED_REPEAT
+	, GL_REPEAT
+	, GL_MIRROR_CLAMP_TO_EDGE
+};
+
+
+
 }
 
 #endif //GL_ENUM_CONVERIONS_MAPS_H

@@ -1,4 +1,5 @@
 #include "J_Display_Image_Pane.h"
+//
 #include "../J_OpenGl/J_Shader_Program.h"
 //
 #include <J_OpenGl.h>
@@ -22,7 +23,7 @@ J_Display_Image_Pane::J_Display_Image_Pane(j_uint i_obj_id):J_Display_Box(i_obj_
 
 
 void J_Display_Image_Pane::set_image_width(int i_width){
-	glUseProgram(M_image_program->image_program_id());
+	glUseProgram(M_image_program->program_id());
 	if(image_width() == i_width){
 		return;
 	}
@@ -37,7 +38,7 @@ void J_Display_Image_Pane::set_image_width(int i_width){
 }
 
 void J_Display_Image_Pane::set_image_height(int i_height){
-	glUseProgram(M_image_program->image_program_id());
+	glUseProgram(M_image_program->program_id());
 	if(image_height() == i_height){
 		return;
 	}
@@ -55,7 +56,7 @@ void J_Display_Image_Pane::set_image_height(int i_height){
 }
 
 void J_Display_Image_Pane::set_buffer(const j_ubyte* i_buffer){
-	glUseProgram(M_image_program->image_program_id());
+	glUseProgram(M_image_program->program_id());
 
 	glBindTexture(GL_TEXTURE_2D, M_texture_id);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image_width(), image_height(), get_format_val()
@@ -66,7 +67,7 @@ void J_Display_Image_Pane::set_buffer(const j_ubyte* i_buffer){
 }
 
 void J_Display_Image_Pane::set_buffer_mono(const j_ubyte* i_buffer){
-	glUseProgram(M_image_program->image_program_id());
+	glUseProgram(M_image_program->program_id());
 
 	glBindTexture(GL_TEXTURE_2D, M_texture_id);
 
@@ -133,9 +134,9 @@ J_Display_Image_Pane::~J_Display_Image_Pane(){
 
 void J_Display_Image_Pane::draw()const{
 	
-	assert(glIsProgram(M_image_program->image_program_id()));
+	assert(glIsProgram(M_image_program->program_id()));
 	glBindVertexArray(get_box_vao());
-	glUseProgram(M_image_program->image_program_id());
+	glUseProgram(M_image_program->program_id());
 
 	glBindTexture(GL_TEXTURE_2D, M_texture_id);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);

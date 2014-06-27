@@ -27,7 +27,8 @@
 #include "Math_Input_Box.h"
 //
 #include <J_UI/J_Font_Face.h>
-
+//
+#include <J_UI/J_UI.h>
 //Algorithms
 #include <algorithm>
 //
@@ -68,6 +69,7 @@ static Instance_Pointer<Contexts_Handler> s_contexts;
 static Instance_Pointer<J_Calc_Data> s_calc_data;
 static Instance_Pointer<J_Calc_Controller> s_controller;
 static Instance_Pointer<J_Font_Manager> s_font_manager;
+static Instance_Pointer<J_UI> s_j_ui;
 void cursor_pos_callback(j_window_t i_window, j_dbl, j_dbl);
 void char_callback(j_window_t i_window, j_uint i_charcode);
 void key_callback(j_window_t i_window, int i_charcode, int, int, int);
@@ -177,7 +179,7 @@ void J_Calc_Controller::execute(){
 	while(M_continue_flag){
 		poll_events();
 		s_calc_data->update();
-
+		s_j_ui->update();
 
 		if(!has_views()){
 			end_execute();

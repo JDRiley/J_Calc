@@ -15,7 +15,7 @@
 //
 #include "../J_Font_Manager.h"
 //
-#include "J_Display_Letter_box.h" //Implement this here. something that'll hold each letter
+#include "J_UI_Letter_box.h" //Implement this here. something that'll hold each letter
 //
 #include <J_Open_GL.h>
 //Algorithms
@@ -61,7 +61,7 @@ static Instance_Pointer<Contexts_Handler> s_contexts;
 static J_Open_GL s_open_gl;
 
 class Modifier_Manger{
-	typedef ex_array<J_Display_Letter_Box_Shared_t> Arr_t;
+	typedef ex_array<J_UI_Letter_Box_Shared_t> Arr_t;
 	Arr_t& operator*(){
 		M_notification_function();
 		return M_letter_box_arr;
@@ -199,7 +199,7 @@ void J_FT_Text_Display::draw()const{
 
 	s_open_gl.draw_arrays(Array_Draw_Mode::TRIANGLE_FAN, 0, 4);
 	assert(!open_gl_error());
-	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, 0);
+	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, J_GL_Buffer::null_object());
 	assert(!open_gl_error());
 
 	s_open_gl.bind_texture_2D(J_GL_Texture::null_object());
@@ -300,7 +300,7 @@ void J_FT_Text_Display::add_letter_box(j_size_t i_index
 									   , const J_UI_Color& i_color
 									   , const j_ubyte* i_bitmap){
 	
-	J_Display_Letter_Box_Shared_t new_letter_box(new J_Display_Letter_Box(0));
+	J_Display_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(0));
 	new_letter_box->set_image_box(i_pen_pos, i_metrics);
 	new_letter_box->set_buffer_data(i_metrics, i_color, i_bitmap);
 
@@ -326,7 +326,7 @@ void J_FT_Text_Display::set_text_string_size(j_size_t i_size){
 	j_size_t initial_string_size = M_letter_box_string->size();
 	M_letter_box_string->resize(i_size);
 	for(j_size_t i = initial_string_size; i < i_size; i++){
-		M_letter_box_string[i] = (J_Display_Letter_Box_Shared_t(new J_Display_Letter_Box));
+		M_letter_box_string[i] = (J_UI_Letter_Box_Shared_t(new J_UI_Letter_Box));
 	}
 }
 
@@ -346,11 +346,11 @@ void J_FT_Text_Display::insert_text_string(j_size_t i_pos, j_size_t i_size
 										   , Bitmap_Metrics** i_metrics
 										   , const J_UI_Color& i_color
 										   , const j_ubyte* const * i_datas){
-	static ex_array<J_Display_Letter_Box_Shared_t> utility_cont;
+	static ex_array<J_UI_Letter_Box_Shared_t> utility_cont;
 	utility_cont.resize(0);
 	utility_cont.reserve(i_size);
 	for(int i = 0; i < i_size; i++){
-		J_Display_Letter_Box_Shared_t letter_box(new J_Display_Letter_Box(0));
+		J_UI_Letter_Box_Shared_t letter_box(new J_UI_Letter_Box(0));
 		const Bitmap_Metrics& metric = *(i_metrics[i]);
 		letter_box->set_image_box(i_poses[i], metric);
 		letter_box->set_buffer_data(metric, i_color, i_datas[i]);
@@ -519,7 +519,6 @@ void J_FT_Text_Multi_State_Display::insert_text_string(j_size_t i_pos, j_size_t 
 }
 
 
-J_FT_Text_Display::Modifier_Manger::Modifier_Manger(const std::function<void()>& irk_func):M_notification_function(irk_func){
 
 }
 

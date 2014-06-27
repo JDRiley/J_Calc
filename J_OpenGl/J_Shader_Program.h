@@ -80,15 +80,13 @@ private:
 class Image_Shader_Program : public J_GL_Shader_Program{
 public:
 	Image_Shader_Program(Image_Format i_format);
-	j_uint image_program_id()const;
+	j_uint program_id()const;
 	void set_format(Image_Format);
 	void set_middle_line_color(J_UI_Color);
 private:
 	j_uint M_image_program_id, M_vert_shader_id, M_image_frag_id;
 	Image_Format M_format;
 };
-
-
 
 class J_GL_Circle_Shader : public J_GL_Shader_Program{
 public:
@@ -102,6 +100,17 @@ private:
 	j_uint M_circle_fill_prog_id;
 	j_uint M_circle_outine_prog_id;
 };
+
+class J_GL_Line_Shader{
+public:
+	J_GL_Line_Shader();
+	int program_id();
+	void set_fill_color(const J_UI_Color& i_color);
+private:
+	
+	int M_program_id;
+};
+
 
 
 }

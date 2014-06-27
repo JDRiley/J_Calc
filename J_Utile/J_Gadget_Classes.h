@@ -10,6 +10,8 @@
 #include <j_tree.h>
 //
 #include <initializer_list>
+//
+#include <ex_array.h>
 namespace jomike{
 
 template<typename Val_t, typename Comp_t = std::less<Val_t>>
@@ -54,6 +56,39 @@ Delimiter_Handler<Val_t, Comp_t>::Delimiter_Handler(Iter i_delim_begin, Iter i_d
 			, this, std::placeholders::_1, true));
 
 }
+
+
+template<typename Array_t>
+class Array_Modifier_Manger{
+public:
+
+
+	Array_Modifier_Manger(const std::function<void()>& irk_func)
+		:M_notification_function(irk_func){}
+	Array_t& operator*(){
+		M_notification_function();
+		return M_array;
+	}
+
+	typename Array_t::value_type& operator[](j_size_t i_index){
+		return operator->()->operator[](i_index);
+	}
+
+	Array_t* operator->(){
+		M_notification_function();
+		return &M_array;
+	}
+
+	const Array_t* operator->()const{
+		M_notification_function();
+		return &M_array;
+	}
+private:
+	Array_t M_array;
+	std::function<void()> M_notification_function;
+};
+
+
 
 }
 

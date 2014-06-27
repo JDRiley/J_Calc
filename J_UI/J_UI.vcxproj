@@ -375,7 +375,7 @@
     <ClInclude Include="J_Display_Object\J_Display_Object.h" />
     <ClInclude Include="J_Font_Face.h" />
     <ClInclude Include="J_Font_Manager.h" />
-    <ClInclude Include="J_FT_Text_Displayer\J_Display_Letter_Box.h" />
+    <ClInclude Include="J_FT_Text_Displayer\J_UI_Letter_Box.h" />
     <ClInclude Include="J_FT_Text_Displayer\J_FT_Text_Display.h" />
     <ClInclude Include="J_FT_Text_Displayer\J_Text_Box.h" />
     <ClInclude Include="J_FT_Text_Displayer\Letter_Box_String.h" />
@@ -384,10 +384,12 @@
     <ClInclude Include="J_Image_Pane.h" />
     <ClInclude Include="J_Notification_Handler.h" />
     <ClInclude Include="J_Shape.h" />
+    <ClInclude Include="J_UI.h" />
+    <ClInclude Include="J_UI_Box.h" />
+    <ClInclude Include="J_UI_Circle.h" />
     <ClInclude Include="J_UI_Controller.h" />
     <ClInclude Include="J_UI_Functional.h" />
     <ClInclude Include="J_UI_Line.h" />
-    <ClInclude Include="J_UI_Model.h" />
     <ClInclude Include="J_UI_Object.h" />
     <ClInclude Include="J_UI_Object_Factory.h" />
     <ClInclude Include="J_UI_String\J_UI_Char.h" />
@@ -398,12 +400,18 @@
   <ItemGroup>
     <ClCompile Include="Bitmap_Metrics.cpp" />
     <ClCompile Include="j_cursor_management.cpp" />
-    <ClCompile Include="J_Display_Image_Pane.cpp" />
-    <ClCompile Include="J_Display_Object\J_Display_Line.cpp" />
-    <ClCompile Include="J_Display_Object\J_Display_Object.cpp" />
+    <ClCompile Include="J_Display_Image_Pane.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="J_Display_Object\J_Display_Line.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="J_Display_Object\J_Display_Object.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="J_Font_Face.cpp" />
     <ClCompile Include="J_Font_Manager.cpp" />
-    <ClCompile Include="J_FT_Text_Displayer\J_Display_Letter_Box.cpp" />
+    <ClCompile Include="J_FT_Text_Displayer\J_UI_Letter_Box.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\J_FT_Text_Display.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\J_Text_Box.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\Letter_Box_String.cpp" />
@@ -412,13 +420,15 @@
     <ClCompile Include="J_Image_Pane.cpp" />
     <ClCompile Include="J_Notification_Handler.cpp" />
     <ClCompile Include="J_Shape.cpp" />
+    <ClCompile Include="J_UI.cpp" />
+    <ClCompile Include="J_UI_Box.cpp" />
+    <ClCompile Include="J_UI_Circle.cpp" />
     <ClCompile Include="J_UI_Controller.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug2012|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="J_UI_Functional.cpp" />
     <ClCompile Include="J_UI_Line.cpp" />
-    <ClCompile Include="J_UI_Model.cpp" />
     <ClCompile Include="J_UI_Object.cpp" />
     <ClCompile Include="J_UI_Object_Factory.cpp" />
     <ClCompile Include="J_UI_String\J_UI_Char.cpp" />

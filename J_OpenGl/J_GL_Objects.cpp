@@ -69,6 +69,32 @@ void J_GL_Object::make_ID_zero(){
 	M_ID = 0;
 }
 
+
+J_GL_Buffer::J_GL_Buffer():J_GL_Object(0){
+	glGenBuffers(1, ID_ptr());
+	assert(!open_gl_error());
+}
+
+J_GL_Buffer::~J_GL_Buffer(){
+	glDeleteBuffers(1, ID_ptr());
+	assert(!open_gl_error());
+}
+
+
+J_GL_Vertex_Array::J_GL_Vertex_Array(int i_index): J_GL_Object(i_index){
+	assert(0 == i_index);
+	assert(0 == get_ID());
+}
+
+J_GL_Vertex_Array::J_GL_Vertex_Array(J_GL_Texture&& irv_right):J_GL_Object(std::move(irv_right)){
+
+}
+
+const J_GL_Vertex_Array& J_GL_Vertex_Array::null_object(){
+	static J_GL_Vertex_Array null_array(0);
+	return null_array;
+}
+
 }
 
 

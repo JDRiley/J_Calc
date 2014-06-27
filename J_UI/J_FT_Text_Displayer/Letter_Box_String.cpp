@@ -1,6 +1,6 @@
 #include "Letter_Box_String.h"
 //
-#include "J_Display_Letter_Box.h"
+#include "J_UI_Letter_Box.h"
 
 namespace jomike{
 
@@ -12,7 +12,7 @@ void Letter_Box_String::draw(j_size_t i_start_pos, j_size_t i_end_pos)const{
 	}
 }
 
-void Letter_Box_String::push_back(J_Display_Letter_Box_Shared_t i_letter){
+void Letter_Box_String::push_back(J_UI_Letter_Box_Shared_t i_letter){
 	M_letter_boxes.push_back(i_letter);
 }
 
@@ -24,7 +24,7 @@ Letter_Box_String::const_iterator Letter_Box_String::end()const{
 	return M_letter_boxes.end();
 }
 
-J_Display_Letter_Box_Shared_t Letter_Box_String::operator[](j_size_t i_index){
+J_UI_Letter_Box_Shared_t Letter_Box_String::operator[](j_size_t i_index){
 	return M_letter_boxes[i_index];
 }
 
@@ -61,7 +61,7 @@ int Letter_Box_Pos_Order_Comp::get_line_index(j_float i_float)const{
 }
 
 bool Letter_Box_Pos_Order_Comp
-	::operator()(J_Display_Letter_Box_Shared_t ik_left, const Pen_Pos_FL_t& ik_right)const{
+	::operator()(J_UI_Letter_Box_Shared_t ik_left, const Pen_Pos_FL_t& ik_right)const{
 	int compare_val = get_line_index(ik_right.second) - get_line_index(ik_left->y2());
 	if(compare_val < 0){
 		return false;
@@ -75,7 +75,7 @@ bool Letter_Box_Pos_Order_Comp
 }
 
 bool Letter_Box_Pos_Order_Comp
-::operator()(const Pen_Pos_FL_t& ik_left,  J_Display_Letter_Box_Shared_t ik_right)const{
+::operator()(const Pen_Pos_FL_t& ik_left,  J_UI_Letter_Box_Shared_t ik_right)const{
 	int compare_val = get_line_index(ik_right->y2()) - get_line_index(ik_left.second);
 	if(compare_val < 0){
 		return false;

@@ -76,6 +76,11 @@ private:
 	J_GL_Texture(j_uint i_id):J_GL_Object(i_id){ assert(!get_ID()); }
 };
 
+
+
+
+
+
 class J_GL_Texture_Render_Buffer : public J_GL_Texture{
 public:
 	J_GL_Texture_Render_Buffer();
@@ -94,14 +99,38 @@ class J_GL_Vertex_Array : public J_GL_Object{
 public:
 	J_GL_Vertex_Array();
 
-	J_GL_Vertex_Array(J_GL_Texture&& irv_right):J_GL_Object(std::move(irv_right)){}
-
+	J_GL_Vertex_Array(J_GL_Texture&& irv_right);
+	static const J_GL_Vertex_Array& null_object();
 	J_GL_Vertex_Array(const J_GL_Texture&) = delete;
 	~J_GL_Vertex_Array();
 private:
 	friend class J_Open_GL;
 	bool derived_valid()const override;
+	J_GL_Vertex_Array(int i_index);
 };
+
+
+class J_GL_Buffer : public J_GL_Object{
+public:
+	J_GL_Buffer();
+
+	J_GL_Buffer(J_GL_Buffer&& irv_right):J_GL_Object(std::move(irv_right)){}
+	static const J_GL_Buffer& null_object(){
+		static J_GL_Buffer null_buffer(0u);
+		return null_buffer;
+	}
+	J_GL_Buffer(const J_GL_Texture&) = delete;
+	~J_GL_Buffer();
+private:
+	friend class J_Open_GL;
+	bool derived_valid()const override;
+	J_GL_Buffer(j_uint i_id):J_GL_Object(i_id){
+		//Only to make null object
+		assert(!get_ID());
+	}
+};
+
+
 
 }
 

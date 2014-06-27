@@ -289,6 +289,8 @@ public:
 	J_UI_String::const_iterator at_pos(j_size_t)const;
 	J_UI_String::iterator at_pos(j_size_t);
 
+	Pen_Pos_t get_string_indices(const_iterator i_pos)const;
+
 	//Accessors
 	J_UI_Char& operator[](j_size_t i_index);
 	const J_UI_Char& operator[](j_size_t i_index)const;

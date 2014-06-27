@@ -6,6 +6,8 @@
 #include "J_Display_Object/J_Display_Object.h"
 //
 #include <J_Image.h>
+
+#error deprecated
 namespace jomike{
 
 

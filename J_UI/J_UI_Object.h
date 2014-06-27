@@ -20,28 +20,7 @@ typedef void (*Mouse_Press_Func_t)
 typedef void(*Focus_Callback_Func_t)(J_UI_Object_Shared_t i_obj, bool i_focus);
 
 
-class J_UI_Outline_Fill_Management : public J_Outline_Fill_Management{
-public:
-	J_UI_Outline_Fill_Management(j_uint);
-	void set_outline_visibility_status(bool)override;
-	void set_fill_visibility_status(bool)override;
 
-	void set_outline_thickness(j_float)override;
-	
-	virtual void set_outline_color(const J_Color_RGBA<j_float>&);
-	virtual void set_fill_color(const J_UI_Color&);
-
-	
-	J_UI_Color fill_color()const;
-	J_UI_Color outline_color()const;
-	void broadcast_outline_fill_state()const;
-	j_uint get_ID()const;
-private:
-	const j_uint M_ID;
-	J_UI_Color M_fill_color;
-	J_UI_Color M_outline_color;
-
-};
 
 class J_UI_Object_Update_Callback : J_UI_Handler{
 public:
@@ -68,7 +47,7 @@ void J_UI_Func_Obj_Callback<Func_Obj_t>::operator()(J_UI_Object_Shared_t i_obj){
 	M_func_object(i_obj);
 }
 
-class J_UI_Object : public J_UI_Outline_Fill_Management
+class J_UI_Object : public J_Outline_Fill_Management
 	, public virtual J_Shape, public std::enable_shared_from_this<J_UI_Object>{
 public:
 	virtual void update();
@@ -76,13 +55,15 @@ public:
 #if VS_2013
 	J_UI_Object& operator=(const J_UI_Object&) = delete;
 #endif
+	virtual void draw()const = 0;
+
 	virtual void alert_cursor_pos(Pen_Pos_FL_t);
 	virtual void set_left_click_on();
 	virtual void set_left_click_off();
 	bool clickable_status()const;
 	virtual void broadcast_current_state()const;
-	virtual void key_input_cmd(j_window_t, int charcode, int scancode, int action, int modifier);
-	virtual void char_input_cmd(j_window_t, int /*charcode*/){}
+	virtual void key_input_cmd(int charcode, int scancode, int action, int modifier);
+	virtual void char_input_cmd(int /*charcode*/){}
 	virtual void mouse_button_press(int,int, Pen_Pos_FL_t);
 	virtual void mouse_button_press_n(int, int, Pen_Pos_FL_t, int);
 	virtual void mouse_button_release(int,int, Pen_Pos_FL_t);
@@ -95,7 +76,7 @@ public:
 	bool toggle_status()const;
 	void add_update_callback(J_UI_Object_Update_Callback_Shared_t);
 	void copy_state(const J_UI_Object&);
-
+	virtual void alert_resize(int,int) = 0;
 	virtual void set_focus_status(bool i_status);
 	bool focus_status()const;
 	virtual void add_focus_callback(Focus_Callback_Func_t);
@@ -130,37 +111,8 @@ private:
 
 
 
-class J_UI_Box : public J_UI_Object, public J_Rectangle{
-public:
-	J_UI_Box(const J_Rectangle&);
-	void broadcast_current_state()const;
-
-	void set_y(j_float)override;
-	void set_x(j_float)override;
-	void set_width(j_float)override;
-	void set_height(j_float)override;
-
-	void set_rectangle(const J_Rectangle&)override;
-protected:
-	J_UI_Box(const J_Rectangle&, j_uint i_obj_id);
-private:
-
-};
-
-class J_UI_Circle : public J_UI_Object, public J_Circle{
-public:
-	J_UI_Circle(const J_Circle&);
-	void broadcast_current_state()const;
 
 
-	void set_x(j_float)override;
-	void set_y(j_float)override;
-	void set_radius(j_float)override;
-	void set_center(j_float, j_float)override;
-
-private:
-	
-};
 
 
 template<typename UI_Object_t>
