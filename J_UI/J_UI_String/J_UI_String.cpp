@@ -532,6 +532,29 @@ J_UI_Multi_String::j_ui_char_iterator J_UI_Multi_String::insert
 	return j_ui_char_iterator(i_pos + 1 , *this);
 }
 
+void J_UI_Multi_String::insert(j_size_t i_pos, const J_UI_String& irk_string){
+	
+	if(M_strings.empty()){
+		M_strings.push_back(irk_string);
+	}
+	auto insert_pos = get_insert_pos(i_pos);
+
+	auto indices = get_string_indices(insert_pos.second);
+
+	if(i_pos == indices.first){
+		M_strings.insert(insert_pos.second, irk_string);
+	} else if(i_pos == indices.second){
+		M_strings.insert(insert_pos.second + 1, irk_string);
+	} else{
+		J_UI_String remaining_string = insert_pos.second->substr(i_pos - indices.first);
+		insert_pos.second->resize(i_pos - indices.first);
+		auto new_insert_pos = M_strings.insert(insert_pos.second + 1, irk_string);
+		M_strings.insert(new_insert_pos + 1, remaining_string);
+	}
+
+
+}
+
 template<typename Value_Type>
 J_UI_Multi_String::multi_string_iterator<Value_Type>::multi_string_iterator(j_size_t i_pos
 									, const J_UI_Multi_String& irk_cont): M_pos(i_pos)
@@ -746,12 +769,12 @@ jomike::Pen_Pos_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)con
 	auto string_pos = begin();
 
 	while(i_pos != string_pos){
-		index += i_pos->size();
+		index += safe_int_cast(i_pos->size());
 		++i_pos;
 	}
 
 
-	return Pen_Pos_t(index, index + i_pos->size());
+	return Pen_Pos_t(index, safe_int_cast(index + i_pos->size()));
 }
 
 }// namespace jomike

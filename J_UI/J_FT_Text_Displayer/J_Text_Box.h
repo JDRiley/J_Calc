@@ -16,8 +16,8 @@
 #include <J_UI/J_UI_String.h>
 //
 #include <J_Gadget_Classes.h>
+
 //Utilities
-#include <memory>
 #include <utility>
 
 
@@ -58,8 +58,7 @@ public:
 
 	
 	void enable_default_key_char_processing();
-	virtual void set_left_click_on() = 0;
-	virtual void set_left_click_off() = 0;
+
 
 	virtual j_uint get_cursor_line_id()const = 0;
 
@@ -113,7 +112,7 @@ public:
 
 	~J_Text_Box_Object();
 protected:
-	J_Text_Box_Object(const J_Rectangle&, j_uint);
+	
 private:
 };
 
@@ -125,10 +124,9 @@ public:
 	J_Text_Box(const J_Rectangle& irk_rectangle = J_Rectangle()
 		, const J_UI_Multi_String& i_string = J_UI_Multi_String());
 
-	J_Text_Box(const J_Rectangle&
-		, const J_UI_Multi_String& i_string, j_uint i_ID);
+	
 
-
+	void draw()const;
 	//String Maintenance
 	void clear_string()override;
 	bool insert_char(J_UI_Char i_char)override;
@@ -136,7 +134,7 @@ public:
 	void insert_string(const J_UI_String&)override;
 	void insert_string(j_size_t pos, const J_UI_String&)override;
 
-	void recalculate_letter_poses();
+	
 
 	void backspace()override;
 		
@@ -151,9 +149,6 @@ public:
 	void set_string(const J_UI_String& irk_string)override;
 
 
-
-	void set_left_click_on()override;
-	void set_left_click_off()override;
 
 
 	//Cursor Maintenance
@@ -199,7 +194,7 @@ public:
 	void change_color_at_pos(int i_pos, J_UI_Color i_color)override;
 	//String Accessory
 	const J_UI_Multi_String& get_string()const override;
-	void broadcast_current_state()const override;
+	//void broadcast_current_state()const override;
 
 	void notify_letter_box_poses(j_size_t i_pos = J_SIZE_T_ZERO)const;
 	void mouse_button_release(int i_button, int, Pen_Pos_FL_t i_pos)override;
@@ -226,13 +221,13 @@ private:
 	
 		
 
-
+	void recalculate_letter_poses();
 	
 	void set_cursor_on();
 	
 
 
-	void notify_string_data()const;
+	//void notify_string_data()const;
 
 	void scroll_selection_boxes(j_float i_x_scroll, j_float i_y_scroll);
 
@@ -255,13 +250,15 @@ private:
 	
 	void scroll(int i_scroll_val);
 
-	
+	void render_frame_buffer()const;
+	void initialize_frame_buffer();
 	int lines_scrolled_per_tick()const;
 	void set_selection_box_settings(J_UI_Box_Shared_t i_box)const;
 	J_Line get_cursor_line(const Pen_Pos_FL_t& M_pen_poses)const;
 	void clear_selection_boxes();
 	void set_selection_box_visibility_statuses();
-	
+	ex_array<J_UI_Letter_Box_Shared_t> make_letter_boxes(const J_UI_String& irk_string);
+
 
 	int M_text_state;
 	mutable bool M_changed_flag = true;

@@ -8,11 +8,13 @@
 //
 #include "J_FT_Text_Displayer/Multi_State_Text_Box.h"
 //
-#include "J_Display_Image_Pane.h"
+#include "J_UI_Line.h"
 //
-#include "J_Display_Object/J_Display_Line.h"
+#include "J_Image_Pane.h"
 //
 #include "J_UI_Line.h"
+//
+#include "J_UI_Circle.h"
 //Algorithms
 #include <algorithm>
 //
@@ -75,7 +77,7 @@ void J_View::resize(int i_width, int i_height){
 	
 
 	for_each(M_ui_object_stack.begin(), M_ui_object_stack.end()
-		, bind(&J_Display_Object::alert_resize, _1, get_x_resolution(), get_y_resolution()));
+		, bind(&J_UI_Object::alert_resize, _1, get_x_resolution(), get_y_resolution()));
 
 }
 
@@ -137,7 +139,7 @@ void J_View::add_ui_box(J_UI_Box_Shared_t i_ui_box){
 
 void J_View::add_ui_circle(J_UI_Circle_Shared_t i_display_circle){
 	if (M_display_circles.count(i_display_circle->get_ID())){
-		throw J_Argument_Error("View Already Has Text Box With This ID");
+		throw J_Argument_Error("View Already Has Circle Box With This ID");
 	}
 
 	add_ui_object(i_display_circle);
@@ -146,7 +148,7 @@ void J_View::add_ui_circle(J_UI_Circle_Shared_t i_display_circle){
 
 void J_View::add_multi_state_text_box(Multi_State_Text_Box_Shared_t i_multi_state_textbox){
 	if(M_multi_state_text_boxes.count(i_multi_state_textbox->get_ID())){
-		throw J_Argument_Error("View Already Has Text Box With This ID");
+		throw J_Argument_Error("View Already Has Multi Text Box With This ID");
 	}
 
 
@@ -188,14 +190,12 @@ void J_View::add_multi_state_text_box(Multi_State_Text_Box_Shared_t i_multi_stat
 
 /*void J_View::mouse_button(int i_button, int i_action, int i_modifiers, Pen_Pos_FL_t i_pos)*/
 j_uint J_View::mouse_button_press(J_View_Shared_t i_view, int i_button, int i_modifiers, Pen_Pos_FL_t i_pos){
-	J_Display_Object_Shared_t disp_obj_ptr = get_display_object_at_pos(i_pos);
+	J_UI_Object_Shared_t disp_obj_ptr = get_display_object_at_pos(i_pos);
 	if(!disp_obj_ptr){
-		s_controller->notify_object_press(shared_from_this(), 0u, i_button, i_modifiers, i_pos);
 		return 0;
 	}
-	s_controller->notify_object_press(shared_from_this(), disp_obj_ptr->get_ID()
-									  , i_button, i_modifiers, i_pos);
 
+	disp_obj_ptr->mouse_button_press(i_button, i_modifiers, i_pos);
 	switch(i_button){
 	case J_MOUSE_BUTTON_LEFT:
 		M_focused_object = disp_obj_ptr;
@@ -210,13 +210,15 @@ j_uint J_View::mouse_button_press(J_View_Shared_t i_view, int i_button, int i_mo
 
 j_uint J_View::mouse_button_press_n(J_View_Shared_t i_view, int i_button
 									, int i_modifiers, Pen_Pos_FL_t i_pos, int i_count){
-	J_Display_Object_Shared_t disp_obj_ptr = get_display_object_at_pos(i_pos);
+	J_UI_Object_Shared_t disp_obj_ptr = get_display_object_at_pos(i_pos);
+
 	if(!disp_obj_ptr){
-		s_controller->notify_object_press_n(shared_from_this(), 0u, i_button, i_modifiers, i_pos, i_count);
 		return 0;
 	}
-	s_controller->notify_object_press_n(shared_from_this(), disp_obj_ptr->get_ID()
-									  , i_button, i_modifiers, i_pos, i_count);
+
+	for(int i = 0; i < i_count; i++){
+		disp_obj_ptr->mouse_button_press(i_button, i_modifiers, i_pos);
+	}
 
 	switch(i_button){
 	case J_MOUSE_BUTTON_LEFT:
@@ -225,7 +227,7 @@ j_uint J_View::mouse_button_press_n(J_View_Shared_t i_view, int i_button
 	default:
 		;
 	}
-	//disp_obj_ptr->mouse_button_press(i_view, i_button, i_modifiers, i_pos);
+
 
 	return disp_obj_ptr->get_ID();
 }
@@ -235,8 +237,8 @@ void J_View::mouse_button_release(J_View_Shared_t i_view, int i_button, int i_mo
 
 	switch(i_button){
 	case J_LEFT_MOUSE_BUTTON:
-		if(M_focused_object){
-			M_focused_object->mouse_button_release(shared_from_this(), i_button, i_modifiers, i_pos);
+		if(!M_focused_object.expired()){
+			M_focused_object.lock()->mouse_button_release(i_button, i_modifiers, i_pos);
 		}
 		break;
 	default:
@@ -245,16 +247,16 @@ void J_View::mouse_button_release(J_View_Shared_t i_view, int i_button, int i_mo
 	
 }
 
-void J_View::display_object_pressed(J_Display_Object_Shared_t, int , int 
+void J_View::display_object_pressed(J_UI_Object_Shared_t, int , int 
 		, Pen_Pos_FL_t){}
 
-J_Display_Object_Shared_t J_View::get_display_object_at_pos(Pen_Pos_FL_t i_pos){
+J_UI_Object_Shared_t J_View::get_display_object_at_pos(Pen_Pos_FL_t i_pos){
 	for(auto disp_obj_ptr : M_ui_object_stack){
 		if(disp_obj_ptr->clickable_status() && disp_obj_ptr->is_inside(i_pos.first, i_pos.second)){
 			return disp_obj_ptr;
 		}
 	}
-	return J_Display_Box_Shared_t();
+	return J_UI_Object_Shared_t();
 }
 
 /*void open_window()*/
@@ -288,7 +290,7 @@ void J_View::add_to_buffer()const{
 	s_contexts->make_context_active(M_context);
 	draw_background();
 	for_each(M_ui_object_stack.begin(), M_ui_object_stack.end()
-		, mem_fn(&J_Display_Object::draw));
+		, mem_fn(&J_UI_Object::draw));
 
 }
 
@@ -312,23 +314,22 @@ void J_View::set_cursor_pos(int i_x, int i_y){
 			continue;
 		}
 
-		s_controller->notify_cursor_pos(cursor_pos_objects.lock()->get_ID()
-										, M_cursor_pos);
+		cursor_pos_objects.lock()->alert_cursor_pos(M_cursor_pos);
 	}
 
 }
 
-void J_View::set_fill_visibility(j_uint i_disp_obj, bool i_status){
-	if(auto disp_obj = get_display_object(i_disp_obj)){
-		disp_obj->set_fill_visibility_status(i_status);
-	}
-}
-
-void J_View::set_outline_visibility(j_uint i_disp_obj, bool i_status){
-	if (auto disp_obj = get_display_object(i_disp_obj)){
-		disp_obj->set_outline_visibility_status(i_status);
-	}
-}
+//void J_View::set_fill_visibility(j_uint i_disp_obj, bool i_status){
+//	if(auto disp_obj = get_display_object(i_disp_obj)){
+//		disp_obj->set_fill_visibility_status(i_status);
+//	}
+//}
+//
+//void J_View::set_outline_visibility(j_uint i_disp_obj, bool i_status){
+//	if (auto disp_obj = get_display_object(i_disp_obj)){
+//		disp_obj->set_outline_visibility_status(i_status);
+//	}
+//}
 
 /*~J_FT_Text_Displayer()*/ //Must be called on main thread and not in callback
 J_View::~J_View(){
@@ -354,96 +355,96 @@ void J_View::clear(){
 	M_focused_object.reset();
 
 }
+//
+//J_UI_Object_Shared_t J_View::get_display_object(j_uint i_obj_id){
+//	
+//	auto found_pos = M_ui_objects.find(i_obj_id);
+//	if(found_pos == M_ui_objects.end()){
+//		return J_UI_Object_Shared_t();
+//	}
+//	make_active_context();
+//	return found_pos->second;
+//}
 
-J_Display_Object_Shared_t J_View::get_display_object(j_uint i_obj_id){
-	
-	auto found_pos = M_ui_objects.find(i_obj_id);
-	if(found_pos == M_ui_objects.end()){
-		return J_Display_Object_Shared_t();
-	}
-	make_active_context();
-	return found_pos->second;
-}
-
-J_Display_Box_Shared_t J_View::get_display_box(j_uint i_obj_id){
+jomike::J_UI_Box_Shared_t J_View::get_display_box(j_uint i_obj_id){
 	auto found_pos = M_disp_boxes.find(i_obj_id);
 	if(found_pos == M_disp_boxes.end()){
-		return J_Display_Box_Shared_t();
+		return J_UI_Box_Shared_t();
 	}
 	make_active_context();
 	return found_pos->second;
 }
 
-J_Display_Circle_Shared_t J_View::get_display_circle(j_uint i_circle_id){
+J_UI_Circle_Shared_t J_View::get_display_circle(j_uint i_circle_id){
 	auto found_pos = M_display_circles.find(i_circle_id);
 	if (found_pos == M_display_circles.end()){
-		return J_Display_Circle_Shared_t();
+		return J_UI_Circle_Shared_t();
 	}
 	make_active_context();
 	return found_pos->second;
 }
 
-J_FT_Text_Display_Object_Shared_t J_View::get_text_display(j_uint i_obj_id){
-	auto found_pos = M_text_box_objects.find(i_obj_id);
-	if(found_pos == M_text_box_objects.end()){
-		return J_FT_Text_Display_Shared_t();
-	}
-	make_active_context();
-	return found_pos->second;
-}
+//J_Text_Box_Shared_t J_View::get_text_display(j_uint i_obj_id){
+//	auto found_pos = M_text_box_objects.find(i_obj_id);
+//	if(found_pos == M_text_box_objects.end()){
+//		return J_FT_Text_Display_Shared_t();
+//	}
+//	make_active_context();
+//	return found_pos->second;
+//}
 
-J_FT_Text_Multi_State_Display_Shared_t J_View::get_multi_state_text_display(j_uint i_obj_id){
+Multi_State_Text_Box_Shared_t J_View::get_multi_state_text_display(j_uint i_obj_id){
 	auto found_pos = M_multi_state_text_boxes.find(i_obj_id);
 	if(M_multi_state_text_boxes.end() == found_pos){
-		return J_FT_Text_Multi_State_Display_Shared_t();
+		return Multi_State_Text_Box_Shared_t();
 	}
 
 	make_active_context();
 	return found_pos->second;
 }
 
-void J_View::update_box_coordinates(j_uint i_display_box_id, const J_Rectangle& irk_rectangle){
-	if(auto display_box = get_display_box(i_display_box_id)){
-		display_box->set_rectangle(irk_rectangle);
-	}
-}
-
-void J_View::update_fill_color(j_uint i_disp_obj_id, J_Color_RGBA<j_float> i_color){
-	if (auto disp_obj = get_display_object(i_disp_obj_id)){
-		disp_obj->set_fill_color(i_color);
-	}
-}
-
-void J_View::update_outline_color(j_uint i_disp_obj_id, J_Color_RGBA<j_float> i_color){
-	if (auto disp_obj = get_display_object(i_disp_obj_id)){
-		disp_obj->set_outline_color(i_color);
-	}
-}
-
-void J_View::update_outline_thickness(j_uint i_disp_object_id, j_float i_thickness){
-	if (auto disp_pbj = get_display_object(i_disp_object_id)){
-		disp_pbj->set_outline_thickness(i_thickness);
-	}
-}
-
-void J_View::update_circle_shape_data(j_uint i_circle_id, const J_Circle& irk_circle){
-	if (auto display_circle = get_display_circle(i_circle_id)){
-		display_circle->set_circle(irk_circle);
-	}
-	
-}
-
-void J_View::update_center(j_uint i_obj_id, j_float i_x_pos, j_float i_y_pos){
-	if (auto display_obj = get_display_object((i_obj_id))){
-		display_obj->set_center(i_x_pos, i_y_pos);
-	}
-}
-
-void J_View::update_radius(j_uint i_circle_id, j_float i_radius){
-	if (auto display_circle = get_display_circle(i_circle_id)){
-		display_circle->set_radius(i_radius);
-	}
-}
+//void J_View::update_box_coordinates(j_uint i_display_box_id, const J_Rectangle& irk_rectangle){
+//	if(auto display_box = get_display_box(i_display_box_id)){
+//		display_box->set_rectangle(irk_rectangle);
+//	}
+//}
+//
+//void J_View::update_fill_color(j_uint i_disp_obj_id, J_Color_RGBA<j_float> i_color){
+//	if (auto disp_obj = get_display_object(i_disp_obj_id)){
+//		disp_obj->set_fill_color(i_color);
+//	}
+//}
+//
+//void J_View::update_outline_color(j_uint i_disp_obj_id, J_Color_RGBA<j_float> i_color){
+//	if (auto disp_obj = get_display_object(i_disp_obj_id)){
+//		disp_obj->set_outline_color(i_color);
+//	}
+//}
+//
+//void J_View::update_outline_thickness(j_uint i_disp_object_id, j_float i_thickness){
+//	if (auto disp_pbj = get_display_object(i_disp_object_id)){
+//		disp_pbj->set_outline_thickness(i_thickness);
+//	}
+//}
+//
+//void J_View::update_circle_shape_data(j_uint i_circle_id, const J_Circle& irk_circle){
+//	if (auto display_circle = get_display_circle(i_circle_id)){
+//		display_circle->set_circle(irk_circle);
+//	}
+//	
+//}
+//
+//void J_View::update_center(j_uint i_obj_id, j_float i_x_pos, j_float i_y_pos){
+//	if (auto display_obj = get_display_object((i_obj_id))){
+//		display_obj->set_center(i_x_pos, i_y_pos);
+//	}
+//}
+//
+//void J_View::update_radius(j_uint i_circle_id, j_float i_radius){
+//	if (auto display_circle = get_display_circle(i_circle_id)){
+//		display_circle->set_radius(i_radius);
+//	}
+//}
 
 int J_View::get_x_resolution()const{
 	return s_contexts->get_width(M_context);
@@ -458,79 +459,75 @@ j_window_t J_View::get_window()const{
 }
 
 //Image---------------------------------------------------------------------------------------
-J_Display_Image_Pane_Shared_t J_View::get_image_pane(j_uint i_obj_id){
+J_Image_Pane_Shared_t J_View::get_image_pane(j_uint i_obj_id){
 	auto found_pos = M_image_panes.find(i_obj_id);
 	if(found_pos == M_image_panes.end()){
-		return J_Display_Image_Pane_Shared_t();
+		return J_Image_Pane_Shared_t();
 	}
 	make_active_context();
 	return found_pos->second;
 }
+//
+//void J_View::update_image_clear(j_uint i_obj_id){
+//	if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->clear_image();
+//	}
+//}
+//
+//void J_View::update_image_buffer(j_uint i_obj_id, const j_ubyte* i_buffer){
+//		if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->set_buffer(i_buffer);
+//	}
+//}
+//
+//
+//
+//void J_View::update_image_height(j_uint i_obj_id, int i_height){
+//	if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->set_image_height(i_height);
+//	}
+//}
+//
+//void J_View::update_image_width(j_uint i_obj_id, int i_width){
+//	if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->set_image_width(i_width);
+//	}
+//}
 
-void J_View::update_image_clear(j_uint i_obj_id){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->clear_image();
-	}
-}
-
-void J_View::update_image_buffer(j_uint i_obj_id, const j_ubyte* i_buffer){
-		if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_buffer(i_buffer);
-	}
-}
-
-void J_View::update_image_buffer_mono(j_uint i_obj_id, const j_ubyte* i_buffer){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_buffer_mono(i_buffer);
-	}
-}
-
-void J_View::update_image_height(j_uint i_obj_id, int i_height){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_image_height(i_height);
-	}
-}
-
-void J_View::update_image_width(j_uint i_obj_id, int i_width){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_image_width(i_width);
-	}
-}
-
-void J_View::update_image_buffer_format(j_uint i_obj_id, Image_Format i_format){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_image_format(i_format);
-	}
-}
-
-void J_View::update_middle_line_color(j_uint i_obj_id, J_UI_Color i_color){
-	if(auto image_pane = get_image_pane(i_obj_id)){
-		image_pane->set_middle_line_color(i_color);
-	}
-}
-
-void J_View::update_add_multi_text_state(j_uint i_multi_text_state_id){
-	if(auto multi_text_state_box = get_multi_state_text_display(i_multi_text_state_id)){
-		multi_text_state_box->add_state();
-	}
-}
-
-void J_View::update_multi_text_state(j_uint i_multi_state_text_id, j_size_t i_state){
-	if(auto multi_state_text_box = get_multi_state_text_display(i_multi_state_text_id)){
-		multi_state_text_box->set_state(i_state);
-	}
-}
-
-
-void J_View::remove_display_line(j_uint i_line_id){
-	remove_display_object(i_line_id);
-	if(!M_display_lines.count(i_line_id)){
-		return;
-	}
-
-	M_display_lines.erase(i_line_id);
-}
-
+//void J_View::update_image_buffer_format(j_uint i_obj_id, Image_Format i_format){
+//	if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->set_image_format(i_format);
+//	}
+//}
+//
+//void J_View::update_middle_line_color(j_uint i_obj_id, J_UI_Color i_color){
+//	if(auto image_pane = get_image_pane(i_obj_id)){
+//		image_pane->set_middle_line_color(i_color);
+//	}
+//}
+//
+//void J_View::update_add_multi_text_state(j_uint i_multi_text_state_id){
+//	if(auto multi_text_state_box = get_multi_state_text_display(i_multi_text_state_id)){
+//		multi_text_state_box->add_state();
+//	}
+//}
+//
+//void J_View::update_multi_text_state(j_uint i_multi_state_text_id, j_size_t i_state){
+//	if(auto multi_state_text_box = get_multi_state_text_display(i_multi_state_text_id)){
+//		multi_state_text_box->set_state(i_state);
+//	}
+//}
+//
+//
+//void J_View::remove_display_line(j_uint i_line_id){
+//	remove_display_object(i_line_id);
+//	if(!M_display_lines.count(i_line_id)){
+//		return;
+//	}
+//
+//	M_display_lines.erase(i_line_id);
+//}
+//
 
 //void J_View::remove_text_display(j_uint i_obj_id){
 //	remove_display_box(i_obj_id);
@@ -540,14 +537,14 @@ void J_View::remove_display_line(j_uint i_line_id){
 //	M_text_box_objects.erase(i_obj_id);
 //
 //}
-void J_View::remove_display_box(j_uint i_obj_id){
-	remove_display_object(i_obj_id);
-	if(!M_disp_boxes.count(i_obj_id)){
-		return;
-	}
-
-	M_disp_boxes.erase(i_obj_id);
-}
+//void J_View::remove_display_box(j_uint i_obj_id){
+//	remove_display_object(i_obj_id);
+//	if(!M_disp_boxes.count(i_obj_id)){
+//		return;
+//	}
+//
+//	M_disp_boxes.erase(i_obj_id);
+//}
 //void J_View::remove_display_object(j_uint i_obj_id){
 //	auto found_obj = M_ui_objects.find(i_obj_id);
 //	if(M_ui_objects.end() == found_obj){
@@ -642,11 +639,13 @@ void J_View::remove_display_box(j_uint i_obj_id){
 //	}
 //}
 
-void J_View::add_display_line(J_UI_Line_Shared_t i_line_ptr){
+
+
+void J_View::add_ui_line(J_UI_Line_Shared_t i_line_ptr){
 	Context_RAII context_saver;
 	make_active_context();
 	if(M_display_lines.count(i_line_ptr->get_ID())){
-		throw J_Argument_Error("View Already Has Text Box With This ID");
+		throw J_Argument_Error("View Already Has Line Box With This ID");
 	}
 
 	add_ui_object(i_line_ptr);
@@ -733,6 +732,12 @@ void J_View::char_input_cmd(j_uint i_charcode){
 	}
 
 	M_focused_object.lock()->char_input_cmd(i_charcode);
+}
+
+void J_View::update(){
+	for(auto f_obj : M_ui_objects){
+		f_obj->update();
+	}
 }
 
 }

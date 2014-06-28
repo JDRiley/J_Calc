@@ -8,8 +8,6 @@ using namespace std::placeholders;
 //
 #include "J_View.h"
 //
-#include "J_UI_Model.h"
-//
 #include "J_UI_Object.h"
 //
 #include "J_FT_Text_Displayer/J_Text_Box.h"
@@ -25,6 +23,9 @@ using namespace std::placeholders;
 #include <J_Frame_Counter.h>
 //
 #include <sstream>
+//
+#include "J_UI.h"
+
 using std::ifstream; using std::string; using std::cerr; using std::getline;
 using std::ostringstream; using std::setw; using std::istream; using std::endl;
 namespace jomike{
@@ -33,8 +34,8 @@ const j_dbl DRAW_REFRESH_TIME = 1.0/25;
 static j_dbl draw_refresh_time(){ return DRAW_REFRESH_TIME; }
 
 static Instance_Pointer<J_Font_Manager> s_font_manager;
-static Instance_Pointer<J_UI_Model> s_model;
 static Instance_Pointer<J_UI_Controller> s_controller;
+static Instance_Pointer<J_UI> s_j_ui;
 void J_UI_Controller::init(int argc, char** argv){
 	derived_init(argc, argv);
 }
@@ -53,7 +54,7 @@ void J_UI_Controller::clear_all(){
 	auto view_start = make_pair_iter(M_j_views.begin());
 	auto view_end = make_pair_iter(M_j_views.end());
 
-	for_each(view_start, view_end, bind(&J_UI_Model::remove_view, &*s_model, _1));
+
 	s_font_manager->clear();
 	//for_each(view_start, view_end, mem_fn(&J_View::clear));
 	M_j_views.clear();
@@ -64,12 +65,11 @@ void J_UI_Controller::add_view(J_View_Shared_t i_view){
 	assert(!M_j_views.count(i_view->get_window()));
 
 	M_j_views[i_view->get_window()] = i_view;
-	s_model->attach_view(i_view);
 }
 
 void J_UI_Controller::remove_view(j_window_t i_window){
 	assert(M_j_views.count(i_window));
-	s_model->remove_view(M_j_views[i_window]);
+
 	M_j_views.erase(i_window);
 }
 
@@ -100,7 +100,7 @@ void J_UI_Controller::key_input_cmd(j_window_t i_window, int i_key, int i_scanco
 		return;
 	}
 	M_active_ui_objs[M_j_views[i_window]].lock()
-		->key_input_cmd(i_window, i_key, i_scancode, i_action, i_modifiers);
+		->key_input_cmd(i_key, i_scancode, i_action, i_modifiers);
 }
 
 
@@ -115,11 +115,11 @@ void J_UI_Controller::mouse_button_cmd(j_window_t i_window, int i_mouse_key
 	if(J_PRESS == i_action){
 		view->mouse_button_press(view, i_mouse_key
 								 , i_modifiers
-								 , s_model->cursor_pos(view).cursor_pos_fl());
+								 , s_j_ui->cursor_pos(view).cursor_pos_fl());
 	} else if(J_RELEASE == i_action){
 		view->mouse_button_release(view, i_mouse_key
 								 , i_modifiers
-								 , s_model->cursor_pos(view).cursor_pos_fl());
+								 , s_j_ui->cursor_pos(view).cursor_pos_fl());
 	}
 
 
@@ -142,7 +142,7 @@ void J_UI_Controller::mouse_button_cmd_n(j_window_t i_window, int i_mouse_key
 	if(J_PRESS == i_action){
 		view->mouse_button_press_n(view, i_mouse_key
 								 , i_modifiers
-								 , s_model->cursor_pos(view).cursor_pos_fl(), i_count);
+								 , s_j_ui->cursor_pos(view).cursor_pos_fl(), i_count);
 	} else if(J_RELEASE == i_action){
 		assert(!"Multiple releases?");
 
@@ -154,88 +154,6 @@ void J_UI_Controller::mouse_button_cmd_n(j_window_t i_window, int i_mouse_key
 
 
 }
-
-
-void J_UI_Controller::notify_object_press(J_View_Shared_t i_view, j_uint i_obj_id, int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos){
-	J_UI_Object_Shared_t prev_active_object
-		= M_active_ui_objs[i_view].expired() ? J_UI_Object_Shared_t()
-		: M_active_ui_objs[i_view].lock();
-
-	if(prev_active_object 
-	   && (i_obj_id != prev_active_object->get_ID())){
-		defocus_active_object(i_view->get_window());
-
-	}
-
-	if(!i_obj_id){
-		return;
-	}
-
-	J_UI_Object_Shared_t active_object = s_model->get_ui_object(i_obj_id);
-	
-	active_object->mouse_button_press(i_key, i_modifiers, i_pen_pos);
-	M_active_ui_objs[i_view] = active_object;
-	active_object->set_focus_status(true);
-}
-
-void J_UI_Controller::notify_object_press_n(J_View_Shared_t i_view
-											, j_uint i_obj_id, int i_key
-											, int i_modifiers
-											, Pen_Pos_FL_t i_pen_pos, int i_count){
-	J_UI_Object_Shared_t prev_active_object
-		= M_active_ui_objs[i_view].expired() ? J_UI_Object_Shared_t()
-		: M_active_ui_objs[i_view].lock();
-
-	if(prev_active_object
-	   && (i_obj_id != prev_active_object->get_ID())){
-		defocus_active_object(i_view->get_window());
-
-	}
-
-	if(!i_obj_id){
-		return;
-	}
-
-	J_UI_Object_Shared_t active_object = s_model->get_ui_object(i_obj_id);
-
-	active_object->mouse_button_press_n(i_key, i_modifiers, i_pen_pos, i_count);
-	M_active_ui_objs[i_view] = active_object;
-	active_object->set_focus_status(true);
-}
-
-
-void J_UI_Controller::notify_text_box_press(J_View_Shared_t i_view, j_uint i_text_obj_id
-	, j_size_t i_cursor_index){
-
-	assert(s_model->is_text_box_present(i_text_obj_id));
-	J_Text_Box_Object_Shared_t text_box = s_model->get_text_box(i_text_obj_id);
-	text_box->silent_set_cursor_pos(i_cursor_index);
-	//text_box->set_left_click_on();
-
-
-	if(!i_view){
-		return;
-	}
-
-	text_box->mouse_button_press(J_LEFT_MOUSE_BUTTON, J_PRESS
-		, s_model->cursor_pos(i_view).cursor_pos_fl());
-
-	M_active_ui_objs[i_view] = text_box;
-	text_box->set_focus_status(true);
-
-}
-
-void J_UI_Controller::notify_text_box_release(j_uint i_text_obj_id, j_size_t i_cursor_index){
-
-	assert(s_model->is_text_box_present(i_text_obj_id));
-	auto text_box = s_model->get_text_box(i_text_obj_id);
-
-	text_box->set_cursor_pos(i_cursor_index);
-
-
-}
-
-
 
 
 J_UI_Controller::J_UI_Controller(){
@@ -252,10 +170,10 @@ void J_UI_Controller::cursor_pos_input_cmd(j_window_t i_window, j_dbl i_x_pos, j
 
 	assert(M_j_views.count(i_window));
 	auto view = M_j_views[i_window];
-	s_model->set_cursor_pos(view, i_x_pos, i_y_pos);
+	s_j_ui->set_cursor_pos(view, i_x_pos, i_y_pos);
 
 	static 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
-		draw_timer(get_model_time, cursor_update_time);
+		draw_timer(get_j_ui_time, cursor_update_time);
 
 	if(!draw_timer.time_exceeded()){
 		return;
@@ -280,11 +198,11 @@ private:
 
 void Cursor_Pos_Updater::operator()(J_UI_Object_Shared_t i_obj){
 
-	if(s_model->cursor_pos(M_view).cursor_pos_fl() == M_cursor_pos_fl){
+	if(s_j_ui->cursor_pos(M_view).cursor_pos_fl() == M_cursor_pos_fl){
 		return;
 	}
 	
-	M_cursor_pos_fl = s_model->cursor_pos(M_view).cursor_pos_fl();
+	M_cursor_pos_fl = s_j_ui->cursor_pos(M_view).cursor_pos_fl();
 	auto text_box = dynamic_pointer_cast<J_Text_Box_Object>(i_obj);
 	assert(text_box);
 	ostringstream o_str;
@@ -358,7 +276,7 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 	}
 
 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
-		draw_timer(get_model_time, draw_refresh_time);
+		draw_timer(get_j_ui_time, draw_refresh_time);
 	try{
 		while(file){
 			string command;
@@ -376,7 +294,7 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 				break;
 			}
 
-			s_model->update();
+			s_j_ui->update();
 
 
 
@@ -438,7 +356,7 @@ public:
 		auto width_manip = setw(8);
 		o_str.precision(4);
 		o_str << std::fixed;
-		o_str << "FPS: " << s_model->fps();
+		o_str << "FPS: " << s_j_ui->fps();
 
 		auto font_face = text_box->get_string().front().font_face();
 		auto color = text_box->get_string().front().color();
@@ -463,9 +381,6 @@ int J_UI_Controller::current_key_modifiers()const{
 	return M_last_key_modifiers;
 }
 
-void J_UI_Controller::notify_cursor_pos(j_uint i_obj_id, Pen_Pos_FL_t i_pos){
-	s_model->get_ui_object(i_obj_id)->alert_cursor_pos(i_pos);
-}
 
 
 static j_dbl get_screen_pos_double(istream& ir_is){
@@ -536,7 +451,7 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 	if(modder.tick()){
 		cerr << "\nLine number: " << num_lines << " Total Size: " << total_string.size()
 			<< " Time of Run: " << line_writer_timer.elapsed_time() 
-			<< " Model Fps: " << s_model->fps();
+			<< " Model Fps: " << s_j_ui->fps();
 		line_writer_timer.reset_timer();
 	}
 }

@@ -14,12 +14,12 @@ public:
 	void init(int argc, char** argv);
 	void initialize_text_data();
 	static J_UI_Controller& get_instance();
-	virtual void notify_text_box_release(j_uint text_obj_id, j_size_t cursor_index);
-	virtual void notify_text_box_press(J_View_Shared_t, j_uint text_obj_id, j_size_t cursor_index);
+	//virtual void notify_text_box_release(j_uint text_obj_id, j_size_t cursor_index);
+	//virtual void notify_text_box_press(J_View_Shared_t, j_uint text_obj_id, j_size_t cursor_index);
 	
 
 	
-	virtual void notify_cursor_pos(j_uint i_obj_id, Pen_Pos_FL_t i_pos);
+	//virtual void notify_cursor_pos(j_uint i_obj_id, Pen_Pos_FL_t i_pos);
 	virtual void char_input_cmd(j_window_t, int);
 	virtual void key_input_cmd(j_window_t, int charcode, int, int, int);
 	virtual void mouse_button_cmd(j_window_t, int mouse_key, int action, int modifiers);
@@ -30,10 +30,10 @@ public:
 	virtual void remove_view(j_window_t);
 	virtual bool has_views()const;
 	virtual void draw_views()const;
-	virtual void notify_object_press(J_View_Shared_t i_view, j_uint i_obj_id, int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos);
-	virtual void notify_object_press_n(J_View_Shared_t i_view, j_uint i_obj_id
-									 , int i_key, int i_modifiers
-									 , Pen_Pos_FL_t i_pen_pos, int i_count);
+	//virtual void notify_object_press(J_View_Shared_t i_view, j_uint i_obj_id, int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos);
+	//virtual void notify_object_press_n(J_View_Shared_t i_view, j_uint i_obj_id
+	//								 , int i_key, int i_modifiers
+	//								 , Pen_Pos_FL_t i_pen_pos, int i_count);
 	virtual void cursor_pos_input_cmd(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos);
 	j_dbl fps()const;
 	virtual void end_script_run();

@@ -8,7 +8,10 @@
 namespace jomike{
 
 static J_Open_GL s_open_gl;
-static Image_Shader_Program s_image_shader(Image_Format::RGBA32_UBYTE);
+static int image_shader_id(){
+	static Image_Shader_Program s_image_shader(Image_Format::RGBA32_UBYTE);
+	return s_image_shader.program_id();
+}
 J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 	, GL_Pixel_Formats i_format, int i_image_width, int i_image_height)
 	:J_UI_Box(ik_rec), M_image_width(i_image_width)
@@ -22,12 +25,14 @@ J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 }
 
 void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
-	s_open_gl.use_program(s_image_shader.program_id());
+	s_open_gl.use_program(image_shader_id());
 
 	s_open_gl.bind_texture_2D(M_texture);
-	s_open_gl.tex_sub_image_2D_ubyte(
-		Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height()
-		, M_format, i_buffer);
+	if(image_width() && image_height()){
+		s_open_gl.tex_sub_image_2D_ubyte(
+			Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height()
+			, M_format, i_buffer);
+	}
 
 	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
 	s_open_gl.debind_program();
@@ -40,7 +45,7 @@ void J_Image_Pane::set_image_width(int i_image_width){
 	}
 	M_image_width = i_image_width;
 
-	s_open_gl.use_program(s_image_shader.program_id());
+	s_open_gl.use_program(image_shader_id());
 	
 	M_texture = J_GL_Texture();
 
@@ -50,7 +55,7 @@ void J_Image_Pane::set_image_width(int i_image_width){
 		, image_height());
 	set_texture_clamp_parameters();
 
-	s_open_gl.use_program(0);
+	s_open_gl.debind_program();
 	clear_image();
 }
 
@@ -60,7 +65,7 @@ void J_Image_Pane::set_image_height(int i_image_height){
 		return;
 	}
 	M_image_height = i_image_height;
-	s_open_gl.use_program(s_image_shader.program_id());
+	s_open_gl.use_program(image_shader_id());
 	M_texture = J_GL_Texture();
 
 	s_open_gl.bind_texture_2D(M_texture);
@@ -100,15 +105,17 @@ void J_Image_Pane::clear_image(){
 	ex_array<j_ubyte> zeros(image_width()*image_height()*num_channels(), static_cast<j_ubyte>(0));
 
 	s_open_gl.bind_texture_2D(M_texture);
-	s_open_gl.tex_sub_image_2D_ubyte(
-		Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height(), M_format, zeros.data());
+	if(image_height() && image_width()){
+		s_open_gl.tex_sub_image_2D_ubyte(
+			Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height(), M_format, zeros.data());
+	}
 	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
 }
 
 void J_Image_Pane::draw()const{
 	J_UI_Box::draw();
 	
-	s_open_gl.use_program(s_image_shader.program_id());
+	s_open_gl.use_program(image_shader_id());
 	s_open_gl.bind_vertex_array(get_box_vao());
 	
 
@@ -118,7 +125,6 @@ void J_Image_Pane::draw()const{
 	s_open_gl.debind_vertex_array();
 	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
 	s_open_gl.debind_program();
-	
 }
 
 

@@ -24,15 +24,6 @@ bool J_GL_Framebuffer::derived_valid()const {
 	return glIsFramebuffer(get_ID());
 }
 
-const J_GL_Framebuffer& J_GL_Framebuffer::null_object(){
-	static J_GL_Framebuffer null_framebuffer(0);
-	return null_framebuffer;
-}
-
-
-
-
-
 
 J_GL_Texture::J_GL_Texture(): J_GL_Object(0){
 	glGenTextures(1, ID_ptr());
@@ -80,19 +71,34 @@ J_GL_Buffer::~J_GL_Buffer(){
 	assert(!open_gl_error());
 }
 
+bool J_GL_Buffer::derived_valid()const {
+	return glIsBuffer(get_ID());
+}
+
 
 J_GL_Vertex_Array::J_GL_Vertex_Array(int i_index): J_GL_Object(i_index){
 	assert(0 == i_index);
 	assert(0 == get_ID());
 }
 
-J_GL_Vertex_Array::J_GL_Vertex_Array(J_GL_Texture&& irv_right):J_GL_Object(std::move(irv_right)){
 
+
+J_GL_Vertex_Array::J_GL_Vertex_Array():J_GL_Object(0){
+	glGenVertexArrays(1, ID_ptr());
+	
+	
+	assert(!open_gl_error());
 }
 
-const J_GL_Vertex_Array& J_GL_Vertex_Array::null_object(){
-	static J_GL_Vertex_Array null_array(0);
-	return null_array;
+
+
+J_GL_Vertex_Array::~J_GL_Vertex_Array(){
+	glDeleteBuffers(1, ID_ptr());
+	assert(!open_gl_error());
+}
+
+bool J_GL_Vertex_Array::derived_valid()const {
+	return glIsVertexArray(get_ID());
 }
 
 }

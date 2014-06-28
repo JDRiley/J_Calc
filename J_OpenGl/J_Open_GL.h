@@ -46,7 +46,7 @@ public:
 	//
 	bool get_program_info(int i_prgram_id, GL_Statuses i_status);
 	//
-	void bind_read_framebuffer(int i_framebuffer_id);
+	void bind_read_framebuffer(const J_GL_Framebuffer& irk_framebuffer_id);
 	//
 	void bind_draw_framebuffer(const J_GL_Framebuffer& irk_framebuffer_id);
 	//

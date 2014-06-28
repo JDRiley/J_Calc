@@ -18,7 +18,6 @@ public:
 
 	void set_image_box(const Pen_Pos_FL_t &i_pos, const Bitmap_Metrics &i_metrics);
 
-	void draw()const override;
 	void draw_to_frame_buffer(j_uint i_frame_buffer)const;
 	void set_buffer_data(const Pen_Pos_FL_t& i_pos, const Bitmap_Metrics& i_metrics
 					, const J_UI_Color& i_color, const j_ubyte* i_buffer);

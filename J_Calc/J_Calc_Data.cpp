@@ -206,4 +206,8 @@ void J_Calc_Data::init_reserved_symbols(){
 		, "least_common_multiple");
 }
 
+void J_Calc_Data::update(){
+
+}
+
 }

@@ -1,6 +1,5 @@
 #include "Multi_State_Text_Box.h"
-//
-#include "../J_UI_Model.h"
+
 using std::dynamic_pointer_cast;
 
 namespace jomike{
@@ -11,7 +10,7 @@ void Multi_State_Text_Box::set_state(j_size_t i_index){
 	M_current_state = i_index;
 	M_current_text_box = M_states[i_index];
 	J_Rectangle::set_rectangle(*M_current_text_box);
-	s_model->notify_multi_text_state(get_ID(), i_index);
+
 }
 
 
@@ -150,14 +149,13 @@ void Multi_State_Text_Box::broadcast_current_state()const{
 		return;
 	}
 
-	s_model->notify_multi_text_state(get_ID(), M_current_state);
-	M_current_text_box->broadcast_current_state();
+
 }
 
 void Multi_State_Text_Box::add_state(){
-	s_model->notify_add_multi_text_state(get_ID());
+
 	M_states.push_back(J_Text_Box_Shared_t(new J_Text_Box(J_Rectangle()
-		, J_UI_Multi_String(), get_ID())));
+		, J_UI_Multi_String())));
 
 }
 

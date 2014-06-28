@@ -8,7 +8,7 @@ namespace jomike{
 static j_uint g_object_ids = 0;
 static Instance_Pointer<J_UI_Model> s_model;
 
-J_UI_Object::J_UI_Object(): M_ID(g_object_ids){
+J_UI_Object::J_UI_Object(): M_ID(++g_object_ids){
 #ifndef VS_2013
 	default_initialization();
 #endif
@@ -120,6 +120,18 @@ void J_UI_Object::add_focus_callback(Focus_Callback_Func_t i_callback){
 }
 
 void J_UI_Object::alert_cursor_pos(Pen_Pos_FL_t){
+
+}
+
+bool J_UI_Object::left_click_on_status()const{
+	return M_left_click_on_flag;
+}
+
+void J_UI_Object::broadcast_current_state()const{
+
+}
+
+void J_UI_Object::alert_resize(int, int){
 
 }
 

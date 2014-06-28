@@ -25,6 +25,10 @@ static int get_gl_enum(Texture_Wrap_Type i_wrap_type){
 	return texture_wrap_type_array[static_cast<int>(i_wrap_type)];
 }
 
+static int get_gl_enum(GL_Pixel_Formats i_format){
+	return gl_pixel_formats_array[static_cast<int>(i_format)];
+}
+
 
 void J_Open_GL::bind_texture(Texture_Target i_target, const J_GL_Texture& irk_texture_id){
 	glBindTexture(texture_map_array[static_cast<int>(i_target)], irk_texture_id.get_ID());
@@ -32,12 +36,26 @@ void J_Open_GL::bind_texture(Texture_Target i_target, const J_GL_Texture& irk_te
 }
 
 void J_Open_GL::bind_texture_2D(const J_GL_Texture& irk_texture_id){
-	glBindTexture(texture_map_array[static_cast<int>(Texture_Target::TEXTURE_2D)], irk_texture_id.get_ID());
+	glBindTexture(GL_TEXTURE_2D, irk_texture_id.get_ID());
 	assert(!open_gl_error());
 }
 
 void J_Open_GL::bind_vertex_array(const J_GL_Vertex_Array& irk_vao){
+	int val = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	int val2 = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
+
+	const int complete = GL_FRAMEBUFFER_COMPLETE;
+	const int scomplete = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
+	(void)complete;
+	(void)scomplete;
+	(void)val;
+	(void)val2;
+	
 	glBindVertexArray(irk_vao.get_ID());
+	assert(glIsVertexArray(irk_vao.get_ID()));
+
+
+
 	assert(!open_gl_error());
 }
 
@@ -76,17 +94,19 @@ void J_Open_GL::bind_draw_framebuffer(const J_GL_Framebuffer& irk_framebuffer){
 	assert(!open_gl_error());
 }
 
-void J_Open_GL::bind_read_framebuffer(int i_framebuffer_id){
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, i_framebuffer_id);
+void J_Open_GL::bind_read_framebuffer(const J_GL_Framebuffer& irk_framebuffer){
+	glBindFramebuffer(GL_READ_FRAMEBUFFER, irk_framebuffer.get_ID());
 	assert(!open_gl_error());
 }
 
-void J_Open_GL::bind_framebuffer(const J_GL_Framebuffer& irk_frambuffer){
-	glBindFramebuffer(GL_FRAMEBUFFER, irk_frambuffer.get_ID());
+void J_Open_GL::bind_framebuffer(const J_GL_Framebuffer& irk_framebuffer){
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, irk_framebuffer.get_ID());
 	assert(!open_gl_error());
 }
 
 void J_Open_GL::draw_arrays(Array_Draw_Mode i_draw_mode, int i_first, int i_count){
+
 	glDrawArrays(array_draw_mode_array[static_cast<int>(i_draw_mode)], i_first, i_count);
 
 	assert(!open_gl_error());
@@ -138,6 +158,8 @@ void J_Open_GL::attach_draw_framebuffer_texture_2D(
 	GL_Attachment_Points i_attatchment_point, Texture_Target i_tex_target
 	, const J_GL_Texture_Render_Buffer& irk_frame_renderbuffer, int i_level){
 
+	assert(glIsTexture(irk_frame_renderbuffer.get_ID()));
+
 	glFramebufferTexture2D(
 		GL_DRAW_FRAMEBUFFER, gl_attachment_points_arrary[static_cast<int>(i_attatchment_point)]
 		, texture_map_array[static_cast<int>(i_tex_target)], irk_frame_renderbuffer.get_ID(), i_level);
@@ -180,6 +202,7 @@ void J_Open_GL::line_width(j_float i_thickness){
 
 void J_Open_GL::debind_buffer(GL_Buffer_Targets i_buffer_target){
 	glBindBuffer(get_gl_enum(i_buffer_target), 0);
+	assert(!open_gl_error());
 }
 
 void J_Open_GL::debind_vertex_array(){
@@ -209,6 +232,21 @@ void J_Open_GL::texture_wrap_r(Texture_Target i_target, Texture_Wrap_Type i_text
 
 void J_Open_GL::texture_wrap_t(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type){
 	glTexParameteri(get_gl_enum(i_target), GL_TEXTURE_WRAP_T, get_gl_enum(i_texture_wrap_type));
+	assert(!open_gl_error());
+}
+
+J_Open_GL::J_Open_GL(){
+
+}
+
+void J_Open_GL::tex_sub_image_2D_ubyte(
+	Texture_Target i_texture_type, int i_level, int i_x_offset, int i_y_offset, int i_width
+	, int i_height, GL_Pixel_Formats i_format, const j_ubyte* i_data){
+
+	glTexSubImage2D(
+		get_gl_enum(i_texture_type), i_level, i_x_offset, i_y_offset, i_width, i_height, get_gl_enum(i_format)
+		, GL_UNSIGNED_BYTE, i_data);
+
 	assert(!open_gl_error());
 }
 

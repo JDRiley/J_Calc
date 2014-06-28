@@ -13,7 +13,7 @@ public:
 	void draw()const override;
 	J_UI_Line(j_float i_x1, j_float i_y1, j_float i_x2, j_float i_y2);
 	void set_line(const J_Line& i_line)override;
-	void alert_resize(int, int)override;
+
 private:
 	J_GL_Vertex_Array M_vao;
 	J_GL_Buffer M_vao_buffer;

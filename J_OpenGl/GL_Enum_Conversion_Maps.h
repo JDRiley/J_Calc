@@ -13,13 +13,13 @@ static const int texture_map_array[]
 		= {
 		GL_TEXTURE_1D
 		, GL_TEXTURE_2D
-		, GL_TEXTURE_3D, GL_TEXTURE_CUBE_MAP
+		, GL_TEXTURE_3D
+		, GL_TEXTURE_CUBE_MAP
 	};
 
 static const int gl_status_array[]
 = {
-	GL_LINK_STATUS
-	, GL_DELETE_STATUS
+	 GL_DELETE_STATUS
 	, GL_LINK_STATUS
 	, GL_VALIDATE_STATUS
 	, GL_INFO_LOG_LENGTH

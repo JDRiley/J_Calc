@@ -34,7 +34,7 @@ public:
 	j_symbol* get_reserved_symbol(const J_UI_String&)const;
 	~J_Calc_Data();
 	void clear_data();
-	
+	void update();
 	void remove_view(J_Calc_View_Shared_t i_view);
 private:
 	static J_Calc_Data& get_instance();

@@ -23,7 +23,7 @@ public:
 	void set_middle_line_color(J_UI_Color);
 	void set_input_format(GL_Pixel_Formats);
 	GL_Pixel_Formats input_format()const;
-
+	void clear_image();
 private:
 	GL_Pixel_Formats M_format;
 	GL_Sized_Internal_Formats M_internal_format = GL_Sized_Internal_Formats::RGBA8;
@@ -32,7 +32,7 @@ private:
 
 	J_GL_Texture M_texture;
 	
-	void clear_image();
+	
 
 	//Requires texture is already bound
 	void set_texture_clamp_parameters();

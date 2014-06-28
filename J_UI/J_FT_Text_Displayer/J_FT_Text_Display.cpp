@@ -387,7 +387,7 @@ void J_FT_Text_Display::initialize_frame_buffer(){
 
 	s_open_gl.tex_storage_2D(
 		Texture_Target::TEXTURE_2D, 1
-		, GL_Sized_Internal_Formats::RGB8, width, height);
+		, GL_Sized_Internal_Formats::RGBA8, width, height);
 
 	{
 		const ex_array<j_ubyte> image_data(4 * width*height, 0);
@@ -397,13 +397,14 @@ void J_FT_Text_Display::initialize_frame_buffer(){
 			, GL_Pixel_Formats::RGBA, image_data.data());
 	}
 
+	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
 
 	s_open_gl.attach_draw_framebuffer_texture_2D(
 		GL_Attachment_Points::COLOR_ATTACHMENT0
 		, Texture_Target::TEXTURE_2D, M_texture_render_buffer, 0);
 
-
-	s_open_gl.bind_texture_2D(J_GL_Texture::null_object());
+	s_open_gl.bind_framebuffer(J_GL_Framebuffer::null_object());
+	
 }
 
 

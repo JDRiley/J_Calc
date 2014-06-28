@@ -412,7 +412,9 @@
     <ClCompile Include="J_Font_Face.cpp" />
     <ClCompile Include="J_Font_Manager.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\J_UI_Letter_Box.cpp" />
-    <ClCompile Include="J_FT_Text_Displayer\J_FT_Text_Display.cpp" />
+    <ClCompile Include="J_FT_Text_Displayer\J_FT_Text_Display.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="J_FT_Text_Displayer\J_Text_Box.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\Letter_Box_String.cpp" />
     <ClCompile Include="J_FT_Text_Displayer\Multi_State_Text_Box.cpp" />

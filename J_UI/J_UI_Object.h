@@ -76,10 +76,11 @@ public:
 	bool toggle_status()const;
 	void add_update_callback(J_UI_Object_Update_Callback_Shared_t);
 	void copy_state(const J_UI_Object&);
-	virtual void alert_resize(int,int) = 0;
+	virtual void alert_resize(int, int);
 	virtual void set_focus_status(bool i_status);
 	bool focus_status()const;
 	virtual void add_focus_callback(Focus_Callback_Func_t);
+	bool left_click_on_status()const;
 protected:
 	J_UI_Object();
 	J_UI_Object(j_uint i_id);

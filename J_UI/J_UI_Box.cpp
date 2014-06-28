@@ -120,6 +120,18 @@ void J_UI_Box::set_rectangle(const J_Rectangle& irk_rectangle){
 
 }
 
+J_UI_Box::~J_UI_Box(){
+
+}
+
+void J_UI_Box::alert_resize(int, int){
+
+}
+
+const J_GL_Vertex_Array& J_UI_Box::get_box_vao()const{
+	return M_box_vao;
+}
+
 
 }
 

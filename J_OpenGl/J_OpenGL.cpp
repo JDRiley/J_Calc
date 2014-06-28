@@ -68,7 +68,8 @@ public:
 	int M_width, M_height;
 	j_window_t M_window = nullptr;
 	GLEWContextStruct* M_context = nullptr;
-	J_GL_Vertex_Array M_screen_box_vao;
+	J_GL_Vertex_Array M_screen_box_vao = J_GL_Vertex_Array(0);
+	J_GL_Buffer M_screen_box_vao_buffer = J_GL_Buffer(0);
 	~J_Context();
 
 };
@@ -233,20 +234,21 @@ void initialize_context(J_Context_Shared_t new_context){
 		, 0.0f, 1.0f
 	};
 
-	j_uint vao_buffer_id;
-
+	
+	new_context->M_screen_box_vao = J_GL_Vertex_Array();
+	new_context->M_screen_box_vao_buffer = J_GL_Buffer();
 	s_open_gl.bind_vertex_array(new_context->M_screen_box_vao);
-	glGenBuffers(1, &vao_buffer_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vao_buffer_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_array_data)
-				 , vertex_array_data.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, nullptr);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, reinterpret_cast<void*>(sizeof(j_float)* 16));
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, new_context->M_screen_box_vao_buffer);
+	s_open_gl.buffer_data(GL_Buffer_Targets::ARRAY_BUFFER, vertex_array_data.size()
+				 , vertex_array_data.data(), GL_Draw_Types::STATIC);
+	s_open_gl.vertix_attribute_pointer(0, 4, GL_Types::FLOAT, false, 0, 0);
+
+	s_open_gl.vertix_attribute_pointer(1, 2, GL_Types::FLOAT, false, 0, sizeof(j_float)* 16);
+	s_open_gl.enable_vertex_attribute_array(0);
+	s_open_gl.enable_vertex_attribute_array(1);
+	s_open_gl.debind_vertex_array();
+	s_open_gl.debind_buffer(GL_Buffer_Targets::ARRAY_BUFFER);
 }
 j_window_t Contexts_Handler::get_window(J_Context_Shared_t i_context){
 	return i_context->M_window;
@@ -327,7 +329,7 @@ j_float Contexts_Handler::ratio()const{
 	return static_cast<j_float>(M_active_context->M_width)/ M_active_context->M_height;
 }
 
-const J_GL_Vertex_Array Contexts_Handler::screen_box_vao(){
+const J_GL_Vertex_Array& Contexts_Handler::screen_box_vao(){
 	
 	return M_active_context->M_screen_box_vao;
 }
@@ -466,8 +468,9 @@ void j_set_cursor_pos(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
 }
 
 bool open_gl_error(){
-	ex_array<int> errors;
 
+	ex_array<int> errors;
+	
 	while(int error = glGetError()){
 		errors.push_back(error);
 	}

@@ -12,8 +12,6 @@
 //
 #include <J_Error.h>
 //
-#include <J_UI/J_UI_Model.h>
-//
 #include <J_OpenGL.h>
 //
 #include <J_UI/J_Text_Box.h>
@@ -93,6 +91,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 
 	initialize_font_faces();
 
+
 	Math_Input_Box_Shared_t main_text_box_ptr(
 		new Math_Input_Box(J_Rectangle(-0.95f, -0.70f, 1.90f, 1.50f)
 		, J_UI_String(M_input_font_face, J_CYAN))
@@ -106,7 +105,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 
 	main_text_box_ptr->set_colors(J_WHITE, J_CLEAR, J_CYAN);
 
-	M_main_view->subscribe_cursor_updates(main_text_box_ptr->get_ID());
+	M_main_view->subscribe_cursor_updates(main_text_box_ptr);
 	main_text_box_ptr->set_cursor_pos(0);
 	J_Text_Box_Shared_t cursor_pos_box(
 			new J_Text_Box(J_Rectangle(0.50f, -1.0f, 0.50f, 0.1f)
@@ -150,7 +149,6 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 
 	add_update_fps_updater(update_fps_text_box);
 
-	s_calc_data->broadcast_current_state();
 	assert(!open_gl_error());
 }
 
@@ -175,12 +173,12 @@ void J_Calc_Controller::execute(){
 
 
 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
-		draw_timer(get_model_time, draw_refresh_time);
+		draw_timer(get_j_ui_time, draw_refresh_time);
 	while(M_continue_flag){
 		poll_events();
 		s_calc_data->update();
 		s_j_ui->update();
-
+		M_main_view->update();
 		if(!has_views()){
 			end_execute();
 			continue;

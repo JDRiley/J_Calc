@@ -12,7 +12,7 @@ namespace jomike{
 class J_UI_Box : public J_UI_Object, public J_Rectangle{
 public:
 	J_UI_Box(const J_Rectangle&);
-	void broadcast_current_state()const;
+	//void broadcast_current_state()const;
 	
 
 	void draw()const override;
@@ -24,7 +24,7 @@ public:
 	
 	void set_rectangle(const J_Rectangle&)override;
 	void alert_resize(int, int)override;
-
+	~J_UI_Box();
 protected:
 	//J_UI_Box(const J_Rectangle&, j_uint i_obj_id);
 	const J_GL_Vertex_Array& get_box_vao()const;

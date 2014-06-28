@@ -14,11 +14,16 @@
 //
 #include <J_OpenGL.h>
 //
+#include <J_Shader_Program.h>
+//
 #include "../J_UI_Line.h"
 //
 #include "../J_UI.h"
 //
 #include "J_UI_Letter_Box.h"
+//
+#include <J_Open_GL.h>
+
 using std::any_of; using std::bind; using std::equal_to; using std::mem_fn; using std::not1;
 using std::remove_if; using std::transform; using std::static_pointer_cast;
 using std::dynamic_pointer_cast; using std::max; using std::min; using std::mem_fn;
@@ -31,7 +36,7 @@ using namespace std::placeholders;
 #include <functional>
 
 using std::mem_fn; using std::bind; using std::for_each; using std::transform;
-using namespace std::placeholders;
+using namespace std::placeholders; using std::lower_bound;
 
 //Containers
 #include <iostream>
@@ -44,10 +49,15 @@ namespace jomike{
 
 
 static Instance_Pointer<Contexts_Handler> s_contexts;
+static int image_shader_id(){
+	static Image_Shader_Program s_image_shader(Image_Format::RGBA32_UBYTE);
+	return s_image_shader.program_id();
+}
 const j_float FLOAT_DELTA = 0.0001f;
 const j_float K_LEFT_PADDING = 0.01f;
 
 j_dbl DEFAULT_CURSOR_REFESH_TIME = 1.0/1.8;
+static J_Open_GL s_open_gl;
 class Text_Line_Order_Comp{
 public:
 	Text_Line_Order_Comp(j_float i_start_line, j_float i_line_size):M_line_size(i_line_size)
@@ -153,7 +163,7 @@ public:
 private:
 	const int M_ID;
 	static j_dbl get_blink_rate(int i_id);
-	typedef decltype(std::bind(&J_UI::time, (J_UI_Model*)0)) Time_Retrieval_t;
+	typedef decltype(std::bind(&J_UI::time, &J_UI::get_instance())) Time_Retrieval_t;
 	typedef
 		decltype(std::bind(&J_Text_Cursor_Blinker_Updater::get_blink_rate
 		, J_INT_ZERO)) Rate_Retrieval_t;
@@ -166,25 +176,25 @@ private:
 J_Text_Box::J_Text_Box(const J_Rectangle& irk_rec_pos, const J_UI_Multi_String& irk_string)
 	: J_Text_Box_Object(irk_rec_pos), M_multi_string(irk_string)
 	, M_letter_box_string(bind(&J_Text_Box::alert_changed, this))
-	, M_cursor_pos(static_cast<int>(M_multi_string.size()))
-{
+	, M_cursor_pos(static_cast<int>(M_multi_string.size())){
 	
+	
+	
+	for(auto& f_string : M_multi_string){
+		auto letter_boxes = make_letter_boxes(f_string);
+
+		M_letter_box_string->insert(
+			M_letter_box_string->end(), letter_boxes.begin(), letter_boxes.end());
+									
+	}
+
 	initialize();
 
 }
 
-J_Text_Box::J_Text_Box(const J_Rectangle& irk_rec_pos, const J_UI_Multi_String& irk_string
-	, j_uint i_id)
-	:J_Text_Box_Object(irk_rec_pos, i_id)
-	, M_multi_string(irk_string)
-	, M_letter_box_string(bind(&J_Text_Box::alert_changed, this))
-	, M_cursor_pos(static_cast<int>(M_multi_string.size()))
-{
-	initialize();
-}
 
 void J_Text_Box::initialize(){
-
+	initialize_frame_buffer();
 	M_text_state = Text_Flags::SCROLL;
 	M_cursor_line = J_UI_Line_Shared_t(
 		new J_UI_Line(default_pen_pos().first, default_pen_pos().second
@@ -203,6 +213,41 @@ void J_Text_Box::initialize(){
 	M_selection.set_first_unordered_elem(M_cursor_pos);
 	M_selection.set_second_unordered_elem(M_cursor_pos);
 }
+
+void J_Text_Box::initialize_frame_buffer(){
+	s_open_gl.bind_framebuffer(M_framebuffer);
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
+
+	auto window = s_contexts->get_active_window();
+	j_uint width = get_x_res(window);
+	j_uint height = get_y_res(window);
+
+	s_open_gl.tex_storage_2D(
+		Texture_Target::TEXTURE_2D, 1
+		, GL_Sized_Internal_Formats::RGBA8, width, height);
+
+	{
+	const ex_array<j_ubyte> image_data(4 * width*height, 0);
+
+	s_open_gl.tex_sub_image_2D_ubyte(
+		Texture_Target::TEXTURE_2D, 0, 0, 0, width, height
+		, GL_Pixel_Formats::RGBA, image_data.data());
+
+	}
+
+	s_open_gl.attach_draw_framebuffer_texture_2D(
+		GL_Attachment_Points::COLOR_ATTACHMENT0
+		, Texture_Target::TEXTURE_2D, M_texture_render_buffer, 0);
+
+
+	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
+
+	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object());
+	s_open_gl.bind_read_framebuffer(J_GL_Framebuffer::null_object());
+
+}
+
+
 
 void J_Text_Box::key_input_cmd(int i_key, int i_scancode, int i_action, int i_modifiers){
 	if(!M_key_input_command){
@@ -327,14 +372,17 @@ void J_Text_Box::enable_blinking_cursor(){
 
 	add_update_callback(M_blinker_updater);
 }
-
+ex_array<Bitmap_Metrics> g_bitmap_metrics;
 void J_Text_Box::calculate_remaining_letter_poses(){
 	assert(M_pen_poses.size() <= M_multi_string.size()+1);
+	assert(M_multi_string.size() == M_letter_box_string->size());
 
 	for(j_size_t i = M_pen_poses.size()-1; i < M_multi_string.size(); i++){
+		
 		J_UI_String& cur_string = *M_multi_string.get_string_holding_index(i);
 		J_Char_t charcode = M_multi_string.at_pos(i)->charcode();
-
+		Bitmap_Metrics& test_bitmap = g_bitmap_metrics[i];
+		(void)test_bitmap;
 		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
 			->bitmap_metric(charcode);
 
@@ -347,6 +395,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 
 		j_float x_start, y_start;
 
+		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric);
 		if('\n' == charcode){
 			M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
 		}else if((M_pen_poses.back().first + width) > x2()){
@@ -362,7 +411,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 				, bitmap_metric.advance_x));
 		}
 
-		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric);
+		
 	}
 }
 
@@ -600,18 +649,15 @@ void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)cons
 void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_String& irk_string){
 	auto insert_pos = M_multi_string.get_insert_pos(i_index);
 	M_multi_string.insert(i_index, irk_string);
-	J_UI_Color color = irk_string.color();
-	J_Font_Face font_face = irk_string.font_face();
+	
 
-	for(int i = 0; i < irk_string.size(); i++){
-		J_Char_t char_code = irk_string[i].charcode();
-		J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
-		new_letter_box->set_buffer_data(font_face->bitmap_metric(char_code)
-										, color, font_face->get_data(char_code));
-		auto iterator = M_letter_box_string->insert(
-			M_letter_box_string->begin() + i_index + i, new_letter_box);
 
-	}
+	ex_array<J_UI_Letter_Box_Shared_t> letter_boxes = make_letter_boxes(irk_string);
+
+	M_letter_box_string->insert(M_letter_box_string->begin() + i_index
+								, letter_boxes.begin(), letter_boxes.end());
+
+
 
 	M_pen_poses.resize(i_index+1);
 
@@ -620,6 +666,26 @@ void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_String& irk_s
 	set_cursor_pos_no_scroll(i_index + irk_string.size());
 
 }
+
+
+ex_array<J_UI_Letter_Box_Shared_t> J_Text_Box::make_letter_boxes(const J_UI_String& irk_string){
+	ex_array<J_UI_Letter_Box_Shared_t> letter_boxes;
+	J_UI_Color color = irk_string.color();
+	J_Font_Face font_face = irk_string.font_face();
+
+	for(int i = 0; i < irk_string.size(); i++){
+		J_Char_t char_code = irk_string[i].charcode();
+		J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
+		g_bitmap_metrics.push_back(font_face->bitmap_metric(char_code));
+		new_letter_box->set_buffer_data(font_face->bitmap_metric(char_code)
+										, color, font_face->get_data(char_code));
+		letter_boxes.push_back(new_letter_box);
+	}
+	return letter_boxes;
+}
+
+
+
 
 void J_Text_Box::mouse_button_press(int i_button, int , Pen_Pos_FL_t i_pos){
 	
@@ -651,7 +717,7 @@ void J_Text_Box::mouse_button_press_n(int i_button, int, Pen_Pos_FL_t i_pos, int
 								 set_cursor_pos(get_cursor_index(i_pos));
 								 M_selection.set_first_unordered_elem(M_cursor_pos);
 								 M_selection.set_second_unordered_elem(M_cursor_pos);
-								 set_left_click_on()
+								 set_left_click_on();
 	}
 		break;
 	case J_MOUSE_WHEEL_UP:
@@ -822,7 +888,7 @@ void J_Text_Box::scroll(int i_scroll_val){
 }
 
 void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_pos){
-	if(!M_left_mouse_button_pressed_status){
+	if(!left_click_on_status()){
 		return;
 	}
 	j_set_cursor_type(J_I_BEAM_CURSOR_ID);
@@ -868,8 +934,6 @@ void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_pos){
 				new J_UI_Box(rectangle)
 				);
 			M_selection_boxes.push_back(display_box);
-			s_model->add_managed_display_object(get_ID(), display_box->get_ID(), UI_Object_Types::Box);
-			s_model->add_box(display_box);
 		}
 
 		M_selection_boxes[num_display_boxes]->set_rectangle(rectangle);
@@ -877,10 +941,7 @@ void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_pos){
 
 		++num_display_boxes;
 	}
-	for(int i = num_display_boxes; i < M_selection_boxes.size(); i++){
-		s_model->remove_box(M_selection_boxes[i]->get_ID());
-		s_model->notify_ui_box_gone(M_selection_boxes[i]->get_ID());
-	}
+
 	M_selection_boxes.resize(num_display_boxes);
 	set_selection_box_visibility_statuses();
 
@@ -894,7 +955,7 @@ void J_Text_Box::set_selection_box_settings(J_UI_Box_Shared_t i_box)const{
 	i_box->set_fill_visibility_status(true);
 	i_box->set_fill_color(J_BLUE*0.4f + J_RED*0.08f);
 	i_box->set_outline_color(J_WHITE);
-	s_model->notify_object_draw_position_before(get_ID(), i_box->get_ID());
+
 }
 
 /*void insert_string(const J_UI_String&)*/
@@ -906,19 +967,7 @@ void J_Text_Box::insert_string(const J_UI_String& irk_string){
 void J_Text_Box::insert_string(j_size_t i_pos, const J_UI_String& irk_string){
 	
 	insert_string_silent(i_pos, irk_string);
-	J_Font_Face font_face = M_multi_string.get_string_holding_index(i_pos)->font_face();
 
-	auto color = M_multi_string.get_string_holding_index(i_pos)->color();
-
-	J_UI_String utility_string(irk_string.std_str(), font_face, color);
-
-	s_model->notify_text_string_add(get_ID(), i_pos, irk_string.size(), &M_pen_poses[i_pos]
-							 , utility_string.metrics_array().data(), color
-							 , utility_string.bitmap_data_array().data());
-
-
-
-	notify_letter_box_poses(i_pos+irk_string.size());
 	set_cursor_pos(i_pos + irk_string.size());
 }
 
@@ -928,8 +977,7 @@ void J_Text_Box::set_string(const J_UI_String& irk_string){
 
 	recalculate_letter_poses();
 
-	
-	notify_string_data();
+
 	set_cursor_on();
 	set_cursor_pos(irk_string.size());
 }
@@ -978,12 +1026,12 @@ void J_Text_Box::backspace(){
 	}
 
 	M_multi_string.erase(--M_cursor_pos, 1);
+	M_letter_box_string->erase(M_cursor_pos);
+
 	set_cursor_pos(M_cursor_pos);
-	s_model->notify_char_delete(get_ID(), M_cursor_pos);
 
 	M_pen_poses.resize(M_cursor_pos+1);
 	calculate_remaining_letter_poses();
-	notify_letter_box_poses(M_cursor_pos);
 	set_cursor_on();
 }
 
@@ -1000,39 +1048,15 @@ void J_Text_Box::erase_chars(j_size_t i_pos, j_size_t i_size){
 	set_cursor_pos(i_pos);
 
 	M_multi_string.erase(i_pos, i_size);
-	s_model->notify_erase_chars(get_ID(), M_cursor_pos, i_size);
+	M_letter_box_string->erase(i_pos, i_size);
+
 	M_pen_poses.resize(i_pos+1);
 	calculate_remaining_letter_poses();
-	notify_letter_box_poses(i_pos);
 }
 
-void J_Text_Box::set_left_click_on(){
-	M_left_click_is_on = true;
-	M_saved_outline_visibility_status = outline_visibility_status();
-	set_outline_visibility_status(true);
-}
 
-void J_Text_Box::set_left_click_off(){
-	M_left_click_is_on = false;
-	set_outline_visibility_status(M_saved_outline_visibility_status);
-}
-
-void J_Text_Box::broadcast_current_state()const{
-	J_UI_Box::broadcast_current_state();
-	notify_string_data();
-	M_cursor_line->broadcast_current_state();
-	for(auto selection_box : M_selection_boxes){
-		selection_box->broadcast_current_state();
-	}
-}
 
 void J_Text_Box::clear_selection_boxes(){
-	for(auto f_box : M_selection_boxes){
-		s_model->remove_managed_display_object(f_box->get_ID()
-								   , UI_Object_Types::Box);
-		s_model->remove_box(f_box->get_ID());
-	}
-
 	M_selection_boxes.clear();
 }
 
@@ -1062,8 +1086,7 @@ J_Text_Box_Object::J_Text_Box_Object(const J_Rectangle& i_rec):J_UI_Box(i_rec){}
 
 J_Text_Box_Object::~J_Text_Box_Object(){}
 
-J_Text_Box_Object::J_Text_Box_Object(const J_Rectangle& i_rec, j_uint i_obj_id) 
-	: J_UI_Box(i_rec, i_obj_id){}
+
 
 J_Text_Box_Object_Shared_t J_Text_Box_Object::shared_from_this(){
 	auto this_text_box_ptr
@@ -1113,7 +1136,7 @@ void J_Text_Cursor_Blinker_Updater::set_blink_rate(j_dbl i_rate){
 }
 
 J_Text_Cursor_Blinker_Updater::J_Text_Cursor_Blinker_Updater()
-	:M_ID(++s_cursor_blinker_ids), M_timer(bind(&J_UI_Model::time, &*s_model)
+	:M_ID(++s_cursor_blinker_ids), M_timer(bind(&J_UI::time, &J_UI::get_instance())
 	, bind(&J_Text_Cursor_Blinker_Updater::get_blink_rate, M_ID)){
 	if(M_ID >= Ms_blink_rates.size()){
 		Ms_blink_rates.resize(M_ID + 1);
@@ -1129,10 +1152,109 @@ void J_Text_Cursor_Blinker_Updater::reset_timer(){
 	M_timer.reset_timer();
 }
 
-}
-
 void J_Text_Box::alert_changed(){
 	M_changed_flag = true;
 }
+
+
+
+/*void J_Text_Box::draw()const*/
+void J_Text_Box::draw()const{
+	J_UI_Box::draw();
+
+	if(M_changed_flag){
+		render_frame_buffer();
+	}
+
+
+	assert(M_framebuffer.valid());
+	assert(M_framebuffer.get_ID());
+	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object());
+
+
+
+	s_open_gl.use_program(image_shader_id());
+
+	
+
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
+
+	s_open_gl.bind_vertex_array(s_contexts->screen_box_vao());
+
+	s_open_gl.bind_texture_2D(M_texture_render_buffer);
+
+	s_open_gl.draw_arrays(Array_Draw_Mode::TRIANGLE_FAN, 0, 4);
+
+	s_open_gl.debind_buffer(GL_Buffer_Targets::ARRAY_BUFFER);
+	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
+
+	
+
+	s_open_gl.debind_program();
+
+
+}
+
+void J_Text_Box::render_frame_buffer()const{
+	j_uint prev_width = get_x_res(s_contexts->get_active_window());
+	j_uint prev_height = get_y_res(s_contexts->get_active_window());;
+
+
+	s_open_gl.bind_draw_framebuffer(M_framebuffer);
+
+	s_open_gl.viewport(0, 0, prev_width, prev_height);
+	assert(!open_gl_error());
+	s_open_gl.set_clear_color(0.0f, 0.0f, 0.0f, 0.0f);
+	assert(!open_gl_error());
+	j_clear();
+	assert(!open_gl_error());
+
+	auto start_view_pos
+		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
+		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y1(), 0.0f, 0.0f))
+		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
+		j_float compare_val = i_left->y1() - i_right->y1();
+		//hot fix
+		if(compare_val > 0.01f){
+			return true;
+		} else if(compare_val < -0.01f){
+			return false;
+		} else{
+			return i_left->x1() < i_left->x2();
+		}
+	});
+
+	auto end_view_pos
+		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
+		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y2(), 0.0f, 0.0f))
+		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
+		j_float compare_val = i_left->y2() - i_right->y2();
+		//hot fix
+		if(compare_val > 0.01f){
+			return true;
+		} else if(compare_val < -0.01f){
+			return false;
+		} else{
+			return i_left->x1() < i_left->x2();
+		}
+	});
+
+
+
+
+	while(start_view_pos != end_view_pos){
+		(*start_view_pos++)->draw();
+	}
+
+	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object());
+
+	s_open_gl.viewport(0, 0, prev_width, prev_height);
+	M_changed_flag = false;
+	assert(!open_gl_error());
+}
+
+
+}
+
 
 

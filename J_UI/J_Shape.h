@@ -49,8 +49,8 @@ private:
 	J_UI_Color M_fill_color;
 	J_UI_Color M_outline_color;
 
-	virtual void derived_set_fill_color();
-	virtual void derived_set_outline_color();
+	virtual void derived_set_fill_color() = 0;
+	virtual void derived_set_outline_color() = 0;
 };
 
 class J_Rectangle : public virtual J_Shape{
