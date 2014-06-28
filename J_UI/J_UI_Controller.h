@@ -44,7 +44,7 @@ public:
 protected:
 	J_UI_Controller();
 	void add_cursor_pos_text_updater(J_Text_Box_Object_Shared_t
-		, J_View_Shared_t);
+		, J_View_Weak_t);
 	void add_draw_fps_updater(J_Text_Box_Object_Shared_t);
 	void add_update_fps_updater(J_Text_Box_Object_Shared_t);
 	void defocus_active_object(j_window_t i_window);

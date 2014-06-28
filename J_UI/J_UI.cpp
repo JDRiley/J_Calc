@@ -26,15 +26,16 @@ void J_UI::update(){
 
 
 
-void J_UI::set_cursor_pos(J_View_Shared_t i_view, j_dbl i_x_pos, j_dbl i_y_pos){
+void J_UI::set_cursor_pos(J_View_Weak_t i_view, j_dbl i_x_pos, j_dbl i_y_pos){
 	if(!M_cursor_positions.count(i_view)){
 		M_cursor_positions[i_view] = J_Cursor_Position_Shared_t(new J_Cursor_Position);
 	}
+	assert(!i_view.expired());
 	M_cursor_positions[i_view]
-		->set_cursor_position(i_view->get_window(), i_x_pos, i_y_pos);
+		->set_cursor_position(i_view.lock()->get_window(), i_x_pos, i_y_pos);
 }
 
-const J_Cursor_Position& J_UI::cursor_pos(J_View_Shared_t i_view)const{
+const J_Cursor_Position& J_UI::cursor_pos(J_View_Weak_t i_view)const{
 	return **M_cursor_positions.find(i_view);
 }
 

@@ -12,15 +12,16 @@ public:
 	static J_UI& get_instance();
 	void update();
 	j_dbl time()const;
-	virtual void set_cursor_pos(J_View_Shared_t i_view, j_dbl i_x_pos, j_dbl i_y_pos);
-	const J_Cursor_Position& cursor_pos(J_View_Shared_t)const;
+	virtual void set_cursor_pos(J_View_Weak_t i_view, j_dbl i_x_pos, j_dbl i_y_pos);
+	const J_Cursor_Position& cursor_pos(J_View_Weak_t)const;
 	j_dbl fps()const;
 	~J_UI();
 private:
 	J_UI();
 	j_dbl M_time = 0.0f;
 
-	typedef j_map<J_View_Shared_t, J_Cursor_Position_Shared_t> Cursor_Position_Cont_t;
+	typedef j_map<J_View_Weak_t, J_Cursor_Position_Shared_t
+		, std::owner_less<J_View_Weak_t>> Cursor_Position_Cont_t;
 	Cursor_Position_Cont_t M_cursor_positions;
 	J_Frame_Counter_Shared_t M_frame_counter;
 };

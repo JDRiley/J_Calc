@@ -372,7 +372,7 @@ void J_Text_Box::enable_blinking_cursor(){
 
 	add_update_callback(M_blinker_updater);
 }
-ex_array<Bitmap_Metrics> g_bitmap_metrics;
+
 void J_Text_Box::calculate_remaining_letter_poses(){
 	assert(M_pen_poses.size() <= M_multi_string.size()+1);
 	assert(M_multi_string.size() == M_letter_box_string->size());
@@ -381,8 +381,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 		
 		J_UI_String& cur_string = *M_multi_string.get_string_holding_index(i);
 		J_Char_t charcode = M_multi_string.at_pos(i)->charcode();
-		Bitmap_Metrics& test_bitmap = g_bitmap_metrics[i];
-		(void)test_bitmap;
+
 		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
 			->bitmap_metric(charcode);
 
@@ -599,6 +598,7 @@ void J_Text_Box::set_cursor_line_position(j_size_t i_cursor_pos){
 
 void J_Text_Box::recalculate_letter_poses(){
 	M_pen_poses.resize(1);
+	assert(M_pen_poses.back() == default_pen_pos());
 	calculate_remaining_letter_poses();
 }
 
@@ -676,7 +676,7 @@ ex_array<J_UI_Letter_Box_Shared_t> J_Text_Box::make_letter_boxes(const J_UI_Stri
 	for(int i = 0; i < irk_string.size(); i++){
 		J_Char_t char_code = irk_string[i].charcode();
 		J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
-		g_bitmap_metrics.push_back(font_face->bitmap_metric(char_code));
+		
 		new_letter_box->set_buffer_data(font_face->bitmap_metric(char_code)
 										, color, font_face->get_data(char_code));
 		letter_boxes.push_back(new_letter_box);
@@ -973,7 +973,10 @@ void J_Text_Box::insert_string(j_size_t i_pos, const J_UI_String& irk_string){
 
 void J_Text_Box::set_string(const J_UI_String& irk_string){
 
+
 	M_multi_string = J_UI_Multi_String(irk_string);
+	auto letter_boxes = make_letter_boxes(irk_string);
+	M_letter_box_string->swap(letter_boxes);
 
 	recalculate_letter_poses();
 
@@ -1161,7 +1164,7 @@ void J_Text_Box::alert_changed(){
 /*void J_Text_Box::draw()const*/
 void J_Text_Box::draw()const{
 	J_UI_Box::draw();
-
+	M_cursor_line->draw();
 	if(M_changed_flag){
 		render_frame_buffer();
 	}
@@ -1252,6 +1255,11 @@ void J_Text_Box::render_frame_buffer()const{
 	M_changed_flag = false;
 	assert(!open_gl_error());
 }
+
+J_Text_Box::~J_Text_Box(){
+
+}
+
 
 
 }

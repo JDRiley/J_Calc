@@ -56,7 +56,7 @@ void J_Image_Pane::set_image_width(int i_image_width){
 	set_texture_clamp_parameters();
 
 	s_open_gl.debind_program();
-	clear_image();
+	//clear_image();
 }
 
 void J_Image_Pane::set_image_height(int i_image_height){
@@ -74,7 +74,7 @@ void J_Image_Pane::set_image_height(int i_image_height){
 	set_texture_clamp_parameters();
 	
 	s_open_gl.debind_program();
-	clear_image();
+	//clear_image();
 	
 }
 

@@ -9,6 +9,7 @@
 #include "GL_Enum_Conversion_Maps.h"
 //
 #include "J_GL_Objects.h"
+
 namespace jomike{
 
 
@@ -41,16 +42,6 @@ void J_Open_GL::bind_texture_2D(const J_GL_Texture& irk_texture_id){
 }
 
 void J_Open_GL::bind_vertex_array(const J_GL_Vertex_Array& irk_vao){
-	int val = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
-	int val2 = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
-
-	const int complete = GL_FRAMEBUFFER_COMPLETE;
-	const int scomplete = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
-	(void)complete;
-	(void)scomplete;
-	(void)val;
-	(void)val2;
-	
 	glBindVertexArray(irk_vao.get_ID());
 	assert(glIsVertexArray(irk_vao.get_ID()));
 
@@ -248,6 +239,15 @@ void J_Open_GL::tex_sub_image_2D_ubyte(
 		, GL_UNSIGNED_BYTE, i_data);
 
 	assert(!open_gl_error());
+}
+
+void J_Open_GL::check_frame_buffer_status()const{
+#ifndef NDEBUG
+	int draw_frame_buffer_status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+	int read_framebuffer_status = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
+	assert(draw_frame_buffer_status == GL_FRAMEBUFFER_COMPLETE);
+	assert(read_framebuffer_status == GL_FRAMEBUFFER_COMPLETE);
+#endif
 }
 
 

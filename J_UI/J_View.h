@@ -14,7 +14,7 @@
 //
 #include <ex_array.h>
 //Containers
-#include <map>
+#include <j_map.h>
 
 
 namespace jomike{
@@ -144,13 +144,13 @@ private:
 
 
 	j_shared_ptr_tree<J_UI_Object> M_ui_objects;
-	std::map<j_uint, J_UI_Box_Shared_t> M_disp_boxes;
+	j_map<j_uint, J_UI_Box_Shared_t> M_disp_boxes;
 	j_shared_ptr_tree<J_Text_Box_Object> M_text_box_objects;
 
-	std::map<j_uint, J_Image_Pane_Shared_t> M_image_panes;
-	std::map<j_uint, J_UI_Circle_Shared_t> M_display_circles;
-	std::map<j_uint, Multi_State_Text_Box_Shared_t> M_multi_state_text_boxes;
-	std::map<j_uint, J_UI_Line_Shared_t> M_display_lines;
+	j_map<j_uint, J_Image_Pane_Shared_t> M_image_panes;
+	j_map<j_uint, J_UI_Circle_Shared_t> M_display_circles;
+	j_map<j_uint, Multi_State_Text_Box_Shared_t> M_multi_state_text_boxes;
+	j_map<j_uint, J_UI_Line_Shared_t> M_display_lines;
 
 	j_tree<J_UI_Object_Weak_t,J_UI_Object_Weak_t
 		, std::owner_less<J_UI_Object_Weak_t>> M_objects_using_cursor_data;

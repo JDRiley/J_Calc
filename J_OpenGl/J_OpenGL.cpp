@@ -75,6 +75,8 @@ public:
 };
 
 J_Context::~J_Context(){
+	M_screen_box_vao = J_GL_Vertex_Array(0);
+	M_screen_box_vao_buffer = J_GL_Buffer(0);
 
 	delete M_context;
 	glfwDestroyWindow(M_window);
@@ -125,6 +127,7 @@ Contexts_Handler::~Contexts_Handler(){
 	destroy();
 }
 void Contexts_Handler::destroy(){
+
 	glfwTerminate();
 	//this_thread::sleep_for(chrono::milliseconds(2000));
 }
@@ -334,6 +337,8 @@ const J_GL_Vertex_Array& Contexts_Handler::screen_box_vao(){
 	return M_active_context->M_screen_box_vao;
 }
 
+
+
 void j_poll_events(){
 	glfwPollEvents();
 }
@@ -470,11 +475,12 @@ void j_set_cursor_pos(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
 bool open_gl_error(){
 
 	ex_array<int> errors;
+	assert(s_contexts_handler->get_glew_context());
 	
 	while(int error = glGetError()){
 		errors.push_back(error);
 	}
-
+	
 	const j_map<int, string> sk_error_strings
 		= {
 		 {GL_INVALID_ENUM, "GL_INVALID_ENUM"}
@@ -516,7 +522,7 @@ bool open_gl_error(){
 
 extern "C" j_context_t glewGetContext(){
 	//assert(s_contexts_handler->get_active_context());
-	return (s_contexts_handler->get_glew_context());
+	return s_contexts_handler->get_glew_context();
 }
 
 

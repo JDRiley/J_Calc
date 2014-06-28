@@ -189,11 +189,11 @@ J_FWD_DECL(Cursor_Pos_Updater)
 
 class Cursor_Pos_Updater : public J_UI_Object_Update_Callback{
 public:
-	Cursor_Pos_Updater(J_View_Shared_t i_view):M_view(i_view){}
+	Cursor_Pos_Updater(J_View_Weak_t i_view):M_view(i_view){}
 	void operator()(J_UI_Object_Shared_t i_obj)override;
 private:
 	Pen_Pos_FL_t M_cursor_pos_fl;
-	J_View_Shared_t M_view;
+	J_View_Weak_t M_view;
 };
 
 void Cursor_Pos_Updater::operator()(J_UI_Object_Shared_t i_obj){
@@ -219,7 +219,7 @@ void Cursor_Pos_Updater::operator()(J_UI_Object_Shared_t i_obj){
 }
 
 void J_UI_Controller::add_cursor_pos_text_updater(J_Text_Box_Object_Shared_t i_text_obj
-	, J_View_Shared_t i_view){
+	, J_View_Weak_t i_view){
 	i_text_obj->add_update_callback(Cursor_Pos_Updater_Shared_t(new Cursor_Pos_Updater(i_view)));
 }
 

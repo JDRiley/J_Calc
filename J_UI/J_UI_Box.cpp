@@ -51,8 +51,8 @@ void J_UI_Box::gen_vaos(){
 	s_open_gl.enable_vertex_attribute_array(1);
 
 
-	s_open_gl.bind_vertex_array(J_GL_Vertex_Array::null_object());
-	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, J_GL_Buffer::null_object());
+	s_open_gl.debind_vertex_array();
+	s_open_gl.debind_buffer(GL_Buffer_Targets::ARRAY_BUFFER);
 
 }
 
@@ -71,7 +71,7 @@ void J_UI_Box::draw()const{
 		s_open_gl.draw_arrays(Array_Draw_Mode::LINE_LOOP, 0, 4);
 
 	}
-	s_open_gl.bind_vertex_array(J_GL_Vertex_Array::null_object());
+	s_open_gl.debind_vertex_array();
 	s_open_gl.debind_program();
 
 

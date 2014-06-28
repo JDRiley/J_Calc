@@ -211,6 +211,7 @@ public:
 	void alert_changed();
 
 	void alert_cursor_pos(Pen_Pos_FL_t i_pos)override;
+	~J_Text_Box();
 protected:
 	bool is_cursor_pos_in_view(j_size_t i_pos)const;
 	void set_cursor_pos_no_scroll(j_size_t i_pos);

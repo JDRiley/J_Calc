@@ -139,6 +139,8 @@ public:
 	}
 	
 	~J_GL_Texture_Render_Buffer();
+	
+
 private:
 	friend class J_Open_GL;
 	J_GL_Texture_Render_Buffer(int i_id):J_GL_Texture(i_id){ assert(!i_id); }
@@ -161,7 +163,7 @@ public:
 	J_GL_Vertex_Array& operator=(const J_GL_Vertex_Array& ) = delete;
 	
 	static const J_GL_Vertex_Array& null_object(){
-		static J_GL_Vertex_Array null_obj;
+		static J_GL_Vertex_Array null_obj(0);
 		return null_obj;
 	}
 	
@@ -190,7 +192,7 @@ public:
 	J_GL_Buffer& operator=(const J_GL_Buffer& ) = delete;
 	
 	static const J_GL_Buffer& null_object(){
-		static J_GL_Buffer null_obj;
+		static J_GL_Buffer null_obj(0);
 		return null_obj;
 	}
 	

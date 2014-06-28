@@ -171,7 +171,10 @@ void J_Font_Manager::clear(){
 	M_font_data.clear();
 	
 	FT_Done_FreeType(M_FT_library);
+
+	
 	M_context.reset();
+	s_contexts->detach_active_context();
 	M_FT_library = nullptr;
 }
 

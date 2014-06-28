@@ -33,7 +33,7 @@ public:
 	//Gets
 	j_symbol* get_reserved_symbol(const J_UI_String&)const;
 	~J_Calc_Data();
-	void clear_data();
+	void clear_user_data();
 	void update();
 	void remove_view(J_Calc_View_Shared_t i_view);
 private:
@@ -42,7 +42,7 @@ private:
 	void init_reserved_symbols();
 	friend class Instance_Pointer<J_Calc_Data>;
 	typedef j_tree<J_Calc_View_Shared_t> Calc_J_View_Cont_t;
-
+	void clear_reserved();
 	Calc_J_View_Cont_t M_calc_views;
 
 	j_tree<J_UI_String> M_reserved_words;

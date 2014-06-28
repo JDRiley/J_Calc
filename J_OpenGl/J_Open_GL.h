@@ -30,6 +30,9 @@ public:
 		, const j_ubyte* data);
 	//
 	void bind_vertex_array(const J_GL_Vertex_Array& i_vao_id);
+
+	void check_frame_buffer_status()const;
+
 	//
 	void debind_vertex_array();
 	void debind_buffer(GL_Buffer_Targets i_buffer_target);

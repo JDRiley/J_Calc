@@ -9,7 +9,9 @@
 namespace jomike{
 static J_Open_GL s_open_gl;
 J_GL_Framebuffer::~J_GL_Framebuffer(){
-	
+	if(!get_ID()){
+		return;
+	}
 	glDeleteFramebuffers(1, ID_ptr());
 	assert(!open_gl_error());
 }
@@ -31,6 +33,9 @@ J_GL_Texture::J_GL_Texture(): J_GL_Object(0){
 }
 
 J_GL_Texture::~J_GL_Texture(){
+	if(!get_ID()){
+		return;
+	}
 	glDeleteTextures(1, ID_ptr());
 	assert(!open_gl_error());
 }
@@ -45,6 +50,10 @@ J_GL_Texture_Render_Buffer::J_GL_Texture_Render_Buffer(){
 }
 
 J_GL_Texture_Render_Buffer::~J_GL_Texture_Render_Buffer(){
+	if(!get_ID()){
+		return;
+	}
+
 	glDeleteRenderbuffers(1, ID_ptr());
 	assert(!open_gl_error());
 
@@ -67,6 +76,9 @@ J_GL_Buffer::J_GL_Buffer():J_GL_Object(0){
 }
 
 J_GL_Buffer::~J_GL_Buffer(){
+	if(!get_ID()){
+		return;
+	}
 	glDeleteBuffers(1, ID_ptr());
 	assert(!open_gl_error());
 }
@@ -93,7 +105,10 @@ J_GL_Vertex_Array::J_GL_Vertex_Array():J_GL_Object(0){
 
 
 J_GL_Vertex_Array::~J_GL_Vertex_Array(){
-	glDeleteBuffers(1, ID_ptr());
+	if(!get_ID()){
+		return;
+	}
+	glDeleteVertexArrays(1, ID_ptr());
 	assert(!open_gl_error());
 }
 

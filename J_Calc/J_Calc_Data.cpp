@@ -182,9 +182,18 @@ bool J_Calc_Data::symbol_name_availability_status(const J_UI_String& irk_string)
 	return true;
 }
 
-J_Calc_Data::~J_Calc_Data(){clear_data();}
+J_Calc_Data::~J_Calc_Data(){
+	clear_user_data();
+	clear_reserved();
+}
 
-void J_Calc_Data::clear_data(){
+void J_Calc_Data::clear_reserved(){
+	for(auto f_reserved_symbol : M_reserved_symbols){
+		delete f_reserved_symbol;
+	}
+}
+
+void J_Calc_Data::clear_user_data(){
 	M_calc_views.clear();
 
 	for(auto f_user_symbol : M_user_symbols){

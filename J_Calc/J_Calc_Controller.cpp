@@ -106,6 +106,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	main_text_box_ptr->set_colors(J_WHITE, J_CLEAR, J_CYAN);
 
 	M_main_view->subscribe_cursor_updates(main_text_box_ptr);
+
 	main_text_box_ptr->set_cursor_pos(0);
 	J_Text_Box_Shared_t cursor_pos_box(
 			new J_Text_Box(J_Rectangle(0.50f, -1.0f, 0.50f, 0.1f)
@@ -135,7 +136,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	draw_fps_text_box->set_outline_and_fill_visibility_status(true);
 	draw_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
-	add_draw_fps_updater(draw_fps_text_box);
+	//add_draw_fps_updater(draw_fps_text_box);
 
 
 	J_Text_Box_Shared_t update_fps_text_box(
@@ -147,7 +148,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	update_fps_text_box->set_outline_and_fill_visibility_status(true);
 	update_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
-	add_update_fps_updater(update_fps_text_box);
+	//add_update_fps_updater(update_fps_text_box);
 
 	assert(!open_gl_error());
 }

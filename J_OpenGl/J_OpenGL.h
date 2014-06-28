@@ -45,6 +45,7 @@ public:
 	void move_main_context_to_here();
 	static Contexts_Handler& get_instance();
 	void destroy();
+
 	~Contexts_Handler();
 private:
 	

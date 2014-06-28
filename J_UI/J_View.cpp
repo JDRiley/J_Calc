@@ -333,9 +333,15 @@ void J_View::set_cursor_pos(int i_x, int i_y){
 
 /*~J_FT_Text_Displayer()*/ //Must be called on main thread and not in callback
 J_View::~J_View(){
-	Context_RAII context_saver;
+	
+	bool detatch_context_after_clear = s_contexts->get_active_context() == M_context;
+
 	make_active_context();
 	clear();
+	M_context.reset();
+	if(detatch_context_after_clear){
+		s_contexts->detach_active_context();
+	}
 }
 
 /*virtual void clear()*/
@@ -353,6 +359,8 @@ void J_View::clear(){
 	M_image_panes.clear();
 	M_disp_boxes.clear();
 	M_focused_object.reset();
+	M_multi_state_text_boxes.clear();
+	M_display_lines.clear();
 
 }
 //
@@ -372,7 +380,7 @@ jomike::J_UI_Box_Shared_t J_View::get_display_box(j_uint i_obj_id){
 		return J_UI_Box_Shared_t();
 	}
 	make_active_context();
-	return found_pos->second;
+	return *found_pos;
 }
 
 J_UI_Circle_Shared_t J_View::get_display_circle(j_uint i_circle_id){
@@ -381,7 +389,7 @@ J_UI_Circle_Shared_t J_View::get_display_circle(j_uint i_circle_id){
 		return J_UI_Circle_Shared_t();
 	}
 	make_active_context();
-	return found_pos->second;
+	return *found_pos;
 }
 
 //J_Text_Box_Shared_t J_View::get_text_display(j_uint i_obj_id){
@@ -400,7 +408,7 @@ Multi_State_Text_Box_Shared_t J_View::get_multi_state_text_display(j_uint i_obj_
 	}
 
 	make_active_context();
-	return found_pos->second;
+	return *found_pos;
 }
 
 //void J_View::update_box_coordinates(j_uint i_display_box_id, const J_Rectangle& irk_rectangle){
@@ -465,7 +473,7 @@ J_Image_Pane_Shared_t J_View::get_image_pane(j_uint i_obj_id){
 		return J_Image_Pane_Shared_t();
 	}
 	make_active_context();
-	return found_pos->second;
+	return *found_pos;
 }
 //
 //void J_View::update_image_clear(j_uint i_obj_id){
