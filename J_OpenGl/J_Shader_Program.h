@@ -54,9 +54,13 @@ void enforce_program_status(j_uint program_id, GL_Statuses i_status);
 
 class J_GL_Shader_Program{
 public:
-
+	~J_GL_Shader_Program();
+protected:
+	void add_shader_id(j_uint i_shader_id);
+	void add_program_id(j_uint i_program_id);
 private:
-
+	ex_array<j_uint> M_program_ids;
+	ex_array<j_uint> M_shader_ids;
 };
 
 
@@ -64,8 +68,8 @@ private:
 class J_GL_Box_Shader : public J_GL_Shader_Program{
 public:
 	J_GL_Box_Shader();
-	void attach_box_program();
-	void attach_outline_program();
+	/*void attach_box_program();
+	void attach_outline_program();*/
 	void set_fill_color(J_Color_RGBA<j_float>);
 	void set_outline_color(J_Color_RGBA<j_float>);
 

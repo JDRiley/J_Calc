@@ -21,7 +21,9 @@ jomike::j_dbl J_UI::time()const{
 }
 
 void J_UI::update(){
+	assert(M_frame_counter);
 	M_time = j_get_time();
+	M_frame_counter->count_frame();
 }
 
 

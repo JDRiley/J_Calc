@@ -16,6 +16,7 @@ bool Call_Expression::has_value()const{
 
 j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
 	assert(i_args.empty());
+	(void)i_args;
 	return get_symbol()->get_value(*M_args_list);
 }
 

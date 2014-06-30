@@ -393,6 +393,7 @@
     <ClInclude Include="J_UI_Object.h" />
     <ClInclude Include="J_UI_Object_Factory.h" />
     <ClInclude Include="J_UI_String\J_UI_Char.h" />
+    <ClInclude Include="J_UI_String\J_UI_Multi_String.h" />
     <ClInclude Include="J_UI_String\J_UI_String.h" />
     <ClInclude Include="J_View.h" />
     <ClInclude Include="J_UI_Fwd_Decl.h" />
@@ -438,6 +439,7 @@
     <ClCompile Include="J_UI_Object.cpp" />
     <ClCompile Include="J_UI_Object_Factory.cpp" />
     <ClCompile Include="J_UI_String\J_UI_Char.cpp" />
+    <ClCompile Include="J_UI_String\J_UI_Multi_String.cpp" />
     <ClCompile Include="J_UI_String\J_UI_String.cpp" />
     <ClCompile Include="J_View.cpp" />
   </ItemGroup>

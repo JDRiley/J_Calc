@@ -90,32 +90,18 @@ Arguments get_arguments(const J_UI_String& irk_string){
 	return get_args_from_string(argument_string);
 }
 
-static bool is_assignment_statement(const J_UI_String& irk_string){
-	auto begin_pos = irk_string.begin();
-	advance_white_space(&begin_pos, irk_string.end());
 
 
-	if(irk_string.size() < 2){
-		return false;
-	}
-	return equal(sk_assignment_string.begin(), sk_assignment_string.end(), irk_string.begin());
-}
 
-static j_conditional_construct_symbol* 
-get_conditional_construct(J_UI_Const_Iter*, J_UI_Const_Iter){
-	assert(0);
-	return nullptr;
-}
 
-static j_symbol* assign_symbol(j_symbol*, const J_UI_String&);
 
-J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_String& irk_string){
+J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_Multi_String& irk_string){
 
 	Math_Parser parser;
 	string error_string;
+	
 	try{
-		if(j_symbol*  new_symbol 
-		   = parser.parse(irk_string.std_str() + ';')){
+		if(j_symbol* new_symbol = parser.parse(irk_string.std_str() + ';')){
 			J_UI_String return_val;
 			if(new_symbol->has_value()){
 				return_val = new_symbol->get_value().to_str();
@@ -124,80 +110,18 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_String& irk
 			}
 			delete new_symbol;
 			return return_val;
-		} else if(j_true){
+		} else{
 			return error_string;
 		}
-	} catch(J_Syntax_Error& er_error){
+	}catch(J_Syntax_Error& er_error){
 		er_error.print();
 		return er_error.str();
-	} catch(J_Sym_Argument_Error& er_error){
+	}catch(J_Sym_Argument_Error& er_error){
 		er_error.print();
 		return er_error.str();
-	} catch(J_Symbol_Error& er_error){
+	}catch(J_Symbol_Error& er_error){
 		er_error.print();
 		return er_error.str();
-	}
-	//This Be old code for reference. Will be deleting soon
-	auto string_pos = irk_string.begin();
-	
-	
-	advance_white_space(&string_pos, irk_string.end());
-	if(J_UI_Char('[') == *string_pos){
-		//Declaring a routine
-		j_routine_symbol_unique_t new_routine(
-				get_routine(&string_pos, irk_string.end())
-			);
-
-		s_calc_data->add_user_symbol(&*new_routine);
-		return new_routine->name();
-	}
-
-	if(J_UI_Char('?') == *string_pos){
-		j_conditional_construct_symbol_unique_t conditional_construct(
-			get_conditional_construct(&string_pos, irk_string.end())
-			);
-		conditional_construct->get_value();
-		return conditional_construct->get_display_name();
-	}
-
-	J_UI_String cur_word = get_symbol_name(&string_pos, irk_string.end());
-	
-	cerr << "Math Input Received word: " << cur_word << endl;
-
-	J_UI_String remaining_string(irk_string.substr(string_pos - irk_string.begin()));
-	remaining_string.push_back(';');
-	j_symbol* symbol = nullptr;
-	try{
-		if(M_declaration_functions.count(cur_word)){
-			remaining_string.pop_front();
-			auto begin_pos = remaining_string.cbegin();
-			assert(!symbol);
-			symbol = (this->*M_declaration_functions[cur_word])(&begin_pos, remaining_string.end());
-			if(s_calc_data->symbol_name_availability_status(symbol->name())){
-				s_calc_data->add_user_symbol(symbol);
-				J_UI_String return_string(symbol->get_display_name());
-				delete symbol;
-				return return_string;
-			} else{
-				delete symbol;
-				return J_UI_String("Symbol Name is Unavailable");
-			}
-		
-		} else if(is_assignment_statement(remaining_string)){
-			assert(!symbol);
-			symbol = s_calc_data->get_symbol(cur_word);
-			symbol = assign_symbol(symbol, remaining_string);
-			return to_string(symbol->value());
-		} else{
-			auto temp_symbol = j_symbol_unique_t(create_j_symbol(irk_string));
-			return to_string(temp_symbol->value());
-		}
-
-		
-	} catch(J_Syntax_Error& e){
-		return J_UI_String("Symbol Syntax Error: " + e.str());
-	} catch(J_Argument_Error& e){
-		return J_UI_String("Argument Error: " + e.str());
 	}
 }
 

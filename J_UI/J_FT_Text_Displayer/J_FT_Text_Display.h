@@ -170,7 +170,7 @@ private:
 
 	Array_Modifier_Manger<ex_array<J_UI_Letter_Box_Shared_t>> M_letter_box_string;
 	J_GL_Framebuffer M_framebuffer;
-	J_GL_Texture_Render_Buffer M_texture_render_buffer;
+	J_GL_Texture M_texture_render_buffer;
 	void render_frame_buffer()const;
 	j_uint x_pixels()const;
 	j_uint y_pixels()const;

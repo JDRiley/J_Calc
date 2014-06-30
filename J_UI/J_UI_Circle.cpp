@@ -74,15 +74,14 @@ void J_UI_Circle::recalc_vertex_data(){
 		vertex_array_data.push_back(0.0f);
 		vertex_array_data.push_back(1.0f);
 	}
-	int data_size = safe_int_cast(sizeof(j_float)*vertex_array_data.size());
+	int data_size = safe_int_cast(vertex_array_data.size());
 
 	s_open_gl.bind_vertex_array(M_circle_vao);
 	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, M_vao_buffer);
 	s_open_gl.buffer_sub_data(
 		GL_Buffer_Targets::ARRAY_BUFFER, 0, data_size, vertex_array_data.data());
 
-	s_open_gl.vertix_attribute_pointer(0, 4, GL_Types::FLOAT, false, 0, 0);
-	s_open_gl.enable_vertex_attribute_array(0);
+
 	s_open_gl.debind_vertex_array();
 	s_open_gl.debind_buffer(GL_Buffer_Targets::ARRAY_BUFFER);
 }

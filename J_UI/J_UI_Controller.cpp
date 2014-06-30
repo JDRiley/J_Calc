@@ -88,19 +88,17 @@ void J_UI_Controller::draw_views()const{
 }
 
 void J_UI_Controller::char_input_cmd(j_window_t i_window, int i_charcode){
-	if(M_active_ui_objs[M_j_views[i_window]].expired()){
-		return;
-	}
+
+	assert(M_j_views.count(i_window));
 	M_j_views[i_window]->char_input_cmd(i_charcode);
 }
 
 void J_UI_Controller::key_input_cmd(j_window_t i_window, int i_key, int i_scancode, int i_action, int i_modifiers){
 	M_last_key_modifiers = i_modifiers;
-	if(M_active_ui_objs[M_j_views[i_window]].expired()){
-		return;
-	}
-	M_active_ui_objs[M_j_views[i_window]].lock()
-		->key_input_cmd(i_key, i_scancode, i_action, i_modifiers);
+
+	assert(M_j_views.count(i_window));
+
+	M_j_views[i_window]->key_input_cmd(i_key, i_scancode, i_action, i_modifiers);
 }
 
 

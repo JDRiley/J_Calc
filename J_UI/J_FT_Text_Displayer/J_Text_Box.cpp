@@ -373,6 +373,59 @@ void J_Text_Box::enable_blinking_cursor(){
 	add_update_callback(M_blinker_updater);
 }
 
+void J_Text_Box::calculate_letter_boxes(j_size_t i_pos){
+	assert(M_letter_box_string->size() >= M_multi_string.size());
+	auto pos = M_multi_string.get_insert_pos(i_pos);
+	M_pen_poses.resize(i_pos + 1);
+	auto char_pos = pos.first;
+	j_size_t index = i_pos;
+	while(pos.second != M_multi_string.end()){
+		J_UI_Color color = pos.second->color();
+		J_Font_Face font_face = pos.second->font_face();
+		while(char_pos != pos.second->end()){
+			J_Char_t char_code = char_pos->charcode();
+			auto& bitmap_metric = font_face->bitmap_metric(char_code);
+			M_letter_box_string[index]
+				->set_buffer_data(bitmap_metric
+				, color, font_face->get_data(char_code));
+
+			
+
+
+			M_letter_box_string[index]->set_image_box(M_pen_poses[index], bitmap_metric);
+			++index;
+			
+			calculate_next_pen_pos(char_code, bitmap_metric);
+			
+
+			++char_pos;
+		}
+		++pos.second;
+		char_pos = pos.second->begin();
+	}
+	assert(M_pen_poses.size() == (M_multi_string.size() + 1));
+}
+
+void J_Text_Box::calculate_next_pen_pos(J_Char_t i_char_code, const Bitmap_Metrics& irk_bitmap){
+	auto window = s_contexts->get_active_window();
+
+	j_float width = to_x_screen(window, irk_bitmap.width);
+
+
+
+
+	if('\n' == i_char_code){
+		M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
+	} else if((M_pen_poses.back().first + width) > x2()){
+		Pen_Pos_FL_t new_pos(new_line_pen_pos(M_pen_poses.back()));
+		M_pen_poses.push_back(calculate_pen_advance(new_pos
+			, irk_bitmap.advance_x));
+	} else{
+		M_pen_poses.push_back(calculate_pen_advance(M_pen_poses.back()
+			, irk_bitmap.advance_x));
+	}
+}
+
 void J_Text_Box::calculate_remaining_letter_poses(){
 	assert(M_pen_poses.size() <= M_multi_string.size()+1);
 	assert(M_multi_string.size() == M_letter_box_string->size());
@@ -385,30 +438,9 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
 			->bitmap_metric(charcode);
 
-		
-
-		auto window = s_contexts->get_active_window();
-
-		j_float width = to_x_screen(window, bitmap_metric.width);
-		//j_float height = to_y_screen(window, bitmap_metric.height);
-
-		j_float x_start, y_start;
-
 		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric);
-		if('\n' == charcode){
-			M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
-		}else if((M_pen_poses.back().first + width) > x2()){
-			Pen_Pos_FL_t new_pos(new_line_pen_pos(M_pen_poses.back()));
-			x_start = new_pos.first;
-			y_start = new_pos.second;
-			M_pen_poses.push_back(calculate_pen_advance(new_pos
-				, bitmap_metric.advance_x));
-		} else{
-			x_start = M_pen_poses.back().first;
-			y_start = M_pen_poses.back().second;
-			M_pen_poses.push_back(calculate_pen_advance(M_pen_poses.back()
-				, bitmap_metric.advance_x));
-		}
+		calculate_next_pen_pos(charcode, bitmap_metric);
+		
 
 		
 	}
@@ -624,31 +656,16 @@ void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)cons
 			-= to_y_screen(s_contexts->get_active_window(), underreach);
 	}
 
-	//s_model->notify_letter_box_poses(get_ID(), i_pos, M_multi_string.size() - i_pos
-	//								 , pen_poses.data());
 }
 
-//void J_Text_Box::notify_string_data()const{
-//	s_model->notify_text_string_size(get_ID(), M_multi_string.size());
-//	int index = 0;
-//	for(auto& cur_string : M_multi_string){
-//		J_Font_Face font_face = cur_string.font_face();
-//		for(int i = 0; i < cur_string.size(); i++, index++){
-//			Bitmap_Metrics& bitmap_metric
-//				= cur_string.font_face()->bitmap_metric(cur_string[i].charcode());
-//
-//			s_model->notify_letter_box_rectangle(get_ID(), index, M_pen_poses[index]
-//												 , bitmap_metric);
-//			s_model->notify_letter_box_data(get_ID(), index, bitmap_metric, cur_string.color()
-//											, font_face->get_data(cur_string[i].charcode()));
-//
-//		}
-//	}
-//}
+void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_Multi_String& irk_string){
 
-void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_String& irk_string){
-	auto insert_pos = M_multi_string.get_insert_pos(i_index);
-	M_multi_string.insert(i_index, irk_string);
+	if(M_multi_string.empty()){
+		assert(0 == i_index);
+		M_multi_string = irk_string;
+	}else{
+		M_multi_string.insert(i_index, irk_string);
+	}
 	
 
 
@@ -667,6 +684,17 @@ void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_String& irk_s
 
 }
 
+ex_array<J_UI_Letter_Box_Shared_t> 
+	J_Text_Box::make_letter_boxes(const J_UI_Multi_String& irk_string){
+
+	ex_array<J_UI_Letter_Box_Shared_t> letter_boxes;
+	for(const auto& f_string : irk_string){
+		auto next_letter_box =  make_letter_boxes(f_string);
+		letter_boxes.insert(letter_boxes.end(), next_letter_box.begin(), next_letter_box.end());
+	}
+
+	return letter_boxes;
+}
 
 ex_array<J_UI_Letter_Box_Shared_t> J_Text_Box::make_letter_boxes(const J_UI_String& irk_string){
 	ex_array<J_UI_Letter_Box_Shared_t> letter_boxes;
@@ -683,9 +711,6 @@ ex_array<J_UI_Letter_Box_Shared_t> J_Text_Box::make_letter_boxes(const J_UI_Stri
 	}
 	return letter_boxes;
 }
-
-
-
 
 void J_Text_Box::mouse_button_press(int i_button, int , Pen_Pos_FL_t i_pos){
 	
@@ -778,6 +803,8 @@ bool J_Text_Box::insert_char(J_UI_Char i_char){
 
 
 	M_pen_poses.resize(M_cursor_pos+1);
+	M_letter_box_string
+		->insert(M_letter_box_string->begin() + M_cursor_pos, new_letter_box);
 
 	calculate_remaining_letter_poses();
 
@@ -963,9 +990,21 @@ void J_Text_Box::insert_string(const J_UI_String& irk_string){
 	insert_string(get_cursor_pos(), irk_string);
 }
 
+void J_Text_Box::insert_string(const J_UI_Multi_String& irk_string){
+	insert_string(get_cursor_pos(), irk_string);
+}
+
 /*void insert_string(int pos, const J_UI_String&)*/
 void J_Text_Box::insert_string(j_size_t i_pos, const J_UI_String& irk_string){
 	
+	insert_string_silent(i_pos, irk_string);
+
+	set_cursor_pos(i_pos + irk_string.size());
+}
+
+/*void insert_string(int pos, const J_UI_String&)*/
+void J_Text_Box::insert_string(j_size_t i_pos, const J_UI_Multi_String& irk_string){
+
 	insert_string_silent(i_pos, irk_string);
 
 	set_cursor_pos(i_pos + irk_string.size());
@@ -975,10 +1014,10 @@ void J_Text_Box::set_string(const J_UI_String& irk_string){
 
 
 	M_multi_string = J_UI_Multi_String(irk_string);
-	auto letter_boxes = make_letter_boxes(irk_string);
-	M_letter_box_string->swap(letter_boxes);
+	expand_num_letter_boxes();
 
-	recalculate_letter_poses();
+	recalculate_letter_boxes();
+	
 
 
 	set_cursor_on();
@@ -1206,14 +1245,16 @@ void J_Text_Box::render_frame_buffer()const{
 	s_open_gl.bind_draw_framebuffer(M_framebuffer);
 
 	s_open_gl.viewport(0, 0, prev_width, prev_height);
-	assert(!open_gl_error());
+
 	s_open_gl.set_clear_color(0.0f, 0.0f, 0.0f, 0.0f);
-	assert(!open_gl_error());
+
 	j_clear();
-	assert(!open_gl_error());
+
+
+	auto letter_draw_end = M_letter_box_string->begin() + M_multi_string.size();
 
 	auto start_view_pos
-		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
+		= lower_bound(M_letter_box_string->begin(), letter_draw_end
 		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y1(), 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y1() - i_right->y1();
@@ -1228,7 +1269,7 @@ void J_Text_Box::render_frame_buffer()const{
 	});
 
 	auto end_view_pos
-		= lower_bound(M_letter_box_string->begin(), M_letter_box_string->end()
+		= lower_bound(M_letter_box_string->begin(), letter_draw_end
 		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y2(), 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y2() - i_right->y2();
@@ -1253,12 +1294,26 @@ void J_Text_Box::render_frame_buffer()const{
 
 	s_open_gl.viewport(0, 0, prev_width, prev_height);
 	M_changed_flag = false;
-	assert(!open_gl_error());
+
 }
 
 J_Text_Box::~J_Text_Box(){
 
 }
+
+void J_Text_Box::expand_num_letter_boxes(){
+	while(M_letter_box_string->size() < M_multi_string.size()){
+		M_letter_box_string->push_back(J_UI_Letter_Box_Shared_t(new J_UI_Letter_Box(J_Rectangle())));
+	}
+}
+
+void J_Text_Box::recalculate_letter_boxes(){
+	calculate_letter_boxes(0);
+}
+
+
+
+
 
 
 

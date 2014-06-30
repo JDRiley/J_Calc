@@ -1,6 +1,9 @@
 #include "Math_Input_Box.h"
 
 #include "J_Calc_Error.h"
+//
+#include <J_UI/J_UI_Controller.h>
+
 #include <iostream>
 //Algorithms
 #include <algorithm>
@@ -20,15 +23,16 @@ namespace jomike{
 //Math Input Text Box Functions**********************************************************
 
 extern const char LINE_END_SYMBOL = ';';
-const char* DEFAULT_INPUT_STRING = "{}";
 
+extern const J_UI_Color G_DEFAULT_OUTPUT_COLOR = J_Color::White;
 
 //Constructors--------------------------------------------------
 Math_Input_Box::Math_Input_Box(const J_Rectangle& irk_rectangle
-	, const J_UI_Multi_String& irk_string):J_Text_Box(irk_rectangle, irk_string)
-	, M_line_inputs(1, Line_Input(0)){
-	insert_string_silent(0, irk_string.front() + DEFAULT_INPUT_STRING);
-	M_line_inputs.front().set_input_str(irk_string.std_str());
+	, const J_UI_Multi_String& irk_string, J_Font_Face i_font_face)
+	:J_Text_Box(irk_rectangle, irk_string)
+	, M_line_inputs(1, Line_Input(0, irk_string, i_font_face, G_DEFAULT_OUTPUT_COLOR)){
+	insert_string_silent(irk_string.size(), J_UI_String(GK_DEFAULT_OUTPUT_STRING, i_font_face, G_DEFAULT_OUTPUT_COLOR));
+	
 	set_key_input_command(math_key_input_cmd);
 	set_char_input_command(math_box_char_input_cmd);
 }
@@ -41,7 +45,8 @@ void Math_Input_Box::insert_line_input(const Line_Input& irk_line_input){
 		, irk_line_input.start_pos(), Line_Cursor_Comp());
 	insert_pos = M_line_inputs.insert(insert_pos, irk_line_input);
 
-	J_Text_Box::insert_string(irk_line_input.start_pos(), irk_line_input.input_str() + irk_line_input.output_str());
+	J_Text_Box::insert_string(
+		irk_line_input.start_pos(), irk_line_input.input_str() + irk_line_input.output_str());
 
 	for_each(insert_pos + 1, M_line_inputs.end()
 		, bind(&Line_Input::increment_pos, _1, irk_line_input.size()));
@@ -197,7 +202,7 @@ void Math_Input_Box::eval_and_break_line_input(){
 	}
 	assert(!line_input_pos->read_only_status(pos));
 
-	J_UI_String new_input_string(line_input_pos->input_str().substr(pos));
+	J_UI_Multi_String new_input_string(line_input_pos->input_str().substr(pos));
 
 	assert(pos <= line_input_pos->input_str().size());
 
@@ -209,8 +214,7 @@ void Math_Input_Box::eval_and_break_line_input(){
 	//line_input_pos->advance_whitespace();
 	j_size_t input_str_size = line_input_pos->input_str().size();
 	j_size_t output_str_size = line_input_pos->output_str().size();
-	line_input_pos->set_input_str(
-		J_UI_String(line_input_pos->input_str().begin(), line_input_pos->input_str().begin() + pos));
+	line_input_pos->set_input_str(line_input_pos->input_str().substr(0, pos));
 
 	line_input_pos->evaluate_output();
 	j_size_t start_pos_move_size = line_input_pos->input_str().size() - input_str_size 
@@ -218,7 +222,7 @@ void Math_Input_Box::eval_and_break_line_input(){
 	
 
 	J_Text_Box::erase_chars(line_input_pos->start_pos(), input_str_size + output_str_size);
-	
+//#error insert string must take a valid font face. right now it's not.'
 	J_Text_Box::insert_string(line_input_pos->start_pos(), line_input_pos->input_str() + line_input_pos->output_str());
 
 	assert(get_cursor_pos() 
@@ -228,7 +232,7 @@ void Math_Input_Box::eval_and_break_line_input(){
 
 	for_each(line_input_pos + 1, M_line_inputs.end(), bind(&Line_Input::increment_pos, _1, start_pos_move_size));
 	
-	Line_Input new_input(get_cursor_pos());
+	Line_Input new_input(line_input_pos->make_empty_from(get_cursor_pos()));
 	
 	new_input.set_input_str(new_input_string);
 

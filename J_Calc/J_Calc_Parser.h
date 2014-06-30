@@ -4,7 +4,7 @@
 #include "J_Calc_Fwd_Decl.h"
 #include <J_Utile.h>
 #include <J_Fwd_Decl.h>
-#include <J_UI/J_UI_String.h>
+#include <J_UI/J_UI_Multi_String.h>
 //
 #include <J_Gadget_Classes.h>
 //
@@ -19,7 +19,7 @@ typedef Delimiter_Handler<J_UI_Char> Delim_t;
 class J_Calc_Math_Input_Parser{
 public:
 	void convert_to_proper_math_input(J_UI_String*);
-	J_UI_String evaluate_math_input(const J_UI_String&);
+	J_UI_String evaluate_math_input(const J_UI_Multi_String&);
 private:
 	static J_Calc_Math_Input_Parser& get_instance();
 	J_Calc_Math_Input_Parser();

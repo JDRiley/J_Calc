@@ -188,6 +188,8 @@ j_float byte_normalized(int_t i_val){
 j_ubyte_arr_t convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
 
 
+void convert_to_rgba32(j_ubyte_arr_t* ir_bitmap_arr, int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
+
 }
 
 

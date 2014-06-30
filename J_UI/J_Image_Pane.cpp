@@ -25,7 +25,7 @@ J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 }
 
 void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
-	s_open_gl.use_program(image_shader_id());
+
 
 	s_open_gl.bind_texture_2D(M_texture);
 	if(image_width() && image_height()){
@@ -35,7 +35,7 @@ void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
 	}
 
 	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
-	s_open_gl.debind_program();
+
 }
 
 void J_Image_Pane::set_image_width(int i_image_width){
@@ -50,9 +50,11 @@ void J_Image_Pane::set_image_width(int i_image_width){
 	M_texture = J_GL_Texture();
 
 	s_open_gl.bind_texture_2D(M_texture);
-	s_open_gl.tex_storage_2D(
-		Texture_Target::TEXTURE_2D, 1, M_internal_format, image_width()
-		, image_height());
+	if(image_width() && image_height()){
+		s_open_gl.tex_storage_2D(
+			Texture_Target::TEXTURE_2D, 1, M_internal_format, image_width()
+			, image_height());
+	}
 	set_texture_clamp_parameters();
 
 	s_open_gl.debind_program();
@@ -69,8 +71,11 @@ void J_Image_Pane::set_image_height(int i_image_height){
 	M_texture = J_GL_Texture();
 
 	s_open_gl.bind_texture_2D(M_texture);
-	s_open_gl.tex_storage_2D(
-		Texture_Target::TEXTURE_2D, 1, M_internal_format, image_width(), image_height());
+
+	if(image_width() && image_height()){
+		s_open_gl.tex_storage_2D(
+			Texture_Target::TEXTURE_2D, 1, M_internal_format, image_width(), image_height());
+	}
 	set_texture_clamp_parameters();
 	
 	s_open_gl.debind_program();
@@ -257,6 +262,10 @@ int J_Image_Pane::num_channels(){
 	}
 	assert(!"Unhandled Sized Internal Format");
 	return -1;
+}
+
+J_Image_Pane::~J_Image_Pane(){
+
 }
 
 

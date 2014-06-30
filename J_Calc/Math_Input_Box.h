@@ -1,10 +1,16 @@
 #ifndef MATH_INPUT_BOX_H
 #define MATH_INPUT_BOX_H
+
+
+//
+#include "J_Calc_Fwd_Decl.h"
+//
 #include <J_UI\J_Text_Box.h>
 
 //Containers
 #include <ex_array.h>
-#include "J_Calc_Fwd_Decl.h"
+
+//
 #include "Line_Input.h"
 namespace jomike{
 extern const char LINE_END_SYMBOL;
@@ -14,8 +20,9 @@ extern const char LINE_END_SYMBOL;
 class Math_Input_Box : public J_Text_Box{
 public:
 	//Constructors 
-	Math_Input_Box(const J_Rectangle& irk_rec = J_Rectangle()
-		, const J_UI_Multi_String& irk_string = J_UI_Multi_String());
+	Math_Input_Box(const J_Rectangle& irk_rec
+		, const J_UI_Multi_String& irk_input_string
+		, J_Font_Face i_output_font_face);
 
 	bool insert_char(J_UI_Char);
 

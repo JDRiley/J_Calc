@@ -10,6 +10,11 @@
 //
 #include "J_GL_Objects.h"
 
+#ifndef NDEBUG
+//#define NDEBUG
+#endif
+//
+#include <cassert>
 namespace jomike{
 
 
@@ -147,7 +152,7 @@ void J_Open_GL::attach_read_framebuffer_texture_2D(
 
 void J_Open_GL::attach_draw_framebuffer_texture_2D(
 	GL_Attachment_Points i_attatchment_point, Texture_Target i_tex_target
-	, const J_GL_Texture_Render_Buffer& irk_frame_renderbuffer, int i_level){
+	, const J_GL_Texture& irk_frame_renderbuffer, int i_level){
 
 	assert(glIsTexture(irk_frame_renderbuffer.get_ID()));
 
@@ -248,6 +253,66 @@ void J_Open_GL::check_frame_buffer_status()const{
 	assert(draw_frame_buffer_status == GL_FRAMEBUFFER_COMPLETE);
 	assert(read_framebuffer_status == GL_FRAMEBUFFER_COMPLETE);
 #endif
+}
+
+void J_Open_GL::delete_framebuffers(int i_num_buffers, j_uint* i_buffer_ids){
+	glDeleteFramebuffers(i_num_buffers, i_buffer_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::gen_framebuffers(int i_num_buffers, j_uint* i_framebuffer_ids){
+	glGenFramebuffers(i_num_buffers, i_framebuffer_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::gen_buffers(int i_num_buffers, j_uint* i_buffer_ids){
+	glGenBuffers(i_num_buffers, i_buffer_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::gen_textures(int i_num_textures, j_uint* i_texture_ids){
+	glGenTextures(i_num_textures, i_texture_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::gen_vertex_arrays(int i_num_vaos, j_uint* i_vao_ids){
+	glGenVertexArrays(i_num_vaos, i_vao_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::delete_buffers(int i_num_buffers, j_uint* i_buffer_ids){
+	glDeleteBuffers(i_num_buffers, i_buffer_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::delete_textures(int i_num_textures, j_uint* i_texture_ids){
+	glDeleteTextures(i_num_textures, i_texture_ids);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::delete_vertex_arrays(int i_num_vaos, j_uint* i_vao_ids){
+	glDeleteVertexArrays(i_num_vaos, i_vao_ids);
+	assert(!open_gl_error());
+}
+
+bool J_Open_GL::is_buffer(j_uint i_buffer_id){
+	assert(!open_gl_error());
+	return glIsBuffer(i_buffer_id);
+}
+
+bool J_Open_GL::is_texture(j_uint i_texture_id){
+	assert(!open_gl_error());
+	return glIsTexture(i_texture_id);
+}
+
+bool J_Open_GL::is_vertex_array(j_uint i_vao_id){
+	assert(!open_gl_error());
+	return glIsVertexArray(i_vao_id);
+}
+
+bool J_Open_GL::is_framebuffer(j_uint i_framebuffer_id){
+	assert(!open_gl_error());
+	return glIsFramebuffer(i_framebuffer_id);
 }
 
 

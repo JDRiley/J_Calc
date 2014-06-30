@@ -92,16 +92,20 @@ Contexts_Handler& Contexts_Handler::get_instance(){
 Contexts_Handler::Contexts_Handler(){init_view_library();}
 
 Context_RAII::Context_RAII():M_context(s_contexts_handler->get_active_context()){
-	if(M_context){
-		s_contexts_handler->detach_active_context();
-	}
+	//if(M_context){
+	//	s_contexts_handler->detach_active_context();
+	//}
 }
 
 
 
 Context_RAII::~Context_RAII(){
+	J_Context_Shared_t cur_context = s_contexts_handler->get_active_context();
+	if(M_context == cur_context){
+		return;
+	}
 
-	if (s_contexts_handler->get_active_context()){
+	if (cur_context){
 		s_contexts_handler->detach_active_context();
 	}
 
@@ -135,7 +139,7 @@ void Contexts_Handler::destroy(){
 
 
 j_window_t Contexts_Handler::get_active_window(){
-	assert(!open_gl_error());
+
 	return M_active_context->M_window;
 }
 
@@ -427,7 +431,7 @@ j_dbl get_x_pixel(j_window_t i_window, j_dbl i_x_screen){
 	return (i_x_screen + 1.0f)*get_x_res(i_window) / 2.0f;
 }
 j_dbl get_y_pixel(j_window_t i_window, j_dbl i_y_screen){
-	return -(1.0f - i_y_screen)*get_y_res(i_window) / 2.0f;
+	return (1.0f - i_y_screen)*get_y_res(i_window) / 2.0f;
 }
 
 j_uint x_pixels(j_window_t i_window, j_dbl i_x_screen){
@@ -474,14 +478,15 @@ void j_set_cursor_pos(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos){
 
 bool open_gl_error(){
 
-	ex_array<int> errors;
+	static ex_array<int> errors;
+
 	assert(s_contexts_handler->get_glew_context());
 	
 	while(int error = glGetError()){
 		errors.push_back(error);
 	}
 	
-	const j_map<int, string> sk_error_strings
+	const static j_map<int, string> sk_error_strings
 		= {
 		 {GL_INVALID_ENUM, "GL_INVALID_ENUM"}
 		, {GL_INVALID_VALUE, "GL_INVALID_VALUE"}
@@ -491,8 +496,8 @@ bool open_gl_error(){
 		, {GL_OUT_OF_MEMORY, "GL_OUT_OF_MEMORY"}
 		, {GL_INVALID_FRAMEBUFFER_OPERATION, "GL_INVALID_FRAMEBUFFER_OPERATION"}
 	};
-
-	if(!errors.empty()){
+	bool errors_had = !errors.empty();
+	if(errors_had){
 
 
 		cout << "\nOpenGl Errors: \n";
@@ -513,9 +518,10 @@ bool open_gl_error(){
 				return num_string;
 		});
 		cout << endl;
+		errors.clear();
 	}
 
-	return !errors.empty();
+	return errors_had;
 }
 
 }

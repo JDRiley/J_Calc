@@ -13,9 +13,9 @@ using std::cerr;
 
 #endif
 namespace jomike{
-extern const char* const DEFAULT_OUTPUT_STRING = "{}";
+extern const char* const GK_DEFAULT_OUTPUT_STRING = "{}";
 extern const j_size_t DEFAULT_OUTPUT_STRING_SIZE 
-	= static_cast<j_size_t>(strlen(DEFAULT_OUTPUT_STRING));
+	= static_cast<j_size_t>(strlen(GK_DEFAULT_OUTPUT_STRING));
 
 J_FWD_DECL(Line_Input)
 
@@ -30,7 +30,10 @@ void Line_Input::set_start_pos(j_size_t i_pos){M_start_pos = i_pos;}
 j_size_t Line_Input::size()const{return M_input.size() + M_output.size();}
 
 //Constructors
-Line_Input::Line_Input(j_size_t i_start_pos):M_start_pos(i_start_pos), M_output("{}"){}
+Line_Input::Line_Input(
+	j_size_t i_start_pos, const J_UI_Multi_String& irk_input
+	, J_Font_Face i_font_face, const J_UI_Color& irk_color)
+	:M_start_pos(i_start_pos), M_input(irk_input), M_output(J_UI_String(GK_DEFAULT_OUTPUT_STRING,  i_font_face, irk_color)){}
 
 /*int start_pos()const*/
 j_size_t Line_Input::start_pos()const{return M_start_pos;}
@@ -67,17 +70,17 @@ void Line_Input::delete_char(j_size_t i_pos){
 bool Line_Input::output_status()const{assert(M_output.size() > 1); return !(M_output.size() == 2);}
 
 /*void input_str(const J_UI_String&, const ex_array<int>&)*/
-void Line_Input::set_input_str(const J_UI_String& irk_string){
+void Line_Input::set_input_str(const J_UI_Multi_String& irk_string){
 	M_input	= irk_string;
 }
 
 /*void clear_output()*/
-void Line_Input::clear_output(){M_output = DEFAULT_OUTPUT_STRING;}
+void Line_Input::clear_output(){M_output = J_UI_String(GK_DEFAULT_OUTPUT_STRING, M_output.front().font_face(), M_output.front().color());}
 /*int output_start_pos()const;*/
 j_size_t Line_Input::output_start_pos()const{return M_start_pos + M_input.size();}
 
 /*const J_UI_String& output_str()const*/
-const J_UI_String& Line_Input::output_str()const{return M_output;}
+const J_UI_Multi_String& Line_Input::output_str()const{return M_output;}
 
 /*bool read_only_status(int)*/
 bool Line_Input::read_only_status(j_size_t i_pos){
@@ -92,7 +95,7 @@ bool Line_Input::is_inside_input(j_size_t i_pos){
 }
 
 /*const J_UI_String& input_str()const*/
-const J_UI_String& Line_Input::input_str()const{return M_input;}
+const J_UI_Multi_String& Line_Input::input_str()const{return M_input;}
 
 /*void evaluate_output()*/
 void Line_Input::evaluate_output(){
@@ -102,8 +105,8 @@ void Line_Input::evaluate_output(){
 #if _DEBUG	
 	cerr << "\nInput_Str:" << M_input;
 #endif //_DEBUGS
-	J_UI_String input_string(M_input);
-	gs_parser->convert_to_proper_math_input(&input_string);
+	J_UI_Multi_String input_string(M_input);
+//	gs_parser->convert_to_proper_math_input(&input_string);
 
 	if(M_input.empty()){
 		return;
@@ -113,23 +116,26 @@ void Line_Input::evaluate_output(){
 
 	input_string.push_back(LINE_END_SYMBOL);
 
-	M_output = gs_parser->evaluate_math_input(input_string);
-	M_output.push_front(DEFAULT_OUTPUT_STRING[0]);
-	M_output.push_back(DEFAULT_OUTPUT_STRING[1]);
+	
+	J_UI_String output_string =  gs_parser->evaluate_math_input(input_string);
+	output_string.set_font_face(M_output.front().font_face());
+	M_output = output_string;
+	M_output.push_front(GK_DEFAULT_OUTPUT_STRING[0]);
+	M_output.push_back(GK_DEFAULT_OUTPUT_STRING[1]);
 	M_output.set_color(J_WHITE);
 }
 
 /*void advance_whitespace()*/
-void Line_Input::advance_whitespace(){
-	j_size_t old_string_size = M_input.size();
-
-	auto string_pos = M_input.begin();
-	while((string_pos != M_input.end()) && string_pos->is_space()){++string_pos;}
-
-	M_input = M_input.substr(string_pos - M_input.begin());
-
-	set_start_pos(start_pos() + (old_string_size - M_input.size()));
-}
+//void Line_Input::advance_whitespace(){
+//	j_size_t old_string_size = M_input.size();
+//
+//	auto string_pos = M_input.begin();
+//	while((string_pos != M_input.end()) && string_pos->is_space()){++string_pos;}
+//
+//	M_input = M_input.substr(string_pos - M_input.begin());
+//
+//	set_start_pos(start_pos() + (old_string_size - M_input.size()));
+//}
 
 /*void increment_pos(int)*/
 void Line_Input::increment_pos(j_size_t i_inc_size){
@@ -139,6 +145,11 @@ void Line_Input::increment_pos(j_size_t i_inc_size){
 /*void decrement_pos(int)*/
 void Line_Input::decrement_pos(j_size_t i_dec_size){
 	M_start_pos -= i_dec_size;
+}
+
+jomike::Line_Input Line_Input::make_empty_from(j_size_t i_pos)const{
+	return Line_Input(i_pos, M_input.front()
+					  , M_output.front().font_face(), M_output.front().color());
 }
 
 

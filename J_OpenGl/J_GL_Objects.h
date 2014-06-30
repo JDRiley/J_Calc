@@ -119,34 +119,6 @@ private:
 
 
 
-class J_GL_Texture_Render_Buffer : public J_GL_Texture{
-public:
-	J_GL_Texture_Render_Buffer();
-	J_GL_Texture_Render_Buffer(const J_GL_Texture_Render_Buffer&) = delete;
-	J_GL_Texture_Render_Buffer(J_GL_Texture_Render_Buffer&& irv_right)
-		:J_GL_Texture(std::move(irv_right)){}
-	
-	J_GL_Texture_Render_Buffer& operator=(J_GL_Texture_Render_Buffer&& irv_right){
-		swap(irv_right);
-		return *this;
-	}
-	
-	J_GL_Texture_Render_Buffer& operator=(const J_GL_Texture_Render_Buffer& ) = delete;
-	
-	static const J_GL_Texture_Render_Buffer& null_object(){
-		static J_GL_Texture_Render_Buffer null_obj(0);
-		return null_obj;
-	}
-	
-	~J_GL_Texture_Render_Buffer();
-	
-
-private:
-	friend class J_Open_GL;
-	J_GL_Texture_Render_Buffer(int i_id):J_GL_Texture(i_id){ assert(!i_id); }
-	bool derived_valid()const override;
-
-};
 
 class J_GL_Vertex_Array : public J_GL_Object{
 public:

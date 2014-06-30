@@ -24,6 +24,7 @@ public:
 	void set_input_format(GL_Pixel_Formats);
 	GL_Pixel_Formats input_format()const;
 	void clear_image();
+	~J_Image_Pane();
 private:
 	GL_Pixel_Formats M_format;
 	GL_Sized_Internal_Formats M_internal_format = GL_Sized_Internal_Formats::RGBA8;

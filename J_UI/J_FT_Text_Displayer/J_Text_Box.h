@@ -13,7 +13,7 @@
 //
 #include <ordered_pair.h>
 //
-#include <J_UI/J_UI_String.h>
+#include <J_UI/J_UI_Multi_String.h>
 //
 #include <J_Gadget_Classes.h>
 
@@ -45,6 +45,7 @@ public:
 	virtual bool insert_char(J_UI_Char i_char) = 0;
 
 	virtual void insert_string(const J_UI_String&) = 0;
+	virtual void insert_string(const J_UI_Multi_String&) = 0;
 	virtual void insert_string(j_size_t pos, const J_UI_String&) =0;
 
 	virtual void backspace() = 0;
@@ -56,6 +57,7 @@ public:
 	virtual void set_cursor_color(const J_Color_RGBA<j_float>) = 0;
 	virtual void set_string(const J_UI_String& irk_string) = 0;
 
+	virtual void insert_string(j_size_t pos, const J_UI_Multi_String&) = 0;
 	
 	void enable_default_key_char_processing();
 
@@ -132,8 +134,10 @@ public:
 	bool insert_char(J_UI_Char i_char)override;
 
 	void insert_string(const J_UI_String&)override;
+	void insert_string(const J_UI_Multi_String&)override;
 	void insert_string(j_size_t pos, const J_UI_String&)override;
 
+	void insert_string(j_size_t pos, const J_UI_Multi_String&)override;
 	
 
 	void backspace()override;
@@ -147,6 +151,8 @@ public:
 
 	void set_cursor_color(const J_Color_RGBA<j_float>)override;
 	void set_string(const J_UI_String& irk_string)override;
+
+	
 
 
 
@@ -213,14 +219,17 @@ public:
 	void alert_cursor_pos(Pen_Pos_FL_t i_pos)override;
 	~J_Text_Box();
 protected:
+	
+	void insert_string_silent(j_size_t i_index, const J_UI_Multi_String& irk_string);
+
 	bool is_cursor_pos_in_view(j_size_t i_pos)const;
 	void set_cursor_pos_no_scroll(j_size_t i_pos);
-	void insert_string_silent(j_size_t i_index, const J_UI_String& irk_string);
+
 	j_size_t selection_start()const;
 	j_size_t selection_end()const;
 private:
 	
-		
+	void expand_num_letter_boxes();
 
 	void recalculate_letter_poses();
 	
@@ -259,8 +268,10 @@ private:
 	void clear_selection_boxes();
 	void set_selection_box_visibility_statuses();
 	ex_array<J_UI_Letter_Box_Shared_t> make_letter_boxes(const J_UI_String& irk_string);
-
-
+	ex_array<J_UI_Letter_Box_Shared_t> 
+		make_letter_boxes(const J_UI_Multi_String& irk_string);
+	void recalculate_letter_boxes();
+	void calculate_letter_boxes(j_size_t i_pos);
 	int M_text_state;
 	mutable bool M_changed_flag = true;
 	bool M_auto_scrolling_status = true;
@@ -278,9 +289,9 @@ private:
 
 	ordered_pair<j_size_t> M_selection;
 	
-
+	void calculate_next_pen_pos(J_Char_t i_char_code, const Bitmap_Metrics& irk_bitmap);
 	J_GL_Framebuffer M_framebuffer;
-	J_GL_Texture_Render_Buffer M_texture_render_buffer;
+	J_GL_Texture M_texture_render_buffer;
 	Key_Input_Cmd_Func_t M_key_input_command;
 	Char_Input_Cmd_Func_t M_char_input_command;
 
@@ -288,4 +299,5 @@ private:
 
 
 }
+
 #endif

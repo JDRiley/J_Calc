@@ -278,7 +278,7 @@ void J_View::draw()const{
 	draw_background();
 	for(auto f_obj : M_ui_object_stack){
 		f_obj->draw();
-		assert(!open_gl_error());
+
 	}
 
 	j_swap_buffers(M_context);
@@ -741,6 +741,16 @@ void J_View::char_input_cmd(j_uint i_charcode){
 
 	M_focused_object.lock()->char_input_cmd(i_charcode);
 }
+
+
+void J_View::key_input_cmd(int i_key, int i_scancode, int i_action, int i_modifiers){
+	if(M_focused_object.expired()){
+		return;
+	}
+
+	M_focused_object.lock()->key_input_cmd(i_key, i_scancode, i_action, i_modifiers);
+}
+
 
 void J_View::update(){
 	for(auto f_obj : M_ui_objects){

@@ -22,14 +22,22 @@ J_GL_Box_Shader::J_GL_Box_Shader(){
 	j_uint vert_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");
 	j_uint box_frag_id  = load_fragment_shader(SHADER_BASE_PATH + "box.frag");
 	j_uint outline_frag_id  = load_fragment_shader(SHADER_BASE_PATH + "box_outline.frag");
+	
+	add_shader_id(vert_shader_id);
+	add_shader_id(box_frag_id);
+	add_shader_id(outline_frag_id);
 
 	M_box_prog_id = glCreateProgram();
+	add_program_id(M_box_prog_id);
 	glAttachShader(M_box_prog_id, vert_shader_id);
 	glAttachShader(M_box_prog_id, box_frag_id);
 	glLinkProgram(M_box_prog_id);
 	enforce_program_status(M_box_prog_id, GL_Statuses::LINK_STATUS);
 
+
+
 	M_outline_prog_id = glCreateProgram();
+	add_program_id(M_outline_prog_id);
 	glAttachShader(M_outline_prog_id, vert_shader_id);
 	glAttachShader(M_outline_prog_id, outline_frag_id);
 	glLinkProgram(M_outline_prog_id);
@@ -284,5 +292,24 @@ void J_GL_Line_Shader::set_fill_color(const J_UI_Color& i_color){
 	assert(!open_gl_error());
 }
 
+
+
+J_GL_Shader_Program::~J_GL_Shader_Program(){
+	for(auto& f_program : M_program_ids){
+		glDeleteProgram(f_program);
+		
+	}
+	for(auto f_shader : M_shader_ids){
+		glDeleteShader(f_shader);
+	}
+}
+
+void J_GL_Shader_Program::add_program_id(j_uint i_program_id){
+	M_program_ids.push_back(i_program_id);
+}
+
+void J_GL_Shader_Program::add_shader_id(j_uint i_shader_id){
+	M_shader_ids.push_back(i_shader_id);
+}
 
 }

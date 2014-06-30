@@ -126,6 +126,7 @@ public:
 	virtual void clear();
 
 	virtual void char_input_cmd(j_uint i_charcode);
+	virtual void key_input_cmd(int i_key, int i_scancode, int i_action, int i_modifiers);
 protected:
 	J_UI_Object_Shared_t get_display_object_at_pos(Pen_Pos_FL_t);
 	virtual void display_object_pressed(J_UI_Object_Shared_t, int action, int modifiers

@@ -91,10 +91,10 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 
 	initialize_font_faces();
 
-
+	M_main_view->make_active_context();
 	Math_Input_Box_Shared_t main_text_box_ptr(
 		new Math_Input_Box(J_Rectangle(-0.95f, -0.70f, 1.90f, 1.50f)
-		, J_UI_String(M_input_font_face, J_CYAN))
+		, J_UI_String(M_input_font_face, J_CYAN), M_input_font_face)
 	);
 
 	M_main_view->add_text_box(main_text_box_ptr);
@@ -108,6 +108,10 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	M_main_view->subscribe_cursor_updates(main_text_box_ptr);
 
 	main_text_box_ptr->set_cursor_pos(0);
+
+
+
+
 	J_Text_Box_Shared_t cursor_pos_box(
 			new J_Text_Box(J_Rectangle(0.50f, -1.0f, 0.50f, 0.1f)
 			, J_UI_String("Cursor Box", M_log_font_face, J_WHITE))
@@ -136,7 +140,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	draw_fps_text_box->set_outline_and_fill_visibility_status(true);
 	draw_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
-	//add_draw_fps_updater(draw_fps_text_box);
+	add_draw_fps_updater(draw_fps_text_box);
 
 
 	J_Text_Box_Shared_t update_fps_text_box(
@@ -148,7 +152,7 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	update_fps_text_box->set_outline_and_fill_visibility_status(true);
 	update_fps_text_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
-	//add_update_fps_updater(update_fps_text_box);
+	add_update_fps_updater(update_fps_text_box);
 
 	assert(!open_gl_error());
 }

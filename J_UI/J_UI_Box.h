@@ -37,8 +37,8 @@ private:
 	J_GL_Box_Shader_Unique_t M_shader;
 
 	void initialization();
-	void gen_vaos();
-
+	void recalculate_vaos();
+	void init_vaos();
 	void derived_set_fill_color()override;
 	void derived_set_outline_color()override;
 };

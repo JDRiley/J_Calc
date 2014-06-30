@@ -99,6 +99,9 @@
     <ClInclude Include="J_UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_UI_String\J_UI_Multi_String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_UI_Controller.cpp">
@@ -180,6 +183,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_UI_String\J_UI_Multi_String.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

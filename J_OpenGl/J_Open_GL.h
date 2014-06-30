@@ -30,11 +30,13 @@ public:
 		, const j_ubyte* data);
 	//
 	void bind_vertex_array(const J_GL_Vertex_Array& i_vao_id);
-
+	//
 	void check_frame_buffer_status()const;
-
+	//
+	void delete_framebuffers(int i_num_buffers, j_uint* i_buffer_ids);
 	//
 	void debind_vertex_array();
+	//
 	void debind_buffer(GL_Buffer_Targets i_buffer_target);
 	//
 	void use_program(j_uint i_program_id);
@@ -69,7 +71,7 @@ public:
 	//
 	void attach_draw_framebuffer_texture_2D(
 		GL_Attachment_Points i_attatchment_point, Texture_Target i_tex_target
-		,  const J_GL_Texture_Render_Buffer& irk_frame_renderbuffer, int i_level);
+		,  const J_GL_Texture& irk_frame_renderbuffer, int i_level);
 	//
 	void buffer_data(
 		GL_Buffer_Targets i_buffer, std::size_t i_size, const j_float* i_data
@@ -88,6 +90,31 @@ public:
 	void texture_wrap_s(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type);
 	void texture_wrap_t(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type);
 	void texture_wrap_r(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type);
+
+	//
+	void gen_framebuffers(int i_num_buffers, j_uint* i_framebuffer_ids);
+	//
+	void gen_buffers(int i_num_buffers, j_uint* i_buffer_ids);
+	//
+	void gen_textures(int i_num_textures, j_uint* i_texture_ids);
+	//
+	void gen_vertex_arrays(int i_num_vaos, j_uint* i_vao_ids);
+
+	//
+	void delete_buffers(int i_num_buffers, j_uint* i_buffer_ids);
+	//
+	void delete_textures(int i_num_textures, j_uint* i_texture_ids);
+	//
+	void delete_vertex_arrays(int i_num_vaos, j_uint* i_vao_ids);
+
+	//
+	bool is_buffer(j_uint i_buffer_id);
+	//
+	bool is_texture(j_uint i_texture_id);
+	//
+	bool is_vertex_array(j_uint i_vao_id);
+	//
+	bool is_framebuffer(j_uint i_framebuffer_id);
 private:
 
 };

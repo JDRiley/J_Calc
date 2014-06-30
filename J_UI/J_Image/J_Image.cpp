@@ -37,8 +37,16 @@ j_int j_num_channels(Image_Format i_format){
 	}
 }
 
+
+
 j_ubyte_arr_t convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap){
-	j_ubyte_arr_t bitmap(i_width*i_height * 4);
+	j_ubyte_arr_t bitmap;
+	convert_to_rgba32(&bitmap, i_width, i_height, i_color, i_bitmap);
+	return bitmap;
+}
+void convert_to_rgba32(j_ubyte_arr_t* ir_bitmap_arr, int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap){
+	j_ubyte_arr_t& bitmap = *ir_bitmap_arr;
+	bitmap.resize(i_width*i_height * 4);
 
 	int width_offset = i_width * 4;
 
@@ -57,7 +65,6 @@ j_ubyte_arr_t convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_c
 		}
 	}
 
-	return bitmap;
 }
 
 const J_UI_Color& J_BLACK = J_Color::Black;
