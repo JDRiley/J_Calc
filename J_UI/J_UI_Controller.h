@@ -39,7 +39,7 @@ public:
 	virtual void end_script_run();
 	virtual void resize_cmd(j_window_t, int width, int height);
 	int key_modifiers()const;
-
+	void update();
 	int current_key_modifiers()const;
 protected:
 	J_UI_Controller();

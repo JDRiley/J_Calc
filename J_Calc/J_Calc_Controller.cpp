@@ -76,8 +76,9 @@ void resize_callback(j_window_t i_window, int i_width, int i_height);
 void main_mouse_button_callback(j_window_t i_window, int i_mouse_button, int i_action, int i_modifiers);
 void scroll_callback(j_window_t, j_dbl, j_dbl);
 const j_dbl DRAW_REFRESH_TIME = 1.0 / 60.0;
+const j_dbl PROGRAM_REFRESH_TIME = 1.0 / 2000.0;
 static j_dbl draw_refresh_time(){ return DRAW_REFRESH_TIME; }
-
+static j_dbl model_refresh_time(){ return PROGRAM_REFRESH_TIME; }
 J_UI_Controller& J_UI_Controller::get_instance(){
 	return *s_controller;
 }
@@ -158,10 +159,12 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 }
 
 void J_Calc_Controller::initialize_font_faces(){
-	M_input_font_face
-		= s_font_manager->get_font_face(M_main_view->get_context(), "times", 14);
+	M_message_font_face
+		= s_font_manager->get_font_face("times", 14);
 	M_log_font_face
-		= s_font_manager->get_font_face(M_main_view->get_context(), "times_italic", 20);
+		= s_font_manager->get_font_face("times_italic", 20);
+	M_input_font_face
+		= s_font_manager->get_font_face("consolas", 20);
 }
 
 void J_Calc_Controller::execute(){
@@ -169,21 +172,37 @@ void J_Calc_Controller::execute(){
 	
 #ifdef _DEBUG
 	run_script("button_press.jcs");
-	
+	//run_script("in_script2.jcs");
 #else
 	run_script("button_press.jcs");
 #endif
+
+
 	draw_views();
 	j_block_execution(10);
 
 
-	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
+	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)(void)>
 		draw_timer(get_j_ui_time, draw_refresh_time);
+
+
+	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)(void)>
+		update_timer(j_get_time, model_refresh_time);
+
+
 	while(M_continue_flag){
 		poll_events();
-		s_calc_data->update();
-		s_j_ui->update();
-		M_main_view->update();
+
+		if(update_timer.time_exceeded()){
+			s_calc_data->update();
+			s_j_ui->update();
+			M_main_view->update();
+			update_timer.reset_timer();
+
+		} else{
+			j_block_execution(5);
+		}
+
 		if(!has_views()){
 			end_execute();
 			continue;
@@ -244,6 +263,7 @@ J_Calc_Controller::~J_Calc_Controller(){
 	j_free_glfw();
 	delete M_input_font_face;
 	delete M_log_font_face;
+	delete M_message_font_face;
 }
 
 void J_Calc_Controller::clear_all(){

@@ -31,7 +31,7 @@ public:
 		, const std::string& font_name);
 	void clear();
 	~J_Font_Manager();
-	J_Font_Face get_font_face(J_Context_Shared_t context_to_add_to, const std::string& font_name, int font_size);
+	J_Font_Face get_font_face(const std::string& font_name, int font_size);
 	void delete_font_face(const std::string& font_name, int i_font_size);
 	bool is_font_present(const std::string& i_font_name)const;
 private:

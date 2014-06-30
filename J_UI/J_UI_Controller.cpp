@@ -30,7 +30,7 @@ using std::ifstream; using std::string; using std::cerr; using std::getline;
 using std::ostringstream; using std::setw; using std::istream; using std::endl;
 namespace jomike{
 
-const j_dbl DRAW_REFRESH_TIME = 1.0/25;
+const j_dbl DRAW_REFRESH_TIME = 1.0/10.0;
 static j_dbl draw_refresh_time(){ return DRAW_REFRESH_TIME; }
 
 static Instance_Pointer<J_Font_Manager> s_font_manager;
@@ -46,6 +46,7 @@ void J_UI_Controller::initialize_text_data(){
 	s_font_manager->add_font("Fonts/timesbd.ttf", "times_bold");
 	s_font_manager->add_font("Fonts/timesbi.ttf", "times_bold_italic");
 	s_font_manager->add_font("Fonts/machadomath.ttf", "math_symbols");
+	s_font_manager->add_font("Fonts/Consolas.ttf", "consolas");
 }
 
 J_UI_Controller::~J_UI_Controller(){}
@@ -274,7 +275,7 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 	}
 
 	J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
-		draw_timer(get_j_ui_time, draw_refresh_time);
+		draw_timer(j_get_time, draw_refresh_time);
 	try{
 		while(file){
 			string command;
@@ -293,7 +294,9 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 			}
 
 			s_j_ui->update();
-
+			for(auto f_view : M_j_views){
+				f_view.second->update();
+			}
 
 
 			if(draw_timer.time_exceeded()){
@@ -379,6 +382,12 @@ int J_UI_Controller::current_key_modifiers()const{
 	return M_last_key_modifiers;
 }
 
+void J_UI_Controller::update(){
+	for(auto f_view : M_j_views){
+		f_view.second->update();
+	}
+}
+
 
 
 static j_dbl get_screen_pos_double(istream& ir_is){
@@ -420,13 +429,16 @@ static void mouse_release_script_cmd(J_UI_Controller* i_controller, istream& ir_
 
 static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_stream){
 	static string total_string;
-	static J_Modder<200> modder;
+	static J_Modder<1000> modder;
 	static int num_lines = 0;
 	static J_Duration_Tester<j_dbl(*)(void), j_dbl(*)()>
 		line_writer_timer(j_get_time, draw_refresh_time);
 
 	string char_string;
 	getline(ir_stream, char_string, ';');
+	assert(char_string.front() == ' ');
+	char_string.erase(char_string.begin());
+
 	char_string.push_back(';');
 	if(!ir_stream){
 		throw J_Syntax_Error("Stream Went Bad in Char Press Read. Possibly no Endline Char");
@@ -442,7 +454,13 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 				<< char_string.size() << " Percent: " << 100.0*i/char_string.size() << '%';
 		}
 		i_controller->char_input_cmd(window, char_string[i]);
-
+		if(line_writer_timer.time_exceeded()){
+			i_controller->draw_views();
+			s_j_ui->update();
+			i_controller->update();
+			line_writer_timer.reset_timer();
+			j_poll_events();
+		}
 	}
 	total_string += char_string;
 	++num_lines;

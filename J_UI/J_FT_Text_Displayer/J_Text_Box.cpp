@@ -497,7 +497,6 @@ void J_Text_Box::set_starting_pen_pos(Pen_Pos_FL_t i_pen_pos){
 	M_pen_poses.front() = i_pen_pos;
 
 	recalculate_letter_poses();
-	notify_letter_box_poses();
 
 	set_cursor_pos_no_scroll(cursor_pos);
 }
@@ -630,7 +629,7 @@ void J_Text_Box::set_cursor_line_position(j_size_t i_cursor_pos){
 
 void J_Text_Box::recalculate_letter_poses(){
 	M_pen_poses.resize(1);
-	assert(M_pen_poses.back() == default_pen_pos());
+	//assert(M_pen_poses.back() == default_pen_pos());
 	calculate_remaining_letter_poses();
 }
 

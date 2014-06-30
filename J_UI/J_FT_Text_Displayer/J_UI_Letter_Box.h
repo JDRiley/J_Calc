@@ -28,7 +28,7 @@ public:
 
 	~J_UI_Letter_Box();
 private:
-	j_ubyte_arr_t M_colored_bitmap;
+	//j_ubyte_arr_t M_colored_bitmap;
 	Bitmap_Metrics M_metrics;
 };
 

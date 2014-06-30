@@ -44,8 +44,6 @@ void J_Image_Pane::set_image_width(int i_image_width){
 		return;
 	}
 	M_image_width = i_image_width;
-
-	s_open_gl.use_program(image_shader_id());
 	
 	M_texture = J_GL_Texture();
 
@@ -67,7 +65,7 @@ void J_Image_Pane::set_image_height(int i_image_height){
 		return;
 	}
 	M_image_height = i_image_height;
-	s_open_gl.use_program(image_shader_id());
+
 	M_texture = J_GL_Texture();
 
 	s_open_gl.bind_texture_2D(M_texture);

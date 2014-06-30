@@ -178,8 +178,7 @@ void J_Font_Manager::clear(){
 	M_FT_library = nullptr;
 }
 
-J_Font_Face J_Font_Manager::get_font_face(J_Context_Shared_t i_context_to_add_to
-										  ,const std::string& i_font_name
+J_Font_Face J_Font_Manager::get_font_face(const std::string& i_font_name
 										  , int i_font_size){
 	Context_RAII context_saver;
 	s_contexts->make_context_active(M_context);

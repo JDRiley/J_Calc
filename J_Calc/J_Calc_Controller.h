@@ -61,7 +61,7 @@ private:
 	void initialize_font_faces();
 	J_Font_Face M_input_font_face = nullptr;
 	J_Font_Face M_log_font_face = nullptr;
-
+	J_Font_Face M_message_font_face = nullptr;
 
 	
 	bool M_continue_flag;

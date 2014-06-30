@@ -69,6 +69,21 @@ struct J_Color_RGBA{
 		}
 		return new_color;
 	}
+
+	bool operator<(const J_Color_RGBA& i_right)const{
+		if(red() < i_right.red()){
+			return true;
+		}
+
+		if(green() < i_right.green()){
+			return true;
+		}
+
+		if(blue() < i_right.blue()){
+			return true;
+		}
+		return alpha() < i_right.alpha();
+	}
 };
 
 typedef J_Color_RGBA<j_float> J_UI_Color;
@@ -185,7 +200,7 @@ j_float byte_normalized(int_t i_val){
 	return static_cast<j_float>(i_val)/x;
 }
 
-j_ubyte_arr_t convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
+const j_ubyte* convert_to_rgba32(int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
 
 
 void convert_to_rgba32(j_ubyte_arr_t* ir_bitmap_arr, int i_width, int i_height, const J_UI_Color& i_color, const j_ubyte* i_bitmap);
