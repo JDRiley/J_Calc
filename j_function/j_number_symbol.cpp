@@ -14,7 +14,7 @@ namespace jomike{
 
 //Constructors
 j_number_symbol::j_number_symbol(Dbl_t i_val)
-: Variable_Symbol(make_double_type_syntax(), new J_Symbol_Identifier(J_UI_String("#unnamed")))
+: Variable_Symbol(make_double_type_syntax(), new J_Symbol_Identifier(J_UI_String("#unnamed", nullptr)))
 ,M_value_status(true)
 	, M_value(j_value(i_val, J_Unit())){
 }

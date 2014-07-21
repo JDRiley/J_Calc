@@ -36,8 +36,8 @@ public:
 	//Empty Constructor
 	ptr_iterator():M_pos(){}
 
-	reference operator*()const{ return *M_pos; }
-	pointer operator->()const{ return M_pos; }
+	reference operator*()const{ assert(M_pos); return *M_pos; }
+	pointer operator->()const{ assert(M_pos); return M_pos; }
 
 	ptr_iterator& operator++(){ ++M_pos; return *this; }
 	ptr_iterator operator++(int){ return ptr_iterator(M_pos++); }

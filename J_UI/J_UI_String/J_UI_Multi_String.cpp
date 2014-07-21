@@ -188,29 +188,106 @@ J_UI_Multi_String::iterator
 	J_UI_Multi_String::insert(j_size_t i_pos, const J_UI_Multi_String& irk_string){
 	
 	if(M_strings.empty()){
+		assert(i_pos == 0);
 		M_strings = irk_string.M_strings;
 		return begin();
 	}
 
-	auto insert_pos = get_insert_pos(i_pos);
+	auto insert_pos_pair = get_insert_pos(i_pos);
+	
 
-	auto indices = get_string_indices(insert_pos.second);
+	auto indices = get_string_indices(insert_pos_pair.second);
+
+	auto insert_pos = insert_pos_pair.second + 1;
+	J_UI_Multi_String::iterator return_iterator;
 
 	if(i_pos == indices.second){
-		return M_strings.insert(insert_pos.second + 1, irk_string.begin(), irk_string.end());
+		return insert(insert_pos, irk_string);
 
 	} else if(i_pos == indices.first){
-		
-		return M_strings.insert(insert_pos.second, irk_string.begin(), irk_string.end());
+
+		return insert(insert_pos - 1, irk_string);
 	} else{
-		J_UI_String remaining_string = insert_pos.second->substr(i_pos - indices.first);
-		insert_pos.second->resize(i_pos - indices.first);
-		auto new_insert_pos = M_strings.insert(insert_pos.second + 1, irk_string.begin(), irk_string.end());
-		M_strings.insert(new_insert_pos + 1, remaining_string);
+		J_UI_String remaining_string = insert_pos->substr(i_pos - indices.first);
+		insert_pos->resize(i_pos - indices.first);
+		auto new_insert_pos = insert(insert_pos, irk_string);
+		insert(new_insert_pos + irk_string.num_strings() , remaining_string);
 		return new_insert_pos;
 	}
 
+	
+}
 
+J_UI_Multi_String::iterator
+	J_UI_Multi_String::insert_into(const_iterator i_ins_pos, const J_UI_String& irk_string){
+		J_UI_Multi_String::iterator pos = begin() + (i_ins_pos - begin());
+	if((pos != end()) && pos->is_same_type(irk_string)){
+
+		pos = M_strings.insert(pos, irk_string);
+		auto delete_pos = pos + 1;
+		assert(end() != delete_pos);
+		assert(pos->is_same_type(*delete_pos));
+
+		pos->append(*delete_pos);
+		pos = M_strings.erase(delete_pos);
+
+	} else{
+		pos = ++M_strings.insert(pos, irk_string);
+	}
+	return pos;
+};
+
+
+J_UI_Multi_String::iterator  J_UI_Multi_String
+	::insert(const_iterator i_pos, const J_UI_Multi_String& irk_string){
+		assert(irk_string.no_same_adjacent_types());
+		assert(no_same_adjacent_types());
+		J_UI_Multi_String::iterator pos = begin() + (i_pos - begin());
+		J_UI_Multi_String::iterator return_iterator;
+		
+
+		
+		if(!irk_string.num_strings()){
+			return pos;
+		}
+
+		if((i_pos != begin()) && (pos -1)->is_same_type(irk_string.front())){
+			return_iterator = pos - 1;
+
+			(pos - 1)->append(irk_string.front());
+
+		} else {
+			pos = insert_into(pos, irk_string.front());
+			return_iterator = (pos - 1);
+		}
+
+
+		if(irk_string.num_strings() == 1){
+			return return_iterator;
+		}
+
+		auto src_string_pos = irk_string.begin() + 1;
+		auto end_string_pos = irk_string.end();
+		while(src_string_pos != end_string_pos){
+			pos = insert_into(pos, *src_string_pos++);
+		}
+		return pos - 1;
+}
+
+J_UI_Multi_String::iterator J_UI_Multi_String::insert(
+	const_iterator i_pos, const J_UI_String& irk_string){
+	auto pos = begin() + (i_pos - begin());
+	J_UI_Multi_String::iterator return_iterator;
+	if((pos != begin()) && (pos - 1)->is_same_type(irk_string)){
+		return_iterator = pos - 1;
+
+		(pos - 1)->append(irk_string);
+
+	} else {
+		pos = insert_into(pos, irk_string);
+		return_iterator = (pos - 1);
+	}
+	return return_iterator;
 }
 
 template<typename Value_Type>
@@ -223,10 +300,12 @@ void J_UI_Multi_String::erase(j_size_t i_pos, j_size_t i_size){
 	J_UI_String::iterator char_pos = at_pos(i_pos);
 
 	auto string_it = get_string_holding_index(i_pos);
-
+	assert(string_it != end());
 	j_size_t total_erased = 0;
 	while(total_erased < i_size){
-		j_size_t amount_to_erase = std::min(i_size - total_erased, string_it->size());
+		j_size_t offset = char_pos - string_it->begin();
+
+		j_size_t amount_to_erase = std::min(i_size - total_erased, string_it->size() - offset);
 		
 
 		string_it->erase(char_pos, char_pos + amount_to_erase);
@@ -291,7 +370,9 @@ void J_UI_Multi_String::push_back(const J_UI_Char& irk_char){
 J_UI_Multi_String J_UI_Multi_String::substr(j_size_t i_pos, j_size_t i_size)const{
 	auto string_it = get_string_holding_index(i_pos);
 	if(end() == string_it){
-		return J_UI_Multi_String();
+		return num_strings() 
+			? J_UI_String(M_strings.back().font_face(), M_strings.back().color()) 
+			: J_UI_Multi_String();
 	}
 	auto char_pos = at_pos(i_pos);
 	J_UI_String part_string = string_it->substr(char_pos - string_it->begin());
@@ -307,7 +388,7 @@ J_UI_Multi_String J_UI_Multi_String::substr(j_size_t i_pos, j_size_t i_size)cons
 }
 
 void J_UI_Multi_String::push_back(const J_UI_String& irk_string){
-	if(!M_strings.empty() && M_strings.back().has_same_font_and_color(irk_string)){
+	if(!M_strings.empty() && M_strings.back().is_same_type(irk_string)){
 		M_strings.back().append(irk_string);
 	}else{
 		M_strings.push_back(irk_string);
@@ -460,8 +541,8 @@ Pen_Pos_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)const{
 		++string_pos;
 	}
 
-
-	return Pen_Pos_t(index, safe_int_cast(index + i_pos->size()));
+	int str_size = i_pos == end() ? 0 : safe_int_cast(index + i_pos->size());
+	return Pen_Pos_t(index, str_size);
 }
 
 void J_UI_Multi_String::set_color(const J_UI_Color& irk_color){
@@ -471,6 +552,32 @@ void J_UI_Multi_String::set_color(const J_UI_Color& irk_color){
 void J_UI_Multi_String::push_front(const J_UI_Char& i_char){
 	assert(!M_strings.empty());
 	M_strings.front().push_front(i_char);
+}
+
+jomike::j_size_t J_UI_Multi_String::num_strings()const{
+	return M_strings.size();
+}
+
+bool J_UI_Multi_String::no_same_adjacent_types()const{
+	if(num_strings() <= 1){
+		return true;
+	}
+
+	auto pos = begin();
+	auto end_pos = end() - 1;
+	
+	while(pos != end_pos){
+		if(pos->is_same_type(*(pos+1))){
+			return false;
+		}
+		++pos;
+	}
+	return true;
+
+}
+
+void J_UI_Multi_String::pop_back(){
+	M_strings.pop_back();
 }
 
 std::ostream& operator<<(std::ostream& ir_os, const J_UI_Multi_String& irk_string){

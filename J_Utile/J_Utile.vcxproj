@@ -364,6 +364,7 @@
     <ClInclude Include="J_Fwd_Decl.h" />
     <ClInclude Include="J_Gadget_Classes.h" />
     <ClInclude Include="j_limits.h" />
+    <ClInclude Include="J_Test_Suite.h" />
     <ClInclude Include="j_type.h" />
     <ClInclude Include="J_Utile.h" />
     <ClInclude Include="ordered_pair.h" />
@@ -371,6 +372,7 @@
   <ItemGroup>
     <ClCompile Include="J_Error.cpp" />
     <ClCompile Include="j_limits.cpp" />
+    <ClCompile Include="J_Test_Suite.cpp" />
     <ClCompile Include="j_type.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug2012|x64'">false</ExcludedFromBuild>

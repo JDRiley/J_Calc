@@ -101,15 +101,15 @@ J_UI_String::J_UI_String(J_UI_String&& irr_source){swap(irr_source);}
 J_UI_String& J_UI_String::operator=(J_UI_String&& irr_right){swap(irr_right); return *this;}
 
 
-J_UI_String::J_UI_String(const LU_String& irk_string): M_font_face(nullptr), M_color(DEFAULT_FONT_COLOR){
-	auto push_back_iterator = back_inserter(M_UI_Chars);
-	copy(irk_string.begin(), irk_string.end(), push_back_iterator);
-	M_UI_Chars.push_back('\0');
-	M_UI_Chars.set_front_buffer(S_DEFAULT_FRONT_BUFFER_RATIO);
-#if _DEBUG
-		M_string = std_str();
-#endif
-}
+//J_UI_String::J_UI_String(const LU_String& irk_string): M_font_face(nullptr), M_color(DEFAULT_FONT_COLOR){
+//	auto push_back_iterator = back_inserter(M_UI_Chars);
+//	copy(irk_string.begin(), irk_string.end(), push_back_iterator);
+//	M_UI_Chars.push_back('\0');
+//	M_UI_Chars.set_front_buffer(S_DEFAULT_FRONT_BUFFER_RATIO);
+//#if _DEBUG
+//		M_string = std_str();
+//#endif
+//}
 
 /*void insert(int i_pos, J_UI_Char i_ui_char)*/
 void J_UI_String::insert(j_size_t i_pos, J_UI_Char i_ui_char){
@@ -157,7 +157,10 @@ void J_UI_String::erase(j_size_t i_pos, j_size_t i_size){
 #endif
 }
 void J_UI_String::erase(const_iterator i_pos, const_iterator i_end_pos){
+
+
 #if _DEBUG
+	assert(M_string.size() == safe_uns_cast(size()));
 	ptrdiff_t index = i_pos - begin();
 	ptrdiff_t end_index = i_end_pos - begin();
 #endif
@@ -233,7 +236,7 @@ J_UI_String::const_iterator J_UI_String::cend()const{return M_UI_Chars.cend()-1;
 
 const J_UI_Color& J_UI_String::color()const{return M_color;}
 
-bool J_UI_String::has_same_font_and_color(const J_UI_String& irk_string){
+bool J_UI_String::is_same_type(const J_UI_String& irk_string)const{
 	return (font_face() == irk_string.font_face())
 		&& (color() == irk_string.color());
 }
@@ -245,7 +248,7 @@ void white_space_normalize(J_UI_String* ir_string){
 	}
 
 	bool copy_whitespace = false;
-	J_UI_String normalized_str;
+	J_UI_String normalized_str(ir_string->font_face(), ir_string->color());
 
 
 	for_each(ir_string->begin(), ir_string->end()
@@ -339,6 +342,7 @@ void J_UI_String::pop_front(){
 
 /*J_UI_String& append(const J_UI_String&)*/
 J_UI_String& J_UI_String::append(const J_UI_String& irk_string){
+	assert(is_same_type(irk_string));
 	M_UI_Chars.insert(end(),irk_string.begin(), irk_string.end());
 #if _DEBUG
 		M_string.append(irk_string.M_string);
@@ -393,6 +397,23 @@ void J_UI_String::set_font_face(J_Font_Face i_font_face){M_font_face = i_font_fa
 
 void J_UI_String::set_color(J_UI_Color i_color){
 	M_color = i_color;
+}
+
+bool J_UI_String::operator==(const J_UI_String& irk_other)const{
+	if(!is_same_type(irk_other)){
+		return false;
+	}
+	return M_UI_Chars == irk_other.M_UI_Chars;
+}
+
+bool J_UI_String::operator!=(const J_UI_String& irk_other)const{
+	return !(*this == irk_other);
+}
+
+std::string J_UI_String::to_std_string()const{
+	std::string new_string = std_str();
+	assert(new_string == M_string);
+	return new_string;
 }
 
 

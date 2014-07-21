@@ -24,6 +24,8 @@
 //Iterator
 #include <j_iterator.h>
 
+
+#define J_UI_STRING_DEBUG
 namespace jomike{
 
 
@@ -37,19 +39,22 @@ typedef std::basic_string<j_ulint> LU_String;
 class J_UI_String{
 public:
 	typedef J_UI_Char value_type;
-	explicit J_UI_String(J_Font_Face font_face = nullptr
+
+
+	//Constructors 
+	J_UI_String(J_Font_Face font_face 
 		, J_UI_Color i_color = J_Color::Black);
 	J_UI_String(const char* const, J_Font_Face font_face = nullptr
 		, J_UI_Color i_color = J_Color::Black);
 	J_UI_String(const wchar_t* const, J_Font_Face font_face = nullptr
 		, J_UI_Color i_color = J_Color::Black);
-	J_UI_String(const LU_String&);
+
 	J_UI_String(const std::string&, J_Font_Face font_face = nullptr
 		, J_UI_Color i_color = J_Color::Black);
 
 	
 	J_UI_String(J_UI_String&&);
-
+	J_UI_String(const J_UI_String&) = default;
 
 
 	template<typename Iter>
@@ -127,7 +132,7 @@ public:
 	const J_Font_Face font_face()const;
 	void set_font_face(J_Font_Face);
 
-	bool has_same_font_and_color(const J_UI_String&);
+	bool is_same_type(const J_UI_String&)const;
 
 	//Iterators
 	iterator begin();
@@ -160,6 +165,10 @@ public:
 
 	ex_array<Bitmap_Metrics*> metrics_array()const;
 	ex_array<const j_ubyte*> bitmap_data_array()const;
+
+	bool operator==(const J_UI_String& irk_other)const;
+
+	bool operator!=(const J_UI_String& irk_other)const;
 private:
 	const static j_dbl S_DEFAULT_FRONT_BUFFER_RATIO;
 	J_UI_Char_Arr_t M_UI_Chars;
@@ -168,6 +177,12 @@ private:
 
 #if _DEBUG
 	std::string M_string;
+#endif
+#ifdef J_UI_STRING_DEBUG
+	
+	friend class J_Test_Suite;
+	void test_ui_string();
+	std::string to_std_string()const;
 #endif
 };
 

@@ -428,7 +428,7 @@ void J_Text_Box::calculate_next_pen_pos(J_Char_t i_char_code, const Bitmap_Metri
 
 void J_Text_Box::calculate_remaining_letter_poses(){
 	assert(M_pen_poses.size() <= M_multi_string.size()+1);
-	assert(M_multi_string.size() == M_letter_box_string->size());
+	assert(M_multi_string.size() <= M_letter_box_string->size());
 
 	for(j_size_t i = M_pen_poses.size()-1; i < M_multi_string.size(); i++){
 		
@@ -504,7 +504,7 @@ void J_Text_Box::set_starting_pen_pos(Pen_Pos_FL_t i_pen_pos){
 void J_Text_Box::add_string(const J_UI_String& irk_string){
 	if(M_multi_string.empty() 
 	   || !M_multi_string.get_string_holding_index(M_cursor_pos)
-	   ->has_same_font_and_color(irk_string)){
+	   ->is_same_type(irk_string)){
 
 		M_multi_string.push_back(J_UI_String(irk_string.font_face(), irk_string.color()));
 	}
@@ -657,6 +657,17 @@ void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)cons
 
 }
 
+
+void J_Text_Box::insert_string(
+	J_UI_Multi_String::const_iterator i_pos, const J_UI_String& irk_string){
+	j_size_t index = M_multi_string.get_string_indices(i_pos).first;
+
+	M_multi_string.insert(i_pos, irk_string);
+
+	expand_num_letter_boxes();
+	calculate_letter_boxes(index);
+
+}
 void J_Text_Box::insert_string_silent(j_size_t i_index, const J_UI_Multi_String& irk_string){
 
 	if(M_multi_string.empty()){
@@ -1009,6 +1020,9 @@ void J_Text_Box::insert_string(j_size_t i_pos, const J_UI_Multi_String& irk_stri
 	set_cursor_pos(i_pos + irk_string.size());
 }
 
+
+
+
 void J_Text_Box::set_string(const J_UI_String& irk_string){
 
 
@@ -1067,12 +1081,13 @@ void J_Text_Box::backspace(){
 	}
 
 	M_multi_string.erase(--M_cursor_pos, 1);
-	M_letter_box_string->erase(M_cursor_pos);
+
 
 	set_cursor_pos(M_cursor_pos);
 
-	M_pen_poses.resize(M_cursor_pos+1);
-	calculate_remaining_letter_poses();
+
+	
+	calculate_letter_boxes(M_cursor_pos);
 	set_cursor_on();
 }
 
@@ -1309,6 +1324,11 @@ void J_Text_Box::expand_num_letter_boxes(){
 void J_Text_Box::recalculate_letter_boxes(){
 	calculate_letter_boxes(0);
 }
+
+const J_UI_Multi_String& J_Text_Box::multi_string()const{
+	return M_multi_string;
+}
+
 
 
 

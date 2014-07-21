@@ -36,6 +36,9 @@
     <ClInclude Include="ordered_pair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_Test_Suite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Utile.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Test_Suite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

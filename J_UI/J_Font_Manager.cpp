@@ -94,6 +94,10 @@ void J_Font_Manager::delete_font_face(const string& irk_font_name, int i_font_si
 	delete M_font_data[irk_font_name]->j_font_faces[i_font_size];
 }
 
+void J_Font_Manager::delete_font_face(J_Font_Face i_fontface){
+	delete i_fontface;
+}
+
 
 
 
@@ -214,11 +218,14 @@ FT_Face create_face(FT_Library i_lib, const char* ik_pathname, int i_level){
 
 
 void J_Font_Manager::add_font(const string& i_font_filename, const string& i_font_name){
+	if(M_font_data.count(i_font_name)){
+		return;
+	}
 	Font_Data_Shared_t new_font_data(new Font_Data);
 	new_font_data->ft_face = create_face(M_FT_library, i_font_filename.c_str(), 0);
 	new_font_data->filename = i_font_filename;
 	new_font_data->name = i_font_name;
-	assert(!M_font_data.count(i_font_name));
+	
 
 	M_font_data[i_font_name] = new_font_data;
 }

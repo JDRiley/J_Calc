@@ -56,7 +56,7 @@ bool j_composite_symbol::has_value()const{
 }
 
 J_UI_String j_composite_symbol::get_display_name(){
-	J_UI_String display_name;
+	J_UI_String display_name(nullptr, J_BLACK);
 
 	if(has_value()){
 		display_name.push_back(' ');

@@ -143,105 +143,105 @@ j_symbol* create_j_symbol(const J_UI_String& irk_string){
 	}
 	return new_symbol.release();
 }
+//
+//j_symbol* create_multi_j_symbol(J_UI_String::const_iterator* i_pos
+//	, J_UI_String::const_iterator i_end_pos
+//	, const Delimiter_Handler<J_UI_Char>& irk_delim){
+//
+//
+//	j_symbol* new_arg = create_j_symbol(i_pos, i_end_pos);
+//
+//	advance_white_space(i_pos, i_end_pos);
+//
+//	if((*i_pos == i_end_pos)
+//		|| (irk_delim.is_delim((*i_pos)->charcode()))){
+//		return new_arg;
+//	}
+//
+//
+//
+//
+//	j_composite_symbol_unique_t new_composite_symbol(new j_composite_symbol);
+//	new_composite_symbol->append(j_composite_symbol::Join_Type::ADD, *new_arg);
+//	delete new_arg;
+//	while(!irk_delim.is_delim((*i_pos)->charcode())){
+//		auto join_type = get_composite_symbol_join_type(*(*i_pos++));
+//		new_arg = create_j_symbol(i_pos, i_end_pos);
+//
+//		new_composite_symbol->append(join_type, *new_arg);
+//
+//		delete new_arg;
+//		if(*i_pos == i_end_pos){
+//			break;
+//		}
+//		advance_white_space(i_pos, i_end_pos);
+//	}
+//
+//
+//	return new_composite_symbol.release();
+//
+//
+//
+//}
 
-j_symbol* create_multi_j_symbol(J_UI_String::const_iterator* i_pos
-	, J_UI_String::const_iterator i_end_pos
-	, const Delimiter_Handler<J_UI_Char>& irk_delim){
-
-
-	j_symbol* new_arg = create_j_symbol(i_pos, i_end_pos);
-
-	advance_white_space(i_pos, i_end_pos);
-
-	if((*i_pos == i_end_pos)
-		|| (irk_delim.is_delim((*i_pos)->charcode()))){
-		return new_arg;
-	}
-
-
-
-
-	j_composite_symbol_unique_t new_composite_symbol(new j_composite_symbol);
-	new_composite_symbol->append(j_composite_symbol::Join_Type::ADD, *new_arg);
-	delete new_arg;
-	while(!irk_delim.is_delim((*i_pos)->charcode())){
-		auto join_type = get_composite_symbol_join_type(*(*i_pos++));
-		new_arg = create_j_symbol(i_pos, i_end_pos);
-
-		new_composite_symbol->append(join_type, *new_arg);
-
-		delete new_arg;
-		if(*i_pos == i_end_pos){
-			break;
-		}
-		advance_white_space(i_pos, i_end_pos);
-	}
-
-
-	return new_composite_symbol.release();
-
-
-
-}
-
-
-
-/*j_symbol* create_j_symbol(const J_UI_String&)*/
-j_symbol* create_j_symbol(J_UI_Const_Iter* i_pos, J_UI_Const_Iter i_end_pos){
-	J_UI_String test_string(*i_pos, i_end_pos);
-	cerr << "\nOriginal Str: " << test_string << endl;
-	check_parenthesis_ex(test_string);
-
-
-	bool creating_symbol = false;
-	j_symbol* symbol = nullptr;
-	J_UI_String symbol_string;
-	advance_white_space(i_pos, i_end_pos);
-	if((*i_pos)->is_alpha()){
-		creating_symbol = true;
-		symbol_string = get_symbol_name(i_pos, i_end_pos);
-	}
-
-	if((*i_pos)->is_number() || (**i_pos == '-')){
-		assert(!creating_symbol);
-		symbol = new j_number_symbol(read_double_and_advance(i_pos, i_end_pos - *i_pos));
-		return symbol;
-	}
-
-	if(creating_symbol){
-		if(is_reserved_symbol(symbol_string)){
-			symbol = s_calc_data->get_reserved_symbol(symbol_string)->get_copy();
-		} else{
-			symbol = s_calc_data->get_symbol(symbol_string)->get_copy();
-		}
-	}
-	advance_white_space(i_pos, i_end_pos);
-
-	switch((*i_pos)->charcode()){
-	case '(': {
-		auto closing_pos = get_closing_parenthesis(*i_pos);
-		if(creating_symbol){
-			assert(symbol);
-			symbol->set_args(get_args_from_string(J_UI_String(*i_pos + 1, closing_pos)));
-		} else{
-			assert(!symbol);
-			return create_j_symbol(i_pos, closing_pos);
-		}
-
-		*i_pos = closing_pos + 1;
-	}
-		break;
-	default:
-		;
-	}
-
-
-	if(!symbol){
-		throw J_Symbol_Syntax_Error("Empty Symbol Encountered");
-	}
-
-	return symbol;
-}
+//
+//
+///*j_symbol* create_j_symbol(const J_UI_String&)*/
+//j_symbol* create_j_symbol(J_UI_Const_Iter* i_pos, J_UI_Const_Iter i_end_pos){
+//	J_UI_String test_string(*i_pos, i_end_pos);
+//	cerr << "\nOriginal Str: " << test_string << endl;
+//	check_parenthesis_ex(test_string);
+//
+//
+//	bool creating_symbol = false;
+//	j_symbol* symbol = nullptr;
+//	J_UI_String symbol_string;
+//	advance_white_space(i_pos, i_end_pos);
+//	if((*i_pos)->is_alpha()){
+//		creating_symbol = true;
+//		symbol_string = get_symbol_name(i_pos, i_end_pos);
+//	}
+//
+//	if((*i_pos)->is_number() || (**i_pos == '-')){
+//		assert(!creating_symbol);
+//		symbol = new j_number_symbol(read_double_and_advance(i_pos, i_end_pos - *i_pos));
+//		return symbol;
+//	}
+//
+//	if(creating_symbol){
+//		if(is_reserved_symbol(symbol_string)){
+//			symbol = s_calc_data->get_reserved_symbol(symbol_string)->get_copy();
+//		} else{
+//			symbol = s_calc_data->get_symbol(symbol_string)->get_copy();
+//		}
+//	}
+//	advance_white_space(i_pos, i_end_pos);
+//
+//	switch((*i_pos)->charcode()){
+//	case '(': {
+//		auto closing_pos = get_closing_parenthesis(*i_pos);
+//		if(creating_symbol){
+//			assert(symbol);
+//			symbol->set_args(get_args_from_string(J_UI_String(*i_pos + 1, closing_pos)));
+//		} else{
+//			assert(!symbol);
+//			return create_j_symbol(i_pos, closing_pos);
+//		}
+//
+//		*i_pos = closing_pos + 1;
+//	}
+//		break;
+//	default:
+//		;
+//	}
+//
+//
+//	if(!symbol){
+//		throw J_Symbol_Syntax_Error("Empty Symbol Encountered");
+//	}
+//
+//	return symbol;
+//}
 
 
 

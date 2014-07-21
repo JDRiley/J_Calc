@@ -219,8 +219,11 @@ public:
 	void alert_cursor_pos(Pen_Pos_FL_t i_pos)override;
 	~J_Text_Box();
 protected:
-	
+	const J_UI_Multi_String& multi_string()const;
+
 	void insert_string_silent(j_size_t i_index, const J_UI_Multi_String& irk_string);
+
+	void insert_string(J_UI_Multi_String::const_iterator i_pos, const J_UI_String& irk_string);
 
 	bool is_cursor_pos_in_view(j_size_t i_pos)const;
 	void set_cursor_pos_no_scroll(j_size_t i_pos);

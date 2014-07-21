@@ -31,7 +31,7 @@ Math_Input_Box::Math_Input_Box(const J_Rectangle& irk_rectangle
 	, const J_UI_Multi_String& irk_string, J_Font_Face i_font_face)
 	:J_Text_Box(irk_rectangle, irk_string)
 	, M_line_inputs(1, Line_Input(0, irk_string, i_font_face, G_DEFAULT_OUTPUT_COLOR)){
-	insert_string_silent(irk_string.size(), J_UI_String(GK_DEFAULT_OUTPUT_STRING, i_font_face, G_DEFAULT_OUTPUT_COLOR));
+	insert_string(multi_string().begin() + 1, J_UI_String(GK_DEFAULT_OUTPUT_STRING, i_font_face, G_DEFAULT_OUTPUT_COLOR));
 	
 	set_key_input_command(math_key_input_cmd);
 	set_char_input_command(math_box_char_input_cmd);

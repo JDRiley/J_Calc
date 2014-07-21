@@ -86,6 +86,8 @@ public:
 	typedef J_UI_String_Arr_t::const_iterator const_iterator;
 
 	iterator insert(j_size_t i_pos, const J_UI_Multi_String& irk_string);
+	iterator insert(const_iterator i_pos, const J_UI_Multi_String& irk_string);
+	iterator insert(const_iterator i_pos, const J_UI_String& irk_string);
 
 	J_UI_Multi_String::const_iterator get_string_holding_index(j_size_t i_index)const;
 	J_UI_Multi_String::iterator get_string_holding_index(j_size_t i_index);
@@ -112,7 +114,7 @@ public:
 
 	void push_front(const J_UI_Char& i_char);
 	void pop_front();
-
+	j_size_t num_strings()const;
 	LU_String lu_str()const;
 	std::string std_str()const;
 
@@ -167,10 +169,13 @@ public:
 		J_UI_Multi_String::get_insert_pos(j_size_t i_index);
 
 	void set_color(const J_UI_Color& irk_color);
+	
 private:
 	J_UI_String_Arr_t M_strings;
-
-
+	bool no_same_adjacent_types()const;
+	J_UI_Multi_String::iterator
+		J_UI_Multi_String::insert_into(
+		const_iterator y_insert_pos, const J_UI_String& yrk_string);
 };
 
 

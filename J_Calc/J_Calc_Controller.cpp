@@ -164,7 +164,7 @@ void J_Calc_Controller::initialize_font_faces(){
 	M_log_font_face
 		= s_font_manager->get_font_face("times_italic", 20);
 	M_input_font_face
-		= s_font_manager->get_font_face("consolas", 20);
+		= s_font_manager->get_font_face("consolas", 14);
 }
 
 void J_Calc_Controller::execute(){
@@ -174,7 +174,7 @@ void J_Calc_Controller::execute(){
 	run_script("button_press.jcs");
 	//run_script("in_script2.jcs");
 #else
-	run_script("button_press.jcs");
+	run_script("mouse_press.jcs");
 #endif
 
 

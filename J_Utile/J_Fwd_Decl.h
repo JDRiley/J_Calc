@@ -123,7 +123,7 @@ typedef std::pair<j_float, j_float> Pen_Pos_FL_t;
 //creates a lock_guard for a given mutex
 #define J_LOCK(lock) std::lock_guard<decltype(lock)> MD_LOCK_GUARD(lock)
 
-
+J_FWD_DECL(J_Test_Suite)
 }
 
 

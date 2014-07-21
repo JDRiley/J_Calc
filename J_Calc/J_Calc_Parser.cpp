@@ -73,8 +73,8 @@ void J_Calc_Math_Input_Parser::convert_to_proper_math_input(J_UI_String* i_strin
 };
 
 J_Calc_Math_Input_Parser::J_Calc_Math_Input_Parser(){
-	M_declaration_functions["Dbl"] 
-		= &Math_Parser_t::dbl_declaration_parser;
+	//M_declaration_functions["Dbl"]
+	//	= &Math_Parser_t::dbl_declaration_parser;
 }
 
 J_Calc_Math_Input_Parser& J_Calc_Math_Input_Parser::get_instance(){
@@ -102,7 +102,7 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_Multi_Strin
 	
 	try{
 		if(j_symbol* new_symbol = parser.parse(irk_string.std_str() + ';')){
-			J_UI_String return_val;
+			J_UI_String return_val((J_Font_Face)nullptr);
 			if(new_symbol->has_value()){
 				return_val = new_symbol->get_value().to_str();
 			} else{
@@ -124,63 +124,64 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_Multi_Strin
 		return er_error.str();
 	}
 }
-
-J_UI_String J_Calc_Math_Input_Parser::dbl_declaration_cmd(const J_UI_String& irk_input){
-
-	cerr << "\nDbl declaration input: " << irk_input;
-	assert(!gk_symbol_delimiter.is_delim(irk_input[0]));
-
-	switch(irk_input[0].charcode()){
-	case '~':
-		//Handle Units here. '~' denotes the units of the dbl being declared
-		assert(0);
-	default:
-		;
-	}
-	
-	auto string_pos = irk_input.begin();
-
-	J_UI_String symbol_name = get_symbol_name(&string_pos, irk_input.end());
-
-	j_symbol* new_symbol = nullptr;
-	try{
-		if(!s_calc_data->symbol_name_availability_status(symbol_name.lu_str())){
-			throw J_Syntax_Error("Symbol Name Unavailable");
-		}
-
-
-
-
-		advance_white_space(&string_pos, irk_input.end());
-		switch(string_pos++->charcode()){
-		case '=':
-			new_symbol = create_multi_j_symbol(&string_pos, irk_input.end()
-				, sk_statement_delim);
-			break;
-		case ';':
-			new_symbol = new j_number_symbol(symbol_name);
-			break;
-		default:
-			throw J_Syntax_Error("Unexpected Character Encountered");
-		}
-
-		new_symbol->set_name(symbol_name);
-		s_calc_data->add_user_symbol(new_symbol);
-		J_UI_String display_name(new_symbol->get_display_name());
-		delete new_symbol;
-		return display_name;
-
-	} catch(J_Error& e){
-		delete new_symbol;
-		return e.str();
-	}
-
-
-}
+//
+//J_UI_String J_Calc_Math_Input_Parser::dbl_declaration_cmd(const J_UI_String& irk_input){
+//
+//	cerr << "\nDbl declaration input: " << irk_input;
+//	assert(!gk_symbol_delimiter.is_delim(irk_input[0]));
+//
+//	switch(irk_input[0].charcode()){
+//	case '~':
+//		//Handle Units here. '~' denotes the units of the dbl being declared
+//		assert(0);
+//	default:
+//		;
+//	}
+//	
+//	auto string_pos = irk_input.begin();
+//
+//	J_UI_String symbol_name = get_symbol_name(&string_pos, irk_input.end());
+//
+//	j_symbol* new_symbol = nullptr;
+//	try{
+//		if(!s_calc_data->symbol_name_availability_status(symbol_name.lu_str())){
+//			throw J_Syntax_Error("Symbol Name Unavailable");
+//		}
+//
+//
+//
+//
+//		advance_white_space(&string_pos, irk_input.end());
+//		switch(string_pos++->charcode()){
+//		case '=':
+//			new_symbol = create_multi_j_symbol(&string_pos, irk_input.end()
+//				, sk_statement_delim);
+//			break;
+//		case ';':
+//			new_symbol = new j_number_symbol(symbol_name);
+//			break;
+//		default:
+//			throw J_Syntax_Error("Unexpected Character Encountered");
+//		}
+//
+//		new_symbol->set_name(symbol_name);
+//		s_calc_data->add_user_symbol(new_symbol);
+//		J_UI_String display_name(new_symbol->get_display_name());
+//		delete new_symbol;
+//		return display_name;
+//
+//	} catch(J_Error& e){
+//		delete new_symbol;
+//		return e.str();
+//	}
+//
+//
+//}
 
 J_UI_String J_Calc_Math_Input_Parser::get_statement(J_UI_Const_Iter* i_pos, J_UI_Const_Iter i_end_pos){
 	int if_statement_depth = 0;
-	J_UI_String statement_string;
+	J_UI_String statement_string(static_cast<J_Font_Face>(nullptr));
+
 	while(*i_pos < i_end_pos){
 		if(!if_statement_depth && **i_pos == ':'){
 			break;
@@ -360,59 +361,59 @@ J_Calc_Math_Input_Parser::Symbol_Cont_t J_Calc_Math_Input_Parser
 		}
 		return symbols;
 }
-
-j_symbol* J_Calc_Math_Input_Parser
-	::dbl_declaration_parser(J_UI_Const_Iter* i_pos, J_UI_Const_Iter i_end_pos){
-
-	cerr << "\nDbl declaration input: " << J_UI_String(*i_pos, i_end_pos);
-	assert(!gk_symbol_delimiter.is_delim(**i_pos));
-
-	switch((*i_pos)->charcode()){
-	case '~':
-		//Handle Units here. '~' denotes the units of the dbl being declared
-		assert(0);
-	default:
-		;
-	}
-	J_UI_String symbol_name =  get_symbol_name(i_pos, i_end_pos);
-
-	j_symbol* new_symbol = nullptr;
-	try{
-
-		advance_white_space(i_pos, i_end_pos);
-		
-		if(*i_pos == i_end_pos){
-			new_symbol = new j_number_symbol(symbol_name);
-		}
-		
-		//to bypass switch if we already made the symbol
-		switch(new_symbol ? '\0' : (*i_pos)++->charcode()){
-		case '=':
-			new_symbol = create_multi_j_symbol(i_pos, i_end_pos, srk_arg_delim);
-			break;
-		case ',':
-		case ';':
-		case ']':
-			--*i_pos;
-		case ':':
-			new_symbol = new j_number_symbol(symbol_name);
-			break;
-		case '\0':
-			break;
-		default:
-			throw J_Syntax_Error("Unexpected Character Encountered");
-		}
-
-		new_symbol->set_name(symbol_name.std_str());
-
-		return new_symbol;
-	} catch(J_Error& e){
-		delete new_symbol;
-		throw e;
-	}
-
-
-}
+//
+//j_symbol* J_Calc_Math_Input_Parser
+//	::dbl_declaration_parser(J_UI_Const_Iter* i_pos, J_UI_Const_Iter i_end_pos){
+//
+//	cerr << "\nDbl declaration input: " << J_UI_String(*i_pos, i_end_pos);
+//	assert(!gk_symbol_delimiter.is_delim(**i_pos));
+//
+//	switch((*i_pos)->charcode()){
+//	case '~':
+//		//Handle Units here. '~' denotes the units of the dbl being declared
+//		assert(0);
+//	default:
+//		;
+//	}
+//	J_UI_String symbol_name =  get_symbol_name(i_pos, i_end_pos);
+//
+//	j_symbol* new_symbol = nullptr;
+//	try{
+//
+//		advance_white_space(i_pos, i_end_pos);
+//		
+//		if(*i_pos == i_end_pos){
+//			new_symbol = new j_number_symbol(symbol_name);
+//		}
+//		
+//		//to bypass switch if we already made the symbol
+//		switch(new_symbol ? '\0' : (*i_pos)++->charcode()){
+//		case '=':
+//			new_symbol = create_multi_j_symbol(i_pos, i_end_pos, srk_arg_delim);
+//			break;
+//		case ',':
+//		case ';':
+//		case ']':
+//			--*i_pos;
+//		case ':':
+//			new_symbol = new j_number_symbol(symbol_name);
+//			break;
+//		case '\0':
+//			break;
+//		default:
+//			throw J_Syntax_Error("Unexpected Character Encountered");
+//		}
+//
+//		new_symbol->set_name(symbol_name.std_str());
+//
+//		return new_symbol;
+//	} catch(J_Error& e){
+//		delete new_symbol;
+//		throw e;
+//	}
+//
+//
+//}
 
 J_UI_String::const_iterator get_closing_brace(J_UI_String::const_iterator ik_pos){
 	if('{' != ik_pos->charcode()){

@@ -33,6 +33,7 @@ public:
 	~J_Font_Manager();
 	J_Font_Face get_font_face(const std::string& font_name, int font_size);
 	void delete_font_face(const std::string& font_name, int i_font_size);
+	void delete_font_face(J_Font_Face i_fontface);
 	bool is_font_present(const std::string& i_font_name)const;
 private:
 	friend class Instance_Pointer<J_Font_Manager>;

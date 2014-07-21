@@ -1,8 +1,10 @@
 #include <J_Fwd_Decl.h>
 
 #include "J_Calc_Controller.h"
+//
 #include <J_Error.h>
-
+//
+#include <J_Test_Suite.h>
 
 
 namespace jtl = jomike;
@@ -15,6 +17,11 @@ int wWinMain(HINSTANCE , HINSTANCE , PTSTR  , int ){
 int main(int argc, char** argv){
 #endif
 
+	jtl::J_Test_Suite().test_ui_string();
+	jtl::J_Test_Suite().test_ui_multi_string();
+	if(jtl::j_true){
+		//return 0;
+	}
 	jtl::Instance_Pointer<jtl::J_Calc_Controller> controller;
 	try{
 	controller->init(argc, argv);
