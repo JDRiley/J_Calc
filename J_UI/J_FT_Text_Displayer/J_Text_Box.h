@@ -112,6 +112,8 @@ public:
 	virtual bool auto_scrolling_status()const = 0;
 	virtual void set_auto_scrolling_status(bool i_status) = 0;
 
+	
+
 	~J_Text_Box_Object();
 protected:
 	
@@ -153,7 +155,7 @@ public:
 	void set_string(const J_UI_String& irk_string)override;
 
 	
-
+	void alert_resize(int i_width, int i_length)override;
 
 
 
@@ -264,6 +266,7 @@ private:
 	void scroll(int i_scroll_val);
 
 	void render_frame_buffer()const;
+	void reset_frame_buffer();
 	void initialize_frame_buffer();
 	int lines_scrolled_per_tick()const;
 	void set_selection_box_settings(J_UI_Box_Shared_t i_box)const;

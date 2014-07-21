@@ -86,6 +86,8 @@ J_UI_Controller& J_UI_Controller::get_instance(){
 /*J_Calc_Controller Constructor*/
 J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	J_Calc_View_Shared_t new_view(new J_Calc_View(1400, 800, "J_Calc"));
+	
+	//J_Calc_View_Shared_t new_view(new J_Calc_View(1407, 813, "J_Calc"));
 	M_main_view = new_view;
 	add_view(M_main_view);
 	M_main_view->make_active_context();

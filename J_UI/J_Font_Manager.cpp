@@ -210,7 +210,7 @@ FT_Face create_face(FT_Library i_lib, const char* ik_pathname, int i_level){
 	FT_Face new_face;
 	if(FT_New_Face(i_lib, ik_pathname, i_level
 		, &new_face)){
-		throw J_FT_Init_Error("Free Type Default Face initialization error occurred");
+		throw J_FT_Init_Error("Free Type Face initialization error occurred");
 	}
 	return new_face;
 }

@@ -1156,6 +1156,9 @@ void J_Text_Box_Object::enable_default_key_char_processing(){
 	set_char_input_command(standard_char_input_cmd);
 }
 
+
+
+
 void standard_char_input_cmd(J_Text_Box_Object_Shared_t i_text_box, int i_charcode){
 	i_text_box->insert_char(i_charcode);
 }
@@ -1322,11 +1325,23 @@ void J_Text_Box::expand_num_letter_boxes(){
 }
 
 void J_Text_Box::recalculate_letter_boxes(){
+	M_pen_poses.front() = default_pen_pos();
 	calculate_letter_boxes(0);
 }
 
 const J_UI_Multi_String& J_Text_Box::multi_string()const{
 	return M_multi_string;
+}
+
+void J_Text_Box::alert_resize(int /*i_width*/, int /*i_length*/){
+	reset_frame_buffer();
+	recalculate_letter_boxes();
+}
+
+void J_Text_Box::reset_frame_buffer(){
+	M_framebuffer = J_GL_Framebuffer();
+	M_texture_render_buffer = J_GL_Texture();
+	initialize_frame_buffer();
 }
 
 
