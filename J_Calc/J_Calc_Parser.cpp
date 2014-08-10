@@ -116,7 +116,10 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_Multi_Strin
 	}catch(J_Syntax_Error& er_error){
 		er_error.print();
 		return er_error.str();
-	}catch(J_Sym_Argument_Error& er_error){
+	} catch(J_Value_Error& er_error){
+		er_error.print();
+		return er_error.str();
+	} catch(J_Sym_Argument_Error& er_error){
 		er_error.print();
 		return er_error.str();
 	}catch(J_Symbol_Error& er_error){

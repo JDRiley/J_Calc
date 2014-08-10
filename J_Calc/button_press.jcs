@@ -1,5 +1,4 @@
-mouse_press -0.935 0.737
-mouse_release -0.935 0.737
-char_press 4+4;
-char_press dbl a <-a ;
+char_press dbl c<-3;
+char_press -c*-c;
+char_press c- c*-c;
 end

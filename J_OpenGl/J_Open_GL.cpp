@@ -223,6 +223,8 @@ void J_Open_GL::texture_wrap_s(Texture_Target i_target, Texture_Wrap_Type i_text
 
 void J_Open_GL::texture_wrap_r(Texture_Target i_target, Texture_Wrap_Type i_texture_wrap_type){
 	glTexParameteri(get_gl_enum(i_target), GL_TEXTURE_WRAP_R, get_gl_enum(i_texture_wrap_type));
+	//cludge to add GL_NEAREST filtering
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	assert(!open_gl_error());
 }
 

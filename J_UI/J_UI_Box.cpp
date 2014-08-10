@@ -50,6 +50,8 @@ void J_UI_Box::recalculate_vaos(){
 	};
 
 
+
+
 	s_open_gl.bind_vertex_array(M_box_vao);
 
 	s_open_gl.bind_buffer(GL_Buffer_Targets::ARRAY_BUFFER, M_vao_buffer);

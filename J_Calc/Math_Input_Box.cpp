@@ -94,6 +94,12 @@ void Math_Input_Box::math_key_input_cmd(J_Text_Box_Object_Shared_t i_text_box, i
 		case J_KEY_DELETE:
 			math_box->key_delete();
 			return;
+		case J_KEY_LEFT:
+			math_box->move_cursor(-1);
+			return;
+		case J_KEY_RIGHT:
+			math_box->move_cursor(1);
+			return;
 		default:
 			;
 		}
@@ -115,7 +121,7 @@ void Math_Input_Box::key_backspace(){
 	}
 
 
-
+	//j_size_t initial_line_start_pos = line_input_pos->start_pos();
 	if(line_input_pos->is_inside_input(char_pos)){
 		line_input_pos = clear_output(line_input_pos);
 		//line_input = *line_input_pos;
@@ -124,12 +130,14 @@ void Math_Input_Box::key_backspace(){
 		J_Text_Box::backspace();
 		return;
 	}
-
+	//J_Text_Box::move_cursor(line_input_pos->start_pos() - initial_line_start_pos);
 	if(char_pos != line_input_pos->input_str().size()){
 		line_input_pos->delete_char(char_pos);
 		for_each(line_input_pos + 1, M_line_inputs.end(), bind(&Line_Input::decrement_pos, _1, 1));
 		J_Text_Box::backspace();
 	}
+	
+
 }
 
 void Math_Input_Box::key_delete(){
@@ -139,6 +147,7 @@ void Math_Input_Box::key_delete(){
 	}
 	auto line_input_pos = get_line_pos_at_pos(get_cursor_pos());
 
+	j_size_t initial_line_start_pos = line_input_pos->start_pos();
 
 	j_size_t char_pos = get_cursor_pos() - line_input_pos->start_pos();
 	
@@ -150,13 +159,15 @@ void Math_Input_Box::key_delete(){
 		return;
 	}
 
-	line_input_pos = clear_output(line_input_pos);
 
+	line_input_pos = clear_output(line_input_pos);
+	J_Text_Box::move_cursor(line_input_pos->start_pos() - initial_line_start_pos);
 	if(line_input_pos->input_str().size() != char_pos){
 		line_input_pos->delete_char(char_pos);
 		for_each(line_input_pos + 1, M_line_inputs.end(), bind(&Line_Input::decrement_pos, _1, 1));
 		J_Text_Box::delete_char();
 	}
+	
 }
 
 /*void char_input_cmd(j_window_t, j_ulint)*/
@@ -164,11 +175,12 @@ void Math_Input_Box::math_box_char_input_cmd(J_Text_Box_Object_Shared_t i_math_b
 	, int i_charcode){
 	auto math_box = dynamic_pointer_cast<Math_Input_Box>(i_math_box);
 
-	auto line_input_pos = math_box->get_line_pos_at_pos(i_math_box->get_cursor_pos());
-	if(line_input_pos
-		->read_only_status(math_box->get_cursor_pos() - line_input_pos->start_pos())){
+	if(math_box->is_read_only_status(math_box->get_cursor_pos())){
 		return;
 	}
+
+	auto line_input_pos = math_box->get_line_pos_at_pos(i_math_box->get_cursor_pos());
+
 
 	line_input_pos = math_box->clear_output(line_input_pos);
 	switch(i_charcode){
@@ -341,6 +353,11 @@ Math_Input_Box::Line_Input_Cont_t::iterator Math_Input_Box::lower_bound_line_inp
 	return lower_bound(M_line_inputs.begin(), M_line_inputs.end(), i_pos, Line_Cursor_Comp());
 }
 
+Math_Input_Box::Line_Input_Cont_t::const_iterator Math_Input_Box::lower_bound_line_input(j_size_t i_pos)const{
+
+	return lower_bound(M_line_inputs.begin(), M_line_inputs.end(), i_pos, Line_Cursor_Comp());
+}
+
 /*Line_Input_Shared_t get_line_at_pos(int pos)*/
 Line_Input& Math_Input_Box::get_line_at_pos(j_size_t i_pos){
 	assert(!M_line_inputs.empty());
@@ -356,6 +373,65 @@ Math_Input_Box::Line_Input_Cont_t::iterator Math_Input_Box::get_line_pos_at_pos(
 		|| (line_input_pos->start_pos() != i_pos)){--line_input_pos;}
 
 	return line_input_pos;
+}
+
+Math_Input_Box::Line_Input_Cont_t::const_iterator Math_Input_Box::get_line_pos_at_pos(j_size_t i_pos)const{
+
+	auto line_input_pos = lower_bound_line_input(i_pos);
+
+	if((line_input_pos == M_line_inputs.end())
+	   || (line_input_pos->start_pos() != i_pos)){
+		--line_input_pos;
+	}
+
+	return line_input_pos;
+}
+
+void Math_Input_Box::move_cursor(j_size_t i_amount){
+	J_Text_Box::move_cursor(i_amount);
+	j_size_t cursor_pos = get_cursor_pos();
+	if(!is_read_only_status(cursor_pos)){
+		return;
+	}
+	auto line_input_pos = get_line_pos_at_pos(cursor_pos);
+
+	if(i_amount < 0){
+		set_cursor_pos(line_input_pos->input_end_pos());
+	} else{
+		set_cursor_pos(line_input_pos->end_pos());
+	}
+}
+
+bool Math_Input_Box::is_read_only_status(j_size_t i_cursor_pos)const{
+	auto line_input_pos = get_line_pos_at_pos(i_cursor_pos);
+	return line_input_pos
+		->read_only_status(i_cursor_pos - line_input_pos->start_pos());
+
+}
+
+void Math_Input_Box::mouse_button_press(int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos){
+	J_Text_Box::mouse_button_press(i_key, i_modifiers, i_pen_pos);
+
+
+	move_cursor_to_input_end();
+	return;
+}
+
+void Math_Input_Box::mouse_button_release(int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos){
+	J_Text_Box::mouse_button_release(i_key, i_modifiers, i_pen_pos);
+
+
+	move_cursor_to_input_end();
+	return;
+}
+
+void Math_Input_Box::move_cursor_to_input_end(){
+	if(!is_read_only_status(get_cursor_pos())){
+		return;
+	}
+
+	auto line_input_pos = get_line_pos_at_pos(get_cursor_pos());
+	set_cursor_pos(line_input_pos->input_end_pos());
 }
 
 }

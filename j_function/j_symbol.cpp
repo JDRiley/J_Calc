@@ -17,7 +17,7 @@
 namespace jomike{
 static int s_symbol_ids = 0;
 
-J_Sym_Argument_Error::J_Sym_Argument_Error(const char* const ik_message):J_Error(ik_message){}
+J_Sym_Argument_Error::J_Sym_Argument_Error(const std::string& ik_message):J_Error(ik_message){}
 
 
 //Destructor
@@ -129,16 +129,16 @@ void j_symbol::set_args(Arguments&& i_args){
 j_value j_symbol::get_value(const Arguments& i_args)const{
 	Arguments args(*M_arguments);
 	j_tree<j_size_t> removed_indices;
-	for(int b = 0; b < args.size(); b++){
-		if(args[b].is_placeholder()){
+	for(int i = 0; i < args.size(); i++){
+		if(args[i].is_placeholder()){
 			j_placeholder_symbol* place_holder_symbol
-				= dynamic_cast<j_placeholder_symbol*>(&args[b]);
+				= dynamic_cast<j_placeholder_symbol*>(&args[i]);
 
 			assert(place_holder_symbol);
 			j_size_t index = place_holder_symbol->placeholder_index();
 			removed_indices.insert(index);
 			if(index >= i_args.size()){
-				throw J_Sym_Argument_Error("Not Enough Arguments to Symbol");
+				throw J_Sym_Argument_Error("Not Enough Arguments to Symbol: " + name().std_str());
 			}
 			args.set_argument(index, i_args.arguments()[index]);
 		}

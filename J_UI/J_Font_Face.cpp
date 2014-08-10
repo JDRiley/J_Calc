@@ -9,8 +9,8 @@
 
 using std::cerr;
 namespace jomike{
-const int FT_POINT_TO_PARAMETER_CONVERSION = 64;
-const int DEFAULT_DOTS_PER_INCH = 96;
+const int FT_POINT_TO_PARAMETER_CONVERSION = 64;//64;
+const int DEFAULT_DOTS_PER_INCH = 96*EXTRA_CHAR_DPI_FACTOR;//96;
 const int DEFAULT_CHAR_POINT_SIZE = 24;
 const int DEFAULT_NUMBER_OF_FT_LIBS = 1;
 const int DEFAULT_NUMBER_OF_FT_FACES = 1;
@@ -18,7 +18,7 @@ const int DEFAULT_NUMBER_OF_FT_FACES = 1;
 static FT_GlyphSlot get_rendered_glyph(FT_Face i_face, j_ulint i_charcode, FT_Int32 i_load_flag);
 J_Font_Face__::J_Font_Face__(J_Context_Shared_t i_context, FT_Face i_face
 							 , int i_font_size, int i_render_mode):M_tab_distance(4)
-	, M_new_line_size(static_cast<int>(i_face->height/64*11.0/10)){
+	, M_new_line_size(static_cast<int>(i_face->height/FT_POINT_TO_PARAMETER_CONVERSION*11.0/10)){
 	
 
 	if(FT_Set_Char_Size(i_face, i_font_size*FT_POINT_TO_PARAMETER_CONVERSION,
@@ -43,7 +43,7 @@ J_Font_Face__::J_Font_Face__(J_Context_Shared_t i_context, FT_Face i_face
 			expanded_bitmap.resize(expanded_bitmap.width()*M_tab_distance,expanded_bitmap.height());
 			FT_Bitmap& bitmap = glyph->bitmap;
 			M_bitmap_metrics.push_back(Bitmap_Metrics(expanded_bitmap.width(), expanded_bitmap.height()
-				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x*M_tab_distance/64, glyph->advance.y/64));
+				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x*M_tab_distance/FT_POINT_TO_PARAMETER_CONVERSION, glyph->advance.y/FT_POINT_TO_PARAMETER_CONVERSION));
 
 		} else if('\n' == i){
 			glyph = get_rendered_glyph(i_face, ' ', i_render_mode);
@@ -52,7 +52,7 @@ J_Font_Face__::J_Font_Face__(J_Context_Shared_t i_context, FT_Face i_face
 			expanded_bitmap.resize(expanded_bitmap.width()*M_tab_distance, expanded_bitmap.height());
 			FT_Bitmap& bitmap = glyph->bitmap;
 			M_bitmap_metrics.push_back(Bitmap_Metrics(expanded_bitmap.width(), 0
-				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, 0, glyph->advance.y / 64));
+				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, 0, glyph->advance.y / FT_POINT_TO_PARAMETER_CONVERSION));
 
 		} else{
 			glyph = get_rendered_glyph(i_face, i, i_render_mode);
@@ -60,7 +60,8 @@ J_Font_Face__::J_Font_Face__(J_Context_Shared_t i_context, FT_Face i_face
 			, glyph->bitmap.buffer);
 			FT_Bitmap& bitmap = glyph->bitmap;
 			M_bitmap_metrics.push_back(Bitmap_Metrics(expanded_bitmap.width(), expanded_bitmap.height()
-				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x/64, glyph->advance.y/64));
+				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x/FT_POINT_TO_PARAMETER_CONVERSION
+				, glyph->advance.y/FT_POINT_TO_PARAMETER_CONVERSION));
 
 		}
 		M_bitmap_datas[i] = expanded_bitmap.get_array();

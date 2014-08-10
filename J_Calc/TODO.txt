@@ -1,0 +1,3 @@
+Make prototypes so we can detect whether funtions match up
+implement logical operators.
+implement routine creation.

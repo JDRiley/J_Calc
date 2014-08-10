@@ -41,13 +41,10 @@ public:
 	virtual void update();
 	virtual void add_ui_box(J_UI_Box_Shared_t i_ui_box);
 	virtual void add_ui_object(J_UI_Object_Shared_t);
-	//virtual void add_image_pane(j_uint);
+
 	virtual void add_ui_circle(J_UI_Circle_Shared_t);
 	virtual void add_multi_state_text_box(Multi_State_Text_Box_Shared_t );
-	//virtual void add_managed_display_object(j_uint i_obj_id, j_uint i_new_obj_id, UI_Object_Types i_obj_type);
-	//virtual void remove_managed_display_object(j_uint i_obj_id, UI_Object_Types i_obj_type);
-	//
-	//virtual void update_text_string_size(j_uint i_obj_id, j_size_t i_size);
+
 	virtual void resize(int width, int height);
 	virtual ~J_View();
 	virtual j_uint mouse_button_press(J_View_Shared_t, int button, int modifier, Pen_Pos_FL_t pos);
@@ -59,72 +56,16 @@ public:
 	virtual bool should_close()const;
 	void subscribe_cursor_updates(J_UI_Object_Weak_t i_ui_obj);
 
-	/*virtual void update_letter_box_rectangle(j_uint i_text_box_id, j_size_t i_index
-											 , const Pen_Pos_FL_t& i_rec
-											 , const Bitmap_Metrics& i_metrics);
-	virtual void update_letter_box_data(j_uint i_text_box_id, j_size_t i_index
-										, const Bitmap_Metrics& i_metrics
-										, const J_UI_Color& i_color
-										, const j_ubyte* i_data);
-
-
-	virtual void update_letter_box_poses(j_uint i_text_box_id, j_size_t i_pos
-										 , j_size_t i_size
-										 , const Pen_Pos_FL_t* i_poses);*/
-
-	//virtual void update_text_string_add(j_uint i_text_box_id, j_size_t i_pos, j_size_t i_size, const Pen_Pos_FL_t* i_poses, Bitmap_Metrics** i_metrics, const J_UI_Color& i_color, const j_ubyte* const * i_datas);
-	//virtual void set_clickable_status(j_uint i_obj_id, bool i_status);
-	//virtual void delete_char(j_uint text_box_id, j_size_t pos);
-	//virtual void erase_chars(j_uint text_box_id, j_size_t pos, j_size_t size);
-	//virtual void insert_char(j_uint i_text_box_id, j_size_t i_pos, const Pen_Pos_FL_t& i_pen_pos
-	//						 , const Bitmap_Metrics& i_metrics, const J_UI_Color& i_color
-	//						 , const j_ubyte* i_data);
 	
 	virtual bool is_visible()const;
 	virtual void set_cursor_pos(int,int);
-	//virtual void set_fill_visibility(j_uint i_disp_obj, bool status);
-	//virtual void set_outline_visibility(j_uint i_disp_obj, bool status);
+
 	virtual void close_window();
 
-	//virtual void update_box_coordinates(j_uint i_obj_id, const J_Rectangle& i_rectangle);
-	//virtual void update_fill_color(j_uint, J_Color_RGBA<j_float>);
-	//virtual void update_outline_color(j_uint, J_Color_RGBA<j_float> );
-	//virtual void update_outline_thickness(j_uint, j_float);
 
-	//Line
-	//virtual void update_line_data(j_uint i_obj_id, const J_Line& i_line);
-
-	//circle
-	//virtual void update_circle_shape_data(j_uint i_circle_id, const J_Circle&);
-	//virtual void update_center(j_uint i_obj_id, j_float i_x_pos, j_float i_y_pos);
-	//virtual void update_radius(j_uint i_circle_id, j_float i_radius);
-
-	//image
-	//virtual void update_image_clear(j_uint);
-	//virtual void update_image_buffer(j_uint, const j_ubyte*);
-	//virtual void update_image_buffer_mono(j_uint, const j_ubyte*);
-	//virtual void update_image_height(j_uint, int);
-	//virtual void update_image_width(j_uint, int);
-	//virtual void update_image_buffer_format(j_uint, Image_Format);
-	//virtual void update_middle_line_color(j_uint, J_UI_Color);
-
-
-	//virtual void update_add_multi_text_state(j_uint i_multi_text_state_id);
-	//virtual void update_multi_text_state(j_uint i_multi_state_text_id, j_size_t i_state);
-
-	//virtual void remove_text_display(j_uint i_obj_id);
-	//virtual void remove_display_box(j_uint i_obj_id);
-	//virtual void remove_display_object(j_uint i_obj_id);
-	//virtual void remove_display_circle(j_uint i_obj_id);
-	//virtual void remove_image_pane(j_uint i_obj_id);
-	//virtual void remove_multi_state_text_box(j_uint i_obj_id);
-	//virtual void remove_display_line(j_uint i_line_id);
-	//virtual void position_after(j_uint i_front_pos_id, j_uint i_after_pos_id);
-	//virtual void position_before(j_uint i_front_pos_id, j_uint i_before_pos_id);
-	//bool is_display_object_present(j_uint i_obj_id)const;
 
 	virtual void clear();
-
+	void set_focused_object(J_UI_Object_Shared_t i_obj);
 	virtual void char_input_cmd(j_uint i_charcode);
 	virtual void key_input_cmd(int i_key, int i_scancode, int i_action, int i_modifiers);
 protected:

@@ -363,6 +363,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GL_Enum_Conversion_Maps.h" />
+    <ClInclude Include="J_Frame.h" />
     <ClInclude Include="J_Frame_Counter.h" />
     <ClInclude Include="J_GL_Objects.h" />
     <ClInclude Include="J_OpenGL.h" />
@@ -372,6 +373,7 @@
     <ClInclude Include="OpenGL_Enums.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="J_Frame.cpp" />
     <ClCompile Include="J_GL_Objects.cpp" />
     <ClCompile Include="J_OpenGL.cpp" />
     <ClCompile Include="J_Open_GL.cpp" />

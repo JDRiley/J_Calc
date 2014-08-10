@@ -22,7 +22,6 @@ Binary_Expression::Binary_Expression(
 :j_expression(i_left_expression->symbol_type()){
 	M_left_expression = i_left_expression;
 	M_right_expression = i_right_expression;
-
 }
 
 Binary_Expression::Binary_Expression(const Binary_Expression& irk_source)

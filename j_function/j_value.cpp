@@ -18,6 +18,13 @@ j_value::j_value(j_llint i_val, J_Unit i_unit){
 	M_has_value_status = true;
 }
 
+j_value::j_value(j_int i_val, J_Unit i_unit){
+	M_type = Value_Types::LL_INTEGER;
+	M_val.llint_val = i_val;
+	M_units = i_unit;
+	M_has_value_status = true;
+}
+
 j_value::j_value(j_dbl i_val, J_Unit i_unit){
 	M_type = Value_Types::DOUBLE;
 	M_val.dbl_val = i_val;
@@ -112,10 +119,10 @@ void j_value::binary_value_operation_no_str_or_bool(
 			M_val.dbl_val, i_right, &i_value_union->dbl_val, i_func);
 		break;
 	case Value_Types::BOOL:
-		assert(!"Bool in wrong binary value_operation function");
+		throw J_Value_Error("Bool in wrong binary value_operation function");
 		break;
 	case Value_Types::STRING:
-		assert(!"String in wrong binary value_operation function");
+		throw J_Value_Error("String in wrong binary value_operation function");
 		break;
 	default:
 		break;
@@ -202,6 +209,9 @@ class Division_Class{
 public:
 	template<typename Ret_t, typename Left_t, typename Right_t>
 	void operator()(const Left_t& i_left, const Right_t& i_right, Ret_t* i_destination)const{
+		if(!i_right){
+			throw J_Value_Error("Division By Zero");
+		}
 		*i_destination = static_cast<Ret_t>(i_left / i_right);
 	}
 };
@@ -322,7 +332,7 @@ typename Operator_Class::return_type j_value::unary_value_operation(Operator_Cla
 
 class To_String_Class{
 public:
-	typedef std::string return_type;
+	typedef string return_type;
 
 	
 
@@ -342,11 +352,44 @@ public:
 	}
 };
 
-std::string j_value::to_str()const{
+string j_value::to_str()const{
 
 
 	return unary_value_operation(To_String_Class());
 }
+
+
+class Unary_Negate_Class{
+public:
+	typedef j_value return_type;
+
+
+
+	template<typename Val_t>
+	typename std::enable_if<std::is_arithmetic<Val_t>::value, return_type>::type 
+		operator()(const Val_t& irk_val)const{
+			return j_value(-irk_val, J_Unit());
+	}
+
+	template<typename Val_t>
+	typename std::enable_if<!std::is_arithmetic<Val_t>::value, return_type>::type  operator()(const Val_t& /*irk_val*/)const{
+		throw J_Value_Error("Cannot Negate Non Arithmetic type");
+	}
+
+	
+	j_value operator()(const bool& /*i_val*/)const{
+		throw J_Value_Error("Cannot Negate Boolean Type");
+	}
+
+
+};
+
+j_value j_value::operator-()const{
+	j_value value(unary_value_operation(Unary_Negate_Class()));
+	value.M_units = M_units;
+	return value;
+}
+
 
 Symbol_Types j_value::symbol_type()const{
 	switch(M_type)	{

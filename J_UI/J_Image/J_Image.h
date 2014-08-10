@@ -172,7 +172,7 @@ void text_bitmap_formatter(j_bitmap<Num_t, 1>* i_dest_bitmap
 					  , int i_width, int i_rows, Src_Num_t* i_bitmap){
 	
 	int new_width = next_power_of_two(std::max(static_cast<int>(4),i_width)); //minimum pixel value is 4
-	int new_height = i_rows;
+	int new_height = next_power_of_two(std::max(static_cast<int>(4),i_rows));//i_rows;
 
 	j_bitmap<j_ubyte, 1>& expanded_bitmap = *i_dest_bitmap;
 	expanded_bitmap.resize(new_width, new_height);
@@ -183,7 +183,8 @@ void text_bitmap_formatter(j_bitmap<Num_t, 1>* i_dest_bitmap
 			if((j < i_width) && ( i < i_rows)){
 				//j_float byte_normalized_color_val = byte_normalized(i_bitmap[i*i_width + j]);
 				//expanded_bitmap.at_index(i,j) = i_dest_max_val*byte_normalized_color_val;
-				expanded_bitmap.at_index(i,j) = i_bitmap[i_width*i +j];
+				//reversing bitmap
+				expanded_bitmap.at_index(i,j) = i_bitmap[i_width*(i_rows - i-1) +j];
 			}else{
 				expanded_bitmap.at_index(i,j) = 0;
 			}

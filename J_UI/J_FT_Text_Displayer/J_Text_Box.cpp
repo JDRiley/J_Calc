@@ -23,6 +23,8 @@
 #include "J_UI_Letter_Box.h"
 //
 #include <J_Open_GL.h>
+//
+#include <J_Frame.h>
 
 using std::any_of; using std::bind; using std::equal_to; using std::mem_fn; using std::not1;
 using std::remove_if; using std::transform; using std::static_pointer_cast;
@@ -53,6 +55,8 @@ static int image_shader_id(){
 	static Image_Shader_Program s_image_shader(Image_Format::RGBA32_UBYTE);
 	return s_image_shader.program_id();
 }
+
+
 const j_float FLOAT_DELTA = 0.0001f;
 const j_float K_LEFT_PADDING = 0.01f;
 
@@ -198,7 +202,7 @@ void J_Text_Box::initialize(){
 	M_text_state = Text_Flags::SCROLL;
 	M_cursor_line = J_UI_Line_Shared_t(
 		new J_UI_Line(default_pen_pos().first, default_pen_pos().second
-		, default_pen_pos().first, default_pen_pos().second + new_line_screen_size())
+		, default_pen_pos().first, default_pen_pos().second + new_line_frame_size())
 		);
 
 
@@ -217,10 +221,16 @@ void J_Text_Box::initialize(){
 void J_Text_Box::initialize_frame_buffer(){
 	s_open_gl.bind_framebuffer(M_framebuffer);
 	s_open_gl.bind_texture_2D(M_texture_render_buffer);
+	
+	auto window = Instance_Pointer<Contexts_Handler>()->get_active_window();
+	
 
-	auto window = s_contexts->get_active_window();
-	j_uint width = get_x_res(window);
-	j_uint height = get_y_res(window);
+	M_frame = J_Frame_Unique_t(new J_Frame(x_pixels(window, width()), y_pixels(window, height()), *this));
+	//M_frame = J_Frame_Unique_t(new J_Frame(get_x_res(window), get_y_res(window)));
+
+	j_uint width = M_frame->width();
+	j_uint height = M_frame->height();
+
 
 	s_open_gl.tex_storage_2D(
 		Texture_Target::TEXTURE_2D, 1
@@ -298,10 +308,9 @@ void J_Text_Box::change_color_at_pos(int i_pos, J_UI_Color i_color){
 	for(int i = indices_of_string.first; i < indices_of_string.second; ++i){
 		J_Char_t char_chode = M_multi_string[i].charcode();
 		J_Font_Face font_face = string_it->font_face();
-		int char_width = font_face->bitmap_metric(char_chode).width;
-		int char_height = font_face->bitmap_metric(char_chode).height;
+
 		const j_ubyte* bitmap_data = font_face->get_data(char_chode);
-		M_letter_box_string[i]->set_buffer_data(char_width, char_height, i_color, bitmap_data);
+		M_letter_box_string[i]->set_buffer_data(font_face->bitmap_metric(char_chode), i_color, bitmap_data);
 	}
 
 	assert(!"This needs to be implemented");
@@ -392,7 +401,7 @@ void J_Text_Box::calculate_letter_boxes(j_size_t i_pos){
 			
 
 
-			M_letter_box_string[index]->set_image_box(M_pen_poses[index], bitmap_metric);
+			M_letter_box_string[index]->set_image_box(M_pen_poses[index], bitmap_metric, *M_frame);
 			++index;
 			
 			calculate_next_pen_pos(char_code, bitmap_metric);
@@ -407,16 +416,15 @@ void J_Text_Box::calculate_letter_boxes(j_size_t i_pos){
 }
 
 void J_Text_Box::calculate_next_pen_pos(J_Char_t i_char_code, const Bitmap_Metrics& irk_bitmap){
-	auto window = s_contexts->get_active_window();
 
-	j_float width = to_x_screen(window, irk_bitmap.width);
+	j_float width = M_frame->to_x_screen(irk_bitmap.width);
 
 
 
 
 	if('\n' == i_char_code){
 		M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
-	} else if((M_pen_poses.back().first + width) > x2()){
+	} else if((M_pen_poses.back().first + width) > 1.0f){
 		Pen_Pos_FL_t new_pos(new_line_pen_pos(M_pen_poses.back()));
 		M_pen_poses.push_back(calculate_pen_advance(new_pos
 			, irk_bitmap.advance_x));
@@ -438,7 +446,7 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
 			->bitmap_metric(charcode);
 
-		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric);
+		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric, *M_frame);
 		calculate_next_pen_pos(charcode, bitmap_metric);
 		
 
@@ -453,14 +461,14 @@ j_uint J_Text_Box::get_cursor_line_id()const{
 void J_Text_Box::scroll_selection_boxes(j_float i_x_scroll, j_float i_y_scroll){
 	for(auto f_box : M_selection_boxes){
 		f_box->set_x(f_box->x1() + i_x_scroll);
-		f_box->set_y(f_box->y2() + i_y_scroll);
+		f_box->set_y(f_box->y1() + i_y_scroll);
 	}
 	set_selection_box_visibility_statuses();
 }
 
 Pen_Pos_FL_t J_Text_Box::default_pen_pos()const{
-	return Pen_Pos_FL_t(x1() + K_LEFT_PADDING, y1()
-						- to_y_screen(s_contexts->get_active_window(), M_new_line_size));
+	return Pen_Pos_FL_t(-1.0f + K_LEFT_PADDING, 1.0f
+						- M_frame->to_y_screen(M_new_line_size));
 }
 
 void J_Text_Box::auto_scroll_window(j_size_t i_pos){
@@ -471,20 +479,23 @@ void J_Text_Box::auto_scroll_window(j_size_t i_pos){
 		return;
 	}
 
+
 	auto pen_pos_y_lower = M_pen_poses[i_pos].second;
-	auto pen_pos_y_upper = M_pen_poses[i_pos].second + new_line_screen_size();
+	auto pen_pos_y_upper = M_pen_poses[i_pos].second + new_line_frame_size();
+
+
 
 	Pen_Pos_FL_t new_starting_pen_pos = M_pen_poses.front();
-	if(pen_pos_y_upper > y1()){
-		new_starting_pen_pos.second -= (pen_pos_y_upper - y1() + FLOAT_DELTA);
+	if(pen_pos_y_upper > 1.0f){
+		new_starting_pen_pos.second -= (pen_pos_y_upper - 1.0f + FLOAT_DELTA);
 		new_starting_pen_pos.second
 			= max(new_starting_pen_pos.second, default_pen_pos().second);
 	} else{
-		assert(pen_pos_y_lower < y2());
-		new_starting_pen_pos.second += (y2() - pen_pos_y_lower + FLOAT_DELTA);
+		assert(pen_pos_y_lower < -1.0f);
+		new_starting_pen_pos.second += (-1.0f - pen_pos_y_lower + FLOAT_DELTA);
 	}
 	scroll_selection_boxes(0.0
-						   , new_starting_pen_pos.second - M_pen_poses.front().second);
+						   , M_frame->to_base_y_screen(new_starting_pen_pos.second - M_pen_poses.front().second));
 
 	set_starting_pen_pos(new_starting_pen_pos);
 
@@ -517,7 +528,7 @@ void J_Text_Box::add_string(const J_UI_String& irk_string){
 
 /*Pen_Pos_t calculate_pen_advance(const J_UI_String_Data*,Pen_Pos_t, int)*/
 Pen_Pos_FL_t J_Text_Box::calculate_pen_advance(Pen_Pos_FL_t i_cur_pen, int i_advance_val_pixels)const{
-	i_cur_pen.first += to_x_screen(s_contexts->get_active_window(), i_advance_val_pixels);
+	i_cur_pen.first += M_frame->to_x_screen(i_advance_val_pixels);
 
 	return i_cur_pen;
 }
@@ -525,78 +536,11 @@ Pen_Pos_FL_t J_Text_Box::calculate_pen_advance(Pen_Pos_FL_t i_cur_pen, int i_adv
 /*Pen_Pos_t calculate_pen_advance(const J_UI_String_Data*,Pen_Pos_t, int)*/
 Pen_Pos_FL_t J_Text_Box::new_line_pen_pos(Pen_Pos_FL_t i_pen)const{
 	i_pen.first = x1() + K_LEFT_PADDING;
-	i_pen.second -= to_y_screen(s_contexts->get_active_window(), M_new_line_size);
+	i_pen.second -= M_frame->to_y_screen(M_new_line_size);
 	return i_pen;
 }
 
-//
-//void J_Text_Box::add_char(J_UI_Char i_char){
-//	//assert(get_context() == s_contexts->get_active_context());
-//	if(M_vao_ids.size() <= M_string.size()){
-//		add_new_vao_and_vbo(safe_int_cast(2 * (M_vao_ids.size() + 1)));
-//	}
-//
-//	auto& bitmap_metric = M_string.back().font_face()->M_bitmap_metrics[i_char.charcode()];
-//
-//	if('\n' == i_char.charcode()){
-//		M_string.push_back(i_char);
-//		M_pen_poses.push_back(new_line_pen_pos(M_pen_poses.back()));
-//		return;
-//	}
-//	auto window = s_contexts->get_active_window();
-//
-//	j_float width = to_x_screen(window, bitmap_metric.width);
-//	j_float height = to_y_screen(window, bitmap_metric.height);
-//
-//	j_float x_start, y_start;
-//
-//
-//
-//	if((M_pen_poses.back().first + width) > x2()){
-//		Pen_Pos_FL_t new_pos(new_line_pen_pos(M_pen_poses.back()));
-//		x_start = new_pos.first;
-//		y_start = new_pos.second;
-//		M_pen_poses.push_back(calculate_pen_advance(new_pos
-//			, bitmap_metric.advance_x));
-//	} else{
-//		x_start = M_pen_poses.back().first;
-//		y_start = M_pen_poses.back().second;
-//		M_pen_poses.push_back(calculate_pen_advance(M_pen_poses.back()
-//			, bitmap_metric.advance_x));
-//	}
-//	j_float x_screen_pos = x_start
-//		+ to_x_screen(window, bitmap_metric.left);
-//
-//	j_float y_screen_pos = y_start
-//		- to_y_screen(window, bitmap_metric.underreach);
-//
-//
-//	//cerr << "\nx_screen_pos: " << x_screen_pos << " y_screen_pos: " << y_screen_pos 
-//	//	<< " Text Width: " << width << " Text Height: " << height;
-//
-//	array<j_float, 24> vertex_array_data = {
-//		x_screen_pos, y_screen_pos, 0.0f, 1.0f
-//		, x_screen_pos + width, y_screen_pos, 0.0f, 1.0f
-//		, x_screen_pos + width, y_screen_pos + height, 0.0f, 1.0f
-//		, x_screen_pos, y_screen_pos + height, 0.0, 1.0f
-//
-//		, 0.0f, 1.0f
-//		, 1.0f, 1.0f
-//		, 1.0f, 0.0f
-//		, 0.0f, 0.0f
-//	};
-//	j_size_t index = M_string.size();
-//	M_string.push_back(i_char.charcode());
-//
-//	glBindVertexArray(M_vao_ids[index]);
-//	glBindBuffer(GL_ARRAY_BUFFER, M_vao_buffer_ids[index]);
-//
-//	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertex_array_data)
-//					, vertex_array_data.data());
-//
-//	glBindVertexArray(0);
-//
-//}
+
 
 bool J_Text_Box::auto_scrolling_status()const {
 	return M_auto_scrolling_status;
@@ -608,12 +552,13 @@ void J_Text_Box::set_auto_scrolling_status(bool i_status){
 
 bool J_Text_Box::is_cursor_pos_in_view(j_size_t i_pos)const{
 	auto y_bottom_pos = M_pen_poses[i_pos].second;
-	auto y_top_pos = y_bottom_pos + new_line_screen_size();
-	return is_y_inside(y_bottom_pos) && is_y_inside(y_top_pos);
+	auto y_top_pos = y_bottom_pos + new_line_frame_size();
+	return between_inclusive(y_bottom_pos, -1.0f, 1.0f) 
+		&& between_inclusive(y_top_pos, -1.0f, 1.0f);
 }
 
-j_float J_Text_Box::new_line_screen_size()const{
-	return to_y_screen(s_contexts->get_active_window(), M_new_line_size);
+j_float J_Text_Box::new_line_frame_size()const{
+	return M_frame->to_y_screen(M_new_line_size);
 }
 
 void J_Text_Box::set_cursor_line_position(j_size_t i_cursor_pos){
@@ -634,27 +579,11 @@ void J_Text_Box::recalculate_letter_poses(){
 }
 
 J_Line J_Text_Box::get_cursor_line(const Pen_Pos_FL_t& i_pen_pos)const{
-	return J_Line(i_pen_pos.first, i_pen_pos.second
-				  , i_pen_pos.first, i_pen_pos.second + new_line_screen_size());
-}
-
-void J_Text_Box::notify_letter_box_poses(j_size_t i_pos /*= J_SIZE_T_ZERO*/)const{
-	assert(!"This needs to be removed");
-	ex_array<Pen_Pos_FL_t> pen_poses(M_pen_poses.begin() + i_pos, M_pen_poses.end());
-	for(j_size_t i = i_pos; i < M_pen_poses.size(); i++){
-		auto char_pos = M_multi_string.get_insert_pos(i);
-		const Bitmap_Metrics& metric= char_pos.second->font_face()
-			->bitmap_metric(char_pos.first->charcode());
-
-		int underreach = metric.underreach;
-		int left = metric.left;
-
-		pen_poses[i - i_pos].first += to_x_screen(s_contexts->get_active_window(), left);
-
-		pen_poses[i - i_pos].second
-			-= to_y_screen(s_contexts->get_active_window(), underreach);
-	}
-
+	J_Context_Shared_t context = s_contexts->get_active_context();
+	Pen_Pos_FL_t base_pen_pos = M_frame->to_base_pen_pos(i_pen_pos);
+	j_float base_new_line_screen_size = M_frame->to_base_y_screen(new_line_frame_size());
+	return J_Line(base_pen_pos.first, base_pen_pos.second
+				  , base_pen_pos.first, base_pen_pos.second + base_new_line_screen_size);
 }
 
 
@@ -723,7 +652,9 @@ ex_array<J_UI_Letter_Box_Shared_t> J_Text_Box::make_letter_boxes(const J_UI_Stri
 }
 
 void J_Text_Box::mouse_button_press(int i_button, int , Pen_Pos_FL_t i_pos){
-	
+
+	i_pos = M_frame->to_frame_pen_pos(i_pos);
+
 	switch(i_button){
 	case J_LEFT_MOUSE_BUTTON:{
 		clear_selection_boxes();
@@ -744,15 +675,33 @@ void J_Text_Box::mouse_button_press(int i_button, int , Pen_Pos_FL_t i_pos){
 	}
 }
 
+
+void J_Text_Box::mouse_button_release(int i_button, int , Pen_Pos_FL_t i_pos){
+
+	i_pos = M_frame->to_frame_pen_pos(i_pos);
+
+	
+	switch(i_button){
+	case J_LEFT_MOUSE_BUTTON:
+		set_left_click_off();
+		set_cursor_pos(get_cursor_index(i_pos));
+		break;
+	default:
+		;
+	}
+}
+
+
+
 void J_Text_Box::mouse_button_press_n(int i_button, int, Pen_Pos_FL_t i_pos, int i_count){
 
 	switch(i_button){
 	case J_LEFT_MOUSE_BUTTON:{
-								 clear_selection_boxes();
-								 set_cursor_pos(get_cursor_index(i_pos));
-								 M_selection.set_first_unordered_elem(M_cursor_pos);
-								 M_selection.set_second_unordered_elem(M_cursor_pos);
-								 set_left_click_on();
+		clear_selection_boxes();
+		set_cursor_pos(get_cursor_index(i_pos));
+		M_selection.set_first_unordered_elem(M_cursor_pos);
+		M_selection.set_second_unordered_elem(M_cursor_pos);
+		set_left_click_on();
 	}
 		break;
 	case J_MOUSE_WHEEL_UP:
@@ -765,19 +714,6 @@ void J_Text_Box::mouse_button_press_n(int i_button, int, Pen_Pos_FL_t i_pos, int
 		;
 	}
 }
-
-void J_Text_Box::mouse_button_release(int i_button, int , Pen_Pos_FL_t i_pos){
-
-	switch(i_button){
-	case J_LEFT_MOUSE_BUTTON:
-		set_left_click_off();
-		set_cursor_pos(get_cursor_index(i_pos));
-		break;
-	default:
-		;
-	}
-}
-
 J_Text_Box_Shared_t J_Text_Box::shared_from_this(){
 	auto this_text_box_ptr
 		= dynamic_pointer_cast<J_Text_Box>(J_UI_Object::shared_from_this());
@@ -805,7 +741,7 @@ bool J_Text_Box::insert_char(J_UI_Char i_char){
 	auto& cur_pen_pos = M_pen_poses[M_cursor_pos];
 
 	J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
-	new_letter_box->set_image_box(cur_pen_pos, bitmap_metrics);
+	new_letter_box->set_image_box(cur_pen_pos, bitmap_metrics, *M_frame);
 	new_letter_box->set_buffer_data(
 		bitmap_metrics, cur_string.color()
 		, cur_string.font_face()->get_data(i_char.charcode()));
@@ -827,7 +763,7 @@ bool J_Text_Box::insert_char(J_UI_Char i_char){
 
 /*int get_cursor_index(Pen_Pos_FL_t)const*/
 j_size_t J_Text_Box::get_cursor_index(Pen_Pos_FL_t i_pen_pos)const{
-	j_float line_screen_size = to_y_screen(s_contexts->get_active_window(), M_new_line_size);
+	j_float line_screen_size = M_frame->to_y_screen(M_new_line_size);
 
 	Text_Line_Order_Comp text_pos_compare_fo(M_pen_poses.front().second
 											 + line_screen_size, line_screen_size);
@@ -845,7 +781,7 @@ j_size_t J_Text_Box::get_cursor_index(Pen_Pos_FL_t i_pen_pos)const{
 
 void J_Text_Box::move_cursor_line_pos_up(j_size_t i_move_val){
 	Pen_Pos_FL_t new_pen_pos = M_last_set_cursor_pos;
-	new_pen_pos.second += i_move_val*new_line_screen_size();
+	new_pen_pos.second += i_move_val*new_line_frame_size();
 	set_cursor_pos(get_cursor_index(new_pen_pos));
 	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
 	M_last_set_cursor_pos.first = new_pen_pos.first;
@@ -853,7 +789,7 @@ void J_Text_Box::move_cursor_line_pos_up(j_size_t i_move_val){
 
 void J_Text_Box::move_cursor_line_pos_down(j_size_t i_move_val){
 	Pen_Pos_FL_t new_pen_pos = M_last_set_cursor_pos;
-	new_pen_pos.second -= (i_move_val*new_line_screen_size() + FLOAT_DELTA);
+	new_pen_pos.second -= (i_move_val*new_line_frame_size() + FLOAT_DELTA);
 	set_cursor_pos(get_cursor_index(new_pen_pos));
 	M_last_set_cursor_pos = M_pen_poses[M_cursor_pos];
 	M_last_set_cursor_pos.first = new_pen_pos.first;
@@ -897,7 +833,7 @@ void J_Text_Box::scroll(int i_scroll_val){
 		return;
 	}
 
-	j_float scroll_size = -i_scroll_val*new_line_screen_size();
+	j_float scroll_size = -i_scroll_val*new_line_frame_size();
 
 	if((scroll_size < 0) && M_pen_poses.front() == default_pen_pos()){
 		return;
@@ -907,16 +843,16 @@ void J_Text_Box::scroll(int i_scroll_val){
 		j_float scroll_size_to_default
 			= default_pen_pos().second - M_pen_poses.front().second;
 		scroll_size = max(scroll_size, scroll_size_to_default);
-	} else if(M_pen_poses.back().second > y2()){
+	} else if(M_pen_poses.back().second > -1.0f){
 		return;
 	} else{
-		scroll_size = min(scroll_size, y2() - M_pen_poses.back().second);
+		scroll_size = min(scroll_size, -1.0f - M_pen_poses.back().second);
 	}
 	auto new_starting_pen_pos = M_pen_poses.front();
 	new_starting_pen_pos.second += scroll_size;
 
 	set_starting_pen_pos(new_starting_pen_pos);
-	scroll_selection_boxes(0.0f, scroll_size);
+	scroll_selection_boxes(0.0f, M_frame->to_base_y_screen(scroll_size));
 	if(!is_cursor_pos_in_view(M_cursor_pos)){
 		M_cursor_line->set_line(J_Line());
 	} else{
@@ -924,12 +860,13 @@ void J_Text_Box::scroll(int i_scroll_val){
 	}
 }
 
-void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_pos){
+void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_base_pos){
+	Pen_Pos_FL_t frame_pos = M_frame->to_frame_pen_pos(i_base_pos);
 	if(!left_click_on_status()){
 		return;
 	}
 	j_set_cursor_type(J_I_BEAM_CURSOR_ID);
-	j_size_t cursor_index = get_cursor_index(i_pos);
+	j_size_t cursor_index = get_cursor_index(frame_pos);
 	set_cursor_pos(cursor_index);
 	M_selection.set_second_unordered_elem(cursor_index);
 	j_size_t low_bound = M_selection.first();
@@ -943,27 +880,30 @@ void J_Text_Box::alert_cursor_pos(Pen_Pos_FL_t i_pos){
 	}
 
 	int num_display_boxes = 0;
+	//TODO: Fix this
 
-	auto window = s_contexts->get_active_window();
 	auto cur_cursor_pos = low_bound;
 	while(cur_cursor_pos < right_bound){
 		J_Rectangle rectangle(M_pen_poses[cur_cursor_pos].first
 							  , M_pen_poses[cur_cursor_pos].second
-							  , 0.0f, new_line_screen_size());
+							  , 0.0f, new_line_frame_size());
 
 		j_float end_x_pos = rectangle.x1()
-			+ to_x_screen(window, M_multi_string.bitmap_metric(cur_cursor_pos).advance_x);
+			+ M_frame->to_x_screen(M_multi_string.bitmap_metric(cur_cursor_pos).advance_x);
 
 
 		while((cur_cursor_pos < right_bound)
-			  && (M_pen_poses[cur_cursor_pos].second == rectangle.y2())){
+			  && (M_pen_poses[cur_cursor_pos].second == rectangle.y1())){
 			end_x_pos = M_pen_poses[cur_cursor_pos].first;
-			end_x_pos += to_x_screen(window, M_multi_string.bitmap_metric(cur_cursor_pos).advance_x);
+			end_x_pos += M_frame->to_x_screen(M_multi_string.bitmap_metric(cur_cursor_pos).advance_x);
 
 			++cur_cursor_pos;
 		}
 		rectangle.set_x2(end_x_pos);
-		rectangle.set_y(rectangle.y2() - 0.01f);
+		rectangle.set_y(rectangle.y1() - 0.01f);
+
+		M_frame->to_base_screen(&rectangle);
+
 		if(M_selection_boxes.size() <= num_display_boxes){
 			assert(M_selection_boxes.size() == num_display_boxes);
 			
@@ -1219,26 +1159,35 @@ void J_Text_Box::alert_changed(){
 
 /*void J_Text_Box::draw()const*/
 void J_Text_Box::draw()const{
-	J_UI_Box::draw();
-	M_cursor_line->draw();
+	
+	
 	if(M_changed_flag){
 		render_frame_buffer();
 	}
 
+	J_UI_Box::draw();
+	for_each(M_selection_boxes.begin(), M_selection_boxes.end(),
+			 [](const J_UI_Box_Shared_t y_box){y_box->draw(); });
 
+	M_cursor_line->draw();
+	int x_res = get_x_res(s_contexts->get_active_window());
+	int y_res = get_y_res(s_contexts->get_active_window());
+	(void)x_res;
+	(void)y_res;
 	assert(M_framebuffer.valid());
 	assert(M_framebuffer.get_ID());
 	s_open_gl.bind_draw_framebuffer(J_GL_Framebuffer::null_object());
 
 
 
+
+
 	s_open_gl.use_program(image_shader_id());
 
-	
 
 	s_open_gl.bind_texture_2D(M_texture_render_buffer);
 
-	s_open_gl.bind_vertex_array(s_contexts->screen_box_vao());
+	s_open_gl.bind_vertex_array(get_box_vao());
 
 	s_open_gl.bind_texture_2D(M_texture_render_buffer);
 
@@ -1247,7 +1196,6 @@ void J_Text_Box::draw()const{
 	s_open_gl.debind_buffer(GL_Buffer_Targets::ARRAY_BUFFER);
 	s_open_gl.debind_texture(Texture_Target::TEXTURE_2D);
 
-	
 
 	s_open_gl.debind_program();
 
@@ -1255,13 +1203,16 @@ void J_Text_Box::draw()const{
 }
 
 void J_Text_Box::render_frame_buffer()const{
-	j_uint prev_width = get_x_res(s_contexts->get_active_window());
-	j_uint prev_height = get_y_res(s_contexts->get_active_window());;
+	auto window = s_contexts->get_active_window();
+//TODO: Make RAII for resseting previews viewport and buffer
+	j_uint prev_width = get_x_res(window);
+	j_uint prev_height = get_y_res(window);
 
 
 	s_open_gl.bind_draw_framebuffer(M_framebuffer);
 
-	s_open_gl.viewport(0, 0, prev_width, prev_height);
+
+	s_open_gl.viewport(0, 0, M_frame->width(), M_frame->height());
 
 	s_open_gl.set_clear_color(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -1272,7 +1223,7 @@ void J_Text_Box::render_frame_buffer()const{
 
 	auto start_view_pos
 		= lower_bound(M_letter_box_string->begin(), letter_draw_end
-		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y1(), 0.0f, 0.0f))
+		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, 1.0f, 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y1() - i_right->y1();
 		//hot fix
@@ -1287,7 +1238,7 @@ void J_Text_Box::render_frame_buffer()const{
 
 	auto end_view_pos
 		= lower_bound(M_letter_box_string->begin(), letter_draw_end
-		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, y2(), 0.0f, 0.0f))
+		, J_Rectangle_Shared_t(new J_Rectangle(0.0f, -1.0f, 0.0f, 0.0f))
 		, [](J_Rectangle_Shared_t i_left, J_Rectangle_Shared_t i_right){
 		j_float compare_val = i_left->y2() - i_right->y2();
 		//hot fix
@@ -1341,6 +1292,7 @@ void J_Text_Box::alert_resize(int /*i_width*/, int /*i_length*/){
 void J_Text_Box::reset_frame_buffer(){
 	M_framebuffer = J_GL_Framebuffer();
 	M_texture_render_buffer = J_GL_Texture();
+	M_frame.reset();
 	initialize_frame_buffer();
 }
 

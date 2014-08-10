@@ -39,6 +39,9 @@
     <ClInclude Include="J_GL_Objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_Frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Shader_Program.cpp">
@@ -51,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_GL_Objects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Frame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -83,6 +83,7 @@ void J_Image_Pane::set_image_height(int i_image_height){
 
 
 void J_Image_Pane::set_texture_clamp_parameters(){
+	
 	s_open_gl.texture_wrap_s(Texture_Target::TEXTURE_2D, Texture_Wrap_Type::CLAMP_TO_BORDER);
 
 	s_open_gl.texture_wrap_t(Texture_Target::TEXTURE_2D, Texture_Wrap_Type::CLAMP_TO_BORDER);

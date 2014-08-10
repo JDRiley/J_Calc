@@ -83,7 +83,7 @@ j_size_t Line_Input::output_start_pos()const{return M_start_pos + M_input.size()
 const J_UI_Multi_String& Line_Input::output_str()const{return M_output;}
 
 /*bool read_only_status(int)*/
-bool Line_Input::read_only_status(j_size_t i_pos){
+bool Line_Input::read_only_status(j_size_t i_pos)const{
 
 	return between_inclusive(i_pos, M_input.size() + 1
 		, M_input.size() + M_output.size()); 

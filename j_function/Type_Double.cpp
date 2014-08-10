@@ -1,7 +1,8 @@
 #include "Type_Double.h"
 //
 #include <j_type.h>
-
+//
+#include "j_value.h"
 namespace jomike{
 
 
@@ -27,9 +28,9 @@ j_value Type_Double::convert_value(const j_value& irk_val)const{
 	case j_value::Value_Types::BOOL:
 		return j_value(irk_val.as_bool() ? 1.0 : 0.0, irk_val.units());
 	case j_value::Value_Types::STRING:
-		assert(!"Cannot convert string to double");
+		throw J_Value_Error("Cannot implicitly convert string to double");
 	case j_value::Value_Types::UNDEFINIED:
-		assert(!"Cannot convert undefined to double");
+		throw J_Value_Error("Cannot implicitly convert undefined to double");
 	default:
 		assert(0);
 		return j_value();

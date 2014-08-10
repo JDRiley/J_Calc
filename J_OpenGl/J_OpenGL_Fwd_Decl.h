@@ -22,6 +22,7 @@ J_FWD_DECL(J_GL_Vertex_Array)
 J_FWD_DECL(J_GL_Framebuffer)
 J_FWD_DECL(J_GL_Buffer)
 J_FWD_DECL(J_GL_Line_Shader)
+J_FWD_DECL(J_Frame)
 }
 
 

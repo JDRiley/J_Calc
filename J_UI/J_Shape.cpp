@@ -81,10 +81,12 @@ J_Rectangle::J_Rectangle(j_float i_x, j_float i_y, j_float i_width, j_float i_he
 
 j_float J_Rectangle::x1()const{return M_x_pos;}
 j_float J_Rectangle::x2()const{return M_x_pos + M_width;}
-j_float J_Rectangle::y1()const{
+
+j_float J_Rectangle::y1()const{return M_y_pos;}
+
+j_float J_Rectangle::y2()const{
 	return M_y_pos + M_height;
 }
-j_float J_Rectangle::y2()const{return M_y_pos;}
 
 
 J_Rectangle* J_Rectangle::get_copy()const{
@@ -92,15 +94,15 @@ J_Rectangle* J_Rectangle::get_copy()const{
 }
 
 void J_Rectangle::set_box(j_float i_x1, j_float i_x2, j_float i_y1, j_float i_y2){
-	if(!(i_y2 <= i_y1) || !(i_x2 >= i_x1)){
+	if(!(i_y1 <= i_y2) || !(i_x2 >= i_x1)){
 		throw J_Argument_Error("Invalid Args given to J_Rectangle set_box()");
 	}
 	M_x_pos = i_x1;
-	M_y_pos = i_y2;
+	M_y_pos = i_y1;
 	
 	M_width = i_x2 - i_x1;
 	
-	M_height = i_y1 - i_y2;
+	M_height = i_y2 - i_y1;
 }
 
 void J_Rectangle::set_box(const J_Rectangle& irk_rec){
@@ -145,7 +147,7 @@ void J_Rectangle::set_y(j_float i_y){
 }
 
 bool J_Rectangle::is_y_inside(j_float i_y)const{
-	return between_inclusive(i_y, y2(), y1());
+	return between_inclusive(i_y, y1(), y2());
 
 }
 

@@ -14,6 +14,8 @@
 //
 #include <Binary_Function_Chain_Symbol.h>
 //
+#include <Unary_Function_Symbol.h>
+//
 #include <J_Symbol_Identifier.h>
 //
 #include <Arguments.h>
@@ -79,13 +81,23 @@ J_Calc_Data::J_Calc_Data(){
 
 void init_reserve_keywords(j_tree<J_UI_String>* ir_dest_set){
 	ir_dest_set->clear();
+	auto add_keyword = [ir_dest_set](const char* y_name){
+		ir_dest_set->insert(y_name);
+	};
+
 	ir_dest_set->insert("Dbl");
+	ir_dest_set->insert("dbl");
+	ir_dest_set->insert("int");
 	ir_dest_set->insert("Alias");
 	ir_dest_set->insert("J_Calc");
 	ir_dest_set->insert("Int");
 	ir_dest_set->insert("Routine");
 	ir_dest_set->insert("gcd");
 	ir_dest_set->insert("lcm");
+	add_keyword("is_print");
+	add_keyword("does_divide");
+	add_keyword("parse_int");
+
 	ir_dest_set->insert("least_common_multiple");
 }
 
@@ -213,6 +225,17 @@ void J_Calc_Data::init_reserved_symbols(){
 	M_reserved_symbols["lcm"] 
 		= new LLint_Binary_Function_Symbol(least_common_multiple
 		, "least_common_multiple");
+
+	M_reserved_symbols["is_prime"]
+		= new Unary_Function_Symbol<bool, j_llint>(is_prime, "is_prime");
+
+
+	using std::stoll; 
+	M_reserved_symbols["parse_int"]
+		= new Unary_Function_Symbol<j_llint, const string&>(
+		bind(static_cast<j_llint(*)(const string&, size_t*, int)>(stoll), _1, nullptr, 10), "parse_int");
+
+
 }
 
 void J_Calc_Data::update(){

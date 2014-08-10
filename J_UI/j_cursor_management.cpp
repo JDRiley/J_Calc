@@ -10,6 +10,8 @@
 
 //
 #include <cassert>
+//
+#include <J_Utile.h>
 namespace jomike{
 	
 HANDLE get_cursor_handle(int i_ordinal){
@@ -24,6 +26,9 @@ const std::map<int, HANDLE> sk_cursors = {
 };
 
 void j_set_cursor_type(int i_cursor_id){
+	if(j_true){
+		return;
+	}
 	auto cursor_it = sk_cursors.find(i_cursor_id);
 	assert(sk_cursors.end() != cursor_it);
 	SetCursor(static_cast<HCURSOR>(cursor_it->second));

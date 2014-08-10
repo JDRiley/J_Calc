@@ -4,11 +4,12 @@
 #include "J_Symbol_Fwd_Decl.h"
 //
 #include <J_Error.h>
-
+//
+#include <string>
 namespace jomike{
 class J_Sym_Argument_Error : public J_Error{
 public:
-	J_Sym_Argument_Error(const char * const ik_message = "invalid args");
+	J_Sym_Argument_Error(const std::string&  ik_message = "invalid args");
 private:
 };
 

@@ -19,6 +19,7 @@ public:
 	//Constructors
 	j_value(Dbl_t, J_Unit);
 	j_value(j_llint, J_Unit);
+	j_value(j_int, J_Unit);
 	j_value(bool, J_Unit);
 	j_value(const std::string&, J_Unit);
 	j_value(const j_value&, J_Unit);
@@ -46,6 +47,16 @@ public:
 	j_llint as_type<j_llint>()const{
 		return as_llint();
 	}
+
+	template<>
+	std::string as_type<std::string>()const{
+		return as_string();
+	}
+
+	template<>
+	const std::string& as_type<const std::string&>()const{
+		return as_string();
+	}
 	
 
 	std::string to_str()const;
@@ -55,6 +66,9 @@ public:
 	j_value& operator-=(const j_value&);
 	j_value& operator*=(const j_value&);
 	j_value& operator/=(const j_value&);
+
+	j_value operator-()const;
+
 	bool operator==(const j_value&)const;
 	bool operator!=(const j_value&)const;
 	bool is_convertible(J_Unit)const;

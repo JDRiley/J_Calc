@@ -111,7 +111,8 @@ J_Calc_Controller::J_Calc_Controller():M_continue_flag(true){
 	M_main_view->subscribe_cursor_updates(main_text_box_ptr);
 
 	main_text_box_ptr->set_cursor_pos(0);
-
+	M_main_view->set_focused_object(main_text_box_ptr);
+	
 
 
 
@@ -176,7 +177,7 @@ void J_Calc_Controller::execute(){
 	run_script("button_press.jcs");
 	//run_script("in_script2.jcs");
 #else
-	run_script("mouse_press.jcs");
+	//run_script("button_press.jcs");
 #endif
 
 

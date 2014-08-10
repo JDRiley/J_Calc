@@ -5,10 +5,14 @@
 
 
 namespace jomike{
+	
+extern const int EXTRA_CHAR_DPI_FACTOR;
 
 struct Bitmap_Metrics{
 	int width;
 	int height;
+	int buffer_width;
+	int buffer_height;
 	int left;
 	int underreach;
 	int advance_x;

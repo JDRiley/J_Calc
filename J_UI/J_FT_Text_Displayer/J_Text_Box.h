@@ -254,7 +254,7 @@ private:
 	
 	Pen_Pos_FL_t default_pen_pos()const;
 	Pen_Pos_FL_t new_line_pen_pos(Pen_Pos_FL_t i_cur_pen)const;
-	j_float new_line_screen_size()const;
+	j_float new_line_frame_size()const;
 	Pen_Pos_FL_t calculate_pen_advance(Pen_Pos_FL_t i_cur_pen
 									, int i_advance)const;
 	
@@ -288,6 +288,8 @@ private:
 	Array_Modifier_Manger<ex_array<J_UI_Letter_Box_Shared_t>> M_letter_box_string;
 	ex_array<J_UI_Box_Shared_t> M_selection_boxes;
 	ex_array<Pen_Pos_FL_t> M_pen_poses;
+
+	J_Frame_Unique_t M_frame;
 
 	Pen_Pos_FL_t M_last_set_cursor_pos;
 	j_size_t M_cursor_pos;

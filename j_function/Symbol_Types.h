@@ -30,6 +30,10 @@ struct CPP_To_Symbol_Type<long long>{
 	static Symbol_Types type(){ return Symbol_Types::INT; }
 };
 
+template<>
+struct CPP_To_Symbol_Type<bool>{
+	static Symbol_Types type(){ return Symbol_Types::BOOL; }
+};
 
 
 }

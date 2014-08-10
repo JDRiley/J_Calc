@@ -51,7 +51,7 @@ public:
 	//void advance_whitespace();
 
 	//Test
-	bool read_only_status(j_size_t pos);
+	bool read_only_status(j_size_t pos)const;
 	bool is_inside_input(j_size_t pos);
 private:
 	j_size_t M_start_pos;

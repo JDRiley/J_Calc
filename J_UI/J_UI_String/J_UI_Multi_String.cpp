@@ -393,6 +393,7 @@ void J_UI_Multi_String::push_back(const J_UI_String& irk_string){
 	}else{
 		M_strings.push_back(irk_string);
 	}
+
 }
 J_UI_Multi_String::iterator J_UI_Multi_String::begin(){return M_strings.begin();}
 J_UI_Multi_String::const_iterator J_UI_Multi_String::begin()const{return M_strings.begin();}
@@ -511,7 +512,7 @@ J_UI_Multi_String J_UI_Multi_String::operator+(const char* irk_string)const{
 J_UI_Multi_String J_UI_Multi_String::operator+(const J_UI_Multi_String& irk_string)const{
 	J_UI_Multi_String new_string(*this);
 	for(const auto& f_string : irk_string){
-		new_string.M_strings.push_back(f_string);
+		new_string.push_back(f_string);
 	}
 	return new_string;
 }

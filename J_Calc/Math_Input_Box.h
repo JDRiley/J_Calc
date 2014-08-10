@@ -26,7 +26,14 @@ public:
 
 	bool insert_char(J_UI_Char);
 
+	void move_cursor(j_size_t i_amount)override;
 
+	bool is_read_only_status(j_size_t i_cursor_pos)const;
+
+	void mouse_button_press(int i_key, int i_modifiers, Pen_Pos_FL_t i_pen_pos)override;
+
+	void mouse_button_release(int i_button, int, Pen_Pos_FL_t i_pos)override;
+	
 
 private:
 	static void math_key_input_cmd(J_Text_Box_Object_Shared_t i_math_box
@@ -41,7 +48,10 @@ private:
 	typedef Line_Input_Cont_t::iterator Line_Input_it;
 	Line_Input_Cont_t M_line_inputs;
 	Line_Input_Cont_t::iterator lower_bound_line_input(j_size_t pos);
+	Line_Input_Cont_t::const_iterator lower_bound_line_input(j_size_t pos)const;
 	Line_Input_Cont_t::iterator get_line_pos_at_pos(j_size_t pos);
+
+	Line_Input_Cont_t::const_iterator get_line_pos_at_pos(j_size_t pos)const;
 	Line_Input& get_line_at_pos(j_size_t pos);
 	Line_Input_it join_to_next(Line_Input_it);
 	void key_backspace();
@@ -49,6 +59,8 @@ private:
 	void insert_line_input(const Line_Input&);
 	void eval_and_break_line_input();
 	Line_Input_it clear_output(Line_Input_Cont_t::iterator);
+
+	void move_cursor_to_input_end();
 };
 
 }

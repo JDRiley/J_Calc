@@ -206,6 +206,7 @@ Variable_Declaration
 Type 
 : T_DOUBLE{$$ = make_double_type_syntax();}
 | T_INT{$$ = make_int_type_syntax();}
+| T_BOOL{$$ = make_bool_type_syntax();}
 ;
 
 Expression
@@ -243,7 +244,9 @@ Expression
 	
 }
 | '(' Expression ')' {$$ = $2;  }
-	
+| '-' Expression{
+	$$ = new Unary_Negate_Expression($2);
+}
 ;
 
 Assignment_Expression

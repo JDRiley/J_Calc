@@ -156,6 +156,18 @@
     <ClInclude Include="Binary_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Unary_Function_Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Type_Bool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Unary_Operator_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Unary_Negate_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -264,6 +276,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Binary_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Type_Bool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Unary_Operator_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Unary_Negate_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
