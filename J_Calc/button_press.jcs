@@ -1,4 +1,3 @@
-char_press dbl c<-3;
-char_press -c*-c;
-char_press c- c*-c;
+char_press af;
+char_press af;
 end

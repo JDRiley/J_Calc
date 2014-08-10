@@ -4,6 +4,8 @@
 #include "J_Calc_Fwd_Decl.h"
 //
 #include <J_UI\J_UI_String.h>
+//
+#include <J_Symbol_Fwd_Decl.h>
 //Containers
 #include <j_tree.h>
 //

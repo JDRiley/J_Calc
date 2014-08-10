@@ -342,79 +342,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="parser.h">
-      <AdditionalInputs>parser.y;</AdditionalInputs>
-      <Command>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
-      <Message>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
-      <Outputs>math_parsing_unit.cc;math_parsing_unit.hh%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="Math_Lexer.h">
-      <AdditionalInputs>Math_Lexer.h;Math_Lexer.l;</AdditionalInputs>
-      <Command>win_flex -d -oMath_YY_Lex.cpp Math_Lexer.l</Command>
-      <Message>win_flex -d -oMath_YY_Lex.cpp Math_Lexer.l</Message>
-      <Outputs>Math_YY_Lex.cpp;%(Outputs)</Outputs>
-    </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="J_Calc_Controller.h" />
     <ClInclude Include="J_Calc_Data.h" />
     <ClInclude Include="J_Calc_Error.h" />
     <ClInclude Include="J_Calc_Functional.h" />
     <ClInclude Include="J_Calc_Fwd_Decl.h" />
-    <ClInclude Include="J_Calc_Parser.h" />
     <ClInclude Include="J_Calc_View.h" />
     <ClInclude Include="j_conditional_construct_symbol.h" />
     <ClInclude Include="j_construct_symbol.h" />
     <ClInclude Include="j_function_factory.h" />
-    <ClInclude Include="j_yy_stack.h" />
-    <ClInclude Include="Lexer_Location.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
-    <ClInclude Include="Math_Parser.h" />
-    <ClInclude Include="math_parsing_unit.hh" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp" />
     <ClCompile Include="J_Calc_Controller.cpp" />
     <ClCompile Include="J_Calc_Data.cpp" />
     <ClCompile Include="J_Calc_Error.cpp" />
-    <ClCompile Include="J_Calc_Parser.cpp" />
     <ClCompile Include="J_Calc_View.cpp" />
     <ClCompile Include="j_conditional_construct_symbol.cpp" />
     <ClCompile Include="j_function_factory.cpp" />
     <ClCompile Include="Line_Input.cpp" />
     <ClCompile Include="Math_Input_Box.cpp" />
-    <ClCompile Include="Math_Lexer.cpp" />
-    <ClCompile Include="Math_Parser.cc" />
-    <ClCompile Include="math_parsing_unit.cc">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="Math_YY_Lex.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='AssertHappy|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers\jtl.natvis" />
     <None Include="button_press.jcs" />
     <None Include="parser.output" />
-    <None Include="parser.y" />
-    <None Include="Math_Lexer.l">
-      <FileType>Document</FileType>
-    </None>
     <None Include="test_script.jcs" />
     <None Include="x64\AssertHappy\in_script.jcs" />
   </ItemGroup>

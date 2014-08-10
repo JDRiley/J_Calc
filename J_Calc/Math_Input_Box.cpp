@@ -12,7 +12,7 @@
 using std::bind; using std::is_sorted; using std::less; using std::lower_bound; using std::mem_fn;
 using namespace std::placeholders; using std::dynamic_pointer_cast;
 
-//Utilities
+//Utilities,
 #include <cassert>
 //
 #include <vector>
@@ -147,7 +147,7 @@ void Math_Input_Box::key_delete(){
 	}
 	auto line_input_pos = get_line_pos_at_pos(get_cursor_pos());
 
-	j_size_t initial_line_start_pos = line_input_pos->start_pos();
+	//j_size_t initial_line_start_pos = line_input_pos->start_pos();
 
 	j_size_t char_pos = get_cursor_pos() - line_input_pos->start_pos();
 	
@@ -159,15 +159,13 @@ void Math_Input_Box::key_delete(){
 		return;
 	}
 
+	line_input_pos->delete_char(char_pos);
+	for_each(line_input_pos + 1, M_line_inputs.end(), bind(&Line_Input::decrement_pos, _1, 1));
+	J_Text_Box::delete_char();
 
 	line_input_pos = clear_output(line_input_pos);
-	J_Text_Box::move_cursor(line_input_pos->start_pos() - initial_line_start_pos);
-	if(line_input_pos->input_str().size() != char_pos){
-		line_input_pos->delete_char(char_pos);
-		for_each(line_input_pos + 1, M_line_inputs.end(), bind(&Line_Input::decrement_pos, _1, 1));
-		J_Text_Box::delete_char();
-	}
 	
+
 }
 
 /*void char_input_cmd(j_window_t, j_ulint)*/
@@ -261,18 +259,18 @@ Math_Input_Box::Line_Input_it Math_Input_Box::clear_output(Line_Input_it i_pos){
 	if(!i_pos->output_status()){
 		return i_pos;
 	}
-	j_size_t return_cursor_pos = i_pos->input_end_pos() == get_cursor_pos() ?  get_cursor_pos() - 1 : get_cursor_pos();
+	j_size_t return_cursor_pos = get_cursor_pos();//i_pos->input_end_pos() == get_cursor_pos() ?  get_cursor_pos() - 1 : get_cursor_pos();
 
 	
-	j_size_t deletetion_size = i_pos->output_str().size() + 1/*The "+1" is cause we added the Line_END_SYMBOL char for deletion*/;
+	j_size_t deletetion_size = i_pos->output_str().size();// + 1/*The "+1" is cause we added the Line_END_SYMBOL char for deletion*/;
 
 
 
-	J_Text_Box::erase_chars(i_pos->output_start_pos() - 1 /*The "-1" is to delete the LINE_END_SYMBOL char*/
+	J_Text_Box::erase_chars(i_pos->output_start_pos()// - 1 /*The "-1" is to delete the LINE_END_SYMBOL char*/
 		, deletetion_size);
 
 	i_pos->clear_output();
-	i_pos->delete_char(i_pos->input_str().size() -1);
+	//i_pos->delete_char(i_pos->input_str().size() -1);
 
 	J_Text_Box::insert_string(i_pos->output_str());
 	J_Text_Box::set_cursor_pos(return_cursor_pos);
@@ -284,6 +282,7 @@ Math_Input_Box::Line_Input_it Math_Input_Box::clear_output(Line_Input_it i_pos){
 
 	if((M_line_inputs.begin() != i_pos) && !(i_pos-1)->output_status()){
 		i_pos = join_to_next(i_pos-1);
+		
 	}
 	if((M_line_inputs.end() != (i_pos+1)) && !(i_pos+1)->output_status()){
 		i_pos = join_to_next(i_pos);

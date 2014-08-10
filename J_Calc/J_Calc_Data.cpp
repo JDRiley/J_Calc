@@ -25,6 +25,11 @@ using std::string; using std::accumulate;
 
 namespace jomike{
 
+void add_user_symbol(j_symbol* i_symbol){
+	static Instance_Pointer<J_Calc_Data> s_data;
+	return s_data->add_user_symbol(i_symbol);
+}
+
 j_symbol* get_j_symbol(const J_UI_String& irk_name){
 	static Instance_Pointer<J_Calc_Data> s_data;
 	return s_data->get_symbol(irk_name);

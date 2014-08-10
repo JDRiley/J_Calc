@@ -1,0 +1,295 @@
+Terminals unused in grammar
+
+   T_VOID
+   T_BOOL
+   T_STRING
+   T_NULL_PTR
+   '='
+   T_OR
+   T_AND
+   T_NOT_EQUAL
+   T_EQUAL
+   '>'
+   '<'
+   T_GREATER_EQUAL
+   T_LESS_EQUAL
+   '+'
+   '-'
+   '*'
+   '/'
+   '%'
+   '!'
+   T_DECREMENT
+   T_INCREMENT
+   NEGATION
+   '.'
+   '['
+   T_DIMENSIONS
+
+
+Grammar
+
+    0 $accept: Input_Line $end
+
+    1 Input_Line: Expression ';'
+    2           | Declaration
+
+    3 Declaration: Variable_Declaration
+
+    4 Variable_Declaration: Type T_IDENTIFIER
+    5                     | Type T_IDENTIFIER T_RIGHT_ARROW Expression ';'
+    6                     | Type T_IDENTIFIER T_LEFT_ARROW Expression ';'
+
+    7 Type: T_DOUBLE
+    8     | T_INT
+
+    9 Expression: Constant_Expression
+
+   10 Constant_Expression: T_INTEGER_CONSTANT
+   11                    | T_DOUBLE_CONSTANT
+   12                    | T_BOOL_CONSTANT
+   13                    | T_STRING_CONSTANT
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33)
+'%' (37)
+'*' (42)
+'+' (43)
+'-' (45)
+'.' (46)
+'/' (47)
+';' (59) 1 5 6
+'<' (60)
+'=' (61)
+'>' (62)
+'[' (91)
+error (256)
+T_VOID (258)
+T_BOOL (259)
+T_INT (260) 8
+T_DOUBLE (261) 7
+T_STRING (262)
+T_NULL_PTR (263)
+T_LEFT_ARROW (264) 6
+T_RIGHT_ARROW (265) 5
+T_IDENTIFIER (266) 4 5 6
+T_STRING_CONSTANT (267) 13
+T_INTEGER_CONSTANT (268) 10
+T_DOUBLE_CONSTANT (269) 11
+T_BOOL_CONSTANT (270) 12
+T_OR (271)
+T_AND (272)
+T_NOT_EQUAL (273)
+T_EQUAL (274)
+T_GREATER_EQUAL (275)
+T_LESS_EQUAL (276)
+T_DECREMENT (277)
+T_INCREMENT (278)
+NEGATION (279)
+T_DIMENSIONS (280)
+
+
+Nonterminals, with rules where they appear
+
+$accept (38)
+    on left: 0
+Input_Line (39)
+    on left: 1 2, on right: 0
+Declaration (40)
+    on left: 3, on right: 2
+Variable_Declaration (41)
+    on left: 4 5 6, on right: 3
+Type (42)
+    on left: 7 8, on right: 4 5 6
+Expression (43)
+    on left: 9, on right: 1 5 6
+Constant_Expression (44)
+    on left: 10 11 12 13, on right: 9
+
+
+State 0
+
+    0 $accept: . Input_Line $end
+
+    T_INT               shift, and go to state 1
+    T_DOUBLE            shift, and go to state 2
+    T_STRING_CONSTANT   shift, and go to state 3
+    T_INTEGER_CONSTANT  shift, and go to state 4
+    T_DOUBLE_CONSTANT   shift, and go to state 5
+    T_BOOL_CONSTANT     shift, and go to state 6
+
+    Input_Line            go to state 7
+    Declaration           go to state 8
+    Variable_Declaration  go to state 9
+    Type                  go to state 10
+    Expression            go to state 11
+    Constant_Expression   go to state 12
+
+
+State 1
+
+    8 Type: T_INT .
+
+    $default  reduce using rule 8 (Type)
+
+
+State 2
+
+    7 Type: T_DOUBLE .
+
+    $default  reduce using rule 7 (Type)
+
+
+State 3
+
+   13 Constant_Expression: T_STRING_CONSTANT .
+
+    $default  reduce using rule 13 (Constant_Expression)
+
+
+State 4
+
+   10 Constant_Expression: T_INTEGER_CONSTANT .
+
+    $default  reduce using rule 10 (Constant_Expression)
+
+
+State 5
+
+   11 Constant_Expression: T_DOUBLE_CONSTANT .
+
+    $default  reduce using rule 11 (Constant_Expression)
+
+
+State 6
+
+   12 Constant_Expression: T_BOOL_CONSTANT .
+
+    $default  reduce using rule 12 (Constant_Expression)
+
+
+State 7
+
+    0 $accept: Input_Line . $end
+
+    $end  shift, and go to state 13
+
+
+State 8
+
+    2 Input_Line: Declaration .
+
+    $default  reduce using rule 2 (Input_Line)
+
+
+State 9
+
+    3 Declaration: Variable_Declaration .
+
+    $default  reduce using rule 3 (Declaration)
+
+
+State 10
+
+    4 Variable_Declaration: Type . T_IDENTIFIER
+    5                     | Type . T_IDENTIFIER T_RIGHT_ARROW Expression ';'
+    6                     | Type . T_IDENTIFIER T_LEFT_ARROW Expression ';'
+
+    T_IDENTIFIER  shift, and go to state 14
+
+
+State 11
+
+    1 Input_Line: Expression . ';'
+
+    ';'  shift, and go to state 15
+
+
+State 12
+
+    9 Expression: Constant_Expression .
+
+    $default  reduce using rule 9 (Expression)
+
+
+State 13
+
+    0 $accept: Input_Line $end .
+
+    $default  accept
+
+
+State 14
+
+    4 Variable_Declaration: Type T_IDENTIFIER .
+    5                     | Type T_IDENTIFIER . T_RIGHT_ARROW Expression ';'
+    6                     | Type T_IDENTIFIER . T_LEFT_ARROW Expression ';'
+
+    T_LEFT_ARROW   shift, and go to state 16
+    T_RIGHT_ARROW  shift, and go to state 17
+
+    $default  reduce using rule 4 (Variable_Declaration)
+
+
+State 15
+
+    1 Input_Line: Expression ';' .
+
+    $default  reduce using rule 1 (Input_Line)
+
+
+State 16
+
+    6 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW . Expression ';'
+
+    T_STRING_CONSTANT   shift, and go to state 3
+    T_INTEGER_CONSTANT  shift, and go to state 4
+    T_DOUBLE_CONSTANT   shift, and go to state 5
+    T_BOOL_CONSTANT     shift, and go to state 6
+
+    Expression           go to state 18
+    Constant_Expression  go to state 12
+
+
+State 17
+
+    5 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW . Expression ';'
+
+    T_STRING_CONSTANT   shift, and go to state 3
+    T_INTEGER_CONSTANT  shift, and go to state 4
+    T_DOUBLE_CONSTANT   shift, and go to state 5
+    T_BOOL_CONSTANT     shift, and go to state 6
+
+    Expression           go to state 19
+    Constant_Expression  go to state 12
+
+
+State 18
+
+    6 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW Expression . ';'
+
+    ';'  shift, and go to state 20
+
+
+State 19
+
+    5 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW Expression . ';'
+
+    ';'  shift, and go to state 21
+
+
+State 20
+
+    6 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW Expression ';' .
+
+    $default  reduce using rule 6 (Variable_Declaration)
+
+
+State 21
+
+    5 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW Expression ';' .
+
+    $default  reduce using rule 5 (Variable_Declaration)
