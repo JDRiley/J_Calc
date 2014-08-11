@@ -32,9 +32,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "J_Math", "..\J_Math\J_Math.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ex_array", "..\ex_array\ex_array.vcxproj", "{FEE038CD-2097-4ED6-9C59-D9BF7DC8B1F6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RB_Tree", "..\J_RB_Tree\RB_Tree.vcxproj", "{3565A91E-F71E-45C6-8AE6-2FBCB43DEAA7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D088A431-2A96-44FF-BD1E-33F53C3FBCE8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "J_RB_Tree", "..\J_RB_Tree\J_RB_Tree.vcxproj", "{3565A91E-F71E-45C6-8AE6-2FBCB43DEAA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
