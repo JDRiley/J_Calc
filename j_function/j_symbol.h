@@ -10,8 +10,10 @@
 #include "Constant_Symbol_Factory.h"
 namespace jomike{
 
-
+//So Created to prevent including Arguments.h in this header.
+//Empty arguments can then be passed as a default parameter
 const Arguments& empty_arguments();
+
 class j_symbol : public j_symbol_component{
 public:
 	j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
