@@ -370,9 +370,6 @@
   <ItemGroup>
     <ClInclude Include="Bitmap_Metrics.h" />
     <ClInclude Include="j_cursor_management.h" />
-    <ClInclude Include="J_Display_Image_Pane.h" />
-    <ClInclude Include="J_Display_Object\J_Display_Line.h" />
-    <ClInclude Include="J_Display_Object\J_Display_Object.h" />
     <ClInclude Include="J_Font_Face.h" />
     <ClInclude Include="J_Font_Manager.h" />
     <ClInclude Include="J_FT_Text_Displayer\J_UI_Letter_Box.h" />

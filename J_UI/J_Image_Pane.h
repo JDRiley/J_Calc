@@ -16,6 +16,11 @@ public:
 	J_Image_Pane(const J_Rectangle&, GL_Pixel_Formats format, int width = 0, int height = 0 );
 
 	J_Image_Pane(const J_Image_Pane&) = delete;
+	J_Image_Pane(J_Image_Pane&&) = delete;
+	J_Image_Pane& operator=(const J_Image_Pane&) = delete;
+	J_Image_Pane& operator=(J_Image_Pane&&) = delete;
+	
+
 
 	void set_buffer(const j_ubyte*);
 	void draw()const;

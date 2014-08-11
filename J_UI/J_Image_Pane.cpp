@@ -30,6 +30,8 @@ J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
 
 
+
+
 	s_open_gl.bind_texture_2D(M_texture);
 
 
@@ -266,6 +268,7 @@ int J_Image_Pane::num_channels(){
 	assert(!"Unhandled Sized Internal Format");
 	return -1;
 }
+
 
 J_Image_Pane::~J_Image_Pane(){
 
