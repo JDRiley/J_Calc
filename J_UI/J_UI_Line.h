@@ -3,6 +3,8 @@
 
 #include "J_UI_Object.h"
 //
+#include <J_Line.h>
+//
 #include <J_OpenGL_Fwd_Decl.h>
 //
 #include <J_GL_Objects.h>

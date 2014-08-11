@@ -48,9 +48,6 @@
     <ClInclude Include="J_UI_Object_Factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_Shape.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="J_Image_Pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +90,9 @@
     <ClInclude Include="J_UI_String\J_UI_Multi_String.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_Outline_Fill_Management.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_UI_Controller.cpp">
@@ -123,9 +123,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_UI_Object_Factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Image_Pane.cpp">
@@ -165,6 +162,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_UI_String\J_UI_Multi_String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Outline_Fill_Management.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

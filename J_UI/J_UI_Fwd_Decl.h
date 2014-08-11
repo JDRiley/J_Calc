@@ -66,6 +66,11 @@ J_FWD_DECL(J_UI_Object_Update_Callback)
 J_FWD_DECL(J_Cursor_Position)
 J_FWD_DECL(J_UI_Line)
 J_FWD_DECL(J_Display_Line)
+
+template<typename Num_t>
+struct J_Color_RGBA;
+typedef J_Color_RGBA<j_float> J_UI_Color;
+
 typedef class J_Font_Face__* J_Font_Face;
 
 typedef int j_key_id_t;

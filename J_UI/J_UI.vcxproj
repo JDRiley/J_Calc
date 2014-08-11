@@ -380,7 +380,7 @@
     <ClInclude Include="J_Image\J_Image.h" />
     <ClInclude Include="J_Image_Pane.h" />
     <ClInclude Include="J_Notification_Handler.h" />
-    <ClInclude Include="J_Shape.h" />
+    <ClInclude Include="J_Outline_Fill_Management.h" />
     <ClInclude Include="J_UI.h" />
     <ClInclude Include="J_UI_Box.h" />
     <ClInclude Include="J_UI_Circle.h" />
@@ -407,7 +407,7 @@
     <ClCompile Include="J_Image\J_Image.cpp" />
     <ClCompile Include="J_Image_Pane.cpp" />
     <ClCompile Include="J_Notification_Handler.cpp" />
-    <ClCompile Include="J_Shape.cpp" />
+    <ClCompile Include="J_Outline_Fill_Management.cpp" />
     <ClCompile Include="J_UI.cpp" />
     <ClCompile Include="J_UI_Box.cpp" />
     <ClCompile Include="J_UI_Circle.cpp" />

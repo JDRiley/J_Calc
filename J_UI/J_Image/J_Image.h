@@ -1,6 +1,6 @@
 #ifndef J_IMAGE_H
 #define J_IMAGE_H
-#include "../../J_Utile/J_Fwd_Decl.h"
+#include "../J_UI_Fwd_Decl.h"
 
 #include <limits>
 //
@@ -86,7 +86,7 @@ struct J_Color_RGBA{
 	}
 };
 
-typedef J_Color_RGBA<j_float> J_UI_Color;
+
 
 namespace J_Color{
 	const J_Color_RGBA<j_float> White(1.0f,1.0f,1.0f,1.0f);

@@ -3,7 +3,7 @@
 
 #include "J_UI_Object.h"
 //
-#include "J_Shape.h"
+#include <J_Rectangle.h>
 //
 #include "J_GL_Objects.h"
 

@@ -3,11 +3,11 @@
 
 #include "J_UI_Fwd_Decl.h"
 //
-#include "J_Image/J_Image.h"
+#include "J_Outline_Fill_Management.h"
 //Container
 #include <ex_array.h>
 
-#include "J_Shape.h"
+#include <J_Shape.h>
 //
 #include "J_Notification_Handler.h"
 namespace jomike{

@@ -7,6 +7,8 @@
 
 
 namespace jomike{
+
+//Manages Cursor positions and updates frames/per/second of event loop
 class J_UI{
 public:
 	static J_UI& get_instance();
