@@ -3,6 +3,7 @@
 
 namespace jomike{
 
+
 extern const int EXTRA_CHAR_DPI_FACTOR = 1;
 
 Bitmap_Metrics::Bitmap_Metrics(int i_width, int i_height, int i_left

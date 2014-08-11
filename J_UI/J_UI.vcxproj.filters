@@ -116,12 +116,6 @@
     <ClCompile Include="J_View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="J_Display_Object\J_Display_Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_FT_Text_Displayer\J_FT_Text_Display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="J_FT_Text_Displayer\J_Text_Box.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -143,9 +137,6 @@
     <ClCompile Include="J_Shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="J_Display_Image_Pane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="J_Image_Pane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -162,9 +153,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bitmap_Metrics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_Display_Object\J_Display_Line.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_UI_Line.cpp">

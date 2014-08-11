@@ -14,6 +14,9 @@ namespace jomike{
 class J_Image_Pane : public J_UI_Box{
 public:
 	J_Image_Pane(const J_Rectangle&, GL_Pixel_Formats format, int width = 0, int height = 0 );
+
+	J_Image_Pane(const J_Image_Pane&) = delete;
+
 	void set_buffer(const j_ubyte*);
 	void draw()const;
 	void set_image_width(int);

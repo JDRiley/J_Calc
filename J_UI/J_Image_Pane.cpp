@@ -8,7 +8,9 @@
 namespace jomike{
 
 static J_Open_GL s_open_gl;
+
 static int image_shader_id(){
+	//This is to prevent the generation of an image_shader glsl program for every image pane
 	static Image_Shader_Program s_image_shader(Image_Format::RGBA32_UBYTE);
 	return s_image_shader.program_id();
 }
@@ -21,6 +23,7 @@ J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 	assert(image_width() >= 0);
 	M_format = i_format;
 
+	//Clear buffer
 	set_buffer(nullptr);
 }
 
@@ -28,7 +31,10 @@ void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
 
 
 	s_open_gl.bind_texture_2D(M_texture);
+
+
 	if(image_width() && image_height()){
+		// Only if width and height are above zero. 
 		s_open_gl.tex_sub_image_2D_ubyte(
 			Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height()
 			, M_format, i_buffer);
@@ -56,7 +62,6 @@ void J_Image_Pane::set_image_width(int i_image_width){
 	set_texture_clamp_parameters();
 
 	s_open_gl.debind_program();
-	//clear_image();
 }
 
 void J_Image_Pane::set_image_height(int i_image_height){
@@ -77,8 +82,6 @@ void J_Image_Pane::set_image_height(int i_image_height){
 	set_texture_clamp_parameters();
 	
 	s_open_gl.debind_program();
-	//clear_image();
-	
 }
 
 
@@ -110,6 +113,7 @@ void J_Image_Pane::clear_image(){
 
 	s_open_gl.bind_texture_2D(M_texture);
 	if(image_height() && image_width()){
+		//only if height and width pixels is above zero
 		s_open_gl.tex_sub_image_2D_ubyte(
 			Texture_Target::TEXTURE_2D, 0, 0, 0, image_width(), image_height(), M_format, zeros.data());
 	}
