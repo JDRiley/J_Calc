@@ -4,7 +4,7 @@
 //
 #include <J_Open_GL.h>
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <j_physical_constants.h>
 namespace jomike{

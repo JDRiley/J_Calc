@@ -12,7 +12,7 @@
 //
 #include <J_Error.h>
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <J_UI/J_Text_Box.h>
 //

@@ -1,6 +1,6 @@
 #include "J_Calc_View.h"
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 namespace jomike{
 
 J_Calc_View::J_Calc_View( int i_width, int i_height, const char* i_title

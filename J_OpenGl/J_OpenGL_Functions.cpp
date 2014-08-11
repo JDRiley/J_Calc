@@ -1,4 +1,4 @@
-#include "J_OpenGL.h"
+#include "J_OpenGL_Functions.h"
 //
 #include "J_Frame_Counter.h"
 //

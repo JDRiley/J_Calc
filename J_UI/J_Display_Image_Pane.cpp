@@ -2,7 +2,7 @@
 //
 #include "../J_OpenGl/J_Shader_Program.h"
 //
-#include <J_OpenGl.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <ex_array.h>
 //

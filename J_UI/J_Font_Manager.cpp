@@ -18,7 +18,7 @@ using std::cerr; using std::endl;
 //
 #include <GL\glew.h>
 //
-#include <J_OpenGl.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <J_Utile.h>
 //

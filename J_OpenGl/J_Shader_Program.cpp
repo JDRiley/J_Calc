@@ -6,7 +6,7 @@
 //
 #include "J_Open_GL.h"
 //
-#include "J_OpenGL.h"
+#include "J_OpenGL_Functions.h"
 //Utilities
 #include <cassert>
 

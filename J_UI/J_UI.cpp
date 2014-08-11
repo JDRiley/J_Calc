@@ -1,6 +1,6 @@
 #include "J_UI.h"
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 //
 #include "J_View.h"
 //

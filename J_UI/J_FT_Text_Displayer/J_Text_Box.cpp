@@ -12,7 +12,7 @@
 //
 #include "../j_cursor_management.h"
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <J_Shader_Program.h>
 //

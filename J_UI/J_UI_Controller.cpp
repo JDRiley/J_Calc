@@ -12,7 +12,7 @@ using namespace std::placeholders;
 //
 #include "J_FT_Text_Displayer/J_Text_Box.h"
 //
-#include <J_OpenGL.h>
+#include <J_OpenGl_Functions.h>
 //
 #include <iostream>
 //

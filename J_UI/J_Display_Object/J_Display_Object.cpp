@@ -2,7 +2,7 @@
 #include <J_Error.h>
 #include <J_Shader_Program.h>
 #include "../J_View.h"
-#include "../../J_OpenGl/J_OpenGL.h"
+#include "../../J_OpenGl/J_OpenGL_Functions.h"
 #include <J_Utile.h>
 #include <J_UI/J_UI_Model.h>
 #include "../J_UI_Object.h"

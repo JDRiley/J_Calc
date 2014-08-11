@@ -2,7 +2,7 @@
 //
 #include "J_UI_Controller.h"
 //
-#include <J_OpenGl.h>
+#include <J_OpenGl_Functions.h>
 //
 #include "J_FT_Text_Displayer\J_Text_Box.h"
 //

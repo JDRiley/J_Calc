@@ -1,6 +1,6 @@
 #include "J_Open_GL.h"
 //
-#include "J_OpenGL.h"
+#include "J_OpenGL_Functions.h"
 //
 #include <gl\glew.h>
 //

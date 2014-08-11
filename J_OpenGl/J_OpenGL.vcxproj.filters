@@ -24,9 +24,6 @@
     <ClInclude Include="J_OpenGL_Fwd_Decl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_OpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="J_Open_GL.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,12 +39,12 @@
     <ClInclude Include="J_Frame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_OpenGL_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Shader_Program.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_OpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Open_GL.cpp">
@@ -57,6 +54,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Frame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_OpenGL_Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
