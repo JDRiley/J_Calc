@@ -6,6 +6,11 @@
 //
 #include <J_Test_Suite.h>
 
+#ifdef WIN32
+
+#define WINDOWS_LEAN_AND_MEAN
+#include <Windows.h>
+#endif //WIN32
 
 namespace jtl = jomike;
 #ifdef RELEASE_BUILD

@@ -10,7 +10,11 @@
 #include <random>
 using std::copy;using std::equal; using std::uniform_int_distribution; using std::default_random_engine;
 
-
+#ifdef WIN32
+//
+#define WINDOWS_LEAN_AND_MEAN
+#include <Windows.h>
+#endif 
 
 //Container
 #include <array>

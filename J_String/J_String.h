@@ -5,16 +5,16 @@
 
 //Algorithm
 #include <algorithm>
-#include <functional>
 
-
-#include <ex_array.h>
 //Containers
 
+//
+#include <ex_array.h>
+//
 #include <string>
+//
 #include <sstream>
-//Char facilities
-#include <cctype>
+
 
 #pragma comment(lib, "J_String"J_LIB_APPEND)
 
@@ -61,15 +61,6 @@ std::string to_std_string(const std::basic_string<Char_t>& irk_string){
 		new_string.push_back(safe_char_cast(f_char));
 	}
 	return new_string;
-}
-
-template<typename Num_t>
-std::string number_to_string(Num_t i_val){
-	std::ostringstream o_str;
-	o_str << i_val;
-
-	return o_str.str();
-	
 }
 
 template<typename Num_t>
