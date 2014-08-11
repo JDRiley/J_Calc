@@ -31,6 +31,8 @@ using std::cerr; using std::cin; using std::cout; using std::endl;
 using std::move;
 namespace jomike{
 
+//Instantiation test
+template class ex_array<int>;
 #if EX_ARRAY_TEST
 
 class Test_Class{

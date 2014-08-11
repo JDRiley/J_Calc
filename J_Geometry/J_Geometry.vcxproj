@@ -115,6 +115,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>../include;</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

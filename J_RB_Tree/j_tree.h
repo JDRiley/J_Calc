@@ -198,14 +198,14 @@ void j_tree<St, Key, Comp_t, Alloc_t>::clear(){
 template<typename St, typename Key, typename Comp_t /*= std::less\<St\>*/
 	, typename Alloc_t /*= std::allocator<std::pair<St, Key>>*/>
 J_TREE_ITERATOR j_tree<St, Key, Comp_t, Alloc_t>::erase(const_iterator i_pos){
-	return M_tree.erase(i_pos.base());
+	return M_tree.erase(i_pos);
 }
 
 
 template<typename St, typename Key, typename Comp_t /*= std::less\<St\>*/
 	, typename Alloc_t /*= std::allocator<std::pair<St, Key>>*/>
 J_TREE_ITERATOR j_tree<St, Key, Comp_t, Alloc_t>::erase(iterator i_pos){
-	return M_tree.erase(i_pos.base());
+	return M_tree.erase(i_pos);
 }
 
 
