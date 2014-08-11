@@ -18,12 +18,6 @@
     <ClInclude Include="ex_array.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\j_iterator\j_iterator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ex_array_content_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ex_array.cpp">

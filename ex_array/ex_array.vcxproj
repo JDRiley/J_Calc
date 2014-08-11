@@ -272,9 +272,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\j_iterator\j_iterator.h" />
     <ClInclude Include="ex_array.h" />
-    <ClInclude Include="ex_array_content_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ex_array.cpp" />
