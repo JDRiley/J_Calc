@@ -61,8 +61,7 @@ void J_UI_Line::draw()const{
 		return;
 	}
 	s_open_gl.use_program(M_shader->program_id());
-	//s_open_gl.enable(GL_BLEND);
-	//s_open_gl.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	s_open_gl.bind_vertex_array(M_vao);
 	s_open_gl.line_width(1.0f);
 
