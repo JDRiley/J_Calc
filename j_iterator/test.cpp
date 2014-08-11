@@ -6,6 +6,7 @@
 using namespace jomike;
 int test(){
 	using std::string;
+	//this is testing iterator for j_map. Mostly a compilation test
 	typedef std::pair<int, string> int_string_pair_t;
 	J_RB_Tree <
 		int_string_pair_t
