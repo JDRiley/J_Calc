@@ -1,10 +1,9 @@
 #ifndef J_MATH_H
 #define J_MATH_H
-#include "../j_function/math_base.h"
 
+#include <math_base.h>
+//
 #include "j_numeric.h"
-
-#include <J_Fwd_Decl.h>
 //
 #include <ex_array.h>
 //Math

@@ -1,1 +1,1 @@
-#include "J:/JoMike Library/j_function/math_base.h"
+#include "../j_function/math_base.h"

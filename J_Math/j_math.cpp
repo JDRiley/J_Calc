@@ -1,29 +1,43 @@
 #include "j_math.h"
+//
 #include <j_function.h>
+//
 #include <J_Utile.h>
-//IO and Stream
-#include<iostream>
+
+
 
 //Facilities
 #include <chrono>
+//
 #include <exception>
+//
 #include <functional>
+//
 #include <future>
+//
 #include <thread>
 
 //Algorithms
 #include <algorithm>
+//
 #include <cmath>
+//
 #include <numeric>
 
 //Containers
 #include <array>
+//
 #include <vector>
 
 
 
-//IO
-using std::cerr; using std::cout; using std::endl;
+//IO Facilities
+#include <iostream>
+//
+#include <iomanip>
+using std::cout; using std::setw;
+
+using std::cerr; using std::endl;
 
 //Function Objects
 using std::bind; using std::plus;
@@ -46,10 +60,6 @@ using std::abs;using std::accumulate;
 //Containers
 using std::array; using std::vector;
 
-//IO Facilities
-#include <iostream>
-#include <iomanip>
-using std::cout; using std::setw;
 
 
 //KERNALS for multi_threading
