@@ -20,7 +20,7 @@
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <SmallerTypeCheck>true</SmallerTypeCheck>
-      <GenerateXMLDocumentationFiles>true</GenerateXMLDocumentationFiles>
+      <GenerateXMLDocumentationFiles>false</GenerateXMLDocumentationFiles>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
   </ItemDefinitionGroup>
