@@ -2,10 +2,10 @@
 #define J_FRAME_H
 
 #include "J_OpenGL_Fwd_Decl.h"
-//
-#include <J_UI/J_UI_Fwd_Decl.h>
+
 
 namespace jomike{
+class J_Rectangle;
 class J_Frame{
 public:
 	J_Frame(

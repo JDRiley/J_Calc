@@ -1,6 +1,6 @@
 #include "J_Frame.h"
 //
-#include <J_UI/J_Shape.h>
+#include <J_Rectangle.h>
 
 namespace jomike{
 
