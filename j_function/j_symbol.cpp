@@ -1,7 +1,8 @@
 #include "j_symbol.h"
 //
 #include "Type_Syntax.h"
-
+//
+#include "J_Symbol_Scope.h"
 //
 #include "J_Symbol_Error.h"
 //
@@ -16,6 +17,32 @@
 #include <j_tree.h>
 namespace jomike{
 static int s_symbol_ids = 0;
+
+class J_Default_Symbol_Scope : public J_Symbol_Scope{
+
+
+	j_symbol* get_symbol(const J_UI_String& irk_string)const override{
+		return get_j_symbol(irk_string);
+	}
+
+	void add_symbol(j_symbol* i_symbol)override{
+		add_symbol(i_symbol);
+	}
+
+};
+
+
+extern const J_Symbol_Scope* gk_default_symbol_scope = new J_Default_Symbol_Scope();
+
+void j_symbol::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
+	M_symbol_scope = i_symbol_scope;
+}
+
+j_symbol* j_symbol::get_symbol_from_scope(const J_UI_String& irk_string)const{
+	assert(M_symbol_scope);
+	return M_symbol_scope->get_symbol(irk_string);
+}
+
 
 J_Sym_Argument_Error::J_Sym_Argument_Error(const std::string& ik_message):J_Error(ik_message){}
 

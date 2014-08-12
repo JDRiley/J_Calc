@@ -179,6 +179,7 @@
     <ClInclude Include="J_Symbol_Fwd_Decl.h" />
     <ClInclude Include="j_symbol_component_list.h" />
     <ClInclude Include="J_Symbol_Identifier.h" />
+    <ClInclude Include="J_Symbol_Scope.h" />
     <ClInclude Include="j_unit.h" />
     <ClInclude Include="J_Unit_Symbol.h" />
     <ClInclude Include="j_value.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="j_symbol_component_list.cpp" />
     <ClCompile Include="J_Symbol_Error.cpp" />
     <ClCompile Include="J_Symbol_Identifier.cpp" />
+    <ClCompile Include="J_Symbol_Scope.cpp" />
     <ClCompile Include="j_unit.cpp" />
     <ClCompile Include="j_value.cpp" />
     <ClCompile Include="math_base.cpp" />

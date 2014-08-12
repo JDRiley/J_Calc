@@ -91,6 +91,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 	jomike::j_expression*			expression;
 	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
+	jomike::Statement_List*			statement_list;
 }
 
 
@@ -149,12 +150,13 @@ j_symbol_component* jtl::g_input_line = nullptr;
 */
 
 %type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild
-%type	<symbol>			Input_Line
-%type	<expression>		Expression Call Field_Access_Expression Assignment_Expression LValue
+%type	<symbol>			Statement 
+%type	<expression>		Expression Call Field_Access_Expression Assignment_Expression LValue 
+%type	<expression>		Non_Dangling_If_Statement
 %type	<constant_symbol>	Constant_Expression
 %type	<declaration>		Declaration Variable_Declaration
 %type	<type_syntax>		Type
-		  
+%type	<statement_list>	Statement_List
 %%
 /* Rules
 * -----
@@ -163,7 +165,12 @@ j_symbol_component* jtl::g_input_line = nullptr;
 */
 
 
-Input_Line
+Statement
+: Non_Dangling_If_Statement {$$ = $1;}
+//| If_Dangling_Statement {$$ = $1;}
+;
+
+Non_Dangling_If_Statement
 : Expression ';' {
 	  
 	*i_symbol_ptr = $1;
@@ -178,6 +185,19 @@ Input_Line
 	return true;
 }
 ;
+
+Statement_List
+	: Statement {
+		$$ = new Statement_List(@$);
+		$$->add_statement(*$1);
+		delete_tokens($1);
+	}
+	| Statement_List Statement {
+		$$ = $1;
+		$$->add_statement(*$2);
+		delete_tokens($2);
+	}
+	;
 
 Declaration
 : Variable_Declaration {$$ = $1;}

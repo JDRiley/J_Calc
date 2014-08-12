@@ -189,6 +189,9 @@
     <ClInclude Include="parser\math_parsing_unit.hh">
       <Filter>Header Files\Parser</Filter>
     </ClInclude>
+    <ClInclude Include="J_Symbol_Scope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -322,6 +325,9 @@
     </ClCompile>
     <ClCompile Include="parser\Math_YY_Lex.cpp">
       <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Symbol_Scope.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

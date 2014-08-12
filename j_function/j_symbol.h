@@ -14,6 +14,9 @@ namespace jomike{
 //Empty arguments can then be passed as a default parameter
 const Arguments& empty_arguments();
 
+//returns symbol from get_j_symbol(const J_UI_String& ) function
+extern const J_Symbol_Scope* gk_default_symbol_scope;
+
 class j_symbol : public j_symbol_component{
 public:
 	j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
@@ -46,9 +49,23 @@ public:
 
 	j_symbol(const j_symbol& irk_symbol);
 	j_symbol(j_symbol&& irr_symbol);
+
+	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
+
+	virtual void process() = 0;
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
+
+
+	const J_Symbol_Scope& symbol_scope()const{
+		assert(M_symbol_scope);
+		return *M_symbol_scope;
+	}
+
+	j_symbol* get_symbol_from_scope(const J_UI_String& irk_string)const;
 private:
+	const J_Symbol_Scope* M_symbol_scope = gk_default_symbol_scope;
+
 	Arguments* M_arguments;
 	Type_Syntax* M_type = nullptr;
 	J_Symbol_Identifier* M_name;

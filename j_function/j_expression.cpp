@@ -2,6 +2,9 @@
 
 
 namespace jomike{
+
+
+
 j_expression::j_expression(Symbol_Types i_type):j_symbol(i_type){
 	
 }
@@ -30,6 +33,7 @@ jomike::J_UI_String j_expression::get_display_name(){
 j_expression::~j_expression(){
 
 }
+
 
 
 }

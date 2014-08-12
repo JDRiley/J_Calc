@@ -22,7 +22,8 @@
 #include <functional>
 //
 #include <utility>
-
+//
+#include "Symbol_List.h"
 
 using std::mem_fn; using std::bind; using std::for_each; using std::transform;
 using namespace std::placeholders;
@@ -80,7 +81,8 @@ j_semantic_type::j_semantic_type()
 , type_syntax(this)
 , expression(this)
 , arguments(this)
-, symbol(this){
+, symbol(this)
+, symbol_list(this){
 	set_pointer_map();
 	
 	 
@@ -97,6 +99,7 @@ void j_semantic_type::set_pointer_map(){
 		, {expression.ID(), &expression}
 		, {arguments.ID(), &arguments}
 		, {symbol.ID(), &symbol}
+		, {symbol_list.ID(), &symbol}
 	};
 }
 
@@ -108,7 +111,8 @@ j_semantic_type::j_semantic_type(const j_semantic_type& irk_right)
 , type_syntax(this)
 , expression(this)
 , arguments(this)
-, symbol(this){
+, symbol(this)
+, symbol_list(this){
 	set_pointer_map();
 
 
@@ -124,7 +128,8 @@ j_semantic_type::j_semantic_type(j_semantic_type&& irr_right)
 , type_syntax(this)
 , expression(this)
 , arguments(this)
-, symbol(this){
+, symbol(this)
+, symbol_list(this){
 	set_pointer_map();
 	swap(irr_right);
 }
@@ -206,7 +211,10 @@ typename jtl::enable_if_same_non_qualified_type<
 		symbol = ptr;
 	}
 
-	
+	if(auto ptr = i_func(irk_right.symbol_list)){
+		++num_set;
+		symbol_list = ptr;
+	}
 
 
 	assert((num_set < 2) || "Num Set Should Be only 1 max");

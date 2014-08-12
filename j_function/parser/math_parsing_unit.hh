@@ -94,10 +94,11 @@ namespace yy {
 	jomike::j_expression*			expression;
 	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
+	jomike::Statement_List*			statement_list;
 
 
 /* Line 33 of lalr1.cc  */
-#line 101 "math_parsing_unit.hh"
+#line 102 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -307,7 +308,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 311 "math_parsing_unit.hh"
+#line 312 "math_parsing_unit.hh"
 
 
 

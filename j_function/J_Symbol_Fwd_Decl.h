@@ -5,7 +5,7 @@
 
 
 namespace jomike{
-
+J_FWD_DECL(J_Symbol_Scope)
 J_FWD_DECL_LOWER(j_symbol)
 J_FWD_DECL(j_symbol)
 J_FWD_DECL(j_value)
@@ -22,7 +22,7 @@ J_FWD_DECL(Expression_List)
 J_FWD_DECL(Call_Expression)
 J_FWD_DECL(J_Symbol_Identifier)
 J_FWD_DECL(Arguments)
-
+J_FWD_DECL(Symbol_List)
 J_FWD_DECL(Math_Parser)
 J_FWD_DECL(Math_Lexer)
 typedef j_symbol_Shared_t J_Symbol_Shared_t;

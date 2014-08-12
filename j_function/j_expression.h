@@ -5,6 +5,9 @@
 
 
 namespace jomike{
+
+
+
 class j_expression : public j_symbol{
 public:
 	j_expression(Symbol_Types);
@@ -23,8 +26,11 @@ public:
 
 	j_expression* as_expression();
 	J_UI_String get_display_name()override;
+
+	
+
 	~j_expression();
-private:
+
 };
 
 

@@ -25,6 +25,10 @@ public:
 	Symbol_Types symbol_type()const;
 
 	virtual ~j_symbol_component();
+
+
+
+
 private:
 	const int M_ID;
 	

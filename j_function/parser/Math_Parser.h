@@ -154,6 +154,8 @@ struct j_semantic_type : public j_base {
 	restrictive_ptr<jtl::j_expression>			expression;
 	restrictive_ptr<jtl::Arguments>				arguments;
 	restrictive_ptr<jtl::j_symbol>				symbol;
+	restrictive_ptr<jtl::Symbol_List>			symbol_list;
+
 
 	jtl::j_map<int, base_restrictive_ptr*> M_ptrs;
 	void set_pointer_map();
