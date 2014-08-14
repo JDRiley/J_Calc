@@ -36,13 +36,13 @@ Custom_Routine_Symbol::Custom_Routine_Symbol(
 	M_statement_list = i_statement_list;
 	M_running_scope = new J_Symbol_Scope(irk_static_declarations);
 
-
-
+	M_running_scope->set_parent_scope(&symbol_scope());
 	transform(irk_arg_declarations.begin(), irk_arg_declarations.end()
 			 , back_inserter(M_arg_names), [](const j_declaration* y_decl){return y_decl->name(); });
 }
 
-Custom_Routine_Symbol::Custom_Routine_Symbol(const Custom_Routine_Symbol& irk_right):j_routine_symbol(irk_right), M_arg_names(irk_right.M_arg_names)
+Custom_Routine_Symbol::Custom_Routine_Symbol(const Custom_Routine_Symbol& irk_right)
+:j_routine_symbol(irk_right), M_arg_names(irk_right.M_arg_names)
 , M_statement_list(irk_right.M_statement_list->get_copy())
 , M_running_scope(irk_right.M_running_scope->get_copy()){
 
@@ -92,7 +92,13 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 
 
 	M_statement_list->set_symbol_scope(running_scope.get());
-	return return_type_syntax().convert_value(M_statement_list->get_value());
+
+	j_value return_val = M_statement_list->get_value();
+	if(return_type_syntax().is_void()){
+		return j_value::void_type();
+	}
+
+	return return_type_syntax().convert_value(return_val);
 
 }
 

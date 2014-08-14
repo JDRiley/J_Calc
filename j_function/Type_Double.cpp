@@ -19,22 +19,9 @@ Type_Double* Type_Double::get_copy()const {
 }
 
 j_value Type_Double::convert_value(const j_value& irk_val)const{
-	j_value::Value_Types type = irk_val.type();
-	switch(type){
-	case j_value::Value_Types::LL_INTEGER:
-		return j_value(safe_cast<double>(irk_val.as_llint()), irk_val.units());
-	case j_value::Value_Types::DOUBLE:
-		return irk_val;
-	case j_value::Value_Types::BOOL:
-		return j_value(irk_val.as_bool() ? 1.0 : 0.0, irk_val.units());
-	case j_value::Value_Types::STRING:
-		throw J_Value_Error("Cannot implicitly convert string to double");
-	case j_value::Value_Types::UNDEFINIED:
-		throw J_Value_Error("Cannot implicitly convert undefined to double");
-	default:
-		assert(0);
-		return j_value();
-	}
+	j_value new_value(irk_val);
+	new_value.convert_to_type(j_value::Value_Types::DOUBLE);
+	return new_value;
 }
 
 }

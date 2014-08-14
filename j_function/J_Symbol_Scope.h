@@ -18,18 +18,16 @@ public:
 
 	virtual void add_symbol(j_symbol* i_symbol);
 	virtual void add_symbol(const j_symbol& irk_symbol);
-	virtual J_Symbol_Scope* get_copy()const{
-		return new J_Symbol_Scope(*this);
-	}
+	virtual J_Symbol_Scope* get_copy()const;
 
-	virtual J_Symbol_Scope* move_copy(){
-		return  new J_Symbol_Scope(std::move(*this));
-	}
+	virtual J_Symbol_Scope* move_copy();
 
 	virtual ~J_Symbol_Scope();
 
+	void set_parent_scope(const J_Symbol_Scope* i_parent_scope);
+
 private:
-	const J_Symbol_Scope* M_parent_symbol;
+	const J_Symbol_Scope* M_parent_scope;
 
 	typedef j_map<J_UI_String, j_symbol*> Symbol_Map_t;
 	

@@ -95,7 +95,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 "bool"				{ return token_t::T_BOOL;        }
 "string"			{ return token_t::T_STRING;      }
 "null_ptr"			{ return token_t::T_NULL_PTR;        }			
-
+"void"|"Void"			{ return token_t::T_VOID;}
 
 
 

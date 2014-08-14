@@ -22,6 +22,8 @@ public:
 	bool operator==(const Type_Syntax& irk_right)const;
 	bool operator!=(const Type_Syntax& irk_right)const;
 	const std::string& type_name()const;
+
+	virtual bool is_void()const;
 private:
 	std::string M_type_name;
 

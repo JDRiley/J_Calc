@@ -57,17 +57,14 @@ public:
 
 	virtual void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
 
-	virtual void process(){}
+	virtual void process();
 
 	virtual const Type_Syntax& return_type_syntax()const;
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 
 
-	const J_Symbol_Scope& symbol_scope()const{
-		assert(M_symbol_scope);
-		return *M_symbol_scope;
-	}
+	const J_Symbol_Scope& symbol_scope()const;
 
 	j_symbol* get_symbol_from_scope(const J_UI_String& irk_string)const;
 private:

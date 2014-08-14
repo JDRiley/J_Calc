@@ -1,5 +1,14 @@
-char_press []foo[dbl i_val]->dbl{i_val + 1.5;}
-process
-char_press foo(1)
-process
+char_press [int counter <-0, dbl ratio <- 1/2.0] foo[int val]->dbl{
+	counter <- counter + 1;
+	val*ratio + counter;
+}@
+char_press foo(1)@
+char_press foo(1)@
+char_press []bar[]->dbl{
+	g_val<- g_val + 1;
+}@
+char_press bar()@
+char_press int g_val <- 0@
+char_press bar()@
+char_press bar()@
 end

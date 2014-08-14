@@ -310,6 +310,8 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 				break;
 			}
 		}
+
+		char_input_cmd(Contexts_Handler::get_instance().get_active_window(), '\n');
 	} catch(J_Error& e){
 			e.print();
 			M_script_run_flag = false;
@@ -440,10 +442,9 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 		line_writer_timer(j_get_time, draw_refresh_time);
 
 	string char_string;
-	getline(ir_stream, char_string);
+	getline(ir_stream, char_string, '@');
 	assert(char_string.front() == ' ');
-	char_string.erase(char_string.begin());
-
+	char_string.front() = '\n';
 
 	if(!ir_stream){
 		throw J_Syntax_Error("Stream Went Bad in Char Press Read. Possibly no Endline Char");
@@ -475,6 +476,7 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 			<< " Model Fps: " << s_j_ui->fps();
 		line_writer_timer.reset_timer();
 	}
+	process_script_cmd(i_controller, ir_stream);
 }
 
 }

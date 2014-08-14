@@ -130,29 +130,38 @@ void j_value::binary_value_operation(
 	}
 }
 
-
+//This function is to prevent compilation errors for non arithmetic type Operator_Classes. Such as
+//division and multiplication
 template<typename Operator_Class>
 void j_value::binary_value_operation_no_str_or_bool(
-	const j_value& i_right, j_value::Value_Union* i_value_union
-	, const Operator_Class& i_func){
+	const j_value& i_right, const Operator_Class& i_func){
+
+	j_value right_val(i_right);
+
+	if(type() != right_val.type()){
+		convert_to_same_type(this, &right_val);
+	}
+
+
+
+
 	switch(M_type){
 	case Value_Types::LL_INTEGER:
 		binary_value_operation(
-			M_val.llint_val, i_right, &i_value_union->llint_val, i_func);
+			M_val.llint_val, i_right, &M_val.llint_val, i_func);
 		break;
 	case Value_Types::DOUBLE:
 		binary_value_operation(
-			M_val.dbl_val, i_right, &i_value_union->dbl_val, i_func);
+			M_val.dbl_val, i_right, &M_val.dbl_val, i_func);
 		break;
 	case Value_Types::BOOL:
 		throw J_Value_Error("Bool in wrong binary value_operation function");
-		break;
 	case Value_Types::STRING:
 		throw J_Value_Error("String in wrong binary value_operation function");
-		break;
 	default:
-		break;
+		assert(!"Unhandled Value Type");
 	}
+
 }
 
 
@@ -184,6 +193,10 @@ j_value::j_value(j_value&& irv_src)
 	M_type = Value_Types::LL_INTEGER;
 	M_has_value_status = false;
 	swap(irv_src);
+}
+
+j_value::j_value(Value_Types i_type):M_type(i_type){
+
 }
 
 template<typename Left_t, typename Right_t>
@@ -228,7 +241,7 @@ j_value& j_value::operator-=(const j_value& irk_val){
 
 
 
-	binary_value_operation_no_str_or_bool(irk_val, &M_val, Subtraction_Class());
+	binary_value_operation_no_str_or_bool(irk_val, Subtraction_Class());
 	return *this;
 }
 
@@ -247,7 +260,7 @@ j_value& j_value::operator*=(const j_value& irk_val){
 
 
 
-	binary_value_operation_no_str_or_bool(irk_val, &M_val, Multiplication_Class());
+	binary_value_operation_no_str_or_bool(irk_val,  Multiplication_Class());
 	return *this;
 }
 class Division_Class{
@@ -268,7 +281,7 @@ j_value& j_value::operator/=(const j_value& irk_val){
 
 	assert(Value_Types::BOOL != M_type);
 
-	binary_value_operation_no_str_or_bool(irk_val, &M_val, Division_Class());
+	binary_value_operation_no_str_or_bool(irk_val, Division_Class());
 	return *this;
 }
 
@@ -441,7 +454,9 @@ public:
 };
 
 string j_value::to_str()const{
-
+	if(Value_Types::VOID == M_type){
+		return "void";
+	}
 
 	return unary_value_operation(To_String_Class());
 }
@@ -489,6 +504,8 @@ Symbol_Types j_value::symbol_type()const{
 		return Symbol_Types::BOOL;
 	case Value_Types::STRING:
 		return Symbol_Types::STRING;
+	case Value_Types::VOID:
+		return Symbol_Types::VOID_TYPE;
 	case Value_Types::UNDEFINIED:
 		return Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED;
 	default:
@@ -581,6 +598,12 @@ j_value& j_value::operator=(const j_value& irv_val){
 j_value& j_value::operator=(j_value&& irv_val){
 	swap(irv_val);
 	return *this;
+}
+
+const j_value& j_value::void_type(){
+	static j_value void_value(Value_Types::VOID);
+	void_value.M_has_value_status = true;
+	return void_value;
 }
 
 J_Value_Error::J_Value_Error(const char* const ik_message):J_Error(ik_message){}

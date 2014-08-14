@@ -214,6 +214,9 @@
     <ClInclude Include="J_Value_Types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Type_Void.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -370,6 +373,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="J_Value_Types.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Type_Void.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

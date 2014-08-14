@@ -282,7 +282,7 @@ private:
 	mutable bool M_changed_flag = true;
 	bool M_auto_scrolling_status = true;
 
-	int M_new_line_size = 30;
+	int M_new_line_size = 25;
 
 	J_UI_Multi_String M_multi_string;
 	Array_Modifier_Manger<ex_array<J_UI_Letter_Box_Shared_t>> M_letter_box_string;

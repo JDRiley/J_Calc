@@ -13,7 +13,11 @@ Type_Syntax::Type_Syntax(
 }
 
 
-j_value Type_Syntax::convert_value(const j_value& /*irk_val*/)const{
+j_value Type_Syntax::convert_value(const j_value& irk_val)const{
+	if(irk_val.symbol_type() == symbol_type()){
+		return irk_val;
+	}
+
 	assert(!"Did Not implement conversion for this type");
 	return j_value();
 }
@@ -32,6 +36,10 @@ bool Type_Syntax::operator==(const Type_Syntax& irk_right)const{
 
 bool Type_Syntax::operator!=(const Type_Syntax& irk_right)const{
 	return !(*this == irk_right);
+}
+
+bool Type_Syntax::is_void()const{
+	return false;
 }
 
 }

@@ -25,7 +25,10 @@ public:
 	j_value(const std::string&, J_Unit);
 	j_value(const j_value&, J_Unit);
 
-	enum class Value_Types{LL_INTEGER, DOUBLE, BOOL, STRING, UNDEFINIED};
+	
+
+	enum class Value_Types{LL_INTEGER, DOUBLE, BOOL, STRING, VOID, UNDEFINIED};
+	
 
 
 	//Value_Union M_val;
@@ -88,6 +91,7 @@ public:
 	}
 	
 	
+	static const j_value& void_type();
 
 	std::string to_str()const;
 	Symbol_Types symbol_type()const;
@@ -116,6 +120,8 @@ public:
 	~j_value();
 private:
 	
+	j_value(Value_Types i_type);
+
 	union Value_Union{
 		j_llint llint_val;
 		j_dbl dbl_val;
@@ -135,7 +141,7 @@ private:
 
 	template<class Operator_Class>
 	void binary_value_operation_no_str_or_bool(
-		const j_value& i_right, Value_Union* i_value_union, const Operator_Class&);
+		const j_value& i_right, const Operator_Class&);
 
 	template<typename Ret_t, typename Left_t, typename Operator_Class>
 	void binary_value_operation(

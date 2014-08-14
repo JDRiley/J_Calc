@@ -271,6 +271,7 @@ Type
 : T_DOUBLE{$$ = make_double_type_syntax();}
 | T_INT{$$ = make_int_type_syntax();}
 | T_BOOL{$$ = make_bool_type_syntax();}
+| T_VOID{$$ = make_void_type_syntax(); }
 ;
 
 Expression

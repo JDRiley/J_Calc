@@ -8,6 +8,8 @@
 //
 #include "Type_String.h"
 //
+#include "Type_Void.h"
+//
 #include "J_Symbol_Error.h"
 //
 #include <string>
@@ -43,6 +45,10 @@ Type_Syntax* make_type_syntax(Symbol_Types i_symbol_type){
 		throw J_Symbol_Error("Cannot make Type_Syntax With this Symbol Type." + to_string(__LINE__ ) +  __FILE__);
 		break;
 	}
+}
+
+Type_Syntax* make_void_type_syntax(){
+	return new Type_Void;
 }
 
 }

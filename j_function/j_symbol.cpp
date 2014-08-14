@@ -210,6 +210,15 @@ const Type_Syntax& j_symbol::return_type_syntax()const{
 	return *M_type;
 }
 
+const J_Symbol_Scope& j_symbol::symbol_scope()const{
+	assert(M_symbol_scope);
+	return *M_symbol_scope;
+}
+
+void j_symbol::process(){
+
+}
+
 const Arguments& empty_arguments(){
 	static Arguments empty_args;
 	return empty_args;
