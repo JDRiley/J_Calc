@@ -186,10 +186,29 @@
     <ClInclude Include="parser\Math_Parser.h">
       <Filter>Header Files\Parser</Filter>
     </ClInclude>
-    <ClInclude Include="parser\math_parsing_unit.hh">
-      <Filter>Header Files\Parser</Filter>
-    </ClInclude>
     <ClInclude Include="J_Symbol_Scope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symbol_Component_List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Specific_Symbol_List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser/math_parsing_unit.hh" />
+    <ClInclude Include="Type_Routine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Type_Routine_Variable_Args.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Type_String.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Custom_Routine_Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Assignment_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -320,13 +339,31 @@
     <ClCompile Include="parser\Math_Parser.cc">
       <Filter>Source Files\parser</Filter>
     </ClCompile>
-    <ClCompile Include="parser\math_parsing_unit.cc">
-      <Filter>Source Files\parser</Filter>
-    </ClCompile>
     <ClCompile Include="parser\Math_YY_Lex.cpp">
       <Filter>Source Files\parser</Filter>
     </ClCompile>
     <ClCompile Include="J_Symbol_Scope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symbol_Component_List.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\math_parsing_unit.cc">
+      <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Type_Routine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Type_Routine_Variable_Args.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Type_String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Custom_Routine_Symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Assignment_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -337,12 +374,15 @@
     <None Include="parser\parser.y">
       <Filter>Source Files\parser</Filter>
     </None>
+    <None Include="parser\math_parsing_unit.output">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser\Math_Lexer.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="parser\parser.h">
+    <CustomBuild Include="parser/parser.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

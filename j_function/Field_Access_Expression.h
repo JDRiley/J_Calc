@@ -22,6 +22,8 @@ public:
 
 	bool has_value()const;
 
+	j_symbol* make_non_referenced()const override;
+
 	~Field_Access_Expression();
 private:
 	J_Symbol_Identifier* M_identifier;

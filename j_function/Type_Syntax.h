@@ -18,8 +18,14 @@ public:
 
 	virtual j_value convert_value(const j_value& irk_val)const;
 
+
+	bool operator==(const Type_Syntax& irk_right)const;
+	bool operator!=(const Type_Syntax& irk_right)const;
+	const std::string& type_name()const;
 private:
 	std::string M_type_name;
+
+	virtual bool is_same_type(const Type_Syntax& irk_right)const;
 };
 
 }

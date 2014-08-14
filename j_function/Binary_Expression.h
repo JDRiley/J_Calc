@@ -21,14 +21,15 @@ public:
 	bool has_value()const override;
 
 	~Binary_Expression();
+
+	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope)override;
 protected:
-	j_expression& left_expression();
+	j_expression& left_expression()const;
 
-	const j_expression& left_expression()const;
 
-	j_expression& right_expression();
 
-	const j_expression& right_expression()const;
+	j_expression& right_expression()const;
+;
 
 private:
 	j_expression* M_left_expression;

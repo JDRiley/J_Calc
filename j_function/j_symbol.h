@@ -44,15 +44,20 @@ public:
 	Type_Syntax& type_syntax()const;
 	void set_type_syntax(const Type_Syntax& irk_type_syntax);
 	void set_type_syntax(Type_Syntax* i_type_syntax);
+
+	virtual j_symbol* convert_to_type(const Type_Syntax& irk_type)const;
+
 	virtual bool is_placeholder()const;
 
+
+	virtual j_symbol* make_non_referenced()const;
 
 	j_symbol(const j_symbol& irk_symbol);
 	j_symbol(j_symbol&& irr_symbol);
 
-	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
+	virtual void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
 
-	virtual void process() = 0;
+	virtual void process(){}
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 
@@ -71,7 +76,7 @@ private:
 	J_Symbol_Identifier* M_name;
 };
 
-j_symbol* get_j_symbol(const J_UI_String& irk_name);
+
 
 }
 

@@ -15,6 +15,7 @@ j_symbol* get_symbol(const J_UI_String& irk_string);
 void add_user_symbol(j_symbol*);
 
 
+
 class J_Calc_Math_Input_Parser{
 public:
 	void convert_to_proper_math_input(J_UI_String*);

@@ -1,6 +1,8 @@
 #ifndef SYMBOL_TYPES_H
 #define SYMBOL_TYPES_H
 
+//
+#include <string>
 
 namespace jomike{
 enum class Symbol_Types{ 
@@ -8,7 +10,7 @@ enum class Symbol_Types{
 	, PLACEHOLDER, FUNCTION_DECLARATION, CLASS_DECLARATION, INTERFACE_DECLARATION, PROTOTYPE_DECLARATION
 	, STATEMENT_BLOCK, STATEMENT, IF_STATEMENT, WHILE_STATEMENT, FOR_STATEMENT
 	, COMPOSITE, BREAK_STATEMENT, RETURN_STATEMENT, PRINT_STATEMENT
-	, EXPRESSION_TYPE_UNINITIALIZED, ARGUMENTS, LIST, END };
+	, EXPRESSION_TYPE_UNINITIALIZED, ARGUMENTS, ROUTINE, LIST, END };
 
 
 
@@ -33,6 +35,21 @@ struct CPP_To_Symbol_Type<long long>{
 template<>
 struct CPP_To_Symbol_Type<bool>{
 	static Symbol_Types type(){ return Symbol_Types::BOOL; }
+};
+
+template<>
+struct CPP_To_Symbol_Type<std::string>{
+	static Symbol_Types type(){ return Symbol_Types::STRING; }
+};
+
+template<>
+struct CPP_To_Symbol_Type<const std::string>{
+	static Symbol_Types type(){ return Symbol_Types::STRING; }
+};
+
+template<>
+struct CPP_To_Symbol_Type<const std::string&>{
+	static Symbol_Types type(){ return Symbol_Types::STRING; }
 };
 
 

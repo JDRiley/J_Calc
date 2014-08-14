@@ -41,21 +41,21 @@ Binary_Expression::~Binary_Expression(){
 	delete M_right_expression;
 }
 
-const j_expression& Binary_Expression::right_expression()const{
+j_expression& Binary_Expression::right_expression()const{
 	return *M_right_expression;
 }
 
-j_expression& Binary_Expression::right_expression(){
-	return *M_right_expression;
-}
 
-const j_expression& Binary_Expression::left_expression()const{
+j_expression& Binary_Expression::left_expression()const{
 	return *M_left_expression;
 }
 
-j_expression& Binary_Expression::left_expression(){
-	return *M_left_expression;
+void Binary_Expression::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
+	j_expression::set_symbol_scope(i_symbol_scope);
+	M_left_expression->set_symbol_scope(i_symbol_scope);
+	M_right_expression->set_symbol_scope(i_symbol_scope);
 }
+
 
 }
 

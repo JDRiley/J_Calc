@@ -80,6 +80,14 @@ void Math_Input_Box::math_key_input_cmd(J_Text_Box_Object_Shared_t i_text_box, i
 		default:	
 			;
 		}
+	} else if(i_modifiers & J_MOD_SHIFT){
+		switch(i_charcode){
+		case J_KEY_ENTER:
+			math_box->eval_and_break_line_input();
+			return;
+		default:
+			;
+		}
 	}else{
 		switch(i_charcode){
 		case J_KEY_BACKSPACE:
@@ -181,14 +189,12 @@ void Math_Input_Box::math_box_char_input_cmd(J_Text_Box_Object_Shared_t i_math_b
 
 
 	line_input_pos = math_box->clear_output(line_input_pos);
-	switch(i_charcode){
-	case LINE_END_SYMBOL:
-		math_box->eval_and_break_line_input();
-		break;
-	default:
+	//switch(i_charcode){
+
+	//default:
 		math_box->insert_char(i_charcode);
-		break;
-	}
+	//	break;
+	//}
 }
 
 

@@ -28,6 +28,8 @@ public:
 
 	J_UI_String get_display_name()override;
 
+	j_symbol* convert_to_type(const Type_Syntax& irk_type)const override;
+
 private:
 	int M_value;
 	J_Unit M_unit;

@@ -116,12 +116,12 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
 <<EOF>> {
-	return static_cast<token_t>(0);
+	return token_t::T_END;
 }
 
 {OPERATOR}          { return static_cast<token_t>(yytext[0]);}
     
-"[]"                { return token_t::T_DIMENSIONS;}
+
 
 
 

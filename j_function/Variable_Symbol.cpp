@@ -33,7 +33,9 @@ Variable_Symbol::Variable_Symbol(Type_Syntax* i_syntax, J_Symbol_Identifier* i_i
 Variable_Symbol::Variable_Symbol(
 	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression)
 	:j_declaration(i_syntax, i_identifier){
-	assert(i_expression.has_value());
+	if(!i_expression.has_value()){
+		throw J_Value_Error("Cannot Declare variable and assign it to expression with no value");
+	}
 	M_value = type_syntax().convert_value(i_expression.get_value());
 
 }

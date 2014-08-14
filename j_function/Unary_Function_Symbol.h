@@ -11,7 +11,7 @@
 namespace jomike{
 
 template<typename Ret_t, typename Arg_t>
-class Unary_Function_Symbol : public j_routine_wrapper_symbol{
+class Unary_Function_Symbol : public j_routine_symbol{
 public:
 	template<typename Func_t>
 	Unary_Function_Symbol(Func_t i_function, const std::string& irk_string);
@@ -35,7 +35,10 @@ template<typename Ret_t, typename Arg_t>
 template<typename Func_t>
 Unary_Function_Symbol<Ret_t, Arg_t>::Unary_Function_Symbol(
 	Func_t i_function, const std::string& irk_name)
-	:j_routine_wrapper_symbol(new J_Symbol_Identifier(irk_name), CPP_To_Symbol_Type<Ret_t>::type())
+	:j_routine_symbol(new J_Symbol_Identifier(irk_name)
+	, new Type_Routine(
+		make_type_syntax(CPP_To_Symbol_Type<Ret_t>::type())
+		, new Type_Syntax_List({make_type_syntax(CPP_To_Symbol_Type<Arg_t>::type())})))
 	, M_function(i_function), M_name(irk_name){
 	set_args(Arguments(1));
 }

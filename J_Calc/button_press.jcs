@@ -1,3 +1,8 @@
-char_press af;
-char_press af;
+char_press [int c<-0]foo[]->int{c <- c + 1; c;}
+process
+char_press foo()
+process
+char_press 
+char_press foo()
+process
 end

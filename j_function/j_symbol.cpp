@@ -18,21 +18,35 @@
 namespace jomike{
 static int s_symbol_ids = 0;
 
+
+j_symbol* get_j_symbol_from_model(const J_UI_String& irk_name);
+
 class J_Default_Symbol_Scope : public J_Symbol_Scope{
-
-
+public:
 	j_symbol* get_symbol(const J_UI_String& irk_string)const override{
-		return get_j_symbol(irk_string);
+		return get_j_symbol_from_model(irk_string);
 	}
 
 	void add_symbol(j_symbol* i_symbol)override{
 		add_symbol(i_symbol);
 	}
 
+	J_Default_Symbol_Scope* get_copy()const override{
+		return new J_Default_Symbol_Scope(*this);
+	}
+
+	J_Default_Symbol_Scope* move_copy()override{
+		return  new J_Default_Symbol_Scope(std::move(*this));
+	}
+
 };
 
+static J_Symbol_Scope* default_symbol_scope(){
+	static J_Default_Symbol_Scope default_scope;
+	return &default_scope;
+}
 
-extern const J_Symbol_Scope* gk_default_symbol_scope = new J_Default_Symbol_Scope();
+extern const J_Symbol_Scope* gk_default_symbol_scope = default_symbol_scope();
 
 void j_symbol::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
 	M_symbol_scope = i_symbol_scope;
@@ -181,6 +195,15 @@ j_value j_symbol::get_value(const Arguments& i_args)const{
 }
 
 bool j_symbol::is_placeholder()const{ return false; }
+
+j_symbol* j_symbol::make_non_referenced()const{
+	return get_copy();
+}
+
+j_symbol* j_symbol::convert_to_type(const Type_Syntax& /*irk_type*/)const{
+	throw J_Symbol_Error("Cannot Convert type of symbol: " + name().std_str()
+						 + " with type: " + type_syntax().type_name());
+}
 
 const Arguments& empty_arguments(){
 	static Arguments empty_args;

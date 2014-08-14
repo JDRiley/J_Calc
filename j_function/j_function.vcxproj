@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Addition_Expression.h" />
     <ClInclude Include="Add_Symbol_Joiner.h" />
+    <ClInclude Include="Assignment_Expression.h" />
     <ClInclude Include="Binary_Expression.h" />
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
     <ClInclude Include="Boolean_Testers.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="Call_Expression.h" />
     <ClInclude Include="Constant_Symbol_Factory.h" />
     <ClInclude Include="Constant_Symbol.h" />
+    <ClInclude Include="Custom_Routine_Symbol.h" />
     <ClInclude Include="Division_Expression.h" />
     <ClInclude Include="Expression_List.h" />
     <ClInclude Include="Field_Access_Expression.h" />
@@ -207,33 +209,27 @@
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
     <ClInclude Include="parser\Math_Parser.h" />
-    <ClInclude Include="parser\math_parsing_unit.hh" />
-    <CustomBuild Include="parser\parser.h">
-      <AdditionalInputs>parser.y;</AdditionalInputs>
+    <ClInclude Include="parser/math_parsing_unit.hh" />
+    <CustomBuild Include="parser/parser.h">
+      <AdditionalInputs>parser/parser.y;</AdditionalInputs>
       <Command>cd parser
       win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
       <Message>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
-      <Outputs>math_parsing_unit.cc;math_parsing_unit.hh%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">parser/parser.y;</AdditionalInputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">parser/parser.y;</AdditionalInputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser/parser.y;</AdditionalInputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">parser/parser.y;</AdditionalInputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Outputs>parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
+      <LinkObjects>false</LinkObjects>
     </CustomBuild>
+    <ClInclude Include="Specific_Symbol_List.h" />
     <ClInclude Include="Subtraction_Expression.h" />
     <ClInclude Include="Symbol_Joiner.h" />
+    <ClInclude Include="Symbol_Component_List.h" />
     <ClInclude Include="Symbol_Types.h" />
     <ClInclude Include="Type_Bool.h" />
     <ClInclude Include="Type_Double.h" />
     <ClInclude Include="Type_Factory.h" />
     <ClInclude Include="Type_Int.h" />
+    <ClInclude Include="Type_Routine.h" />
+    <ClInclude Include="Type_Routine_Variable_Args.h" />
+    <ClInclude Include="Type_String.h" />
     <ClInclude Include="Type_Syntax.h" />
     <ClInclude Include="Unary_Function_Symbol.h" />
     <ClInclude Include="Unary_Negate_Expression.h" />
@@ -245,11 +241,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Addition_Expression.cpp" />
+    <ClCompile Include="Assignment_Expression.cpp" />
     <ClCompile Include="Binary_Expression.cpp" />
     <ClCompile Include="Boolean_Testers.cpp" />
     <ClCompile Include="Call_Expression.cpp" />
     <ClCompile Include="Constant_Symbol.cpp" />
     <ClCompile Include="Constant_Symbol_Factory.cpp" />
+    <ClCompile Include="Custom_Routine_Symbol.cpp" />
     <ClCompile Include="Division_Expression.cpp" />
     <ClCompile Include="Field_Access_Expression.cpp" />
     <ClCompile Include="j_boolean_expression.cpp" />
@@ -288,10 +286,14 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="Subtraction_Expression.cpp" />
+    <ClCompile Include="Symbol_Component_List.cpp" />
     <ClCompile Include="Type_Bool.cpp" />
     <ClCompile Include="Type_Double.cpp" />
     <ClCompile Include="Type_Factory.cpp" />
     <ClCompile Include="Type_Int.cpp" />
+    <ClCompile Include="Type_Routine.cpp" />
+    <ClCompile Include="Type_Routine_Variable_Args.cpp" />
+    <ClCompile Include="Type_String.cpp" />
     <ClCompile Include="Type_Syntax.cpp" />
     <ClCompile Include="Unary_Negate_Expression.cpp" />
     <ClCompile Include="Unary_Operator_Expression.cpp" />
@@ -302,6 +304,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="parser\Math_Lexer.l" />
+    <None Include="parser\math_parsing_unit.output" />
     <None Include="parser\parser.y" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -13,9 +13,25 @@ Type_Syntax::Type_Syntax(
 }
 
 
-jomike::j_value Type_Syntax::convert_value(const j_value& /*irk_val*/)const{
+j_value Type_Syntax::convert_value(const j_value& /*irk_val*/)const{
 	assert(!"Did Not implement conversion for this type");
 	return j_value();
+}
+
+const std::string& Type_Syntax::type_name()const{
+	return M_type_name;
+}
+
+bool Type_Syntax::is_same_type(const Type_Syntax& irk_right)const{
+	return type_name() == irk_right.type_name();
+}
+
+bool Type_Syntax::operator==(const Type_Syntax& irk_right)const{
+	return is_same_type(irk_right);
+}
+
+bool Type_Syntax::operator!=(const Type_Syntax& irk_right)const{
+	return !(*this == irk_right);
 }
 
 }

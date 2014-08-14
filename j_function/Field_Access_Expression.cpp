@@ -18,7 +18,7 @@ Field_Access_Expression::Field_Access_Expression(const Field_Access_Expression& 
 }
 
 j_value Field_Access_Expression::derived_get_value(const Arguments& i_args)const {
-	return get_j_symbol(M_identifier->identifier_name())
+	return get_symbol_from_scope(M_identifier->identifier_name())
 		->get_value(i_args);
 }
 
@@ -48,6 +48,11 @@ J_UI_String Field_Access_Expression::get_display_name(){
 
 Field_Access_Expression::~Field_Access_Expression(){
 	delete M_identifier;
+}
+
+j_symbol* Field_Access_Expression::make_non_referenced()const{
+	auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
+	return symbol->get_copy();
 }
 
 }

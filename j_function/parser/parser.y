@@ -66,6 +66,10 @@ j_symbol_component* jtl::g_input_line = nullptr;
 #include <Arguments.h>
 #include <j_expression.h>
 #include "j_yy_stack.h"
+#include "../Specific_Symbol_List.h"
+#include "../J_Symbol_Scope.h"
+#include "../Custom_Routine_Symbol.h"
+#include "../Assignment_Expression.h"
 }
 
 /* The section before the first %% is the Definitions section of the yacc
@@ -91,7 +95,8 @@ j_symbol_component* jtl::g_input_line = nullptr;
 	jomike::j_expression*			expression;
 	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
-	jomike::Statement_List*			statement_list;
+	jomike::Symbol_List*			symbol_list;
+	jomike::J_Symbol_Scope*			symbol_scope;
 }
 
 
@@ -113,7 +118,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 %token							T_NULL_PTR
 %token							T_LEFT_ARROW T_RIGHT_ARROW
-
+%token							T_END
 %token	<identifier>			T_IDENTIFIER
 %token	<constant_symbol>		T_STRING_CONSTANT
 %token	<constant_symbol>		T_INTEGER_CONSTANT
@@ -134,7 +139,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 %nonassoc '!' NEGATION T_INCREMENT T_DECREMENT
 
 %left '.'
-%nonassoc '['
+%nonassoc '[' ']'
 %left T_DIMENSIONS
 
 /* Non-terminal types
@@ -150,13 +155,15 @@ j_symbol_component* jtl::g_input_line = nullptr;
 */
 
 %type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild
-%type	<symbol>			Statement 
-%type	<expression>		Expression Call Field_Access_Expression Assignment_Expression LValue 
-%type	<expression>		Non_Dangling_If_Statement
+%type	<symbol>			Statement Non_Dangling_If_Statement Input_Line
+%type	<expression>		Expression Call Field_Access_Expression LValue
+%type	<expression>		Assignment_Expression
 %type	<constant_symbol>	Constant_Expression
-%type	<declaration>		Declaration Variable_Declaration
+%type	<declaration>		Declaration Variable_Declaration Routine_Definition
 %type	<type_syntax>		Type
-%type	<statement_list>	Statement_List
+%type	<symbol_list>		Statement_List
+%type	<declaration_list>	Declaration_List Bracketed_Declaration_List
+
 %%
 /* Rules
 * -----
@@ -165,6 +172,19 @@ j_symbol_component* jtl::g_input_line = nullptr;
 */
 
 
+Input_Line
+: Expression T_END {
+	$$ = $1;
+	*i_symbol_ptr = $1;
+	return true;
+}
+| Declaration T_END{
+	$$ = $1;
+	*i_symbol_ptr = $1->get_copy();
+	add_user_symbol($1);
+	return true;
+}
+;
 Statement
 : Non_Dangling_If_Statement {$$ = $1;}
 //| If_Dangling_Statement {$$ = $1;}
@@ -172,35 +192,59 @@ Statement
 
 Non_Dangling_If_Statement
 : Expression ';' {
-	  
-	*i_symbol_ptr = $1;
+	$$ = $1;
 	
-	return true; 
+	
+
 }
 | Declaration ';' {
-	
-	*i_symbol_ptr = $1->get_copy();
-	add_user_symbol($1);
-	
-	return true;
+	$$ = $1;
 }
 ;
 
 Statement_List
-	: Statement {
-		$$ = new Statement_List(@$);
-		$$->add_statement(*$1);
-		delete_tokens($1);
-	}
-	| Statement_List Statement {
-		$$ = $1;
-		$$->add_statement(*$2);
-		delete_tokens($2);
-	}
-	;
+: /*empty*/ {
+$$ = new Specific_Symbol_List<j_symbol>();
+}
+| Statement_List Statement {
+	$$ = $1;
+	$$->add_symbol($2);
+}
+;
+Declaration_List
+: /*empty*/ {
+	$$ = new Specific_Symbol_List<j_declaration>;
+}
+|Declaration {
+	$$ = new Specific_Symbol_List<j_declaration>();
+	$$->add_symbol($1);
+}
+| Declaration_List ',' Declaration{
+	$$ = $1;
+	$$->add_symbol($3);
+}
+;
 
 Declaration
 : Variable_Declaration {$$ = $1;}
+| Routine_Definition{ 
+	$$ = $1; 
+}
+;
+
+Routine_Definition
+: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type '{' Statement_List '}'{
+	$$ = new Custom_Routine_Symbol($2, *$1, *$3, $5, $7);
+	$1.destroy();
+	$3.destroy();
+}
+;
+
+Bracketed_Declaration_List
+: '[' Declaration_List ']' {
+	$$ = $2;
+}
+
 ;
 
 Variable_Declaration
@@ -271,13 +315,12 @@ Expression
 
 Assignment_Expression
 : LValue T_LEFT_ARROW Expression {
-	$1->set_value($3->get_value());
-	$$ = $1;
-	
-	$3.destroy();
+	$$ = new Assignment_Expression($1, $3);
 	
 }
 ;
+
+
 LValue
 : /*Expression '[' Expression ']' {
 	$$ = new Array_Access_Expression(*$1, *$3, @$);

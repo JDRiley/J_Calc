@@ -256,6 +256,7 @@ static void end_script_command(J_UI_Controller* i_controller, istream&){
 	i_controller->end_script_run();
 }
 
+static void process_script_cmd(J_UI_Controller* i_controller, istream&);
 void J_UI_Controller::run_script(const std::string& irk_file_name){
 	cerr << "\nSize of Ptr: " << sizeof(void*);
 	typedef  std::map<std::string, void(*)(J_UI_Controller*, istream&)>
@@ -265,6 +266,7 @@ void J_UI_Controller::run_script(const std::string& irk_file_name){
 		{"mouse_press", mouse_press_script_cmd}
 		,{"mouse_release", mouse_release_script_cmd}
 		,{"char_press", char_press_script_cmd}
+		, {"process", process_script_cmd}
 		,{"end", end_script_command}
 	};
 
@@ -425,7 +427,10 @@ static void mouse_release_script_cmd(J_UI_Controller* i_controller, istream& ir_
 	i_controller->draw_views();
 }
 
-
+static void process_script_cmd(J_UI_Controller* i_controller, istream& ){
+	auto window = Contexts_Handler::get_instance().get_active_window();
+	i_controller->key_input_cmd(window, J_KEY_ENTER, 0, J_PRESS, J_MOD_SHIFT);
+}
 
 static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_stream){
 	static string total_string;
@@ -435,11 +440,11 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 		line_writer_timer(j_get_time, draw_refresh_time);
 
 	string char_string;
-	getline(ir_stream, char_string, ';');
+	getline(ir_stream, char_string);
 	assert(char_string.front() == ' ');
 	char_string.erase(char_string.begin());
 
-	char_string.push_back(';');
+
 	if(!ir_stream){
 		throw J_Syntax_Error("Stream Went Bad in Char Press Read. Possibly no Endline Char");
 	}

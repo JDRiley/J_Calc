@@ -4,6 +4,12 @@
 #include "j_value.h"
 //
 #include "Arguments.h"
+//
+#include "Type_Syntax.h"
+//
+#include "J_Symbol_Error.h"
+//
+#include "parser/Lexer_Location.h"
 namespace jomike{
 
 Constant_Symbol::Constant_Symbol(
@@ -41,8 +47,17 @@ Int_Constant_Symbol::Int_Constant_Symbol(int i_val, const Lexer_Location& i_loc)
 	M_value = i_val;
 }
 
-jomike::J_UI_String Int_Constant_Symbol::get_display_name(){
+J_UI_String Int_Constant_Symbol::get_display_name(){
 	return derived_get_value(Arguments()).to_str();
+}
+
+j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const {
+	switch(irk_type.symbol_type()){
+	case Symbol_Types::DOUBLE:
+		return new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), Lexer_Location());
+	default:
+		throw J_Symbol_Error("Cannot Convert Int Constant to Type: " + irk_type.type_name() + " implicitly.");
+	}
 }
 
 

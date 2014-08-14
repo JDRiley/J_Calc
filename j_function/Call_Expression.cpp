@@ -11,7 +11,7 @@ namespace jomike{
 
 
 bool Call_Expression::has_value()const{
-	return get_j_symbol(M_identifier->identifier_name())->has_value();
+	return get_symbol_from_scope(M_identifier->identifier_name())->has_value();
 }
 
 j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
@@ -44,7 +44,7 @@ Call_Expression::~Call_Expression(){
 }
 
 j_symbol* Call_Expression::get_symbol()const{
-	return get_j_symbol(M_identifier->identifier_name());
+	return get_symbol_from_scope(M_identifier->identifier_name());
 }
 
 }

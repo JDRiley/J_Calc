@@ -54,10 +54,14 @@
 #include <Arguments.h>
 #include <j_expression.h>
 #include "j_yy_stack.h"
+#include "../Specific_Symbol_List.h"
+#include "../J_Symbol_Scope.h"
+#include "../Custom_Routine_Symbol.h"
+#include "../Assignment_Expression.h"
 
 
 /* Line 33 of lalr1.cc  */
-#line 61 "math_parsing_unit.hh"
+#line 65 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -73,7 +77,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 77 "math_parsing_unit.hh"
+#line 81 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -84,7 +88,7 @@ namespace yy {
     union semantic_type
     {
 /* Line 33 of lalr1.cc  */
-#line 85 "parser.y"
+#line 89 "parser.y"
 
     jomike::J_Symbol_Identifier*	identifier;
     jomike::j_symbol_component*		symbol_component;
@@ -94,11 +98,12 @@ namespace yy {
 	jomike::j_expression*			expression;
 	jomike::Arguments*				arguments;
 	jomike::j_symbol*				symbol;
-	jomike::Statement_List*			statement_list;
+	jomike::Symbol_List*			symbol_list;
+	jomike::J_Symbol_Scope*			symbol_scope;
 
 
 /* Line 33 of lalr1.cc  */
-#line 102 "math_parsing_unit.hh"
+#line 107 "math_parsing_unit.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -118,21 +123,22 @@ namespace yy {
      T_NULL_PTR = 263,
      T_LEFT_ARROW = 264,
      T_RIGHT_ARROW = 265,
-     T_IDENTIFIER = 266,
-     T_STRING_CONSTANT = 267,
-     T_INTEGER_CONSTANT = 268,
-     T_DOUBLE_CONSTANT = 269,
-     T_BOOL_CONSTANT = 270,
-     T_OR = 271,
-     T_AND = 272,
-     T_NOT_EQUAL = 273,
-     T_EQUAL = 274,
-     T_GREATER_EQUAL = 275,
-     T_LESS_EQUAL = 276,
-     T_DECREMENT = 277,
-     T_INCREMENT = 278,
-     NEGATION = 279,
-     T_DIMENSIONS = 280
+     T_END = 266,
+     T_IDENTIFIER = 267,
+     T_STRING_CONSTANT = 268,
+     T_INTEGER_CONSTANT = 269,
+     T_DOUBLE_CONSTANT = 270,
+     T_BOOL_CONSTANT = 271,
+     T_OR = 272,
+     T_AND = 273,
+     T_NOT_EQUAL = 274,
+     T_EQUAL = 275,
+     T_GREATER_EQUAL = 276,
+     T_LESS_EQUAL = 277,
+     T_DECREMENT = 278,
+     T_INCREMENT = 279,
+     NEGATION = 280,
+     T_DIMENSIONS = 281
    };
 
     };
@@ -308,7 +314,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 312 "math_parsing_unit.hh"
+#line 318 "math_parsing_unit.hh"
 
 
 
