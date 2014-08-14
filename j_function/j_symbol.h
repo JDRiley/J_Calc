@@ -58,6 +58,8 @@ public:
 	virtual void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
 
 	virtual void process(){}
+
+	virtual const Type_Syntax& return_type_syntax()const;
 protected:
 	virtual j_value derived_get_value(const Arguments& i_args)const = 0;
 

@@ -125,6 +125,30 @@ bool J_Unit::has_mass_unit()const{
 	return Mass_Unit::NONE != M_mass_unit;
 }
 
+bool J_Unit::operator==(const J_Unit& irk_right)const{
+	if(irk_right.M_scalar_unit != M_scalar_unit){
+		return false;
+	}
+
+	if(irk_right.M_time_unit != M_time_unit){
+		return false;
+	}
+
+	if(irk_right.M_distance_unit != M_distance_unit){
+		return false;
+	}
+
+	if(irk_right.M_mass_unit != M_mass_unit){
+		return false;
+	}
+
+	return true;
+}
+
+bool J_Unit::operator!=(const J_Unit& irk_right)const{
+	return !(*this == irk_right);
+}
+
 
 
 

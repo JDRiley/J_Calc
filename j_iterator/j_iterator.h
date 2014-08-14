@@ -90,7 +90,7 @@ struct points_to_same_non_qualified_type
 template<typename Val_TypeL, typename Val_TypeR, typename St>
 struct enable_if_same_non_qualified_type{
 	typedef typename std::enable_if<
-	std::is_same<typename std::remove_cv<St>::type, typename std::remove_cv<St>::type>::value
+	std::is_same<typename std::remove_cv<Val_TypeL>::type, typename std::remove_cv<Val_TypeR>::type>::value
 	, St>::type type;
 };
 

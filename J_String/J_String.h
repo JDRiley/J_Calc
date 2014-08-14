@@ -74,6 +74,17 @@ std::string number_to_string(Num_t i_val, int i_decimal_places){
 
 }
 
+template<typename Ret_t>
+Ret_t from_string(const std::string& irk_str); 
+
+template<>
+int from_string<int>(const std::string& irk_str);
+
+template<>
+j_dbl from_string<j_dbl>(const std::string& irk_str);
+
+template<>
+j_llint from_string<j_llint>(const std::string& irk_str);
 
 }
 

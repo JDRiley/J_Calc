@@ -211,6 +211,9 @@
     <ClInclude Include="Assignment_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="J_Value_Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -364,6 +367,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Assignment_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Value_Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

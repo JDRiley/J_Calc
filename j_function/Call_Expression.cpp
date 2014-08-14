@@ -1,5 +1,4 @@
 #include "Call_Expression.h"
-
 //
 #include <cassert>
 //
@@ -11,7 +10,7 @@ namespace jomike{
 
 
 bool Call_Expression::has_value()const{
-	return get_symbol_from_scope(M_identifier->identifier_name())->has_value();
+	return true;
 }
 
 j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
@@ -25,6 +24,8 @@ Call_Expression::Call_Expression(
 	:j_expression(Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 	M_identifier = i_identifier;
 	M_args_list = i_args_list;
+
+	
 }
 
 Call_Expression::Call_Expression(const Call_Expression& irk_source)
@@ -45,6 +46,10 @@ Call_Expression::~Call_Expression(){
 
 j_symbol* Call_Expression::get_symbol()const{
 	return get_symbol_from_scope(M_identifier->identifier_name());
+}
+
+const Type_Syntax& Call_Expression::return_type_syntax()const {
+	return get_symbol_from_scope(M_identifier->identifier_name())->return_type_syntax();
 }
 
 }

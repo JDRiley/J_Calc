@@ -1,11 +1,15 @@
 #include "j_value.h"
 #include "Unit_Converter.h"
 //
+#include "J_Value_Types.h"
+//
 #include <j_type.h>
 //
 #include "J_Symbol_Error.h"
 //
 #include <cstdlib>
+//
+#include <J_String.h>
 using std::equal;
 using std::string;
 using std::to_string;
@@ -77,27 +81,49 @@ void j_value::binary_value_operation(
 
 }
 
+static void convert_to_same_type(j_value* i_first_val, j_value* i_second_val){
+	if(i_first_val->upcastable(i_second_val->type())){
+		
+		i_first_val->upcast(i_second_val->type());
+
+	} else if(i_second_val->upcastable(i_first_val->type())){
+		
+		i_second_val->upcast(i_first_val->type());
+
+	} else if(i_first_val->type() != i_second_val->type()){
+		throw J_Value_Error("Cannot convert Value to Same type in convert_to_same_type function");
+	}
+
+	return;
+}
+
 
 template<typename Operator_Class>
 void j_value::binary_value_operation(
-	const j_value& i_right, j_value::Value_Union* i_value_union
-	, const Operator_Class& i_func){
+	const j_value& i_right, const Operator_Class& i_func){
+	
+	j_value right_val(i_right);
+	
+	if(type() != right_val.type()){
+		convert_to_same_type(this, &right_val);
+	}
+
 	switch(M_type){
 	case Value_Types::LL_INTEGER:
 		binary_value_operation(
-			M_val.llint_val, i_right, &i_value_union->llint_val, i_func);
+			M_val.llint_val, i_right, &M_val.llint_val, i_func);
 		break;
 	case Value_Types::DOUBLE:
 		binary_value_operation(
-			M_val.dbl_val, i_right, &i_value_union->dbl_val, i_func);
+			M_val.dbl_val, i_right, &M_val.dbl_val, i_func);
 		break;
 	case Value_Types::BOOL:
 		binary_value_operation(
-			M_val.bool_val, i_right, &i_value_union->bool_val, i_func);
+			M_val.bool_val, i_right, &M_val.bool_val, i_func);
 		break;
 	case Value_Types::STRING:
 		assert(i_right.type() == Value_Types::STRING);
-		i_func(*M_val.str_val, i_right.as_string(), i_value_union->str_val);
+		i_func(*M_val.str_val, i_right.as_string(), M_val.str_val);
 		break;
 	default:
 		break;
@@ -131,14 +157,33 @@ void j_value::binary_value_operation_no_str_or_bool(
 
 
 
-j_value::j_value(const j_value& irk_source, J_Unit i_unit):M_units(i_unit)
-, M_val(irk_source.M_val), M_has_value_status(irk_source.value_status()){
-	convert_units(M_units);
+j_value::j_value(const j_value& irk_source, J_Unit i_unit):j_value(irk_source){
+	convert_units(i_unit);
 }
 
 j_value::j_value(){
 	M_type = Value_Types::UNDEFINIED;
 	M_has_value_status = false;
+}
+
+j_value::j_value(const j_value& irk_source)
+: M_val(irk_source.M_val), M_units(irk_source.M_units), M_type(irk_source.M_type)
+, M_has_value_status(irk_source.M_has_value_status){
+	switch(M_type){
+	case Value_Types::STRING:
+		M_val.str_val = new string(irk_source.as_string());
+	default:
+		;
+	}
+}
+
+
+j_value::j_value(j_value&& irv_src)
+: M_val(irv_src.M_val), M_units(irv_src.M_units), M_type(irv_src.M_type)
+, M_has_value_status(irv_src.M_has_value_status){
+	M_type = Value_Types::LL_INTEGER;
+	M_has_value_status = false;
+	swap(irv_src);
 }
 
 template<typename Left_t, typename Right_t>
@@ -163,8 +208,8 @@ j_value& j_value::operator+=(const j_value& irk_val){
 	assert(Value_Types::STRING != irk_val.M_type);
 	
 
-
-	binary_value_operation(irk_val, &M_val, Addition_Class());
+	
+	binary_value_operation(irk_val, Addition_Class());
 	return *this;
 }
 
@@ -270,19 +315,62 @@ j_value::Value_Types j_value::type()const{
 	return M_type;
 }
 
-const std::string& j_value::as_string()const{
-	return *M_val.str_val;
+std::string j_value::as_string()const{
+	return cast_to<std::string>();
 }
 
 bool j_value::as_bool()const{
 	return M_val.bool_val;
 }
 
-j_llint j_value::as_llint()const{
+template<typename Ret_t>
+Ret_t j_value::cast_to()const{
 
 	if(!M_has_value_status){
 		throw J_Symbol_Error("Value uninitialized");
 	}
+	switch(M_type){
+	case j_value::Value_Types::LL_INTEGER:
+		return static_cast<Ret_t>(M_val.llint_val);
+	case j_value::Value_Types::DOUBLE:
+		return static_cast<Ret_t>(M_val.dbl_val);
+	case j_value::Value_Types::BOOL:
+		return static_cast<Ret_t>(M_val.bool_val ? 1ll : 0ll);
+	case j_value::Value_Types::STRING:{
+
+
+		return from_string<Ret_t>(*M_val.str_val);
+	}
+	case j_value::Value_Types::UNDEFINIED:
+		assert(!"Type Not Identified but declared to have value");
+	default:
+		assert(!"Unknown Type");
+		return 0ll;
+	}
+
+}
+
+template<>
+std::string j_value::cast_to()const{
+	switch(M_type){
+	case j_value::Value_Types::LL_INTEGER:
+		return to_string(M_val.llint_val);
+	case j_value::Value_Types::DOUBLE:
+		return to_string(M_val.dbl_val);
+	case j_value::Value_Types::BOOL:
+		return M_val.bool_val ? "true" : "false";
+	case j_value::Value_Types::STRING:
+		return *M_val.str_val;
+	case j_value::Value_Types::UNDEFINIED:
+		throw J_Value_Error("Undefined Value type");
+	default:
+		throw J_Value_Error("Could not convert type to string");
+	}
+}
+
+j_llint j_value::as_llint()const{
+
+	
 	switch(M_type){
 	case j_value::Value_Types::LL_INTEGER:
 		return M_val.llint_val;
@@ -308,7 +396,7 @@ j_llint j_value::as_llint()const{
 }
 
 Dbl_t j_value::as_double()const{
-	return M_val.dbl_val;
+	return cast_to<j_dbl>();
 }
 
 
@@ -411,6 +499,88 @@ Symbol_Types j_value::symbol_type()const{
 
 J_Unit j_value::units()const{
 	return M_units;
+}
+
+bool j_value::upcastable(Value_Types i_type)const{
+	switch(M_type){
+	case j_value::Value_Types::LL_INTEGER:
+		return int_upcastable(i_type);
+	case j_value::Value_Types::DOUBLE:
+		return dbl_upcastable(i_type);
+	case j_value::Value_Types::BOOL:
+		return bool_upcastable(i_type);
+	case j_value::Value_Types::STRING:
+		return str_upcastable(i_type);
+	case j_value::Value_Types::UNDEFINIED:
+		return false;
+	default:
+		assert(!"Unknown Value_Type");
+		return false;
+	}
+}
+
+void j_value::upcast(Value_Types i_type){
+	assert(upcastable(i_type));
+	convert_to_type(i_type);
+}
+
+void j_value::convert_to_type(Value_Types i_type){
+	if(!value_status()){
+		throw J_Value_Error("Cannot convert j_value type when j_value has no value");
+	}
+
+	j_value temp_type(*this);
+	J_Unit old_units = temp_type.units();
+	clear();
+
+	switch(i_type){
+	case j_value::Value_Types::LL_INTEGER:
+		(*this) = j_value(temp_type.as_llint(), old_units);
+		break;
+	case j_value::Value_Types::DOUBLE:
+		(*this) = j_value(temp_type.as_double(), old_units);
+		break;
+	case j_value::Value_Types::BOOL:
+		(*this) = j_value(temp_type.as_bool(), old_units);
+		break;
+	case j_value::Value_Types::STRING:
+		(*this) = j_value(temp_type.as_string(), old_units);
+		break;
+	case j_value::Value_Types::UNDEFINIED:
+	default:
+		throw J_Value_Error("Could Not Convert j_value type");
+	}
+
+	assert(M_type == i_type);
+	assert(units() == old_units);
+}
+
+void j_value::clear(){
+	if(Value_Types::STRING == M_type){
+		delete M_val.str_val;
+	}
+}
+
+j_value::~j_value(){
+	clear();
+}
+
+void j_value::swap(j_value& ir_val){
+	std::swap(M_val, ir_val.M_val);
+	std::swap(M_units, ir_val.M_units);
+	std::swap(M_type, ir_val.M_type);
+	std::swap(M_has_value_status, ir_val.M_has_value_status);
+}
+
+j_value& j_value::operator=(const j_value& irv_val){
+	j_value temp(irv_val);
+	swap(temp);
+	return *this;
+}
+
+j_value& j_value::operator=(j_value&& irv_val){
+	swap(irv_val);
+	return *this;
 }
 
 J_Value_Error::J_Value_Error(const char* const ik_message):J_Error(ik_message){}

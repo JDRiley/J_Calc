@@ -38,4 +38,3 @@ typedef j_value_Shared_t J_Value_Shared_t;
 }
 
 #endif //J_SYMBOL_FWD_DECL_H
-

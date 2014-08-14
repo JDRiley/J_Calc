@@ -52,6 +52,8 @@ j_value Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
 
 		Num_t answer = irk_args[0].get_value().as_type<Num_t>();
 
+		
+
 		answer = std::accumulate(irk_args.begin() + 1, irk_args.end(), answer
 			, [&](Num_t i_val, j_symbol* i_symbol){
 			return M_function(i_val, i_symbol->get_value().as_type<Num_t>());

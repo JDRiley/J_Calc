@@ -35,6 +35,8 @@ public:
 
 	Call_Expression(const Call_Expression& irk_source);
 
+	const Type_Syntax& return_type_syntax()const override;
+
 	~Call_Expression();
 protected:
 	j_symbol* get_symbol()const;

@@ -42,6 +42,11 @@ const Type_Syntax_List& Type_Routine::argument_types_list()const{
 	return *M_argument_types;
 }
 
+const Type_Syntax& Type_Routine::return_type()const{
+	assert(M_return_type);
+	return *M_return_type;
+}
+
 }
 
 

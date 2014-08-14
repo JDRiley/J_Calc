@@ -13,15 +13,19 @@ public:
 	j_routine_symbol* get_copy()const override = 0;
 	j_routine_symbol* move_copy()override = 0;
 
-	bool has_value()const override{
-		return true;
-	}
+	bool has_value()const override;
 
-	void clear()override{
+	void clear()override;
 
-	}
+	const Type_Syntax& return_type_syntax()const override;
+
+	const Type_Routine& routine_type_syntax()const;
+
+
+	J_UI_String get_display_name()override;
 protected:
 	const Type_Syntax_List& argument_types_list()const;
+	
 private:
 
 };

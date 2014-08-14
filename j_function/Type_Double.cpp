@@ -6,7 +6,7 @@
 namespace jomike{
 
 
-Type_Double::Type_Double():Type_Syntax("double", Symbol_Types::INT){
+Type_Double::Type_Double():Type_Syntax("double", Symbol_Types::DOUBLE){
 
 }
 

@@ -205,6 +205,11 @@ j_symbol* j_symbol::convert_to_type(const Type_Syntax& /*irk_type*/)const{
 						 + " with type: " + type_syntax().type_name());
 }
 
+const Type_Syntax& j_symbol::return_type_syntax()const{
+	assert(M_type);
+	return *M_type;
+}
+
 const Arguments& empty_arguments(){
 	static Arguments empty_args;
 	return empty_args;

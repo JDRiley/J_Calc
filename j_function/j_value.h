@@ -9,8 +9,9 @@
 //
 #include "Symbol_Types.h"
 //
-//
 #include "j_numeric.h"
+//
+#include <j_iterator.h>
 namespace jomike{
 
 class j_value{
@@ -26,6 +27,23 @@ public:
 
 	enum class Value_Types{LL_INTEGER, DOUBLE, BOOL, STRING, UNDEFINIED};
 
+
+	//Value_Union M_val;
+	//J_Unit M_units;
+	//Value_Types M_type;
+	//bool M_has_value_status = false;
+
+	//Deleting Constructors and Assignment Operators
+	j_value(const j_value& irk_source);
+	j_value(j_value&&);
+
+
+	j_value& operator=(const j_value& irv_val);
+
+	j_value& operator=(j_value&& irv_val);
+
+	void swap(j_value& ir_val);
+
 	const j_value& operator+(const j_value&)const;
 
 	Dbl_t as_double()const;
@@ -34,18 +52,29 @@ public:
 
 	bool as_bool()const;
 
-	const std::string& as_string()const;
+	std::string as_string()const;
 
 	bool value_status()const;
 
 	J_Unit units()const;
 	
-	template<typename Num_t>
-	Num_t as_type()const;
+	template<typename Val_t>
+	typename std::remove_cv<typename std::remove_reference<Val_t>::type>::type
+		as_type()const;
 
 	template<>
 	j_llint as_type<j_llint>()const{
 		return as_llint();
+	}
+
+	template<>
+	j_dbl as_type<j_dbl>()const{
+		return as_double();
+	}
+
+	template<>
+	bool as_type<bool>()const{
+		return as_bool();
 	}
 
 	template<>
@@ -54,9 +83,10 @@ public:
 	}
 
 	template<>
-	const std::string& as_type<const std::string&>()const{
+	std::string as_type<const std::string&>()const{
 		return as_string();
 	}
+	
 	
 
 	std::string to_str()const;
@@ -75,18 +105,33 @@ public:
 	j_value& convert_units(J_Unit);
 
 	Value_Types type()const;
+
+	bool upcastable(Value_Types i_type)const;
+
+	void upcast(Value_Types i_type);
+
+	void convert_to_type(Value_Types i_type);
+
+	void clear();
+	~j_value();
 private:
-	J_Unit M_units;
+	
 	union Value_Union{
 		j_llint llint_val;
 		j_dbl dbl_val;
 		std::string* str_val;
 		bool bool_val;
-	} M_val;
+	};
+
+	Value_Union M_val;
+	J_Unit M_units;
+	Value_Types M_type;
+	bool M_has_value_status = false;
+
 
 	template<class Operator_Class>
 	void binary_value_operation(
-		const j_value& i_right, Value_Union* i_value_union, const Operator_Class&);
+		const j_value& i_right, const Operator_Class&);
 
 	template<class Operator_Class>
 	void binary_value_operation_no_str_or_bool(
@@ -97,21 +142,31 @@ private:
 		const Left_t& i_left, const j_value& i_right, Ret_t* i_destination
 		, const Operator_Class& i_func);
 	
-	Value_Types M_type;
-	bool M_has_value_status = false;
+	
 
 
+	template<typename Ret_t>
+	Ret_t cast_to()const;
+
+	template<>
+	std::string cast_to()const;
 
 	template<class Operator_Class>
 	typename Operator_Class::return_type
 		unary_value_operation(Operator_Class)const;
+
+
+
+
+
+
 };
 
 j_dbl unit_conversion(const j_value&, J_Unit);
 
 class J_Value_Error : public J_Error{
 public:
-	J_Value_Error(const char * const ik_message = "NO Value in symbol");
+	J_Value_Error(const char * const ik_message = "No Value in symbol");
 private:
 };
 

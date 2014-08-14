@@ -10,11 +10,13 @@
 #include "J_Symbol_Error.h"
 //
 #include "parser/Lexer_Location.h"
+//
+#include "Type_Factory.h"
 namespace jomike{
 
 Constant_Symbol::Constant_Symbol(
 	Symbol_Types i_symbol_type, const Lexer_Location& /*i_loc*/):j_expression(i_symbol_type){
-
+	set_type_syntax(make_type_syntax(i_symbol_type));
 }
 
 
@@ -53,8 +55,11 @@ J_UI_String Int_Constant_Symbol::get_display_name(){
 
 j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const {
 	switch(irk_type.symbol_type()){
-	case Symbol_Types::DOUBLE:
-		return new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), Lexer_Location());
+	case Symbol_Types::DOUBLE:{
+		auto dbl_symbol = new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), Lexer_Location());
+		dbl_symbol->set_name(name());
+		return dbl_symbol;
+	}
 	default:
 		throw J_Symbol_Error("Cannot Convert Int Constant to Type: " + irk_type.type_name() + " implicitly.");
 	}

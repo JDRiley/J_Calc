@@ -213,51 +213,7 @@ typename jtl::enable_if_same_non_qualified_type<
 
 #undef PTR_ASSIGN
 
-	//if(auto ptr = i_func(irk_right.identifier)){
-	//	++num_set;
-	//	identifier = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.constant_symbol)){
-	//	++num_set;
-	//	constant_symbol = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.declaration)){
-	//	++num_set;
-	//	declaration = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.type_syntax)){
-	//	++num_set;
-	//	type_syntax = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.expression)){
-	//	++num_set;
-	//	expression = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.arguments)){
-	//	++num_set;
-	//	arguments = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.symbol)){
-	//	++num_set;
-	//	symbol = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.symbol_list)){
-	//	++num_set;
-	//	symbol_list = ptr;
-	//}
-
-	//if(auto ptr = i_func(irk_right.symbol_scope)){
-	//	++num_set;
-	//	symbol_scope = ptr;
-	//}
-
+	
 
 	assert((num_set < 2) || "Num Set Should Be only 1 max");
 }

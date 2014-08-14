@@ -67,7 +67,7 @@ typedef double j_dbl;
 typedef double Dbl_t;
 typedef int32_t j_int;
 typedef int16_t j_short;
-
+typedef long long j_llint;
 
 const j_size_t J_SIZE_T_ZERO = 0;
 const j_int J_INT_ZERO = 0;

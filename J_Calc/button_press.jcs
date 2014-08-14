@@ -1,8 +1,5 @@
-char_press [int c<-0]foo[]->int{c <- c + 1; c;}
+char_press []foo[dbl i_val]->dbl{i_val + 1.5;}
 process
-char_press foo()
-process
-char_press 
-char_press foo()
+char_press foo(1)
 process
 end

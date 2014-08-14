@@ -56,7 +56,20 @@ J_UI_String::const_iterator get_closing_bracket(J_UI_String::const_iterator ik_p
 }
 
 
+template<>
+int from_string<int>(const std::string& irk_str){
+	return std::stoi(irk_str);
+}
 
+template<>
+j_dbl from_string<j_dbl>(const std::string& irk_str){
+	return std::stod(irk_str);
+}
+
+template<>
+j_llint from_string<j_llint>(const std::string& irk_str){
+	return std::stoll(irk_str);
+}
 
 
 

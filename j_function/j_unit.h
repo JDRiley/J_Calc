@@ -28,6 +28,10 @@ public:
 	bool has_distance_unit()const;
 	bool has_time_unit()const;
 	bool has_mass_unit()const;
+
+	bool operator==(const J_Unit& irk_right)const;
+
+	bool operator!=(const J_Unit& irk_right)const;
 private:
 	Scalar_Unit M_scalar_unit;
 	Time_Unit M_time_unit;

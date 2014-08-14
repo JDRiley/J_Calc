@@ -38,7 +38,7 @@ bool Symbol_Component_List::has_value()const{
 
 jomike::j_value Symbol_Component_List::derived_get_value(const Arguments& i_args)const{
 	assert(i_args.empty());
-
+	(void)i_args;
 	//Symbol List getting the value is just getting the value of the last statement
 
 	if(M_components.empty()){
@@ -60,7 +60,23 @@ jomike::j_value Symbol_Component_List::derived_get_value(const Arguments& i_args
 		throw J_Value_Error("Trying to get value from non j_symbol type. ");
 	}
 
-	return last_symbol->get_value();
+	return  last_symbol->get_value();
+}
+
+jomike::j_size_t Symbol_Component_List::size()const{
+	return M_components.size();
+}
+
+bool Symbol_Component_List::empty()const{
+	return M_components.empty();
+}
+
+const j_symbol_component& Symbol_Component_List::operator[](j_size_t i_index)const{
+	return *M_components[i_index];
+}
+
+j_symbol_component& Symbol_Component_List::operator[](j_size_t i_index){
+	return *M_components[i_index];
 }
 
 }

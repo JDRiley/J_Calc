@@ -20,16 +20,17 @@ public:
 	symbol_iterator begin()const;
 	symbol_iterator end()const;
 
-	j_symbol_component& operator[](j_size_t i_index){
-		return *M_components[i_index];
-	}
+	j_symbol_component& operator[](j_size_t i_index);
 
-	const j_symbol_component& operator[](j_size_t i_index)const{
-		return *M_components[i_index];
-	}
+	const j_symbol_component& operator[](j_size_t i_index)const;
 
 	Symbol_Component_List* get_copy()const override = 0;
 	Symbol_Component_List* move_copy()override = 0;
+
+	bool empty()const;
+
+
+	j_size_t size()const;
 protected:
 	void add_symbol_component(const j_symbol_component& irk_symbol_component);
 	void add_symbol_component(j_symbol_component* i_symbol_component);
