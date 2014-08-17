@@ -4,6 +4,10 @@
 //
 #include <J_Open_GL.h>
 
+//
+#include <iostream>
+
+using std::cerr; using std::cout; using std::endl;
 namespace jomike{
 static J_Open_GL s_open_gl;
 const int SK_VERTEX_ARRAY_SIZE = 24;
@@ -13,6 +17,7 @@ J_UI_Box::J_UI_Box(const J_Rectangle& irk_pos):J_Rectangle(irk_pos){
 
 void J_UI_Box::initialization(){
 	M_shader = J_GL_Box_Shader_Unique_t(new J_GL_Box_Shader);
+	cerr << "\nNew Box Shader";
 	init_vaos();
 	recalculate_vaos();
 }

@@ -9,7 +9,7 @@
 //
 #include <string>
 namespace jomike{
-const std::string SHADER_BASE_PATH = "J:/JoMike Library/J_OpenGl/Shaders/";
+const std::string SHADER_BASE_PATH = "Shaders/";
 /*j_uint load_vertex_shader*/
 /*
 	Loads a vertex shader and returns It's id.

@@ -740,7 +740,16 @@ bool J_Text_Box::insert_char(J_UI_Char i_char){
 
 	auto& cur_pen_pos = M_pen_poses[M_cursor_pos];
 
-	J_UI_Letter_Box_Shared_t new_letter_box(new J_UI_Letter_Box(J_Rectangle()));
+	J_UI_Letter_Box_Shared_t new_letter_box;
+	
+	if(M_multi_string.size() < M_letter_box_string.size()){
+		//If We have a spare letterbox use it instead of creating a new one
+		new_letter_box = M_letter_box_string->back();
+		M_letter_box_string->pop_back();
+	} else{
+		new_letter_box = J_UI_Letter_Box_Shared_t(new J_UI_Letter_Box(J_Rectangle()));
+	}
+
 	new_letter_box->set_image_box(cur_pen_pos, bitmap_metrics, *M_frame);
 	new_letter_box->set_buffer_data(
 		bitmap_metrics, cur_string.color()

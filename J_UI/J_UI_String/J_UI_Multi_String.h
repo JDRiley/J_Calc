@@ -128,7 +128,7 @@ public:
 	//Character Insertions/Deletion
 	j_ui_char_iterator insert(j_size_t pos, J_UI_Char);
 	j_ui_char_iterator insert(j_ui_char_iterator, J_UI_Char);
-	void insert(j_size_t pos, const J_UI_String&);
+	iterator insert(j_size_t pos, const J_UI_String&);
 
 	void erase(j_size_t pos);
 	void erase(j_size_t pos, j_size_t size);
@@ -176,6 +176,11 @@ private:
 	J_UI_Multi_String::iterator
 		J_UI_Multi_String::insert_into(
 		const_iterator y_insert_pos, const J_UI_String& yrk_string);
+
+
+	iterator combine_same_adjacent_types(iterator i_pos);
+
+
 };
 
 

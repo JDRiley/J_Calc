@@ -13,11 +13,16 @@
 #include <iostream>
 using std::cerr; using std::endl; using std::cout;
 using std::string;
+
+
+//#define PRINT_SHADER_SOURCE
+//#define J_GL_DEBUG 1
 namespace jomike{
 //J_GL_Shader_Program Functions *************************************************************
 
 
 static J_Open_GL s_open_gl;
+void enforce_shader_status(j_uint i_shader_id, GLenum i_status);
 J_GL_Box_Shader::J_GL_Box_Shader(){
 	j_uint vert_shader_id = load_vertex_shader(SHADER_BASE_PATH + "quad.vert");
 	j_uint box_frag_id  = load_fragment_shader(SHADER_BASE_PATH + "box.frag");

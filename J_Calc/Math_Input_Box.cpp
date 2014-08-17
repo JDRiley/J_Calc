@@ -185,10 +185,10 @@ void Math_Input_Box::math_box_char_input_cmd(J_Text_Box_Object_Shared_t i_math_b
 		return;
 	}
 
-	auto line_input_pos = math_box->get_line_pos_at_pos(i_math_box->get_cursor_pos());
+	//auto line_input_pos = math_box->get_line_pos_at_pos(i_math_box->get_cursor_pos());
 
 
-	line_input_pos = math_box->clear_output(line_input_pos);
+	//line_input_pos = math_box->clear_output(line_input_pos);
 	//switch(i_charcode){
 
 	//default:
@@ -326,7 +326,9 @@ Math_Input_Box::Line_Input_it Math_Input_Box::join_to_next(Line_Input_it i_pos){
 /*bool insert_char(J_UI_Char)*/
 bool Math_Input_Box::insert_char(J_UI_Char i_char){
 	auto line_input_pos = get_line_pos_at_pos(get_cursor_pos());
-
+	if(M_line_inputs.front().output_str().size() == 2){
+		M_line_inputs.begin();
+	}
 	j_size_t pos = get_cursor_pos() - line_input_pos->start_pos();
 	
 	if(line_input_pos->read_only_status(pos)){

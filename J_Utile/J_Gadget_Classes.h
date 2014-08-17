@@ -83,6 +83,11 @@ public:
 		M_notification_function();
 		return &M_array;
 	}
+
+
+	j_size_t size()const{
+		return M_array.size();
+	}
 private:
 	Array_t M_array;
 	std::function<void()> M_notification_function;

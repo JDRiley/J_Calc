@@ -1,0 +1,14 @@
+#version  430  core
+
+layout (vertices = 1) out;
+
+int number_of_segments = 20;
+int number_of_strips = 5;
+
+void main(){
+	gl_out[gl_InvocationID].gl_Position
+	= gl_in[gl_InvocationID].gl_Position;
+
+	gl_TessLevelOuter[1] = float(number_of_segments);
+	gl_TessLevelOuter[0] = float(number_of_strips);
+}
