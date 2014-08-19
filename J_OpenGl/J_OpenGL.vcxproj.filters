@@ -42,6 +42,12 @@
     <ClInclude Include="J_OpenGL_Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader_Program_Sources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader_Utility_Functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Shader_Program.cpp">
@@ -59,27 +65,21 @@
     <ClCompile Include="J_OpenGL_Functions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shader_Program_Sources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader_Utility_Functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Specific_Shader_Program_Impl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\box.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\box_outline.frag">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Shaders\circle_outline.tes">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\five_float_out.tcs">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\pass_through.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\quad.vert">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shaders\quad_image.frag">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Shaders\quad_texture.frag">

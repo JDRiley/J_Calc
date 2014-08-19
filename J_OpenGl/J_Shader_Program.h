@@ -9,55 +9,28 @@
 //
 #include <string>
 namespace jomike{
-const std::string SHADER_BASE_PATH = "Shaders/";
-/*j_uint load_vertex_shader*/
-/*
-	Loads a vertex shader and returns It's id.
-	Warning j_uint is locally typedef'd to unsigned
-*/
-j_uint load_vertex_shader(const std::string& irk_source);
-
-/*j_uint load_fragment_shader*/
-/*
-	Loads a fragment shader and returns It's id.
-	Warning j_uint is locally typedef'd to unsigned
-*/
-j_uint load_fragment_shader(const std::string& irk_source);
-
-
-///j_uint load_tessellation_control_shader(const std::string&)
-/*																			*/
-/*		Loads a tessellation control shader using string as source file		*/
-/*																			*/
-j_uint load_tessellation_control_shader(const std::string&);
-
-///j_uint load_tessellation_evaluation_shader(const std::string&)
-/*																			*/
-/*		loads a tessellation evaluation shader using string as source file	*/
-/*																			*/
-j_uint load_tessellation_evaluation_shader(const std::string&);
-
-/*void enforce_shader_status(GLenum)*/
-/*
-Checks the given status of the given shader. Throws exception and prints on failure
-*/
-void enforce_shader_status(j_uint shader_id, GL_Statuses i_status);
-
-/*void enforce_program_status(GLenum)*/
-/*
-Checks the given status of the given shader. Throws exception and prints on failure
-*/
-void enforce_program_status(j_uint program_id, GL_Statuses i_status);
-
-
+//const std::string SHADER_BASE_PATH = "Shaders/";
 
 
 class J_GL_Shader_Program{
 public:
 	~J_GL_Shader_Program();
 protected:
-	void add_shader_id(j_uint i_shader_id);
-	void add_program_id(j_uint i_program_id);
+
+	j_uint load_fragment_shader(const char* const ik_shader_src);
+	j_uint load_vertex_shader(const char* const ik_shader_src);
+
+	j_uint create_program();
+
+	int get_uniform_location(j_uint i_program_id, const char* const ik_uniform_name);
+	void attach_shader_to_program(j_uint i_program_id, j_uint i_shader_id);
+
+	void link_program(j_uint i_program_id);
+
+	void enforce_program_status(j_uint i_program_id, GL_Statuses i_status)const;
+
+	void program_uniform_4v(j_uint i_program_id, int i_uniform_loc, int i_count, const j_float* i_data);
+
 private:
 	ex_array<j_uint> M_program_ids;
 	ex_array<j_uint> M_shader_ids;
@@ -75,6 +48,14 @@ public:
 
 	j_uint box_program_id()const{return M_box_prog_id;}
 	j_uint outline_program_id()const{return M_outline_prog_id;}
+
+	
+	//This should be protected but function make_new() in J_UI_Letter_Box.cpp does not 
+	// compile for some reason when declared as protected
+	J_GL_Box_Shader(j_uint i_box_program_id, j_uint i_outline_program_id);
+protected:
+//	J_GL_Box_Shader(j_uint i_box_program_id, j_uint i_outline_program_id);
+	
 private:
 	j_uint M_box_prog_id;
 	j_uint M_outline_prog_id;
@@ -85,8 +66,8 @@ class Image_Shader_Program : public J_GL_Shader_Program{
 public:
 	Image_Shader_Program(Image_Format i_format);
 	j_uint program_id()const;
-	void set_format(Image_Format);
-	void set_middle_line_color(J_UI_Color);
+
+
 private:
 	j_uint M_image_program_id, M_vert_shader_id, M_image_frag_id;
 	Image_Format M_format;
@@ -105,7 +86,7 @@ private:
 	j_uint M_circle_outine_prog_id;
 };
 
-class J_GL_Line_Shader{
+class J_GL_Line_Shader : public J_GL_Shader_Program{
 public:
 	J_GL_Line_Shader();
 	int program_id();

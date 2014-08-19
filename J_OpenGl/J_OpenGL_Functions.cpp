@@ -58,7 +58,7 @@ static jtl::Instance_Pointer<jtl::Contexts_Handler> s_contexts_handler;
 
 
 namespace jomike{
-
+static int g_number_of_contexts = 0;
 static void initialize_context(J_Context_Shared_t new_context);
 static J_Open_GL s_open_gl;
 const int THREAD_WAIT_MS = 50;
@@ -70,6 +70,10 @@ public:
 	GLEWContextStruct* M_context = nullptr;
 	J_GL_Vertex_Array M_screen_box_vao = J_GL_Vertex_Array(0);
 	J_GL_Buffer M_screen_box_vao_buffer = J_GL_Buffer(0);
+
+
+
+
 	~J_Context();
 
 };
@@ -80,6 +84,9 @@ J_Context::~J_Context(){
 
 	delete M_context;
 	glfwDestroyWindow(M_window);
+	assert(g_number_of_contexts > 0);
+	--g_number_of_contexts;
+	
 }
 
 
@@ -89,7 +96,7 @@ Contexts_Handler& Contexts_Handler::get_instance(){
 	return contexts_handler;
 }
 
-Contexts_Handler::Contexts_Handler(){init_view_library();}
+Contexts_Handler::Contexts_Handler(){ init_view_library(); }
 
 Context_RAII::Context_RAII():M_context(s_contexts_handler->get_active_context()){
 	//if(M_context){
@@ -191,7 +198,7 @@ J_Context_Shared_t Contexts_Handler::create_j_context(int i_width, int i_height
 													  , j_monitor_t i_monitor
 													  , j_window_t i_share_window){
 	glfwWindowHint(GLFW_VISIBLE, false);
-
+	
 	J_Context_Shared_t new_context(new J_Context);
 	//M_main_context = M_main_context ? M_main_context : new_context;
 	Context_RAII context_saver;
@@ -224,7 +231,7 @@ J_Context_Shared_t Contexts_Handler::create_j_context(int i_width, int i_height
 
 	initialize_context(new_context);
 
-
+	++g_number_of_contexts;
 	return new_context;
 }
 
@@ -523,6 +530,15 @@ bool open_gl_error(){
 
 	return errors_had;
 }
+
+
+
+
+bool active_contexts_left(){
+	assert(g_number_of_contexts >= 0);
+	return g_number_of_contexts;
+}
+
 
 }
 

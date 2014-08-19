@@ -13,11 +13,18 @@ static J_Open_GL s_open_gl;
 const int SK_VERTEX_ARRAY_SIZE = 24;
 J_UI_Box::J_UI_Box(const J_Rectangle& irk_pos):J_Rectangle(irk_pos){
 	initialization();
+	M_shader = J_GL_Box_Shader_Unique_t(new J_GL_Box_Shader);
+	cerr << "\nNew Box Shader";
+}
+
+J_UI_Box::J_UI_Box(const J_Rectangle& irk_rectangle, J_GL_Box_Shader* i_box_shader)
+	:J_Rectangle(irk_rectangle){
+	M_shader = J_GL_Box_Shader_Unique_t(i_box_shader);
+	initialization();
 }
 
 void J_UI_Box::initialization(){
-	M_shader = J_GL_Box_Shader_Unique_t(new J_GL_Box_Shader);
-	cerr << "\nNew Box Shader";
+
 	init_vaos();
 	recalculate_vaos();
 }

@@ -29,7 +29,7 @@ protected:
 	//J_UI_Box(const J_Rectangle&, j_uint i_obj_id);
 	const J_GL_Vertex_Array& get_box_vao()const;
 	
-
+	J_UI_Box(const J_Rectangle& irk_rectangle, J_GL_Box_Shader* i_box_shader);
 private:
 	J_GL_Vertex_Array M_box_vao;
 	J_GL_Buffer M_vao_buffer;

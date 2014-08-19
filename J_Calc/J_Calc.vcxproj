@@ -197,7 +197,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers\jtl.natvis" />
-    <None Include="button_press.jcs" />
+    <CustomBuild Include="button_press.jcs">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cp %(Identity)  x64/Release/%(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moving script command. cp %(Identity)  x64/Release/%(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">x64/Release/%(Identity)</Outputs>
+    </CustomBuild>
+    <None Include="giant_script.jcs" />
     <None Include="parser.output" />
     <None Include="test_script.jcs" />
     <None Include="x64\AssertHappy\in_script.jcs" />

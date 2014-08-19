@@ -115,8 +115,18 @@ public:
 	bool is_vertex_array(j_uint i_vao_id);
 	//
 	bool is_framebuffer(j_uint i_framebuffer_id);
-private:
 
+
+	//
+	void delete_program(j_uint i_program_id);
+	//
+	void delete_shader(j_uint i_shader_id);
+	//
+	int get_uniform_location(j_uint i_program_id, const char* const ik_uniform_name);
+	//
+	void program_uniform_4v(int i_program_id, int i_uniform_loc, int i_count, const j_float* i_data);
+private:
+	bool contexts_active()const;
 };
 
 }

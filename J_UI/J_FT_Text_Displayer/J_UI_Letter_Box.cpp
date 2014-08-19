@@ -3,15 +3,30 @@
 #include <J_Frame.h>
 //
 #include "../Bitmap_Metrics.h"
+//
+#include <J_Shader_Program.h>
 
 
 namespace jomike{
 
 
+class J_UI_Letter_Box_Shader : public J_GL_Box_Shader{
+public:
+	static J_GL_Box_Shader* make_new();
+private:
+	J_UI_Letter_Box_Shader() = delete;
+};
+
+J_GL_Box_Shader* J_UI_Letter_Box_Shader::make_new(){
+	static J_GL_Box_Shader box_shader;
+	return new J_GL_Box_Shader(box_shader.box_program_id(), box_shader.outline_program_id());
+}
+
 
 J_UI_Letter_Box
 	::J_UI_Letter_Box(const J_Rectangle& irk_rectangle)
-	:J_Image_Pane(irk_rectangle, GL_Pixel_Formats::RGBA), M_metrics(0,0,0,0,0,0){
+	:J_Image_Pane(irk_rectangle, GL_Pixel_Formats::RGBA, J_UI_Letter_Box_Shader::make_new())
+	, M_metrics(0,0,0,0,0,0){
 
 }
 

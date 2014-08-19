@@ -12,4 +12,8 @@ char_press bar()@
 char_press int g_val <- 0@
 char_press bar()@
 char_press bar()@
+char_press 
+[dbl factor<- 40*4*12]jp[dbl rate]->dbl{
+	rate*factor;	
+}@
 end

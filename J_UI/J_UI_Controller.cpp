@@ -30,7 +30,7 @@ using std::ifstream; using std::string; using std::cerr; using std::getline;
 using std::ostringstream; using std::setw; using std::istream; using std::endl;
 namespace jomike{
 
-const j_dbl DRAW_REFRESH_TIME = 1.0/10.0;
+const j_dbl DRAW_REFRESH_TIME = 1.0/5.0;
 static j_dbl draw_refresh_time(){ return DRAW_REFRESH_TIME; }
 
 static Instance_Pointer<J_Font_Manager> s_font_manager;
@@ -444,6 +444,7 @@ static void char_press_script_cmd(J_UI_Controller* i_controller, istream& ir_str
 	string char_string;
 	getline(ir_stream, char_string, '@');
 	assert(char_string.front() == ' ');
+	
 	char_string.front() = '\n';
 
 	if(!ir_stream){

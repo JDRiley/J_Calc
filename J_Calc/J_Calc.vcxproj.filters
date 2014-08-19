@@ -91,7 +91,7 @@
     <None Include="parser.output">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="button_press.jcs">
+    <None Include="giant_script.jcs">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -99,5 +99,10 @@
     <Text Include="TODO.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="button_press.jcs">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

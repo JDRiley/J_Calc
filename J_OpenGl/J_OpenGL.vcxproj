@@ -371,6 +371,8 @@
     <ClInclude Include="J_Open_GL.h" />
     <ClInclude Include="J_Shader_Program.h" />
     <ClInclude Include="OpenGL_Enums.h" />
+    <ClInclude Include="Shader_Program_Sources.h" />
+    <ClInclude Include="Shader_Utility_Functions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Frame.cpp" />
@@ -378,15 +380,13 @@
     <ClCompile Include="J_OpenGL_Functions.cpp" />
     <ClCompile Include="J_Open_GL.cpp" />
     <ClCompile Include="J_Shader_Program.cpp" />
+    <ClCompile Include="Shader_Program_Sources.cpp" />
+    <ClCompile Include="Shader_Utility_Functions.cpp" />
+    <ClCompile Include="Specific_Shader_Program_Impl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\box.frag" />
-    <None Include="Shaders\box_outline.frag" />
     <None Include="Shaders\circle_outline.tes" />
     <None Include="Shaders\five_float_out.tcs" />
-    <None Include="Shaders\pass_through.vert" />
-    <None Include="Shaders\quad.vert" />
-    <None Include="Shaders\quad_image.frag" />
     <None Include="Shaders\quad_texture.frag" />
     <None Include="Shaders\triangles.frag" />
     <None Include="Shaders\triangles.vert" />

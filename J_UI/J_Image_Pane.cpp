@@ -27,6 +27,19 @@ J_Image_Pane::J_Image_Pane(const J_Rectangle& ik_rec
 	set_buffer(nullptr);
 }
 
+J_Image_Pane::J_Image_Pane(
+	const J_Rectangle& irk_rectangle, GL_Pixel_Formats i_format, J_GL_Box_Shader* i_program
+	, int i_width /*= 0*/, int i_height /*= 0*/)
+	:J_UI_Box(irk_rectangle, i_program), M_image_width(i_width), M_image_height(i_height){
+
+	assert(image_height() >= 0);
+	assert(image_width() >= 0);
+	M_format = i_format;
+
+	//Clear buffer
+	set_buffer(nullptr);
+}
+
 void J_Image_Pane::set_buffer(const j_ubyte* i_buffer){
 
 

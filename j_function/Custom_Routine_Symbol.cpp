@@ -22,7 +22,7 @@ namespace jomike{
 static Type_Syntax_List* make_type_syntax_list(const Declaration_List& irk_list){
 	auto syntax_list = new Type_Syntax_List;
 	for(auto declaration : irk_list){
-		syntax_list->add_symbol(declaration->get_copy()->type_syntax());
+		syntax_list->add_symbol(declaration->type_syntax());
 	}
 	return syntax_list;
 }

@@ -178,6 +178,7 @@ void J_Calc_Controller::execute(){
 	//run_script("in_script2.jcs");
 #else
 	run_script("button_press.jcs");
+
 #endif
 
 

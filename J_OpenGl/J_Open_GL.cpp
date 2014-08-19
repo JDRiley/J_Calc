@@ -15,6 +15,15 @@
 #endif
 //
 #include <cassert>
+
+
+#define GL_CREATION_VERBOSE
+#ifdef GL_CREATION_VERBOSE
+//
+#include <iostream>
+
+using std::cerr; using std::cout; using std::endl;
+#endif
 namespace jomike{
 
 
@@ -62,8 +71,17 @@ void J_Open_GL::use_program(j_uint i_program_id){
 }
 
 int J_Open_GL::create_program(){
+	
 	int program_id = glCreateProgram();
 	assert(!open_gl_error());
+
+
+#ifdef GL_CREATION_VERBOSE
+	static int s_num_programs_made = 0;
+	++s_num_programs_made;
+	cerr << "\n" << s_num_programs_made << " program"
+		<< (s_num_programs_made > 1 ? "s" : "" )<< " made.";
+#endif //GL_CREATION_VERBOSE
 	return program_id;
 }
 
@@ -315,6 +333,38 @@ bool J_Open_GL::is_vertex_array(j_uint i_vao_id){
 bool J_Open_GL::is_framebuffer(j_uint i_framebuffer_id){
 	assert(!open_gl_error());
 	return glIsFramebuffer(i_framebuffer_id);
+}
+
+void J_Open_GL::delete_program(j_uint i_program_id){
+	if(!contexts_active()){
+		return;
+	}
+	glDeleteProgram(i_program_id);
+	assert(!open_gl_error());
+}
+
+void J_Open_GL::delete_shader(j_uint i_shader_id){
+	if(!contexts_active()){
+		return;
+	}
+	glDeleteShader(i_shader_id);
+	assert(!open_gl_error());
+}
+
+int J_Open_GL::get_uniform_location(j_uint i_program_id, const char* const ik_uniform_name){
+	int loc = glGetUniformLocation(i_program_id, ik_uniform_name);
+	assert(-1 != loc);
+	assert(!open_gl_error());
+	return loc;
+}
+
+void J_Open_GL::program_uniform_4v(int i_program_id, int i_uniform_loc, int i_count, const j_float* i_data){
+	glProgramUniform4fv(i_program_id, i_uniform_loc, i_count, i_data);
+	assert(!open_gl_error());
+}
+
+bool J_Open_GL::contexts_active()const{
+	return active_contexts_left();
 }
 
 

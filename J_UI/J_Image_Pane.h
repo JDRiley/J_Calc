@@ -15,6 +15,9 @@ class J_Image_Pane : public J_UI_Box{
 public:
 	J_Image_Pane(const J_Rectangle&, GL_Pixel_Formats format, int width = 0, int height = 0 );
 
+	J_Image_Pane(const J_Rectangle& irk_rectangle, GL_Pixel_Formats i_format
+				 , J_GL_Box_Shader* i_program, int i_width = 0, int i_height = 0);
+
 	J_Image_Pane(const J_Image_Pane&) = delete;
 	J_Image_Pane(J_Image_Pane&&) = delete;
 	J_Image_Pane& operator=(const J_Image_Pane&) = delete;

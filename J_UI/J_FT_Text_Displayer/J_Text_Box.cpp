@@ -438,19 +438,27 @@ void J_Text_Box::calculate_remaining_letter_poses(){
 	assert(M_pen_poses.size() <= M_multi_string.size()+1);
 	assert(M_multi_string.size() <= M_letter_box_string->size());
 
-	for(j_size_t i = M_pen_poses.size()-1; i < M_multi_string.size(); i++){
-		
-		J_UI_String& cur_string = *M_multi_string.get_string_holding_index(i);
-		J_Char_t charcode = M_multi_string.at_pos(i)->charcode();
+	j_size_t index = M_pen_poses.size() - 1;
+	auto string_insert_pos = M_multi_string.get_insert_pos(index);
 
-		Bitmap_Metrics& bitmap_metric = cur_string.font_face()
-			->bitmap_metric(charcode);
+	auto string_pos = string_insert_pos.second;
+	auto char_pos = string_insert_pos.first;
 
-		M_letter_box_string[i]->set_image_box(M_pen_poses.back(), bitmap_metric, *M_frame);
-		calculate_next_pen_pos(charcode, bitmap_metric);
-		
+	while(string_pos != M_multi_string.end()){
+		auto font_face = string_pos->font_face();
+		while(char_pos != string_pos->end()){
 
-		
+			J_Char_t charcode = char_pos->charcode();
+
+			Bitmap_Metrics& bitmap_metric = font_face->bitmap_metric(charcode);
+
+			M_letter_box_string[index]->set_image_box(M_pen_poses.back(), bitmap_metric, *M_frame);
+			calculate_next_pen_pos(charcode, bitmap_metric);
+			++char_pos;
+			++index;
+		}
+		++string_pos;
+		char_pos = string_pos->begin();
 	}
 }
 
@@ -492,8 +500,10 @@ void J_Text_Box::auto_scroll_window(j_size_t i_pos){
 			= max(new_starting_pen_pos.second, default_pen_pos().second);
 	} else{
 		assert(pen_pos_y_lower < -1.0f);
-		new_starting_pen_pos.second += (-1.0f - pen_pos_y_lower + FLOAT_DELTA);
+		new_starting_pen_pos.second += (-1.0f - pen_pos_y_lower + FLOAT_DELTA);// +4 * new_line_frame_size());
 	}
+	
+	
 	scroll_selection_boxes(0.0
 						   , M_frame->to_base_y_screen(new_starting_pen_pos.second - M_pen_poses.front().second));
 
@@ -535,7 +545,7 @@ Pen_Pos_FL_t J_Text_Box::calculate_pen_advance(Pen_Pos_FL_t i_cur_pen, int i_adv
 
 /*Pen_Pos_t calculate_pen_advance(const J_UI_String_Data*,Pen_Pos_t, int)*/
 Pen_Pos_FL_t J_Text_Box::new_line_pen_pos(Pen_Pos_FL_t i_pen)const{
-	i_pen.first = x1() + K_LEFT_PADDING;
+	i_pen.first = -1.0f + K_LEFT_PADDING;
 	i_pen.second -= M_frame->to_y_screen(M_new_line_size);
 	return i_pen;
 }

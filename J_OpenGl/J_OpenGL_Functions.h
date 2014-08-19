@@ -23,6 +23,11 @@ private:
 	J_Context_Shared_t M_context;
 };
 
+class Contexts_Handler;
+
+
+bool active_contexts_left();
+
 class Contexts_Handler{
 public:
 	
