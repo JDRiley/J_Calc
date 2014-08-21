@@ -47,12 +47,12 @@
 #include "J_Calc_Parser.h"
 #include<J_UI/J_UI_String.h>
 #include "J_Symbol_Fwd_Decl.h"
-#include <Expression_List.h>
-#include <Call_Expression.h>
+#include "../Expression_List.h"
+#include "../Call_Expression.h"
 #include <J_Symbol_Identifier.h>
-#include <Field_Access_Expression.h>
-#include <Arguments.h>
-#include <j_expression.h>
+#include "../Field_Access_Expression.h"
+#include "../Arguments.h"
+#include "../j_expression.h"
 #include "j_yy_stack.h"
 #include "../Specific_Symbol_List.h"
 #include "../J_Symbol_Scope.h"

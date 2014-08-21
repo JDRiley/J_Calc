@@ -122,7 +122,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>../lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3d.lib;glew32mxsd.lib;freetype250MT_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3d.lib;glew32mxsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -167,7 +167,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>../lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32mxs.lib;freetype250MT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32mxs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
@@ -178,9 +178,6 @@
     <ClInclude Include="J_Calc_Functional.h" />
     <ClInclude Include="J_Calc_Fwd_Decl.h" />
     <ClInclude Include="J_Calc_View.h" />
-    <ClInclude Include="j_conditional_construct_symbol.h" />
-    <ClInclude Include="j_construct_symbol.h" />
-    <ClInclude Include="j_function_factory.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
   </ItemGroup>
@@ -190,8 +187,6 @@
     <ClCompile Include="J_Calc_Data.cpp" />
     <ClCompile Include="J_Calc_Error.cpp" />
     <ClCompile Include="J_Calc_View.cpp" />
-    <ClCompile Include="j_conditional_construct_symbol.cpp" />
-    <ClCompile Include="j_function_factory.cpp" />
     <ClCompile Include="Line_Input.cpp" />
     <ClCompile Include="Math_Input_Box.cpp" />
   </ItemGroup>

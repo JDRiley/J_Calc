@@ -581,7 +581,7 @@ static yyconst flex_int16_t yy_rule_linenum[32] =
 #line 9 "parser/Math_Lexer.l"
 
 #include "Math_Lexer.h"
-#include <Constant_Symbol_Factory.h>
+#include "../Constant_Symbol_Factory.h"
 #include "parser.h" // for token codes, yylval
 #include "Math_Lexer.h"
 #include <ex_array.h>

@@ -47,8 +47,8 @@
 
 #include "parser.h"
 #include "Math_Parser.h"
-#include <Constant_Symbol.h>
-#include <cstdarg>
+#include "../Constant_Symbol.h"
+
 
 
 using namespace jomike;

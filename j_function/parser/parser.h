@@ -43,15 +43,16 @@
 //
 #include "Math_Lexer.h"
 //
-#include <Addition_Expression.h>
+#include "../Addition_Expression.h"
 //
-#include <Subtraction_Expression.h>
+#include "../Subtraction_Expression.h"
 //
-#include <Multiplication_Expression.h>
+#include "../Multiplication_Expression.h"
 //
-#include <Division_Expression.h>
+#include "../Division_Expression.h"
 //
-#include <Unary_Negate_Expression.h>
+#include "../Unary_Negate_Expression.h"
+
 #define YY_NO_UNISTD_H
 #ifdef _DEBUG
 

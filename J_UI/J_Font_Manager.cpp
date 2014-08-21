@@ -102,64 +102,6 @@ void J_Font_Manager::delete_font_face(J_Font_Face i_fontface){
 
 
 
-//J_Font_Face__::J_Font_Face__(J_Context_Shared_t i_context, FT_Face i_face, int i_font_size, int i_render_mode):tab_distance(4)
-//	, new_line_size(static_cast<int>(i_face->height/64*11.0/10)){
-//	
-//
-//	if(FT_Set_Char_Size(i_face, i_font_size*FT_POINT_TO_PARAMETER_CONVERSION,
-//		i_font_size*FT_POINT_TO_PARAMETER_CONVERSION, DEFAULT_DOTS_PER_INCH, DEFAULT_DOTS_PER_INCH)){
-//		throw J_Init_Error("Could Not Set Character Size Properly!");
-//	}
-//	
-//	int num_glyphs = i_face->num_glyphs;
-//
-//	M_bitmap_metrics.reserve(num_glyphs);
-//
-//	//Already Size texture ids cause they are passed in by reference to opengl
-//	M_texture_ids.resize(num_glyphs);
-//	glGenTextures(num_glyphs, &M_texture_ids[0]);
-//	//used to prevent excessive allocations
-//	j_bitmap<j_ubyte, 1> expanded_bitmap;
-//	
-//	for(int i=0; i < i_face->num_glyphs; i++){
-//		FT_GlyphSlot glyph;
-//		if('\t' == i){
-//			glyph = get_rendered_glyph(i_face, ' ', i_render_mode);
-//			text_bitmap_formatter(&expanded_bitmap, glyph->bitmap.width, glyph->bitmap.rows
-//			, glyph->bitmap.buffer);
-//			expanded_bitmap.resize(expanded_bitmap.width()*tab_distance,expanded_bitmap.height());
-//			FT_Bitmap& bitmap = glyph->bitmap;
-//			M_bitmap_metrics.push_back(Bitmap_Metrics(expanded_bitmap.width(), expanded_bitmap.height()
-//				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x*tab_distance/64, glyph->advance.y/64));
-//
-//		}else{
-//			glyph = get_rendered_glyph(i_face, i, i_render_mode);
-//			text_bitmap_formatter(&expanded_bitmap, glyph->bitmap.width, glyph->bitmap.rows
-//			, glyph->bitmap.buffer);
-//			FT_Bitmap& bitmap = glyph->bitmap;
-//			M_bitmap_metrics.push_back(Bitmap_Metrics(expanded_bitmap.width(), expanded_bitmap.height()
-//				, glyph->bitmap_left, bitmap.rows - glyph->bitmap_top, glyph->advance.x/64, glyph->advance.y/64));
-//
-//		}
-//
-//		glBindTexture(GL_TEXTURE_2D, M_texture_ids[i]);
-//		glTexStorage2D(GL_TEXTURE_2D, 1, GL_R8, expanded_bitmap.width(), expanded_bitmap.height());
-//		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, expanded_bitmap.width(), expanded_bitmap.height(), GL_RED
-//			, GL_UNSIGNED_BYTE, expanded_bitmap.data());
-//
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//		
-//		
-//		if(!(i%500)){
-//			cerr << "\nGlyph: " << i << " created!";
-//		}
-//
-//	}
-//}
-
 J_Font_Manager::~J_Font_Manager(){
 	clear();
 }

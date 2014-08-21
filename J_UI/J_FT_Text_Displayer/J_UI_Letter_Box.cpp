@@ -6,7 +6,10 @@
 //
 #include <J_Shader_Program.h>
 
+//
+#include <iostream>
 
+using std::cerr; using std::cout; using std::endl;
 namespace jomike{
 
 
@@ -27,7 +30,7 @@ J_UI_Letter_Box
 	::J_UI_Letter_Box(const J_Rectangle& irk_rectangle)
 	:J_Image_Pane(irk_rectangle, GL_Pixel_Formats::RGBA, J_UI_Letter_Box_Shader::make_new())
 	, M_metrics(0,0,0,0,0,0){
-
+	//	cerr << "\nNew Letter Box";
 }
 
 void J_UI_Letter_Box::set_image_box(const Pen_Pos_FL_t &i_pos, const Bitmap_Metrics& i_metrics

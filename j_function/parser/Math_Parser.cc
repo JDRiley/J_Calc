@@ -9,11 +9,11 @@
 //
 #include <J_Symbol_Error.h>
 //
-#include <Arguments.h>
+#include "../Arguments.h"
 //
-#include <Constant_Symbol.h>
+#include "../Constant_Symbol.h"
 //
-#include <j_declaration.h>
+#include "../j_declaration.h"
 //
 #include <Type_Syntax.h>
 //

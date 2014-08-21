@@ -10,15 +10,11 @@
 //Utilities
 #include <cassert>
 //
-#include <j_routine_symbol.h>
-//
 #include <Binary_Function_Chain_Symbol.h>
 //
 #include <Unary_Function_Symbol.h>
-//
-#include <J_Symbol_Identifier.h>
-//
-#include <Arguments.h>
+
+
 using std::dynamic_pointer_cast;
 
 using std::string; using std::accumulate;

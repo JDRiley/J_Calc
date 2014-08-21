@@ -1,1 +1,0 @@
-#include "../J_PXC_Interface/J_Camera_Manager.h"

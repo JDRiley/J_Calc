@@ -8,6 +8,8 @@
 #include <functional>
 //
 #include "J_Symbol_Error.h"
+//
+#include "J_Symbol_Identifier.h"
 namespace jomike{
 
 template<typename Ret_t, typename Arg_t>

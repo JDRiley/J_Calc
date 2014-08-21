@@ -8,7 +8,7 @@
 %{
 
 #include "Math_Lexer.h"
-#include <Constant_Symbol_Factory.h>
+#include "../Constant_Symbol_Factory.h"
 #include "parser.h" // for token codes, yylval
 #include "Math_Lexer.h"
 #include <ex_array.h>

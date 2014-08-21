@@ -1,14 +1,10 @@
 #include "J_Calc_Parser.h"
 //
 #include <J_Utile.h>
-//
-#include "j_function_factory.h"
+
 //
 #include <j_symbol.h>
-//
-#include <j_number_symbol.h>
-//
-#include <j_routine_symbol.h>
+
 //
 #include <J_UI/J_UI_Multi_String.h>
 //Algorithm

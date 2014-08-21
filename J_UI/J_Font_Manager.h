@@ -15,6 +15,10 @@
 //
 #include <string>
 
+
+#pragma comment(lib, "freetype250MT"J_LIB_APPEND)
+
+
 namespace jomike{
 
 J_FWD_DECL(Font_Data)

@@ -159,7 +159,7 @@ void Math_Input_Box::key_delete(){
 
 	j_size_t char_pos = get_cursor_pos() - line_input_pos->start_pos();
 	
-	if(line_input_pos->read_only_status(char_pos) || read_only_status()){
+	if(line_input_pos->read_only_status(char_pos + 1) || read_only_status()){
 		return;
 	}
 
@@ -305,7 +305,7 @@ Math_Input_Box::Line_Input_it Math_Input_Box::join_to_next(Line_Input_it i_pos){
 	assert(!next_pos->output_status());
 	
 	
-	j_size_t return_cursor_pos = get_cursor_pos() > i_pos->end_pos() 
+	j_size_t return_cursor_pos = get_cursor_pos() >= i_pos->end_pos() 
 		? (get_cursor_pos() - DEFAULT_OUTPUT_STRING_SIZE) : get_cursor_pos() ;
 
 	J_Text_Box::erase_chars(next_pos->start_pos(), next_pos->size());
