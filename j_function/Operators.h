@@ -1,0 +1,15 @@
+#ifndef OPERATORS_H
+#define OPERATORS_H
+
+
+namespace jomike{
+enum class Operators{
+	LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, EQUAL, NOT_EQUAL, AND, OR
+	, PLUS, MINUS, MULTIPLY, DIVIDE, MODULO, NOT, ASSIGN, END
+};
+
+}
+
+#endif //OPERATORS_H
+
+

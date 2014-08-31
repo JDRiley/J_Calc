@@ -153,7 +153,6 @@
     <ClInclude Include="Assignment_Expression.h" />
     <ClInclude Include="Binary_Expression.h" />
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
-    <ClInclude Include="Boolean_Testers.h" />
     <ClInclude Include="boolean_tester_array.h" />
     <ClInclude Include="Call_Expression.h" />
     <ClInclude Include="Constant_Symbol_Factory.h" />
@@ -161,8 +160,9 @@
     <ClInclude Include="Custom_Routine_Symbol.h" />
     <ClInclude Include="Division_Expression.h" />
     <ClInclude Include="Expression_List.h" />
+    <ClInclude Include="Expression_Statement.h" />
     <ClInclude Include="Field_Access_Expression.h" />
-    <ClInclude Include="j_boolean_expression.h" />
+    <ClInclude Include="If_Statement.h" />
     <ClInclude Include="j_composite_symbol.h" />
     <ClInclude Include="j_declaration.h" />
     <ClInclude Include="j_expression.h" />
@@ -172,6 +172,7 @@
     <ClInclude Include="Arguments.h" />
     <ClInclude Include="j_placeholder_symbol.h" />
     <ClInclude Include="j_routine_symbol.h" />
+    <ClInclude Include="j_statement.h" />
     <ClInclude Include="j_symbol.h" />
     <ClInclude Include="j_symbol_component.h" />
     <ClInclude Include="J_Symbol_Component_Allocator.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="J_Value_Types.h" />
     <ClInclude Include="math_base.h" />
     <ClInclude Include="Multiplication_Expression.h" />
+    <ClInclude Include="Operators.h" />
     <ClInclude Include="parser\J_Calc_Parser.h" />
     <ClInclude Include="parser\j_yy_stack.h" />
     <ClInclude Include="parser\Lexer_Location.h" />
@@ -219,7 +221,9 @@
       <Outputs>parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
       <LinkObjects>false</LinkObjects>
     </CustomBuild>
+    <ClInclude Include="Relational_Binary_Expression.h" />
     <ClInclude Include="Specific_Symbol_List.h" />
+    <ClInclude Include="Statement_Block.h" />
     <ClInclude Include="Subtraction_Expression.h" />
     <ClInclude Include="Symbol_Joiner.h" />
     <ClInclude Include="Symbol_Component_List.h" />
@@ -245,14 +249,14 @@
     <ClCompile Include="Addition_Expression.cpp" />
     <ClCompile Include="Assignment_Expression.cpp" />
     <ClCompile Include="Binary_Expression.cpp" />
-    <ClCompile Include="Boolean_Testers.cpp" />
     <ClCompile Include="Call_Expression.cpp" />
     <ClCompile Include="Constant_Symbol.cpp" />
     <ClCompile Include="Constant_Symbol_Factory.cpp" />
     <ClCompile Include="Custom_Routine_Symbol.cpp" />
     <ClCompile Include="Division_Expression.cpp" />
+    <ClCompile Include="Expression_Statement.cpp" />
     <ClCompile Include="Field_Access_Expression.cpp" />
-    <ClCompile Include="j_boolean_expression.cpp" />
+    <ClCompile Include="If_Statement.cpp" />
     <ClCompile Include="j_composite_symbol.cpp" />
     <ClCompile Include="j_declaration.cpp" />
     <ClCompile Include="j_expression.cpp" />
@@ -261,6 +265,7 @@
     <ClCompile Include="j_number_symbol.cpp" />
     <ClCompile Include="j_placeholder_symbol.cpp" />
     <ClCompile Include="j_routine_symbol.cpp" />
+    <ClCompile Include="j_statement.cpp" />
     <ClCompile Include="j_symbol.cpp" />
     <ClCompile Include="j_symbol_array.cpp" />
     <ClCompile Include="j_symbol_component.cpp" />
@@ -288,6 +293,8 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="Relational_Binary_Expression.cpp" />
+    <ClCompile Include="Statement_Block.cpp" />
     <ClCompile Include="Subtraction_Expression.cpp" />
     <ClCompile Include="Symbol_Component_List.cpp" />
     <ClCompile Include="Type_Bool.cpp" />

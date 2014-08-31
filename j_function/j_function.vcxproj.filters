@@ -69,12 +69,6 @@
     <ClInclude Include="Symbol_Joiner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="j_boolean_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Boolean_Testers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Unit_Converter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -217,6 +211,24 @@
     <ClInclude Include="Type_Void.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="If_Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Statement_Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression_Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Relational_Binary_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Operators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -244,12 +256,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_number_symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="j_boolean_expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Boolean_Testers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_unit.cpp">
@@ -376,6 +382,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Type_Void.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="If_Statement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Statement_Block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_statement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression_Statement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Relational_Binary_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -89,7 +89,7 @@ j_symbol::j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
 }
 
 j_symbol::j_symbol(Symbol_Types i_symbol_type) : j_symbol_component(i_symbol_type){
-	M_name = new J_Symbol_Identifier("%Unnamed");
+	M_name = new J_Symbol_Identifier("%Unvalued");
 	M_type = nullptr;
 	M_arguments = empty_arguments().get_copy();
 }

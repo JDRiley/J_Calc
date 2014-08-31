@@ -20,11 +20,19 @@ void Symbol_Component_List::add_symbol_component(const j_symbol_component& i_com
 	M_components.emplace_back(i_component);
 }
 
-jomike::Symbol_Component_List::symbol_iterator Symbol_Component_List::end()const{
+jomike::Symbol_Component_List::const_symbol_iterator Symbol_Component_List::end()const{
 	return M_components.end();
 }
 
-jomike::Symbol_Component_List::symbol_iterator Symbol_Component_List::begin()const{
+jomike::Symbol_Component_List::const_symbol_iterator Symbol_Component_List::begin()const{
+	return M_components.begin();
+}
+
+jomike::Symbol_Component_List::symbol_iterator Symbol_Component_List::end(){
+	return M_components.end();
+}
+
+jomike::Symbol_Component_List::symbol_iterator Symbol_Component_List::begin(){
 	return M_components.begin();
 }
 

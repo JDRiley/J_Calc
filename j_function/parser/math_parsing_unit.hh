@@ -49,7 +49,7 @@
 #include "J_Symbol_Fwd_Decl.h"
 #include "../Expression_List.h"
 #include "../Call_Expression.h"
-#include <J_Symbol_Identifier.h>
+#include "../J_Symbol_Identifier.h"
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
@@ -58,10 +58,14 @@
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
 #include "../Assignment_Expression.h"
+#include "../Statement_Block.h"
+#include "../Expression_Statement.h"
+#include "../If_Statement.h"
+#include "../Relational_Binary_Expression.h"
 
 
 /* Line 33 of lalr1.cc  */
-#line 65 "math_parsing_unit.hh"
+#line 69 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -77,7 +81,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 81 "math_parsing_unit.hh"
+#line 85 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -85,26 +89,7 @@ namespace yy {
   public:
     /// Symbol semantic values.
 #ifndef YYSTYPE
-    union semantic_type
-    {
-/* Line 33 of lalr1.cc  */
-#line 89 "parser.y"
-
-    jomike::J_Symbol_Identifier*	identifier;
-    jomike::j_symbol_component*		symbol_component;
-	jomike::Constant_Symbol*		constant_symbol;
-	jomike::j_declaration*			declaration;
-	jomike::Type_Syntax*			type_syntax;
-	jomike::j_expression*			expression;
-	jomike::Arguments*				arguments;
-	jomike::j_symbol*				symbol;
-	jomike::Symbol_List*			symbol_list;
-	jomike::J_Symbol_Scope*			symbol_scope;
-
-
-/* Line 33 of lalr1.cc  */
-#line 107 "math_parsing_unit.hh"
-    };
+    typedef YYSTYPE semantic_type;
 #else
     typedef YYSTYPE semantic_type;
 #endif
@@ -224,7 +209,7 @@ namespace yy {
     typedef unsigned char token_number_type;
     /* Tables.  */
     /// For a state, the index in \a yytable_ of its portion.
-    static const signed char yypact_[];
+    static const short int yypact_[];
     static const signed char yypact_ninf_;
 
     /// For a state, default reduction number.
@@ -314,7 +299,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 318 "math_parsing_unit.hh"
+#line 303 "math_parsing_unit.hh"
 
 
 

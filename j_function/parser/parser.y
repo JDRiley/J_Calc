@@ -61,7 +61,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 #include "J_Symbol_Fwd_Decl.h"
 #include "../Expression_List.h"
 #include "../Call_Expression.h"
-#include <J_Symbol_Identifier.h>
+#include "../J_Symbol_Identifier.h"
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
@@ -70,6 +70,10 @@ j_symbol_component* jtl::g_input_line = nullptr;
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
 #include "../Assignment_Expression.h"
+#include "../Statement_Block.h"
+#include "../Expression_Statement.h"
+#include "../If_Statement.h"
+#include "../Relational_Binary_Expression.h"
 }
 
 /* The section before the first %% is the Definitions section of the yacc
@@ -86,19 +90,6 @@ j_symbol_component* jtl::g_input_line = nullptr;
  * pp2: You will need to add new fields to this union as you add different 
  *      attributes to your non-terminal symbols.
  */
-%union {
-    jomike::J_Symbol_Identifier*	identifier;
-    jomike::j_symbol_component*		symbol_component;
-	jomike::Constant_Symbol*		constant_symbol;
-	jomike::j_declaration*			declaration;
-	jomike::Type_Syntax*			type_syntax;
-	jomike::j_expression*			expression;
-	jomike::Arguments*				arguments;
-	jomike::j_symbol*				symbol;
-	jomike::Symbol_List*			symbol_list;
-	jomike::J_Symbol_Scope*			symbol_scope;
-}
-
 
 
 //%destructor{delete $$;} <*>
@@ -125,7 +116,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 %token	<constant_symbol>		T_DOUBLE_CONSTANT
 %token	<constant_symbol>		T_BOOL_CONSTANT
 
-//Operator Precence
+//Operator Precedence
 %right T_LEFT_ARROW
 %left T_OR
 %left   T_AND
@@ -154,16 +145,17 @@ j_symbol_component* jtl::g_input_line = nullptr;
 * pp2: You'll need to add many of these of your own.
 */
 
-%type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild
-%type	<symbol>			Statement Non_Dangling_If_Statement Input_Line
+%type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild		
 %type	<expression>		Expression Call Field_Access_Expression LValue
-%type	<expression>		Assignment_Expression
+%type	<expression>		Assignment_Expression Test_Expression
 %type	<constant_symbol>	Constant_Expression
 %type	<declaration>		Declaration Variable_Declaration Routine_Definition
 %type	<type_syntax>		Type
 %type	<symbol_list>		Statement_List
 %type	<declaration_list>	Declaration_List Bracketed_Declaration_List
-
+%type	<statement_block>	Statement_Block
+%type	<statement>			Statement Input_Line  
+%type	<if_statement>		If_Statement
 %%
 /* Rules
 * -----
@@ -174,33 +166,55 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 Input_Line
 : Expression T_END {
-	$$ = $1;
+	$$ = new Expression_Statement($1->get_copy());
 	*i_symbol_ptr = $1;
 	return true;
 }
-| Declaration T_END{
+|Declaration T_END{
 	$$ = $1;
 	*i_symbol_ptr = $1->get_copy();
 	add_user_symbol($1);
 	return true;
 }
+| If_Statement T_END{
+	$$ = $1;
+	*i_symbol_ptr = $1->get_copy();
+	return true;
+}
 ;
 Statement
-: Non_Dangling_If_Statement {$$ = $1;}
-//| If_Dangling_Statement {$$ = $1;}
-;
-
-Non_Dangling_If_Statement
 : Expression ';' {
-	$$ = $1;
-	
-	
-
+	$$ = new Expression_Statement($1);
 }
+| If_Statement{
+	$$ = $1;
+}
+
 | Declaration ';' {
 	$$ = $1;
 }
 ;
+
+Test_Expression
+: '?' '(' Expression ')' {
+	$$ = $3;
+}
+
+If_Statement
+:  Test_Expression Statement_Block{
+	$$ = new If_Statement($1, $2);
+}
+| Test_Expression Statement_Block '!' Statement_Block{
+	$$ = new If_Statement($1, $2, $4);
+}
+| Test_Expression Statement_Block '!' If_Statement{
+	$$ = new If_Statement($1, $2, $4);
+}
+
+Statement_Block
+: '{' Statement_List '}'{
+	$$ = new Statement_Block($2);
+}
 
 Statement_List
 : /*empty*/ {
@@ -233,8 +247,8 @@ Declaration
 ;
 
 Routine_Definition
-: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type '{' Statement_List '}'{
-	$$ = new Custom_Routine_Symbol($2, *$1, *$3, $5, $7);
+: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block{
+	$$ = new Custom_Routine_Symbol($2, *$1, *$3, $5, $6);
 	$1.destroy();
 	$3.destroy();
 }
@@ -307,6 +321,30 @@ Expression
 	$$ = new Division_Expression($1, $3);
 	
 	
+}
+| Expression '>' Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER);
+}
+| Expression '<' Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::LESS);
+}
+| Expression T_GREATER_EQUAL Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER_EQUAL);
+}
+| Expression T_LESS_EQUAL Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::LESS_EQUAL);
+}
+| Expression  T_AND Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::AND);
+}
+| Expression T_OR Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::OR);
+}
+| Expression T_EQUAL Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::EQUAL);
+}
+| Expression T_NOT_EQUAL Expression{
+	$$ = new Relational_Binary_Expression($1, $3, Operators::NOT_EQUAL);
 }
 | '(' Expression ')' {$$ = $2;  }
 | '-' Expression{

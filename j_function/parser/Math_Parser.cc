@@ -24,6 +24,8 @@
 #include <utility>
 //
 #include "../Specific_Symbol_List.h"
+//
+#include "../j_statement.h"
 
 using std::mem_fn; using std::bind; using std::for_each; using std::transform;
 using namespace std::placeholders;
@@ -41,6 +43,8 @@ token_t Math_Parser::lex(semantic_t* yylval){
 j_symbol* Math_Parser::parse(const std::string& irk_string){
 	j_symbol* symbol = nullptr;
 	yy::Math_Parsing_Unit parsing_unit(&symbol, this);
+
+
 	//parsing_unit.set_debug_level(1);
 	stringstream str_stream(irk_string);
 	M_lexer->yyrestart(&str_stream);
@@ -74,18 +78,42 @@ void yy::Math_Parsing_Unit::error(const location_type& , const std::string& irk_
 	throw jtl::J_Syntax_Error("[Syntax_Error]");
 }
 
-#define MEMBER_INITIALIZATION \
-	identifier(this)\
-, symbol_component(this)\
-, constant_symbol(this)\
-, declaration(this)\
-, type_syntax(this)\
-, expression(this)\
-, arguments(this)\
-, symbol(this)\
-, symbol_list(this)\
-, symbol_scope(this)\
-, declaration_list(this)
+//#define MEMBER_INITIALIZATION \
+//	identifier(this)\
+//, symbol_component(this)\
+//, constant_symbol(this)\
+//, declaration(this)\
+//, type_syntax(this)\
+//, expression(this)\
+//, arguments(this)\
+//, symbol(this)\
+//, symbol_list(this)\
+//, symbol_scope(this)\
+//, declaration_list(this)\
+//, statement_block(this)\
+//, statement(this)
+
+#define COMMA ,
+#define SEMI_COLON ;
+#define FOR_ALL(m_macro, seperator)\
+	m_macro(identifier) seperator\
+	m_macro(symbol_component) seperator\
+	m_macro(constant_symbol) seperator\
+	m_macro(declaration) seperator\
+	m_macro(type_syntax) seperator\
+	m_macro(expression) seperator\
+	m_macro(arguments) seperator\
+	m_macro(symbol) seperator\
+	m_macro(symbol_list) seperator\
+	m_macro(symbol_scope) seperator\
+	m_macro(declaration_list) seperator\
+	m_macro(statement) seperator\
+	m_macro(statement_block) seperator\
+	m_macro(if_statement)
+
+#define INITIALIZE_MEMBER(name) name(this)
+
+#define MEMBER_INITIALIZATION FOR_ALL(INITIALIZE_MEMBER, COMMA)
 
 j_semantic_type::j_semantic_type()
 :MEMBER_INITIALIZATION {
@@ -116,18 +144,22 @@ void j_semantic_type::set_pointer_map(){
 #define SET_ID_TO_PTR(ptr) {ptr.ID(), &ptr}
 
 	M_ptrs = {
-		SET_ID_TO_PTR(identifier)
-		, SET_ID_TO_PTR(symbol_component)
-		, SET_ID_TO_PTR(constant_symbol)
-		, SET_ID_TO_PTR(declaration)
-		, SET_ID_TO_PTR(type_syntax)
-		, SET_ID_TO_PTR(expression)
-		, SET_ID_TO_PTR(arguments)
-		, SET_ID_TO_PTR(symbol)
-		, SET_ID_TO_PTR(symbol_list)
-		, SET_ID_TO_PTR(symbol_scope)
-		, SET_ID_TO_PTR(declaration_list)
+		FOR_ALL(SET_ID_TO_PTR, COMMA)
+		//SET_ID_TO_PTR(identifier)
+		//, SET_ID_TO_PTR(symbol_component)
+		//, SET_ID_TO_PTR(constant_symbol)
+		//, SET_ID_TO_PTR(declaration)
+		//, SET_ID_TO_PTR(type_syntax)
+		//, SET_ID_TO_PTR(expression)
+		//, SET_ID_TO_PTR(arguments)
+		//, SET_ID_TO_PTR(symbol)
+		//, SET_ID_TO_PTR(symbol_list)
+		//, SET_ID_TO_PTR(symbol_scope)
+		//, SET_ID_TO_PTR(declaration_list)
+		//, SET_ID_TO_PTR(statement_block)
+		//, SET_ID_TO_PTR(statement)
 	};
+#undef SET_ID_TO_PTR
 }
 
 
@@ -198,18 +230,20 @@ typename jtl::enable_if_same_non_qualified_type<
 
 
 #define PTR_ASSIGN(i_ptr) assign_ptr(num_set, i_ptr, irk_right.i_ptr, i_func);
-
-	PTR_ASSIGN(identifier);
-	PTR_ASSIGN(symbol_component);
-	PTR_ASSIGN(constant_symbol);
-	PTR_ASSIGN(declaration);
-	PTR_ASSIGN(type_syntax);
-	PTR_ASSIGN(expression);
-	PTR_ASSIGN(arguments);
-	PTR_ASSIGN(symbol);
-	PTR_ASSIGN(symbol_list);
-	PTR_ASSIGN(symbol_scope);
-	PTR_ASSIGN(declaration_list);
+	FOR_ALL(PTR_ASSIGN, SEMI_COLON);
+	//PTR_ASSIGN(identifier);
+	//PTR_ASSIGN(symbol_component);
+	//PTR_ASSIGN(constant_symbol);
+	//PTR_ASSIGN(declaration);
+	//PTR_ASSIGN(type_syntax);
+	//PTR_ASSIGN(expression);
+	//PTR_ASSIGN(arguments);
+	//PTR_ASSIGN(symbol);
+	//PTR_ASSIGN(symbol_list);
+	//PTR_ASSIGN(symbol_scope);
+	//PTR_ASSIGN(declaration_list);
+	//PTR_ASSIGN(statement_block);
+	//PTR_ASSIGN(statement);
 
 #undef PTR_ASSIGN
 
@@ -236,9 +270,9 @@ void j_semantic_type::copy_data(const j_semantic_type &irk_right){
 	get_data(irk_right, Copy_Ptr());
 }
 
-void j_semantic_type::swap(j_semantic_type& irk_right){
-	assert(M_ptrs.size() == irk_right.M_ptrs.size());
-	auto src_pos = irk_right.M_ptrs.begin();
+void j_semantic_type::swap(j_semantic_type& ir_right){
+	assert(M_ptrs.size() == ir_right.M_ptrs.size());
+	auto src_pos = ir_right.M_ptrs.begin();
 	for(auto f_res_ptr : M_ptrs){
 		f_res_ptr->swap(**src_pos++);
 	}

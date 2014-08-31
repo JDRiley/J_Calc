@@ -33,12 +33,39 @@ public:
 	const Symbol_t& operator[](j_size_t i_index)const;
 
 	typedef Symbol_Component_List::iterator_type<Symbol_t> iterator;
+	typedef Symbol_Component_List::const_iterator_type<Symbol_t> const_iterator;
 
-	iterator begin()const{ return iterator(Symbol_Component_List::begin()); }
-	iterator end()const{ return iterator(Symbol_Component_List::end()); }
+	const_iterator begin()const{ return const_iterator(Symbol_Component_List::begin()); }
+	const_iterator end()const{ return const_iterator(Symbol_Component_List::end()); }
+
+	iterator begin(){ return iterator(Symbol_Component_List::begin()); }
+	iterator end(){ return iterator(Symbol_Component_List::end()); }
+
+	bool has_value()const override;
+
+	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope)override;
 
 private:
 };
+
+template<typename St>
+typename std::enable_if<std::is_base_of<j_symbol, St>::value, bool>::type
+has_value_helper(const Specific_Symbol_List<St>* ik_symbol_list){
+	return std::all_of(ik_symbol_list->begin(), ik_symbol_list->end()
+					   , std::mem_fn(&St::has_value));
+}
+
+
+template<typename St>
+typename std::enable_if<!std::is_base_of<j_symbol, St>::value, bool>::type
+has_value_helper(const Specific_Symbol_List<St>* /*ik_symbol_list*/){
+	return false;
+}
+template<typename Symbol_t>
+bool Specific_Symbol_List<Symbol_t>::has_value()const {
+	return has_value_helper(this);
+
+}
 
 
 
@@ -65,6 +92,35 @@ const Symbol_t& Specific_Symbol_List<Symbol_t>::operator[](j_size_t i_index)cons
 	assert(symbol);
 	return *symbol;
 }
+
+
+
+
+template<typename St>
+typename std::enable_if<std::is_base_of<j_symbol, St>::value, void>::type
+set_symbol_scope_helper(
+Specific_Symbol_List<St>* ik_symbol_list, const J_Symbol_Scope* ik_scope){
+	for(auto f_symbol : *ik_symbol_list){
+		f_symbol->set_symbol_scope(ik_scope);
+	}
+}
+
+
+template<typename St>
+typename std::enable_if<!std::is_base_of<j_symbol, St>::value, void>::type
+set_symbol_scope_helper(Specific_Symbol_List<St>* /*ik_symbol_list*/
+, const J_Symbol_Scope*){
+	
+}
+
+template<typename Symbol_t>
+void jomike::Specific_Symbol_List<Symbol_t>::set_symbol_scope(
+	const J_Symbol_Scope* i_symbol_scope){
+	Symbol_Component_List::set_symbol_scope(i_symbol_scope);
+
+	set_symbol_scope_helper(this, i_symbol_scope);
+}
+
 
 }
 

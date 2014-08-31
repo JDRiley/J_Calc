@@ -25,7 +25,9 @@ J_FWD_DECL(Arguments)
 J_FWD_DECL(Type_Routine)
 J_FWD_DECL(Math_Parser)
 J_FWD_DECL(Math_Lexer)
-
+J_FWD_DECL(Statement_Block)
+J_FWD_DECL(j_statement)
+J_FWD_DECL(If_Statement)
 template<typename Symbol_t>
 class Specific_Symbol_List;
 

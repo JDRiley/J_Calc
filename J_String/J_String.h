@@ -86,6 +86,8 @@ j_dbl from_string<j_dbl>(const std::string& irk_str);
 template<>
 j_llint from_string<j_llint>(const std::string& irk_str);
 
+template<>
+bool from_string<bool>(const std::string& irk_str);
 }
 
 

@@ -71,7 +71,10 @@ j_llint from_string<j_llint>(const std::string& irk_str){
 	return std::stoll(irk_str);
 }
 
-
+template<>
+bool from_string<bool>(const std::string& irk_str){
+	return !irk_str.empty();
+}
 
 
 

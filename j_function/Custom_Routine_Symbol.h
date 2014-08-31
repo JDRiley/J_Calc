@@ -10,7 +10,7 @@ public:
 	Custom_Routine_Symbol(
 		J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
 		, const Declaration_List& irk_arg_declarations, Type_Syntax* i_return_type
-		, Symbol_List* i_statement_list);
+		, Statement_Block* i_statement_block);
 
 	Custom_Routine_Symbol(const Custom_Routine_Symbol& irk_right);
 	Custom_Routine_Symbol(Custom_Routine_Symbol&& irv_right);
@@ -31,7 +31,7 @@ private:
 
 	ex_array<J_UI_String> M_arg_names;
 
-	Symbol_List* M_statement_list;
+	Statement_Block* M_statement_block;
 	J_Symbol_Scope* M_running_scope;
 };
 

@@ -14,6 +14,14 @@
 #include <j_iterator.h>
 namespace jomike{
 
+
+j_value operator<(const j_value& irk_left, const j_value& irk_right);
+j_value operator<=(const j_value& irk_left, const j_value& irk_right);
+j_value operator>(const j_value& irk_left, const j_value& irk_right);
+j_value operator>=(const j_value& irk_left, const j_value& irk_right);
+j_value operator==(const j_value& irk_left, const j_value& irk_right);
+j_value operator!=(const j_value& irk_left, const j_value& irk_right);
+
 class j_value{
 public:
 	j_value();
@@ -103,8 +111,6 @@ public:
 
 	j_value operator-()const;
 
-	bool operator==(const j_value&)const;
-	bool operator!=(const j_value&)const;
 	bool is_convertible(J_Unit)const;
 	j_value& convert_units(J_Unit);
 
@@ -143,6 +149,14 @@ private:
 	void binary_value_operation_no_str_or_bool(
 		const j_value& i_right, const Operator_Class&);
 
+	template<class Operator_Class>
+	void binary_value_operation_no_str(
+		const j_value& i_right, const Operator_Class&);
+
+	template<class Operator_Class>
+	void binary_value_operation_no_bool(
+		const j_value& i_right, const Operator_Class&);
+
 	template<typename Ret_t, typename Left_t, typename Operator_Class>
 	void binary_value_operation(
 		const Left_t& i_left, const j_value& i_right, Ret_t* i_destination
@@ -163,10 +177,18 @@ private:
 
 
 
-
+	friend j_value operator<(const j_value& irk_left, const j_value& irk_right);
+	friend j_value operator<=(const j_value& irk_left, const j_value& irk_right);
+	friend j_value operator>(const j_value& irk_left, const j_value& irk_right);
+	friend j_value operator>=(const j_value& irk_left, const j_value& irk_right);
+	friend j_value operator==(const j_value& irk_left, const j_value& irk_right);
+	friend j_value operator!=(const j_value& irk_left, const j_value& irk_right);
 
 
 };
+
+
+
 
 j_dbl unit_conversion(const j_value&, J_Unit);
 

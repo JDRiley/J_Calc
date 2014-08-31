@@ -125,7 +125,7 @@ struct j_semantic_type : public j_base {
 		}
 	private:
 		j_semantic_type* M_parent;
-		//because stack in stack.hh does not support move construction
+
 		mutable St* M_ptr;
 
 
@@ -157,6 +157,9 @@ struct j_semantic_type : public j_base {
 	restrictive_ptr<jtl::Symbol_List>			symbol_list;
 	restrictive_ptr<jtl::J_Symbol_Scope>		symbol_scope;
 	restrictive_ptr<jtl::Declaration_List>		declaration_list;
+	restrictive_ptr<jtl::j_statement>			statement;
+	restrictive_ptr<jtl::Statement_Block>		statement_block;
+	restrictive_ptr<jtl::If_Statement>			if_statement;
 
 	jtl::j_map<int, base_restrictive_ptr*> M_ptrs;
 	void set_pointer_map();

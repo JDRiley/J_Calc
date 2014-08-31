@@ -10,6 +10,8 @@
 #include <cstdlib>
 //
 #include <J_String.h>
+//
+#include "Operators.h"
 using std::equal;
 using std::string;
 using std::to_string;
@@ -58,26 +60,31 @@ void j_value::binary_value_operation(
 	const Left_t& i_left, const j_value& i_right, Ret_t* i_destination
 	, const Operator_Class& i_func){
 
-
+	
 	j_value::Value_Types right_type = i_right.M_type;
+	assert(M_type == right_type);
+	(void)right_type;
+
 	assert(j_value::Value_Types::STRING != i_right.type());
 
-		switch(right_type){
-		case j_value::Value_Types::LL_INTEGER:
-			i_func(i_left, i_right.as_llint(), i_destination);
-			break;
-		case j_value::Value_Types::DOUBLE:
-			i_func(i_left, i_right.as_double(), i_destination);
-			break;
-		case j_value::Value_Types::BOOL:
-			assert(0);
-			break;
-		case j_value::Value_Types::STRING:
-			assert(0);
-			break;
-		default:
-			break;
-		}
+	i_func(i_left, i_right.as_type<Left_t>(), i_destination);
+
+	//switch(right_type){
+	//case j_value::Value_Types::LL_INTEGER:
+	//	i_func(i_left, i_right.as_type<Left_t>(), i_destination);
+	//	break;
+	//case j_value::Value_Types::DOUBLE:
+	//	i_func(i_left, i_right.as_double(), i_destination);
+	//	break;
+	//case j_value::Value_Types::BOOL:
+	//	assert(0);
+	//	break;
+	//case j_value::Value_Types::STRING:
+	//	assert(0);
+	//	break;
+	//default:
+	//	break;
+	//}
 
 }
 
@@ -164,7 +171,73 @@ void j_value::binary_value_operation_no_str_or_bool(
 
 }
 
+//division and multiplication
+template<typename Operator_Class>
+void j_value::binary_value_operation_no_str(
+	const j_value& i_right, const Operator_Class& i_func){
 
+	j_value right_val(i_right);
+
+	if(type() != right_val.type()){
+		convert_to_same_type(this, &right_val);
+	}
+
+
+
+
+	switch(M_type){
+	case Value_Types::LL_INTEGER:
+		binary_value_operation(
+			M_val.llint_val, i_right, &M_val.llint_val, i_func);
+		break;
+	case Value_Types::DOUBLE:
+		binary_value_operation(
+			M_val.dbl_val, i_right, &M_val.dbl_val, i_func);
+		break;
+	case Value_Types::BOOL:
+		binary_value_operation(
+			M_val.bool_val, i_right, &M_val.bool_val, i_func);
+	case Value_Types::STRING:
+		throw J_Value_Error("String in wrong binary value_operation function");
+	default:
+		assert(!"Unhandled Value Type");
+	}
+
+}
+template<typename Operator_Class>
+void j_value::binary_value_operation_no_bool(
+	const j_value& irk_right, const Operator_Class& i_func){
+
+	j_value right_val(irk_right);
+
+	if(type() != right_val.type()){
+		convert_to_same_type(this, &right_val);
+	}
+
+
+
+
+	switch(M_type){
+	case Value_Types::LL_INTEGER:
+		binary_value_operation(
+			M_val.llint_val, irk_right, &M_val.llint_val, i_func);
+		break;
+	case Value_Types::DOUBLE:
+		binary_value_operation(
+			M_val.dbl_val, irk_right, &M_val.dbl_val, i_func);
+		break;
+	case Value_Types::BOOL:
+		throw J_Value_Error("String in wrong binary value_operation function");
+		
+	case Value_Types::STRING:
+		assert(irk_right.type() == Value_Types::STRING);
+		i_func(*M_val.str_val, irk_right.as_string(), M_val.str_val);
+		break;
+	default:
+		assert(!"Unhandled Value Type");
+	}
+
+}
 
 j_value::j_value(const j_value& irk_source, J_Unit i_unit):j_value(irk_source){
 	convert_units(i_unit);
@@ -217,7 +290,11 @@ public:
 
 j_value& j_value::operator+=(const j_value& irk_val){
 	//Need to do unit like things here
-	assert(Value_Types::STRING != M_type);
+	
+	
+	if(Value_Types::STRING != M_type){
+		throw J_Value_Error("Cannot use \'+\' on strings yet");
+	}
 	assert(Value_Types::STRING != irk_val.M_type);
 	
 
@@ -285,23 +362,13 @@ j_value& j_value::operator/=(const j_value& irk_val){
 	return *this;
 }
 
-bool j_value::operator==(const j_value& irk_right)const{
-	if(M_type != irk_right.M_type){
-		return false;
-	}
 
-	const char* val_address = reinterpret_cast<const char*>(&M_val);
-	const char* right_val_address = reinterpret_cast<const char*>(&irk_right.M_val);
-	return equal(val_address, val_address + sizeof(M_val), right_val_address);
-}
 
 bool j_value::value_status()const{
 	return M_has_value_status;
 }
 
-bool j_value::operator!=(const j_value& irk_right)const{
-	return !(*this == irk_right);
-}
+
 
 j_value& j_value::convert_units(J_Unit i_unit){
 	if(!M_has_value_status){
@@ -333,7 +400,7 @@ std::string j_value::as_string()const{
 }
 
 bool j_value::as_bool()const{
-	return M_val.bool_val;
+	return cast_to<bool>();
 }
 
 template<typename Ret_t>
@@ -608,6 +675,107 @@ const j_value& j_value::void_type(){
 
 J_Value_Error::J_Value_Error(const char* const ik_message):J_Error(ik_message){}
 
+
+class Relational_Class{
+public:
+
+	Relational_Class(Operators i_operator):M_operator(i_operator){}
+	template<typename Ret_t, typename Left_t, typename Right_t>
+	void operator()(const Left_t& i_left, const Right_t& i_right, Ret_t* i_destination)const{
+	
+
+		switch(M_operator){
+		case Operators::LESS:
+			*i_destination = i_left < i_right;
+			break;
+		case Operators::LESS_EQUAL:
+			*i_destination = i_left <= i_right;
+			break;
+		case Operators::GREATER:
+			*i_destination = i_left > i_right;
+			break;
+		case Operators::GREATER_EQUAL:
+			*i_destination = i_left >= i_right;
+			break;
+		default:
+			assert(!"Bad Operator type for relational class");
+		}
+		
+	}
+private:
+	Operators M_operator;
+};
+
+j_value operator<(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation_no_bool(irk_right, Relational_Class(Operators::LESS));
+	
+	return j_value(left_val.as_bool(), J_Unit());
+}
+
+
+j_value operator<=(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation_no_bool(irk_right, Relational_Class(Operators::LESS_EQUAL));
+
+	return j_value(left_val.as_bool(), J_Unit());
+}
+j_value operator>(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation_no_bool(irk_right, Relational_Class(Operators::GREATER));
+
+	return j_value(left_val.as_bool(), J_Unit());
+}
+j_value operator>=(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation_no_bool(irk_right, Relational_Class(Operators::GREATER_EQUAL));
+
+	return j_value(left_val.as_bool(), J_Unit());
+}
+
+
+class Equality_Class{
+public:
+
+	Equality_Class(Operators i_operator):M_operator(i_operator){}
+
+	template<typename Ret_t, typename Left_t, typename Right_t>
+	void operator()(const Left_t& i_left, const Right_t& i_right, Ret_t* i_destination)const{
+
+
+		switch(M_operator){
+		case Operators::EQUAL:
+			*i_destination = i_left == i_right;
+			break;
+		case Operators::NOT_EQUAL:
+			*i_destination = i_left != i_right;
+			break;
+		default:
+			assert(!"Bad Operator type for equality class");
+		}
+
+	}
+private:
+	Operators M_operator;
+};
+j_value operator==(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation(irk_right, Equality_Class(Operators::EQUAL));
+
+	return j_value(left_val.as_bool(), J_Unit());
+}
+j_value operator!=(const j_value& irk_left, const j_value& irk_right){
+	j_value left_val(irk_left);
+
+	left_val.binary_value_operation(irk_right, Equality_Class(Operators::NOT_EQUAL));
+
+	return j_value(left_val.as_bool(), J_Unit());
+}
 
 
 

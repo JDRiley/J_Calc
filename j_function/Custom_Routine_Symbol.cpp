@@ -12,7 +12,9 @@
 //
 #include <algorithm>
 //
-#include <J_Symbol_Error.h>
+#include "J_Symbol_Error.h"
+//
+#include "Statement_Block.h"
 using std::transform;
 
 using std::to_string;
@@ -31,9 +33,9 @@ static Type_Syntax_List* make_type_syntax_list(const Declaration_List& irk_list)
 Custom_Routine_Symbol::Custom_Routine_Symbol(
 	J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
 	, const Declaration_List& irk_arg_declarations, Type_Syntax* i_return_type
-	, Symbol_List* i_statement_list)
+	, Statement_Block* i_statement_list)
 :j_routine_symbol(i_identifier, new Type_Routine(i_return_type, make_type_syntax_list(irk_arg_declarations))){
-	M_statement_list = i_statement_list;
+	M_statement_block = i_statement_list;
 	M_running_scope = new J_Symbol_Scope(irk_static_declarations);
 
 	M_running_scope->set_parent_scope(&symbol_scope());
@@ -43,20 +45,20 @@ Custom_Routine_Symbol::Custom_Routine_Symbol(
 
 Custom_Routine_Symbol::Custom_Routine_Symbol(const Custom_Routine_Symbol& irk_right)
 :j_routine_symbol(irk_right), M_arg_names(irk_right.M_arg_names)
-, M_statement_list(irk_right.M_statement_list->get_copy())
+, M_statement_block(irk_right.M_statement_block->get_copy())
 , M_running_scope(irk_right.M_running_scope->get_copy()){
 
 }
 
 Custom_Routine_Symbol::Custom_Routine_Symbol(Custom_Routine_Symbol&& irv_right)
 :j_routine_symbol(std::move(irv_right)), M_arg_names(std::move(irv_right.M_arg_names))
-, M_statement_list(irv_right.M_statement_list->move_copy())
+, M_statement_block(irv_right.M_statement_block->move_copy())
 , M_running_scope(irv_right.M_running_scope->move_copy()){
 
 }
 
 Custom_Routine_Symbol::~Custom_Routine_Symbol(){
-	delete M_statement_list;
+	delete M_statement_block;
 	delete M_running_scope;
 }
 
@@ -91,9 +93,9 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 	}
 
 
-	M_statement_list->set_symbol_scope(running_scope.get());
+	M_statement_block->set_symbol_scope(running_scope.get());
 
-	j_value return_val = M_statement_list->get_value();
+	j_value return_val = M_statement_block->get_value();
 	if(return_type_syntax().is_void()){
 		return j_value::void_type();
 	}
