@@ -1,6 +1,6 @@
 char_press 
 []max[int a, int b]->int{
-	?(a > b){a;}!{b;}
+	?(a>b) a ! b;
 }@
 char_press max(4,3)@
 char_press [int counter <-0, dbl ratio <- 1/2.0] foo[int val]->dbl{

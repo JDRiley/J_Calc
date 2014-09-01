@@ -66,7 +66,7 @@ Custom_Routine_Symbol* Custom_Routine_Symbol::move_copy(){
 	return  new Custom_Routine_Symbol(std::move(*this));
 }
 
-Custom_Routine_Symbol* Custom_Routine_Symbol::get_copy()const {
+Custom_Routine_Symbol* Custom_Routine_Symbol::get_copy()const{
 	return new Custom_Routine_Symbol(*this);
 }
 

@@ -15,6 +15,10 @@ public:
 		j_expression* i_test_expression, Statement_Block* i_then_body
 		, If_Statement* i_else_body);
 
+	If_Statement(
+		j_expression* i_test_expression, j_expression* i_then_expression
+		, j_expression* i_else_expression);
+	
 	//Deleting Constructors and Assignment Operators
 	If_Statement(const If_Statement& irk_source);
 	If_Statement(If_Statement&& irv_source);

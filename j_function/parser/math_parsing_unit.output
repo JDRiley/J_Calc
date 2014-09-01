@@ -27,115 +27,116 @@ Grammar
     8 If_Statement: Test_Expression Statement_Block
     9             | Test_Expression Statement_Block '!' Statement_Block
    10             | Test_Expression Statement_Block '!' If_Statement
+   11             | Test_Expression Expression '!' Expression ';'
 
-   11 Statement_Block: '{' Statement_List '}'
+   12 Statement_Block: '{' Statement_List '}'
 
-   12 Statement_List: /* empty */
-   13               | Statement_List Statement
+   13 Statement_List: /* empty */
+   14               | Statement_List Statement
 
-   14 Declaration_List: /* empty */
-   15                 | Declaration
-   16                 | Declaration_List ',' Declaration
+   15 Declaration_List: /* empty */
+   16                 | Declaration
+   17                 | Declaration_List ',' Declaration
 
-   17 Declaration: Variable_Declaration
-   18            | Routine_Definition
+   18 Declaration: Variable_Declaration
+   19            | Routine_Definition
 
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
 
-   20 Bracketed_Declaration_List: '[' Declaration_List ']'
+   21 Bracketed_Declaration_List: '[' Declaration_List ']'
 
-   21 Variable_Declaration: Type T_IDENTIFIER
-   22                     | Type T_IDENTIFIER T_RIGHT_ARROW Expression
-   23                     | Type T_IDENTIFIER T_LEFT_ARROW Expression
+   22 Variable_Declaration: Type T_IDENTIFIER
+   23                     | Type T_IDENTIFIER T_RIGHT_ARROW Expression
+   24                     | Type T_IDENTIFIER T_LEFT_ARROW Expression
 
-   24 Type: T_DOUBLE
-   25     | T_INT
-   26     | T_BOOL
-   27     | T_VOID
+   25 Type: T_DOUBLE
+   26     | T_INT
+   27     | T_BOOL
+   28     | T_VOID
 
-   28 Expression: Assignment_Expression
-   29           | Call
-   30           | Constant_Expression
-   31           | LValue
-   32           | Expression '+' Expression
-   33           | Expression '-' Expression
-   34           | Expression '*' Expression
-   35           | Expression '/' Expression
-   36           | Expression '>' Expression
-   37           | Expression '<' Expression
-   38           | Expression T_GREATER_EQUAL Expression
-   39           | Expression T_LESS_EQUAL Expression
-   40           | Expression T_AND Expression
-   41           | Expression T_OR Expression
-   42           | Expression T_EQUAL Expression
-   43           | Expression T_NOT_EQUAL Expression
-   44           | '(' Expression ')'
-   45           | '-' Expression
+   29 Expression: Assignment_Expression
+   30           | Call
+   31           | Constant_Expression
+   32           | LValue
+   33           | Expression '+' Expression
+   34           | Expression '-' Expression
+   35           | Expression '*' Expression
+   36           | Expression '/' Expression
+   37           | Expression '>' Expression
+   38           | Expression '<' Expression
+   39           | Expression T_GREATER_EQUAL Expression
+   40           | Expression T_LESS_EQUAL Expression
+   41           | Expression T_AND Expression
+   42           | Expression T_OR Expression
+   43           | Expression T_EQUAL Expression
+   44           | Expression T_NOT_EQUAL Expression
+   45           | '(' Expression ')'
+   46           | '-' Expression
 
-   46 Assignment_Expression: LValue T_LEFT_ARROW Expression
+   47 Assignment_Expression: LValue T_LEFT_ARROW Expression
 
-   47 LValue: Field_Access_Expression
+   48 LValue: Field_Access_Expression
 
-   48 Field_Access_Expression: T_IDENTIFIER
+   49 Field_Access_Expression: T_IDENTIFIER
 
-   49 Call: T_IDENTIFIER '(' Expression_List_Wild ')'
+   50 Call: T_IDENTIFIER '(' Expression_List_Wild ')'
 
-   50 Expression_List_Wild: /* empty */
-   51                     | Expression_List
+   51 Expression_List_Wild: /* empty */
+   52                     | Expression_List
 
-   52 Expression_List: Expression_List_Helper
+   53 Expression_List: Expression_List_Helper
 
-   53 Expression_List_Helper: Expression
-   54                       | Expression_List_Helper ',' Expression
+   54 Expression_List_Helper: Expression
+   55                       | Expression_List_Helper ',' Expression
 
-   55 Constant_Expression: T_INTEGER_CONSTANT
-   56                    | T_DOUBLE_CONSTANT
-   57                    | T_BOOL_CONSTANT
-   58                    | T_STRING_CONSTANT
+   56 Constant_Expression: T_INTEGER_CONSTANT
+   57                    | T_DOUBLE_CONSTANT
+   58                    | T_BOOL_CONSTANT
+   59                    | T_STRING_CONSTANT
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'!' (33) 9 10
+'!' (33) 9 10 11
 '%' (37)
-'(' (40) 7 44 49
-')' (41) 7 44 49
-'*' (42) 34
-'+' (43) 32
-',' (44) 16 54
-'-' (45) 33 45
+'(' (40) 7 45 50
+')' (41) 7 45 50
+'*' (42) 35
+'+' (43) 33
+',' (44) 17 55
+'-' (45) 34 46
 '.' (46)
-'/' (47) 35
-';' (59) 4 6
-'<' (60) 37
-'>' (62) 36
+'/' (47) 36
+';' (59) 4 6 11
+'<' (60) 38
+'>' (62) 37
 '?' (63) 7
-'[' (91) 20
-']' (93) 20
-'{' (123) 11
-'}' (125) 11
+'[' (91) 21
+']' (93) 21
+'{' (123) 12
+'}' (125) 12
 error (256)
-T_VOID (258) 27
-T_BOOL (259) 26
-T_INT (260) 25
-T_DOUBLE (261) 24
+T_VOID (258) 28
+T_BOOL (259) 27
+T_INT (260) 26
+T_DOUBLE (261) 25
 T_STRING (262)
 T_NULL_PTR (263)
-T_LEFT_ARROW (264) 23 46
-T_RIGHT_ARROW (265) 19 22
+T_LEFT_ARROW (264) 24 47
+T_RIGHT_ARROW (265) 20 23
 T_END (266) 1 2 3
-T_IDENTIFIER (267) 19 21 22 23 48 49
-T_STRING_CONSTANT (268) 58
-T_INTEGER_CONSTANT (269) 55
-T_DOUBLE_CONSTANT (270) 56
-T_BOOL_CONSTANT (271) 57
-T_OR (272) 41
-T_AND (273) 40
-T_NOT_EQUAL (274) 43
-T_EQUAL (275) 42
-T_GREATER_EQUAL (276) 38
-T_LESS_EQUAL (277) 39
+T_IDENTIFIER (267) 20 22 23 24 49 50
+T_STRING_CONSTANT (268) 59
+T_INTEGER_CONSTANT (269) 56
+T_DOUBLE_CONSTANT (270) 57
+T_BOOL_CONSTANT (271) 58
+T_OR (272) 42
+T_AND (273) 41
+T_NOT_EQUAL (274) 44
+T_EQUAL (275) 43
+T_GREATER_EQUAL (276) 39
+T_LESS_EQUAL (277) 40
 T_DECREMENT (278)
 T_INCREMENT (279)
 NEGATION (280)
@@ -149,47 +150,47 @@ $accept (45)
 Input_Line (46)
     on left: 1 2 3, on right: 0
 Statement (47)
-    on left: 4 5 6, on right: 13
+    on left: 4 5 6, on right: 14
 Test_Expression (48)
-    on left: 7, on right: 8 9 10
+    on left: 7, on right: 8 9 10 11
 If_Statement (49)
-    on left: 8 9 10, on right: 3 5 10
+    on left: 8 9 10 11, on right: 3 5 10
 Statement_Block (50)
-    on left: 11, on right: 8 9 10 19
+    on left: 12, on right: 8 9 10 20
 Statement_List (51)
-    on left: 12 13, on right: 11 13
+    on left: 13 14, on right: 12 14
 Declaration_List (52)
-    on left: 14 15 16, on right: 16 20
+    on left: 15 16 17, on right: 17 21
 Declaration (53)
-    on left: 17 18, on right: 2 6 15 16
+    on left: 18 19, on right: 2 6 16 17
 Routine_Definition (54)
-    on left: 19, on right: 18
-Bracketed_Declaration_List (55)
     on left: 20, on right: 19
+Bracketed_Declaration_List (55)
+    on left: 21, on right: 20
 Variable_Declaration (56)
-    on left: 21 22 23, on right: 17
+    on left: 22 23 24, on right: 18
 Type (57)
-    on left: 24 25 26 27, on right: 19 21 22 23
+    on left: 25 26 27 28, on right: 20 22 23 24
 Expression (58)
-    on left: 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45,
-    on right: 1 4 7 22 23 32 33 34 35 36 37 38 39 40 41 42 43 44 45
-    46 53 54
+    on left: 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46,
+    on right: 1 4 7 11 23 24 33 34 35 36 37 38 39 40 41 42 43 44 45
+    46 47 54 55
 Assignment_Expression (59)
-    on left: 46, on right: 28
+    on left: 47, on right: 29
 LValue (60)
-    on left: 47, on right: 31 46
+    on left: 48, on right: 32 47
 Field_Access_Expression (61)
-    on left: 48, on right: 47
+    on left: 49, on right: 48
 Call (62)
-    on left: 49, on right: 29
+    on left: 50, on right: 30
 Expression_List_Wild (63)
-    on left: 50 51, on right: 49
+    on left: 51 52, on right: 50
 Expression_List (64)
-    on left: 52, on right: 51
+    on left: 53, on right: 52
 Expression_List_Helper (65)
-    on left: 53 54, on right: 52 54
+    on left: 54 55, on right: 53 55
 Constant_Expression (66)
-    on left: 55 56 57 58, on right: 30
+    on left: 56 57 58 59, on right: 31
 
 
 State 0
@@ -228,73 +229,73 @@ State 0
 
 State 1
 
-   27 Type: T_VOID .
+   28 Type: T_VOID .
 
-    $default  reduce using rule 27 (Type)
+    $default  reduce using rule 28 (Type)
 
 
 State 2
 
-   26 Type: T_BOOL .
+   27 Type: T_BOOL .
 
-    $default  reduce using rule 26 (Type)
+    $default  reduce using rule 27 (Type)
 
 
 State 3
 
-   25 Type: T_INT .
+   26 Type: T_INT .
 
-    $default  reduce using rule 25 (Type)
+    $default  reduce using rule 26 (Type)
 
 
 State 4
 
-   24 Type: T_DOUBLE .
+   25 Type: T_DOUBLE .
 
-    $default  reduce using rule 24 (Type)
+    $default  reduce using rule 25 (Type)
 
 
 State 5
 
-   48 Field_Access_Expression: T_IDENTIFIER .
-   49 Call: T_IDENTIFIER . '(' Expression_List_Wild ')'
+   49 Field_Access_Expression: T_IDENTIFIER .
+   50 Call: T_IDENTIFIER . '(' Expression_List_Wild ')'
 
     '('  shift, and go to state 28
 
-    $default  reduce using rule 48 (Field_Access_Expression)
+    $default  reduce using rule 49 (Field_Access_Expression)
 
 
 State 6
 
-   58 Constant_Expression: T_STRING_CONSTANT .
+   59 Constant_Expression: T_STRING_CONSTANT .
 
-    $default  reduce using rule 58 (Constant_Expression)
+    $default  reduce using rule 59 (Constant_Expression)
 
 
 State 7
 
-   55 Constant_Expression: T_INTEGER_CONSTANT .
-
-    $default  reduce using rule 55 (Constant_Expression)
-
-
-State 8
-
-   56 Constant_Expression: T_DOUBLE_CONSTANT .
+   56 Constant_Expression: T_INTEGER_CONSTANT .
 
     $default  reduce using rule 56 (Constant_Expression)
 
 
-State 9
+State 8
 
-   57 Constant_Expression: T_BOOL_CONSTANT .
+   57 Constant_Expression: T_DOUBLE_CONSTANT .
 
     $default  reduce using rule 57 (Constant_Expression)
 
 
+State 9
+
+   58 Constant_Expression: T_BOOL_CONSTANT .
+
+    $default  reduce using rule 58 (Constant_Expression)
+
+
 State 10
 
-   45 Expression: '-' . Expression
+   46 Expression: '-' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -314,7 +315,7 @@ State 10
 
 State 11
 
-   20 Bracketed_Declaration_List: '[' . Declaration_List ']'
+   21 Bracketed_Declaration_List: '[' . Declaration_List ']'
 
     T_VOID    shift, and go to state 1
     T_BOOL    shift, and go to state 2
@@ -322,7 +323,7 @@ State 11
     T_DOUBLE  shift, and go to state 4
     '['       shift, and go to state 11
 
-    $default  reduce using rule 14 (Declaration_List)
+    $default  reduce using rule 15 (Declaration_List)
 
     Declaration_List            go to state 30
     Declaration                 go to state 31
@@ -341,7 +342,7 @@ State 12
 
 State 13
 
-   44 Expression: '(' . Expression ')'
+   45 Expression: '(' . Expression ')'
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -371,128 +372,142 @@ State 15
     8 If_Statement: Test_Expression . Statement_Block
     9             | Test_Expression . Statement_Block '!' Statement_Block
    10             | Test_Expression . Statement_Block '!' If_Statement
+   11             | Test_Expression . Expression '!' Expression ';'
 
-    '{'  shift, and go to state 35
+    T_IDENTIFIER        shift, and go to state 5
+    T_STRING_CONSTANT   shift, and go to state 6
+    T_INTEGER_CONSTANT  shift, and go to state 7
+    T_DOUBLE_CONSTANT   shift, and go to state 8
+    T_BOOL_CONSTANT     shift, and go to state 9
+    '-'                 shift, and go to state 10
+    '('                 shift, and go to state 13
+    '{'                 shift, and go to state 35
 
-    Statement_Block  go to state 36
+    Statement_Block          go to state 36
+    Expression               go to state 37
+    Assignment_Expression    go to state 23
+    LValue                   go to state 24
+    Field_Access_Expression  go to state 25
+    Call                     go to state 26
+    Constant_Expression      go to state 27
 
 
 State 16
 
     3 Input_Line: If_Statement . T_END
 
-    T_END  shift, and go to state 37
+    T_END  shift, and go to state 38
 
 
 State 17
 
     2 Input_Line: Declaration . T_END
 
-    T_END  shift, and go to state 38
+    T_END  shift, and go to state 39
 
 
 State 18
 
-   18 Declaration: Routine_Definition .
+   19 Declaration: Routine_Definition .
 
-    $default  reduce using rule 18 (Declaration)
+    $default  reduce using rule 19 (Declaration)
 
 
 State 19
 
-   19 Routine_Definition: Bracketed_Declaration_List . T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
+   20 Routine_Definition: Bracketed_Declaration_List . T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
 
-    T_IDENTIFIER  shift, and go to state 39
+    T_IDENTIFIER  shift, and go to state 40
 
 
 State 20
 
-   17 Declaration: Variable_Declaration .
+   18 Declaration: Variable_Declaration .
 
-    $default  reduce using rule 17 (Declaration)
+    $default  reduce using rule 18 (Declaration)
 
 
 State 21
 
-   21 Variable_Declaration: Type . T_IDENTIFIER
-   22                     | Type . T_IDENTIFIER T_RIGHT_ARROW Expression
-   23                     | Type . T_IDENTIFIER T_LEFT_ARROW Expression
+   22 Variable_Declaration: Type . T_IDENTIFIER
+   23                     | Type . T_IDENTIFIER T_RIGHT_ARROW Expression
+   24                     | Type . T_IDENTIFIER T_LEFT_ARROW Expression
 
-    T_IDENTIFIER  shift, and go to state 40
+    T_IDENTIFIER  shift, and go to state 41
 
 
 State 22
 
     1 Input_Line: Expression . T_END
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
 
-    T_END            shift, and go to state 41
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
+    T_END            shift, and go to state 42
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
 
 
 State 23
 
-   28 Expression: Assignment_Expression .
-
-    $default  reduce using rule 28 (Expression)
-
-
-State 24
-
-   31 Expression: LValue .
-   46 Assignment_Expression: LValue . T_LEFT_ARROW Expression
-
-    T_LEFT_ARROW  shift, and go to state 54
-
-    $default  reduce using rule 31 (Expression)
-
-
-State 25
-
-   47 LValue: Field_Access_Expression .
-
-    $default  reduce using rule 47 (LValue)
-
-
-State 26
-
-   29 Expression: Call .
+   29 Expression: Assignment_Expression .
 
     $default  reduce using rule 29 (Expression)
 
 
-State 27
+State 24
 
-   30 Expression: Constant_Expression .
+   32 Expression: LValue .
+   47 Assignment_Expression: LValue . T_LEFT_ARROW Expression
+
+    T_LEFT_ARROW  shift, and go to state 55
+
+    $default  reduce using rule 32 (Expression)
+
+
+State 25
+
+   48 LValue: Field_Access_Expression .
+
+    $default  reduce using rule 48 (LValue)
+
+
+State 26
+
+   30 Expression: Call .
 
     $default  reduce using rule 30 (Expression)
 
 
+State 27
+
+   31 Expression: Constant_Expression .
+
+    $default  reduce using rule 31 (Expression)
+
+
 State 28
 
-   49 Call: T_IDENTIFIER '(' . Expression_List_Wild ')'
+   50 Call: T_IDENTIFIER '(' . Expression_List_Wild ')'
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -502,55 +517,55 @@ State 28
     '-'                 shift, and go to state 10
     '('                 shift, and go to state 13
 
-    $default  reduce using rule 50 (Expression_List_Wild)
+    $default  reduce using rule 51 (Expression_List_Wild)
 
-    Expression               go to state 55
+    Expression               go to state 56
     Assignment_Expression    go to state 23
     LValue                   go to state 24
     Field_Access_Expression  go to state 25
     Call                     go to state 26
-    Expression_List_Wild     go to state 56
-    Expression_List          go to state 57
-    Expression_List_Helper   go to state 58
+    Expression_List_Wild     go to state 57
+    Expression_List          go to state 58
+    Expression_List_Helper   go to state 59
     Constant_Expression      go to state 27
 
 
 State 29
 
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   45           | '-' Expression .
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   46           | '-' Expression .
 
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
 
-    $default  reduce using rule 45 (Expression)
+    $default  reduce using rule 46 (Expression)
 
 
 State 30
 
-   16 Declaration_List: Declaration_List . ',' Declaration
-   20 Bracketed_Declaration_List: '[' Declaration_List . ']'
+   17 Declaration_List: Declaration_List . ',' Declaration
+   21 Bracketed_Declaration_List: '[' Declaration_List . ']'
 
-    ']'  shift, and go to state 59
-    ','  shift, and go to state 60
+    ']'  shift, and go to state 60
+    ','  shift, and go to state 61
 
 
 State 31
 
-   15 Declaration_List: Declaration .
+   16 Declaration_List: Declaration .
 
-    $default  reduce using rule 15 (Declaration_List)
+    $default  reduce using rule 16 (Declaration_List)
 
 
 State 32
@@ -565,7 +580,7 @@ State 32
     '-'                 shift, and go to state 10
     '('                 shift, and go to state 13
 
-    Expression               go to state 61
+    Expression               go to state 62
     Assignment_Expression    go to state 23
     LValue                   go to state 24
     Field_Access_Expression  go to state 25
@@ -575,33 +590,33 @@ State 32
 
 State 33
 
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   44           | '(' Expression . ')'
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   45           | '(' Expression . ')'
 
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-    ')'              shift, and go to state 62
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+    ')'              shift, and go to state 63
 
 
 State 34
@@ -613,11 +628,11 @@ State 34
 
 State 35
 
-   11 Statement_Block: '{' . Statement_List '}'
+   12 Statement_Block: '{' . Statement_List '}'
 
-    $default  reduce using rule 12 (Statement_List)
+    $default  reduce using rule 13 (Statement_List)
 
-    Statement_List  go to state 63
+    Statement_List  go to state 64
 
 
 State 36
@@ -626,96 +641,87 @@ State 36
     9             | Test_Expression Statement_Block . '!' Statement_Block
    10             | Test_Expression Statement_Block . '!' If_Statement
 
-    '!'  shift, and go to state 64
+    '!'  shift, and go to state 65
 
     $default  reduce using rule 8 (If_Statement)
 
 
 State 37
 
+   11 If_Statement: Test_Expression Expression . '!' Expression ';'
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+    '!'              shift, and go to state 66
+
+
+State 38
+
     3 Input_Line: If_Statement T_END .
 
     $default  reduce using rule 3 (Input_Line)
 
 
-State 38
+State 39
 
     2 Input_Line: Declaration T_END .
 
     $default  reduce using rule 2 (Input_Line)
 
 
-State 39
+State 40
 
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER . Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER . Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block
 
     '['  shift, and go to state 11
 
-    Bracketed_Declaration_List  go to state 65
-
-
-State 40
-
-   21 Variable_Declaration: Type T_IDENTIFIER .
-   22                     | Type T_IDENTIFIER . T_RIGHT_ARROW Expression
-   23                     | Type T_IDENTIFIER . T_LEFT_ARROW Expression
-
-    T_LEFT_ARROW   shift, and go to state 66
-    T_RIGHT_ARROW  shift, and go to state 67
-
-    $default  reduce using rule 21 (Variable_Declaration)
+    Bracketed_Declaration_List  go to state 67
 
 
 State 41
+
+   22 Variable_Declaration: Type T_IDENTIFIER .
+   23                     | Type T_IDENTIFIER . T_RIGHT_ARROW Expression
+   24                     | Type T_IDENTIFIER . T_LEFT_ARROW Expression
+
+    T_LEFT_ARROW   shift, and go to state 68
+    T_RIGHT_ARROW  shift, and go to state 69
+
+    $default  reduce using rule 22 (Variable_Declaration)
+
+
+State 42
 
     1 Input_Line: Expression T_END .
 
     $default  reduce using rule 1 (Input_Line)
 
 
-State 42
-
-   41 Expression: Expression T_OR . Expression
-
-    T_IDENTIFIER        shift, and go to state 5
-    T_STRING_CONSTANT   shift, and go to state 6
-    T_INTEGER_CONSTANT  shift, and go to state 7
-    T_DOUBLE_CONSTANT   shift, and go to state 8
-    T_BOOL_CONSTANT     shift, and go to state 9
-    '-'                 shift, and go to state 10
-    '('                 shift, and go to state 13
-
-    Expression               go to state 68
-    Assignment_Expression    go to state 23
-    LValue                   go to state 24
-    Field_Access_Expression  go to state 25
-    Call                     go to state 26
-    Constant_Expression      go to state 27
-
-
 State 43
 
-   40 Expression: Expression T_AND . Expression
-
-    T_IDENTIFIER        shift, and go to state 5
-    T_STRING_CONSTANT   shift, and go to state 6
-    T_INTEGER_CONSTANT  shift, and go to state 7
-    T_DOUBLE_CONSTANT   shift, and go to state 8
-    T_BOOL_CONSTANT     shift, and go to state 9
-    '-'                 shift, and go to state 10
-    '('                 shift, and go to state 13
-
-    Expression               go to state 69
-    Assignment_Expression    go to state 23
-    LValue                   go to state 24
-    Field_Access_Expression  go to state 25
-    Call                     go to state 26
-    Constant_Expression      go to state 27
-
-
-State 44
-
-   43 Expression: Expression T_NOT_EQUAL . Expression
+   42 Expression: Expression T_OR . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -733,9 +739,9 @@ State 44
     Constant_Expression      go to state 27
 
 
-State 45
+State 44
 
-   42 Expression: Expression T_EQUAL . Expression
+   41 Expression: Expression T_AND . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -753,9 +759,9 @@ State 45
     Constant_Expression      go to state 27
 
 
-State 46
+State 45
 
-   36 Expression: Expression '>' . Expression
+   44 Expression: Expression T_NOT_EQUAL . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -773,9 +779,9 @@ State 46
     Constant_Expression      go to state 27
 
 
-State 47
+State 46
 
-   37 Expression: Expression '<' . Expression
+   43 Expression: Expression T_EQUAL . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -793,9 +799,9 @@ State 47
     Constant_Expression      go to state 27
 
 
-State 48
+State 47
 
-   38 Expression: Expression T_GREATER_EQUAL . Expression
+   37 Expression: Expression '>' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -813,9 +819,9 @@ State 48
     Constant_Expression      go to state 27
 
 
-State 49
+State 48
 
-   39 Expression: Expression T_LESS_EQUAL . Expression
+   38 Expression: Expression '<' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -833,9 +839,9 @@ State 49
     Constant_Expression      go to state 27
 
 
-State 50
+State 49
 
-   32 Expression: Expression '+' . Expression
+   39 Expression: Expression T_GREATER_EQUAL . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -853,9 +859,9 @@ State 50
     Constant_Expression      go to state 27
 
 
-State 51
+State 50
 
-   33 Expression: Expression '-' . Expression
+   40 Expression: Expression T_LESS_EQUAL . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -873,9 +879,9 @@ State 51
     Constant_Expression      go to state 27
 
 
-State 52
+State 51
 
-   34 Expression: Expression '*' . Expression
+   33 Expression: Expression '+' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -893,9 +899,9 @@ State 52
     Constant_Expression      go to state 27
 
 
-State 53
+State 52
 
-   35 Expression: Expression '/' . Expression
+   34 Expression: Expression '-' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -913,9 +919,9 @@ State 53
     Constant_Expression      go to state 27
 
 
-State 54
+State 53
 
-   46 Assignment_Expression: LValue T_LEFT_ARROW . Expression
+   35 Expression: Expression '*' . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -933,72 +939,112 @@ State 54
     Constant_Expression      go to state 27
 
 
+State 54
+
+   36 Expression: Expression '/' . Expression
+
+    T_IDENTIFIER        shift, and go to state 5
+    T_STRING_CONSTANT   shift, and go to state 6
+    T_INTEGER_CONSTANT  shift, and go to state 7
+    T_DOUBLE_CONSTANT   shift, and go to state 8
+    T_BOOL_CONSTANT     shift, and go to state 9
+    '-'                 shift, and go to state 10
+    '('                 shift, and go to state 13
+
+    Expression               go to state 81
+    Assignment_Expression    go to state 23
+    LValue                   go to state 24
+    Field_Access_Expression  go to state 25
+    Call                     go to state 26
+    Constant_Expression      go to state 27
+
+
 State 55
 
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   53 Expression_List_Helper: Expression .
+   47 Assignment_Expression: LValue T_LEFT_ARROW . Expression
 
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
+    T_IDENTIFIER        shift, and go to state 5
+    T_STRING_CONSTANT   shift, and go to state 6
+    T_INTEGER_CONSTANT  shift, and go to state 7
+    T_DOUBLE_CONSTANT   shift, and go to state 8
+    T_BOOL_CONSTANT     shift, and go to state 9
+    '-'                 shift, and go to state 10
+    '('                 shift, and go to state 13
 
-    $default  reduce using rule 53 (Expression_List_Helper)
+    Expression               go to state 82
+    Assignment_Expression    go to state 23
+    LValue                   go to state 24
+    Field_Access_Expression  go to state 25
+    Call                     go to state 26
+    Constant_Expression      go to state 27
 
 
 State 56
 
-   49 Call: T_IDENTIFIER '(' Expression_List_Wild . ')'
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   54 Expression_List_Helper: Expression .
 
-    ')'  shift, and go to state 81
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 54 (Expression_List_Helper)
 
 
 State 57
 
-   51 Expression_List_Wild: Expression_List .
+   50 Call: T_IDENTIFIER '(' Expression_List_Wild . ')'
 
-    $default  reduce using rule 51 (Expression_List_Wild)
+    ')'  shift, and go to state 83
 
 
 State 58
 
-   52 Expression_List: Expression_List_Helper .
-   54 Expression_List_Helper: Expression_List_Helper . ',' Expression
+   52 Expression_List_Wild: Expression_List .
 
-    ','  shift, and go to state 82
-
-    $default  reduce using rule 52 (Expression_List)
+    $default  reduce using rule 52 (Expression_List_Wild)
 
 
 State 59
 
-   20 Bracketed_Declaration_List: '[' Declaration_List ']' .
+   53 Expression_List: Expression_List_Helper .
+   55 Expression_List_Helper: Expression_List_Helper . ',' Expression
 
-    $default  reduce using rule 20 (Bracketed_Declaration_List)
+    ','  shift, and go to state 84
+
+    $default  reduce using rule 53 (Expression_List)
 
 
 State 60
 
-   16 Declaration_List: Declaration_List ',' . Declaration
+   21 Bracketed_Declaration_List: '[' Declaration_List ']' .
+
+    $default  reduce using rule 21 (Bracketed_Declaration_List)
+
+
+State 61
+
+   17 Declaration_List: Declaration_List ',' . Declaration
 
     T_VOID    shift, and go to state 1
     T_BOOL    shift, and go to state 2
@@ -1006,55 +1052,55 @@ State 60
     T_DOUBLE  shift, and go to state 4
     '['       shift, and go to state 11
 
-    Declaration                 go to state 83
+    Declaration                 go to state 85
     Routine_Definition          go to state 18
     Bracketed_Declaration_List  go to state 19
     Variable_Declaration        go to state 20
     Type                        go to state 21
 
 
-State 61
-
-    7 Test_Expression: '?' '(' Expression . ')'
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-    ')'              shift, and go to state 84
-
-
 State 62
 
-   44 Expression: '(' Expression ')' .
+    7 Test_Expression: '?' '(' Expression . ')'
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
 
-    $default  reduce using rule 44 (Expression)
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+    ')'              shift, and go to state 86
 
 
 State 63
 
-   11 Statement_Block: '{' Statement_List . '}'
-   13 Statement_List: Statement_List . Statement
+   45 Expression: '(' Expression ')' .
+
+    $default  reduce using rule 45 (Expression)
+
+
+State 64
+
+   12 Statement_Block: '{' Statement_List . '}'
+   14 Statement_List: Statement_List . Statement
 
     T_VOID              shift, and go to state 1
     T_BOOL              shift, and go to state 2
@@ -1069,17 +1115,17 @@ State 63
     '['                 shift, and go to state 11
     '?'                 shift, and go to state 12
     '('                 shift, and go to state 13
-    '}'                 shift, and go to state 85
+    '}'                 shift, and go to state 87
 
-    Statement                   go to state 86
+    Statement                   go to state 88
     Test_Expression             go to state 15
-    If_Statement                go to state 87
-    Declaration                 go to state 88
+    If_Statement                go to state 89
+    Declaration                 go to state 90
     Routine_Definition          go to state 18
     Bracketed_Declaration_List  go to state 19
     Variable_Declaration        go to state 20
     Type                        go to state 21
-    Expression                  go to state 89
+    Expression                  go to state 91
     Assignment_Expression       go to state 23
     LValue                      go to state 24
     Field_Access_Expression     go to state 25
@@ -1087,7 +1133,7 @@ State 63
     Constant_Expression         go to state 27
 
 
-State 64
+State 65
 
     9 If_Statement: Test_Expression Statement_Block '!' . Statement_Block
    10             | Test_Expression Statement_Block '!' . If_Statement
@@ -1096,40 +1142,13 @@ State 64
     '{'  shift, and go to state 35
 
     Test_Expression  go to state 15
-    If_Statement     go to state 90
-    Statement_Block  go to state 91
-
-
-State 65
-
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List . T_RIGHT_ARROW Type Statement_Block
-
-    T_RIGHT_ARROW  shift, and go to state 92
+    If_Statement     go to state 92
+    Statement_Block  go to state 93
 
 
 State 66
 
-   23 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW . Expression
-
-    T_IDENTIFIER        shift, and go to state 5
-    T_STRING_CONSTANT   shift, and go to state 6
-    T_INTEGER_CONSTANT  shift, and go to state 7
-    T_DOUBLE_CONSTANT   shift, and go to state 8
-    T_BOOL_CONSTANT     shift, and go to state 9
-    '-'                 shift, and go to state 10
-    '('                 shift, and go to state 13
-
-    Expression               go to state 93
-    Assignment_Expression    go to state 23
-    LValue                   go to state 24
-    Field_Access_Expression  go to state 25
-    Call                     go to state 26
-    Constant_Expression      go to state 27
-
-
-State 67
-
-   22 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW . Expression
+   11 If_Statement: Test_Expression Expression '!' . Expression ';'
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -1147,343 +1166,16 @@ State 67
     Constant_Expression      go to state 27
 
 
+State 67
+
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List . T_RIGHT_ARROW Type Statement_Block
+
+    T_RIGHT_ARROW  shift, and go to state 95
+
+
 State 68
 
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   41           | Expression T_OR Expression .
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 41 (Expression)
-
-
-State 69
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   40           | Expression T_AND Expression .
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 40 (Expression)
-
-
-State 70
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   43           | Expression T_NOT_EQUAL Expression .
-
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 43 (Expression)
-
-
-State 71
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   42           | Expression T_EQUAL Expression .
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 42 (Expression)
-
-
-State 72
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   36           | Expression '>' Expression .
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '+'  shift, and go to state 50
-    '-'  shift, and go to state 51
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 36 (Expression)
-
-
-State 73
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   37           | Expression '<' Expression .
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '+'  shift, and go to state 50
-    '-'  shift, and go to state 51
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 37 (Expression)
-
-
-State 74
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   38           | Expression T_GREATER_EQUAL Expression .
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '+'  shift, and go to state 50
-    '-'  shift, and go to state 51
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 38 (Expression)
-
-
-State 75
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   39           | Expression T_LESS_EQUAL Expression .
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '+'  shift, and go to state 50
-    '-'  shift, and go to state 51
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 39 (Expression)
-
-
-State 76
-
-   32 Expression: Expression . '+' Expression
-   32           | Expression '+' Expression .
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 32 (Expression)
-
-
-State 77
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   33           | Expression '-' Expression .
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    '*'  shift, and go to state 52
-    '/'  shift, and go to state 53
-
-    $default  reduce using rule 33 (Expression)
-
-
-State 78
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   34           | Expression '*' Expression .
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    $default  reduce using rule 34 (Expression)
-
-
-State 79
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   35           | Expression '/' Expression .
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-
-    $default  reduce using rule 35 (Expression)
-
-
-State 80
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   46 Assignment_Expression: LValue T_LEFT_ARROW Expression .
-
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 46 (Assignment_Expression)
-
-
-State 81
-
-   49 Call: T_IDENTIFIER '(' Expression_List_Wild ')' .
-
-    $default  reduce using rule 49 (Call)
-
-
-State 82
-
-   54 Expression_List_Helper: Expression_List_Helper ',' . Expression
+   24 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW . Expression
 
     T_IDENTIFIER        shift, and go to state 5
     T_STRING_CONSTANT   shift, and go to state 6
@@ -1493,7 +1185,7 @@ State 82
     '-'                 shift, and go to state 10
     '('                 shift, and go to state 13
 
-    Expression               go to state 95
+    Expression               go to state 96
     Assignment_Expression    go to state 23
     LValue                   go to state 24
     Field_Access_Expression  go to state 25
@@ -1501,226 +1193,638 @@ State 82
     Constant_Expression      go to state 27
 
 
+State 69
+
+   23 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW . Expression
+
+    T_IDENTIFIER        shift, and go to state 5
+    T_STRING_CONSTANT   shift, and go to state 6
+    T_INTEGER_CONSTANT  shift, and go to state 7
+    T_DOUBLE_CONSTANT   shift, and go to state 8
+    T_BOOL_CONSTANT     shift, and go to state 9
+    '-'                 shift, and go to state 10
+    '('                 shift, and go to state 13
+
+    Expression               go to state 97
+    Assignment_Expression    go to state 23
+    LValue                   go to state 24
+    Field_Access_Expression  go to state 25
+    Call                     go to state 26
+    Constant_Expression      go to state 27
+
+
+State 70
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   42           | Expression T_OR Expression .
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 42 (Expression)
+
+
+State 71
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   41           | Expression T_AND Expression .
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 41 (Expression)
+
+
+State 72
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   44           | Expression T_NOT_EQUAL Expression .
+
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 44 (Expression)
+
+
+State 73
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   43           | Expression T_EQUAL Expression .
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 43 (Expression)
+
+
+State 74
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   37           | Expression '>' Expression .
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '+'  shift, and go to state 51
+    '-'  shift, and go to state 52
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 37 (Expression)
+
+
+State 75
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   38           | Expression '<' Expression .
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '+'  shift, and go to state 51
+    '-'  shift, and go to state 52
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 38 (Expression)
+
+
+State 76
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   39           | Expression T_GREATER_EQUAL Expression .
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '+'  shift, and go to state 51
+    '-'  shift, and go to state 52
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 39 (Expression)
+
+
+State 77
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   40           | Expression T_LESS_EQUAL Expression .
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '+'  shift, and go to state 51
+    '-'  shift, and go to state 52
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 40 (Expression)
+
+
+State 78
+
+   33 Expression: Expression . '+' Expression
+   33           | Expression '+' Expression .
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 33 (Expression)
+
+
+State 79
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   34           | Expression '-' Expression .
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    '*'  shift, and go to state 53
+    '/'  shift, and go to state 54
+
+    $default  reduce using rule 34 (Expression)
+
+
+State 80
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   35           | Expression '*' Expression .
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    $default  reduce using rule 35 (Expression)
+
+
+State 81
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   36           | Expression '/' Expression .
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    $default  reduce using rule 36 (Expression)
+
+
+State 82
+
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   47 Assignment_Expression: LValue T_LEFT_ARROW Expression .
+
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 47 (Assignment_Expression)
+
+
 State 83
 
-   16 Declaration_List: Declaration_List ',' Declaration .
+   50 Call: T_IDENTIFIER '(' Expression_List_Wild ')' .
 
-    $default  reduce using rule 16 (Declaration_List)
+    $default  reduce using rule 50 (Call)
 
 
 State 84
+
+   55 Expression_List_Helper: Expression_List_Helper ',' . Expression
+
+    T_IDENTIFIER        shift, and go to state 5
+    T_STRING_CONSTANT   shift, and go to state 6
+    T_INTEGER_CONSTANT  shift, and go to state 7
+    T_DOUBLE_CONSTANT   shift, and go to state 8
+    T_BOOL_CONSTANT     shift, and go to state 9
+    '-'                 shift, and go to state 10
+    '('                 shift, and go to state 13
+
+    Expression               go to state 98
+    Assignment_Expression    go to state 23
+    LValue                   go to state 24
+    Field_Access_Expression  go to state 25
+    Call                     go to state 26
+    Constant_Expression      go to state 27
+
+
+State 85
+
+   17 Declaration_List: Declaration_List ',' Declaration .
+
+    $default  reduce using rule 17 (Declaration_List)
+
+
+State 86
 
     7 Test_Expression: '?' '(' Expression ')' .
 
     $default  reduce using rule 7 (Test_Expression)
 
 
-State 85
-
-   11 Statement_Block: '{' Statement_List '}' .
-
-    $default  reduce using rule 11 (Statement_Block)
-
-
-State 86
-
-   13 Statement_List: Statement_List Statement .
-
-    $default  reduce using rule 13 (Statement_List)
-
-
 State 87
+
+   12 Statement_Block: '{' Statement_List '}' .
+
+    $default  reduce using rule 12 (Statement_Block)
+
+
+State 88
+
+   14 Statement_List: Statement_List Statement .
+
+    $default  reduce using rule 14 (Statement_List)
+
+
+State 89
 
     5 Statement: If_Statement .
 
     $default  reduce using rule 5 (Statement)
 
 
-State 88
+State 90
 
     6 Statement: Declaration . ';'
 
-    ';'  shift, and go to state 96
+    ';'  shift, and go to state 99
 
 
-State 89
+State 91
 
     4 Statement: Expression . ';'
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
 
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-    ';'              shift, and go to state 97
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+    ';'              shift, and go to state 100
 
 
-State 90
+State 92
 
    10 If_Statement: Test_Expression Statement_Block '!' If_Statement .
 
     $default  reduce using rule 10 (If_Statement)
 
 
-State 91
+State 93
 
     9 If_Statement: Test_Expression Statement_Block '!' Statement_Block .
 
     $default  reduce using rule 9 (If_Statement)
 
 
-State 92
+State 94
 
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW . Type Statement_Block
+   11 If_Statement: Test_Expression Expression '!' Expression . ';'
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+    ';'              shift, and go to state 101
+
+
+State 95
+
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW . Type Statement_Block
 
     T_VOID    shift, and go to state 1
     T_BOOL    shift, and go to state 2
     T_INT     shift, and go to state 3
     T_DOUBLE  shift, and go to state 4
 
-    Type  go to state 98
+    Type  go to state 102
 
 
-State 93
+State 96
 
-   23 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW Expression .
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
+   24 Variable_Declaration: Type T_IDENTIFIER T_LEFT_ARROW Expression .
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
 
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
+
+    $default  reduce using rule 24 (Variable_Declaration)
+
+
+State 97
+
+   23 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW Expression .
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
 
     $default  reduce using rule 23 (Variable_Declaration)
 
 
-State 94
+State 98
 
-   22 Variable_Declaration: Type T_IDENTIFIER T_RIGHT_ARROW Expression .
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
+   33 Expression: Expression . '+' Expression
+   34           | Expression . '-' Expression
+   35           | Expression . '*' Expression
+   36           | Expression . '/' Expression
+   37           | Expression . '>' Expression
+   38           | Expression . '<' Expression
+   39           | Expression . T_GREATER_EQUAL Expression
+   40           | Expression . T_LESS_EQUAL Expression
+   41           | Expression . T_AND Expression
+   42           | Expression . T_OR Expression
+   43           | Expression . T_EQUAL Expression
+   44           | Expression . T_NOT_EQUAL Expression
+   55 Expression_List_Helper: Expression_List_Helper ',' Expression .
 
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
+    T_OR             shift, and go to state 43
+    T_AND            shift, and go to state 44
+    T_NOT_EQUAL      shift, and go to state 45
+    T_EQUAL          shift, and go to state 46
+    '>'              shift, and go to state 47
+    '<'              shift, and go to state 48
+    T_GREATER_EQUAL  shift, and go to state 49
+    T_LESS_EQUAL     shift, and go to state 50
+    '+'              shift, and go to state 51
+    '-'              shift, and go to state 52
+    '*'              shift, and go to state 53
+    '/'              shift, and go to state 54
 
-    $default  reduce using rule 22 (Variable_Declaration)
-
-
-State 95
-
-   32 Expression: Expression . '+' Expression
-   33           | Expression . '-' Expression
-   34           | Expression . '*' Expression
-   35           | Expression . '/' Expression
-   36           | Expression . '>' Expression
-   37           | Expression . '<' Expression
-   38           | Expression . T_GREATER_EQUAL Expression
-   39           | Expression . T_LESS_EQUAL Expression
-   40           | Expression . T_AND Expression
-   41           | Expression . T_OR Expression
-   42           | Expression . T_EQUAL Expression
-   43           | Expression . T_NOT_EQUAL Expression
-   54 Expression_List_Helper: Expression_List_Helper ',' Expression .
-
-    T_OR             shift, and go to state 42
-    T_AND            shift, and go to state 43
-    T_NOT_EQUAL      shift, and go to state 44
-    T_EQUAL          shift, and go to state 45
-    '>'              shift, and go to state 46
-    '<'              shift, and go to state 47
-    T_GREATER_EQUAL  shift, and go to state 48
-    T_LESS_EQUAL     shift, and go to state 49
-    '+'              shift, and go to state 50
-    '-'              shift, and go to state 51
-    '*'              shift, and go to state 52
-    '/'              shift, and go to state 53
-
-    $default  reduce using rule 54 (Expression_List_Helper)
+    $default  reduce using rule 55 (Expression_List_Helper)
 
 
-State 96
+State 99
 
     6 Statement: Declaration ';' .
 
     $default  reduce using rule 6 (Statement)
 
 
-State 97
+State 100
 
     4 Statement: Expression ';' .
 
     $default  reduce using rule 4 (Statement)
 
 
-State 98
+State 101
 
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type . Statement_Block
+   11 If_Statement: Test_Expression Expression '!' Expression ';' .
+
+    $default  reduce using rule 11 (If_Statement)
+
+
+State 102
+
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type . Statement_Block
 
     '{'  shift, and go to state 35
 
-    Statement_Block  go to state 99
+    Statement_Block  go to state 103
 
 
-State 99
+State 103
 
-   19 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block .
+   20 Routine_Definition: Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block .
 
-    $default  reduce using rule 19 (Routine_Definition)
+    $default  reduce using rule 20 (Routine_Definition)

@@ -3,7 +3,10 @@
 #include "j_expression.h"
 //
 #include "Statement_Block.h"
-
+//
+#include "Specific_Symbol_List.h"
+//
+#include "Expression_Statement.h"
 namespace jomike{
 
 
@@ -51,6 +54,15 @@ If_Statement::If_Statement(If_Statement&& irv_source):j_statement(std::move(irv_
 	
 	M_else_body = irv_source.M_else_body;
 	irv_source.M_else_body = nullptr;
+}
+
+If_Statement::If_Statement(
+	j_expression* i_test_expression, j_expression* i_then_expression
+	, j_expression* i_else_expression){
+
+	M_test_expression = i_test_expression;
+	M_then_body = new Statement_Block(new Symbol_List({i_then_expression}));
+	M_else_body = new Expression_Statement(i_else_expression);
 }
 
 void If_Statement::clear(){

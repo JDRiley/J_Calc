@@ -210,12 +210,16 @@ If_Statement
 | Test_Expression Statement_Block '!' If_Statement{
 	$$ = new If_Statement($1, $2, $4);
 }
+| Test_Expression Expression '!' Expression ';'{
+	$$ = new If_Statement($1, $2, $4);
+}
+;
 
 Statement_Block
 : '{' Statement_List '}'{
 	$$ = new Statement_Block($2);
 }
-
+;
 Statement_List
 : /*empty*/ {
 $$ = new Specific_Symbol_List<j_symbol>();
@@ -321,6 +325,9 @@ Expression
 	$$ = new Division_Expression($1, $3);
 	
 	
+}
+| T_INCREMENT LValue{
+	$$ = new Unary_Prefix_Operation(Operators::INCREMENT);
 }
 | Expression '>' Expression{
 	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER);

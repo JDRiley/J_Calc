@@ -292,7 +292,7 @@ j_value& j_value::operator+=(const j_value& irk_val){
 	//Need to do unit like things here
 	
 	
-	if(Value_Types::STRING != M_type){
+	if(Value_Types::STRING == M_type){
 		throw J_Value_Error("Cannot use \'+\' on strings yet");
 	}
 	assert(Value_Types::STRING != irk_val.M_type);

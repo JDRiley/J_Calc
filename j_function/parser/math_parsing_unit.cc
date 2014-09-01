@@ -538,43 +538,42 @@ namespace yy {
 
   case 12:
 /* Line 670 of lalr1.cc  */
-#line 215 "parser.y"
+#line 213 "parser.y"
     {
-	(yyval.statement_block) = new Statement_Block((yysemantic_stack_[(3) - (2)].symbol_list));
+	(yyval.if_statement) = new If_Statement((yysemantic_stack_[(5) - (1)].expression), (yysemantic_stack_[(5) - (2)].expression), (yysemantic_stack_[(5) - (4)].expression));
 }
     break;
 
   case 13:
 /* Line 670 of lalr1.cc  */
-#line 220 "parser.y"
+#line 219 "parser.y"
     {
-(yyval.symbol_list) = new Specific_Symbol_List<j_symbol>();
+	(yyval.statement_block) = new Statement_Block((yysemantic_stack_[(3) - (2)].symbol_list));
 }
     break;
 
   case 14:
 /* Line 670 of lalr1.cc  */
-#line 223 "parser.y"
+#line 224 "parser.y"
+    {
+(yyval.symbol_list) = new Specific_Symbol_List<j_symbol>();
+}
+    break;
+
+  case 15:
+/* Line 670 of lalr1.cc  */
+#line 227 "parser.y"
     {
 	(yyval.symbol_list) = (yysemantic_stack_[(2) - (1)].symbol_list);
 	(yyval.symbol_list)->add_symbol((yysemantic_stack_[(2) - (2)].statement));
 }
     break;
 
-  case 15:
-/* Line 670 of lalr1.cc  */
-#line 229 "parser.y"
-    {
-	(yyval.declaration_list) = new Specific_Symbol_List<j_declaration>;
-}
-    break;
-
   case 16:
 /* Line 670 of lalr1.cc  */
-#line 232 "parser.y"
+#line 233 "parser.y"
     {
-	(yyval.declaration_list) = new Specific_Symbol_List<j_declaration>();
-	(yyval.declaration_list)->add_symbol((yysemantic_stack_[(1) - (1)].declaration));
+	(yyval.declaration_list) = new Specific_Symbol_List<j_declaration>;
 }
     break;
 
@@ -582,28 +581,37 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 236 "parser.y"
     {
-	(yyval.declaration_list) = (yysemantic_stack_[(3) - (1)].declaration_list);
-	(yyval.declaration_list)->add_symbol((yysemantic_stack_[(3) - (3)].declaration));
+	(yyval.declaration_list) = new Specific_Symbol_List<j_declaration>();
+	(yyval.declaration_list)->add_symbol((yysemantic_stack_[(1) - (1)].declaration));
 }
     break;
 
   case 18:
 /* Line 670 of lalr1.cc  */
-#line 243 "parser.y"
-    {(yyval.declaration) = (yysemantic_stack_[(1) - (1)].declaration);}
+#line 240 "parser.y"
+    {
+	(yyval.declaration_list) = (yysemantic_stack_[(3) - (1)].declaration_list);
+	(yyval.declaration_list)->add_symbol((yysemantic_stack_[(3) - (3)].declaration));
+}
     break;
 
   case 19:
 /* Line 670 of lalr1.cc  */
-#line 244 "parser.y"
+#line 247 "parser.y"
+    {(yyval.declaration) = (yysemantic_stack_[(1) - (1)].declaration);}
+    break;
+
+  case 20:
+/* Line 670 of lalr1.cc  */
+#line 248 "parser.y"
     { 
 	(yyval.declaration) = (yysemantic_stack_[(1) - (1)].declaration); 
 }
     break;
 
-  case 20:
+  case 21:
 /* Line 670 of lalr1.cc  */
-#line 250 "parser.y"
+#line 254 "parser.y"
     {
 	(yyval.declaration) = new Custom_Routine_Symbol((yysemantic_stack_[(6) - (2)].identifier), *(yysemantic_stack_[(6) - (1)].declaration_list), *(yysemantic_stack_[(6) - (3)].declaration_list), (yysemantic_stack_[(6) - (5)].type_syntax), (yysemantic_stack_[(6) - (6)].statement_block));
 	(yysemantic_stack_[(6) - (1)].declaration_list).destroy();
@@ -611,26 +619,26 @@ namespace yy {
 }
     break;
 
-  case 21:
-/* Line 670 of lalr1.cc  */
-#line 258 "parser.y"
-    {
-	(yyval.declaration_list) = (yysemantic_stack_[(3) - (2)].declaration_list);
-}
-    break;
-
   case 22:
 /* Line 670 of lalr1.cc  */
-#line 265 "parser.y"
-    {(yyval.declaration) =  new Variable_Symbol((yysemantic_stack_[(2) - (1)].type_syntax), (yysemantic_stack_[(2) - (2)].identifier));
-	
-	
+#line 262 "parser.y"
+    {
+	(yyval.declaration_list) = (yysemantic_stack_[(3) - (2)].declaration_list);
 }
     break;
 
   case 23:
 /* Line 670 of lalr1.cc  */
 #line 269 "parser.y"
+    {(yyval.declaration) =  new Variable_Symbol((yysemantic_stack_[(2) - (1)].type_syntax), (yysemantic_stack_[(2) - (2)].identifier));
+	
+	
+}
+    break;
+
+  case 24:
+/* Line 670 of lalr1.cc  */
+#line 273 "parser.y"
     {
 	(yyval.declaration) = new Variable_Reference_Symbol((yysemantic_stack_[(4) - (1)].type_syntax), (yysemantic_stack_[(4) - (2)].identifier), (yysemantic_stack_[(4) - (4)].expression)); 
 	
@@ -639,9 +647,9 @@ namespace yy {
 }
     break;
 
-  case 24:
+  case 25:
 /* Line 670 of lalr1.cc  */
-#line 275 "parser.y"
+#line 279 "parser.y"
     {
 	(yyval.declaration) = new Variable_Symbol((yysemantic_stack_[(4) - (1)].type_syntax), (yysemantic_stack_[(4) - (2)].identifier), *(yysemantic_stack_[(4) - (4)].expression));
 	
@@ -651,37 +659,28 @@ namespace yy {
 }
     break;
 
-  case 25:
-/* Line 670 of lalr1.cc  */
-#line 285 "parser.y"
-    {(yyval.type_syntax) = make_double_type_syntax();}
-    break;
-
   case 26:
 /* Line 670 of lalr1.cc  */
-#line 286 "parser.y"
-    {(yyval.type_syntax) = make_int_type_syntax();}
+#line 289 "parser.y"
+    {(yyval.type_syntax) = make_double_type_syntax();}
     break;
 
   case 27:
 /* Line 670 of lalr1.cc  */
-#line 287 "parser.y"
-    {(yyval.type_syntax) = make_bool_type_syntax();}
+#line 290 "parser.y"
+    {(yyval.type_syntax) = make_int_type_syntax();}
     break;
 
   case 28:
 /* Line 670 of lalr1.cc  */
-#line 288 "parser.y"
-    {(yyval.type_syntax) = make_void_type_syntax(); }
+#line 291 "parser.y"
+    {(yyval.type_syntax) = make_bool_type_syntax();}
     break;
 
   case 29:
 /* Line 670 of lalr1.cc  */
 #line 292 "parser.y"
-    {
-	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
-	
-}
+    {(yyval.type_syntax) = make_void_type_syntax(); }
     break;
 
   case 30:
@@ -697,30 +696,39 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 300 "parser.y"
     {
-	(yyval.expression) = (yysemantic_stack_[(1) - (1)].constant_symbol); 
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
+	
 }
     break;
 
   case 32:
 /* Line 670 of lalr1.cc  */
-#line 303 "parser.y"
+#line 304 "parser.y"
     {
-	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
-	
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].constant_symbol); 
 }
     break;
 
   case 33:
 /* Line 670 of lalr1.cc  */
 #line 307 "parser.y"
-    { 
-	(yyval.expression) = new Addition_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+    {
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
+	
 }
     break;
 
   case 34:
 /* Line 670 of lalr1.cc  */
-#line 310 "parser.y"
+#line 311 "parser.y"
+    { 
+	(yyval.expression) = new Addition_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
+}
+    break;
+
+  case 35:
+/* Line 670 of lalr1.cc  */
+#line 314 "parser.y"
     { 
 	(yyval.expression) = new Subtraction_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 	
@@ -728,9 +736,9 @@ namespace yy {
 }
     break;
 
-  case 35:
+  case 36:
 /* Line 670 of lalr1.cc  */
-#line 315 "parser.y"
+#line 319 "parser.y"
     { 
 	(yyval.expression) = new Multiplication_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 	
@@ -738,9 +746,9 @@ namespace yy {
 }
     break;
 
-  case 36:
+  case 37:
 /* Line 670 of lalr1.cc  */
-#line 320 "parser.y"
+#line 324 "parser.y"
     { 
 	(yyval.expression) = new Division_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 	
@@ -748,111 +756,111 @@ namespace yy {
 }
     break;
 
-  case 37:
+  case 38:
 /* Line 670 of lalr1.cc  */
-#line 325 "parser.y"
+#line 329 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER);
 }
     break;
 
-  case 38:
+  case 39:
 /* Line 670 of lalr1.cc  */
-#line 328 "parser.y"
+#line 332 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS);
 }
     break;
 
-  case 39:
+  case 40:
 /* Line 670 of lalr1.cc  */
-#line 331 "parser.y"
+#line 335 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER_EQUAL);
 }
     break;
 
-  case 40:
+  case 41:
 /* Line 670 of lalr1.cc  */
-#line 334 "parser.y"
+#line 338 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS_EQUAL);
 }
     break;
 
-  case 41:
+  case 42:
 /* Line 670 of lalr1.cc  */
-#line 337 "parser.y"
+#line 341 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::AND);
 }
     break;
 
-  case 42:
+  case 43:
 /* Line 670 of lalr1.cc  */
-#line 340 "parser.y"
+#line 344 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::OR);
 }
     break;
 
-  case 43:
+  case 44:
 /* Line 670 of lalr1.cc  */
-#line 343 "parser.y"
+#line 347 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::EQUAL);
 }
     break;
 
-  case 44:
+  case 45:
 /* Line 670 of lalr1.cc  */
-#line 346 "parser.y"
+#line 350 "parser.y"
     {
 	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::NOT_EQUAL);
 }
     break;
 
-  case 45:
+  case 46:
 /* Line 670 of lalr1.cc  */
-#line 349 "parser.y"
+#line 353 "parser.y"
     {(yyval.expression) = (yysemantic_stack_[(3) - (2)].expression);  }
     break;
 
-  case 46:
+  case 47:
 /* Line 670 of lalr1.cc  */
-#line 350 "parser.y"
+#line 354 "parser.y"
     {
 	(yyval.expression) = new Unary_Negate_Expression((yysemantic_stack_[(2) - (2)].expression));
 }
     break;
 
-  case 47:
+  case 48:
 /* Line 670 of lalr1.cc  */
-#line 356 "parser.y"
+#line 360 "parser.y"
     {
 	(yyval.expression) = new Assignment_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 	
 }
     break;
 
-  case 48:
+  case 49:
 /* Line 670 of lalr1.cc  */
-#line 368 "parser.y"
+#line 372 "parser.y"
     {(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression); }
     break;
 
-  case 49:
+  case 50:
 /* Line 670 of lalr1.cc  */
-#line 371 "parser.y"
+#line 375 "parser.y"
     {
 	(yyval.expression) = new Field_Access_Expression((yysemantic_stack_[(1) - (1)].identifier));
 	
 }
     break;
 
-  case 50:
+  case 51:
 /* Line 670 of lalr1.cc  */
-#line 382 "parser.y"
+#line 386 "parser.y"
     {
 	(yyval.expression) = new Call_Expression((yysemantic_stack_[(4) - (1)].identifier), (yysemantic_stack_[(4) - (3)].arguments));
 	
@@ -860,30 +868,30 @@ namespace yy {
 }
     break;
 
-  case 51:
-/* Line 670 of lalr1.cc  */
-#line 395 "parser.y"
-    {(yyval.arguments) = new Arguments;}
-    break;
-
   case 52:
 /* Line 670 of lalr1.cc  */
-#line 396 "parser.y"
-    {(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);}
+#line 399 "parser.y"
+    {(yyval.arguments) = new Arguments;}
     break;
 
   case 53:
 /* Line 670 of lalr1.cc  */
 #line 400 "parser.y"
+    {(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);}
+    break;
+
+  case 54:
+/* Line 670 of lalr1.cc  */
+#line 404 "parser.y"
     {
 	(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);
 	
 }
     break;
 
-  case 54:
+  case 55:
 /* Line 670 of lalr1.cc  */
-#line 406 "parser.y"
+#line 410 "parser.y"
     {
 	(yyval.arguments) = new Arguments;
 	(yyval.arguments)->push_back((yysemantic_stack_[(1) - (1)].expression));
@@ -891,9 +899,9 @@ namespace yy {
 }
     break;
 
-  case 55:
+  case 56:
 /* Line 670 of lalr1.cc  */
-#line 411 "parser.y"
+#line 415 "parser.y"
     {
 	(yyval.arguments) = (yysemantic_stack_[(3) - (1)].arguments);
 	
@@ -902,35 +910,35 @@ namespace yy {
 }
     break;
 
-  case 56:
+  case 57:
 /* Line 670 of lalr1.cc  */
-#line 420 "parser.y"
+#line 424 "parser.y"
     {
 	(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);
 }
     break;
 
-  case 57:
-/* Line 670 of lalr1.cc  */
-#line 423 "parser.y"
-    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
-    break;
-
   case 58:
 /* Line 670 of lalr1.cc  */
-#line 424 "parser.y"
-    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);  }
+#line 427 "parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
     break;
 
   case 59:
 /* Line 670 of lalr1.cc  */
-#line 425 "parser.y"
+#line 428 "parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);  }
+    break;
+
+  case 60:
+/* Line 670 of lalr1.cc  */
+#line 429 "parser.y"
     {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
     break;
 
 
 /* Line 670 of lalr1.cc  */
-#line 934 "math_parsing_unit.cc"
+#line 942 "math_parsing_unit.cc"
       default:
         break;
       }
@@ -1142,20 +1150,21 @@ namespace yy {
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char Math_Parsing_Unit::yypact_ninf_ = -54;
+  const signed char Math_Parsing_Unit::yypact_ninf_ = -57;
   const short int
   Math_Parsing_Unit::yypact_[] =
   {
-        70,   -54,   -54,   -54,   -54,   -32,   -54,   -54,   -54,   -54,
-      87,    11,   -28,    87,    21,   -11,    41,    66,   -54,    43,
-     -54,    54,   156,   -54,    69,   -54,   -54,   -54,    87,    -8,
-     -35,   -54,    87,    97,   -54,   -54,    49,   -54,   -54,    45,
-      53,   -54,    87,    87,    87,    87,    87,    87,    87,    87,
-      87,    87,    87,    87,    87,   168,    46,   -54,    47,   -54,
-      11,   122,   -54,    55,   -29,    78,    87,    87,   179,   109,
-       2,     2,   -21,   -21,   -21,   -21,    -8,    -8,   -54,   -54,
-     168,   -54,    87,   -54,   -54,   -54,   -54,   -54,    51,   134,
-     -54,   -54,    44,   168,   168,   168,   -54,   -54,   -11,   -54
+        72,   -57,   -57,   -57,   -57,   -39,   -57,   -57,   -57,   -57,
+     104,    22,   -30,   104,    17,    89,    36,    37,   -57,     9,
+     -57,    38,   196,   -57,    40,   -57,   -57,   -57,   104,   -21,
+     -32,   -57,   104,   115,   -57,   -57,    21,   208,   -57,   -57,
+      18,    10,   -57,   104,   104,   104,   104,   104,   104,   104,
+     104,   104,   104,   104,   104,   104,   222,    23,   -57,    24,
+     -57,    22,   140,   -57,    57,   -31,   104,    55,   104,   104,
+     127,   232,   100,   100,   -12,   -12,   -12,   -12,   -21,   -21,
+     -57,   -57,   222,   -57,   104,   -57,   -57,   -57,   -57,   -57,
+      28,   152,   -57,   -57,   174,    26,   222,   222,   222,   -57,
+     -57,   -57,    25,   -57
   };
 
   /* YYDEFACT[S] -- default reduction number in state S.  Performed when
@@ -1164,34 +1173,35 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yydefact_[] =
   {
-         0,    28,    27,    26,    25,    49,    59,    56,    57,    58,
-       0,    15,     0,     0,     0,     0,     0,     0,    19,     0,
-      18,     0,     0,    29,    32,    48,    30,    31,    51,    46,
-       0,    16,     0,     0,     1,    13,     9,     4,     3,     0,
-      22,     2,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    54,     0,    52,    53,    21,
-       0,     0,    45,     0,     0,     0,     0,     0,    42,    41,
-      44,    43,    37,    38,    39,    40,    33,    34,    35,    36,
-      47,    50,     0,    17,     8,    12,    14,     6,     0,     0,
-      11,    10,     0,    24,    23,    55,     7,     5,     0,    20
+         0,    29,    28,    27,    26,    50,    60,    57,    58,    59,
+       0,    16,     0,     0,     0,     0,     0,     0,    20,     0,
+      19,     0,     0,    30,    33,    49,    31,    32,    52,    47,
+       0,    17,     0,     0,     1,    14,     9,     0,     4,     3,
+       0,    23,     2,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    55,     0,    53,    54,
+      22,     0,     0,    46,     0,     0,     0,     0,     0,     0,
+      43,    42,    45,    44,    38,    39,    40,    41,    34,    35,
+      36,    37,    48,    51,     0,    18,     8,    13,    15,     6,
+       0,     0,    11,    10,     0,     0,    25,    24,    56,     7,
+       5,    12,     0,    21
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yypgoto_[] =
   {
-       -54,   -54,   -54,   -54,     1,   -53,   -54,   -54,    -9,   -54,
-      58,   -54,     0,   -10,   -54,   -54,   -54,   -54,   -54,   -54,
-     -54,   -54
+       -57,   -57,   -57,   -57,   -41,   -56,   -57,   -57,    -9,   -57,
+      39,   -57,   -15,   -10,   -57,   -57,   -57,   -57,   -57,   -57,
+     -57,   -57
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yydefgoto_[] =
   {
-        -1,    14,    86,    15,    16,    36,    63,    30,    17,    18,
-      19,    20,    21,    22,    23,    24,    25,    26,    56,    57,
-      58,    27
+        -1,    14,    88,    15,    16,    36,    64,    30,    17,    18,
+      19,    20,    21,    22,    23,    24,    25,    26,    57,    58,
+      59,    27
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1201,54 +1211,66 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yytable_[] =
   {
-        29,    59,    31,    33,    50,    51,    52,    53,    28,    60,
-      12,    91,    32,    35,     1,     2,     3,     4,    55,    52,
-      53,    34,    61,    46,    47,    48,    49,    50,    51,    52,
-      53,    35,    68,    69,    70,    71,    72,    73,    74,    75,
-      76,    77,    78,    79,    80,    99,    11,     1,     2,     3,
-       4,    83,    37,    89,    88,    39,    93,    94,     1,     2,
-       3,     4,    66,    67,    87,    90,    40,     5,     6,     7,
-       8,     9,    95,     1,     2,     3,     4,    38,    54,    64,
-      11,    10,     5,     6,     7,     8,     9,    81,    92,    96,
-      11,    82,    98,     0,    12,    13,    10,    65,    85,     5,
-       6,     7,     8,     9,     0,    11,     0,     0,     0,    12,
-      13,     0,     0,    10,    42,    43,    44,    45,    46,    47,
-      48,    49,    50,    51,    52,    53,     0,    13,    44,    45,
-      46,    47,    48,    49,    50,    51,    52,    53,    62,    42,
-      43,    44,    45,    46,    47,    48,    49,    50,    51,    52,
-      53,    42,    43,    44,    45,    46,    47,    48,    49,    50,
-      51,    52,    53,    84,     0,     0,     0,    41,     0,     0,
-       0,     0,    97,    42,    43,    44,    45,    46,    47,    48,
-      49,    50,    51,    52,    53,    42,    43,    44,    45,    46,
-      47,    48,    49,    50,    51,    52,    53,    43,    44,    45,
-      46,    47,    48,    49,    50,    51,    52,    53
+        29,    28,    31,    33,    60,    37,    53,    54,    12,    93,
+      32,    35,    61,    51,    52,    53,    54,    34,    56,    68,
+      69,    40,    62,    89,    92,     1,     2,     3,     4,     1,
+       2,     3,     4,    70,    71,    72,    73,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,   103,    38,    39,    55,
+      41,    65,    85,    11,    91,    90,    94,    11,    96,    97,
+       1,     2,     3,     4,    83,    95,    99,    35,    84,     5,
+       6,     7,     8,     9,    98,     1,     2,     3,     4,    67,
+     102,     0,     0,    10,     5,     6,     7,     8,     9,     0,
+       0,     0,    11,     0,     0,     0,    12,    13,    10,     0,
+      87,     5,     6,     7,     8,     9,     0,    11,     0,     0,
+       0,    12,    13,     0,     0,    10,     5,     6,     7,     8,
+       9,    47,    48,    49,    50,    51,    52,    53,    54,    13,
+      10,    35,    43,    44,    45,    46,    47,    48,    49,    50,
+      51,    52,    53,    54,    13,    44,    45,    46,    47,    48,
+      49,    50,    51,    52,    53,    54,    63,    43,    44,    45,
+      46,    47,    48,    49,    50,    51,    52,    53,    54,    43,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    53,
+      54,    86,     0,     0,     0,     0,     0,     0,     0,     0,
+     100,    43,    44,    45,    46,    47,    48,    49,    50,    51,
+      52,    53,    54,     0,     0,     0,     0,    42,     0,     0,
+       0,     0,   101,    43,    44,    45,    46,    47,    48,    49,
+      50,    51,    52,    53,    54,    43,    44,    45,    46,    47,
+      48,    49,    50,    51,    52,    53,    54,     0,    66,    43,
+      44,    45,    46,    47,    48,    49,    50,    51,    52,    53,
+      54,    45,    46,    47,    48,    49,    50,    51,    52,    53,
+      54
   };
 
   /* YYCHECK.  */
   const signed char
   Math_Parsing_Unit::yycheck_[] =
   {
-        10,    36,    11,    13,    25,    26,    27,    28,    40,    44,
-      39,    64,    40,    42,     3,     4,     5,     6,    28,    27,
-      28,     0,    32,    21,    22,    23,    24,    25,    26,    27,
-      28,    42,    42,    43,    44,    45,    46,    47,    48,    49,
-      50,    51,    52,    53,    54,    98,    35,     3,     4,     5,
-       6,    60,    11,    63,    63,    12,    66,    67,     3,     4,
-       5,     6,     9,    10,    63,    64,    12,    12,    13,    14,
-      15,    16,    82,     3,     4,     5,     6,    11,     9,    30,
-      35,    26,    12,    13,    14,    15,    16,    41,    10,    38,
-      35,    44,    92,    -1,    39,    40,    26,    39,    43,    12,
-      13,    14,    15,    16,    -1,    35,    -1,    -1,    -1,    39,
-      40,    -1,    -1,    26,    17,    18,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    -1,    40,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,    28,    41,    17,
+        10,    40,    11,    13,    36,    15,    27,    28,    39,    65,
+      40,    42,    44,    25,    26,    27,    28,     0,    28,     9,
+      10,    12,    32,    64,    65,     3,     4,     5,     6,     3,
+       4,     5,     6,    43,    44,    45,    46,    47,    48,    49,
+      50,    51,    52,    53,    54,    55,   102,    11,    11,     9,
+      12,    30,    61,    35,    64,    64,    66,    35,    68,    69,
+       3,     4,     5,     6,    41,    10,    38,    42,    44,    12,
+      13,    14,    15,    16,    84,     3,     4,     5,     6,    40,
+      95,    -1,    -1,    26,    12,    13,    14,    15,    16,    -1,
+      -1,    -1,    35,    -1,    -1,    -1,    39,    40,    26,    -1,
+      43,    12,    13,    14,    15,    16,    -1,    35,    -1,    -1,
+      -1,    39,    40,    -1,    -1,    26,    12,    13,    14,    15,
+      16,    21,    22,    23,    24,    25,    26,    27,    28,    40,
+      26,    42,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    40,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    41,    17,    18,    19,
+      20,    21,    22,    23,    24,    25,    26,    27,    28,    17,
       18,    19,    20,    21,    22,    23,    24,    25,    26,    27,
-      28,    17,    18,    19,    20,    21,    22,    23,    24,    25,
-      26,    27,    28,    41,    -1,    -1,    -1,    11,    -1,    -1,
+      28,    41,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      38,    17,    18,    19,    20,    21,    22,    23,    24,    25,
+      26,    27,    28,    -1,    -1,    -1,    -1,    11,    -1,    -1,
       -1,    -1,    38,    17,    18,    19,    20,    21,    22,    23,
       24,    25,    26,    27,    28,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    18,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,    28
+      22,    23,    24,    25,    26,    27,    28,    -1,    30,    17,
+      18,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+      28,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+      28
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1259,13 +1281,14 @@ namespace yy {
          0,     3,     4,     5,     6,    12,    13,    14,    15,    16,
       26,    35,    39,    40,    46,    48,    49,    53,    54,    55,
       56,    57,    58,    59,    60,    61,    62,    66,    40,    58,
-      52,    53,    40,    58,     0,    42,    50,    11,    11,    12,
-      12,    11,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,     9,    58,    63,    64,    65,    36,
-      44,    58,    41,    51,    30,    55,     9,    10,    58,    58,
+      52,    53,    40,    58,     0,    42,    50,    58,    11,    11,
+      12,    12,    11,    17,    18,    19,    20,    21,    22,    23,
+      24,    25,    26,    27,    28,     9,    58,    63,    64,    65,
+      36,    44,    58,    41,    51,    30,    30,    55,     9,    10,
       58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    41,    44,    53,    41,    43,    47,    49,    53,    58,
-      49,    50,    10,    58,    58,    58,    38,    38,    57,    50
+      58,    58,    58,    41,    44,    53,    41,    43,    47,    49,
+      53,    58,    49,    50,    58,    10,    58,    58,    58,    38,
+      38,    38,    57,    50
   };
 
 #if YYDEBUG
@@ -1287,11 +1310,12 @@ namespace yy {
   Math_Parsing_Unit::yyr1_[] =
   {
          0,    45,    46,    46,    46,    47,    47,    47,    48,    49,
-      49,    49,    50,    51,    51,    52,    52,    52,    53,    53,
-      54,    55,    56,    56,    56,    57,    57,    57,    57,    58,
+      49,    49,    49,    50,    51,    51,    52,    52,    52,    53,
+      53,    54,    55,    56,    56,    56,    57,    57,    57,    57,
       58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    59,    60,    61,
-      62,    63,    63,    64,    65,    65,    66,    66,    66,    66
+      58,    58,    58,    58,    58,    58,    58,    58,    59,    60,
+      61,    62,    63,    63,    64,    65,    65,    66,    66,    66,
+      66
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1299,11 +1323,12 @@ namespace yy {
   Math_Parsing_Unit::yyr2_[] =
   {
          0,     2,     2,     2,     2,     2,     1,     2,     4,     2,
-       4,     4,     3,     0,     2,     0,     1,     3,     1,     1,
-       6,     3,     2,     4,     4,     1,     1,     1,     1,     1,
-       1,     1,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3,     2,     3,     1,     1,
-       4,     0,     1,     1,     1,     3,     1,     1,     1,     1
+       4,     4,     5,     3,     0,     2,     0,     1,     3,     1,
+       1,     6,     3,     2,     4,     4,     1,     1,     1,     1,
+       1,     1,     1,     1,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3,     2,     3,     1,
+       1,     4,     0,     1,     1,     1,     3,     1,     1,     1,
+       1
   };
 
 #if YYDEBUG
@@ -1335,22 +1360,22 @@ namespace yy {
         46,     0,    -1,    58,    11,    -1,    53,    11,    -1,    49,
       11,    -1,    58,    38,    -1,    49,    -1,    53,    38,    -1,
       39,    40,    58,    41,    -1,    48,    50,    -1,    48,    50,
-      30,    50,    -1,    48,    50,    30,    49,    -1,    42,    51,
-      43,    -1,    -1,    51,    47,    -1,    -1,    53,    -1,    52,
-      44,    53,    -1,    56,    -1,    54,    -1,    55,    12,    55,
-      10,    57,    50,    -1,    35,    52,    36,    -1,    57,    12,
-      -1,    57,    12,    10,    58,    -1,    57,    12,     9,    58,
-      -1,     6,    -1,     5,    -1,     4,    -1,     3,    -1,    59,
-      -1,    62,    -1,    66,    -1,    60,    -1,    58,    25,    58,
-      -1,    58,    26,    58,    -1,    58,    27,    58,    -1,    58,
-      28,    58,    -1,    58,    21,    58,    -1,    58,    22,    58,
-      -1,    58,    23,    58,    -1,    58,    24,    58,    -1,    58,
-      18,    58,    -1,    58,    17,    58,    -1,    58,    20,    58,
-      -1,    58,    19,    58,    -1,    40,    58,    41,    -1,    26,
-      58,    -1,    60,     9,    58,    -1,    61,    -1,    12,    -1,
-      12,    40,    63,    41,    -1,    -1,    64,    -1,    65,    -1,
-      58,    -1,    65,    44,    58,    -1,    14,    -1,    15,    -1,
-      16,    -1,    13,    -1
+      30,    50,    -1,    48,    50,    30,    49,    -1,    48,    58,
+      30,    58,    38,    -1,    42,    51,    43,    -1,    -1,    51,
+      47,    -1,    -1,    53,    -1,    52,    44,    53,    -1,    56,
+      -1,    54,    -1,    55,    12,    55,    10,    57,    50,    -1,
+      35,    52,    36,    -1,    57,    12,    -1,    57,    12,    10,
+      58,    -1,    57,    12,     9,    58,    -1,     6,    -1,     5,
+      -1,     4,    -1,     3,    -1,    59,    -1,    62,    -1,    66,
+      -1,    60,    -1,    58,    25,    58,    -1,    58,    26,    58,
+      -1,    58,    27,    58,    -1,    58,    28,    58,    -1,    58,
+      21,    58,    -1,    58,    22,    58,    -1,    58,    23,    58,
+      -1,    58,    24,    58,    -1,    58,    18,    58,    -1,    58,
+      17,    58,    -1,    58,    20,    58,    -1,    58,    19,    58,
+      -1,    40,    58,    41,    -1,    26,    58,    -1,    60,     9,
+      58,    -1,    61,    -1,    12,    -1,    12,    40,    63,    41,
+      -1,    -1,    64,    -1,    65,    -1,    58,    -1,    65,    44,
+      58,    -1,    14,    -1,    15,    -1,    16,    -1,    13,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1359,11 +1384,12 @@ namespace yy {
   Math_Parsing_Unit::yyprhs_[] =
   {
          0,     0,     3,     6,     9,    12,    15,    17,    20,    25,
-      28,    33,    38,    42,    43,    46,    47,    49,    53,    55,
-      57,    64,    68,    71,    76,    81,    83,    85,    87,    89,
-      91,    93,    95,    97,   101,   105,   109,   113,   117,   121,
-     125,   129,   133,   137,   141,   145,   149,   152,   156,   158,
-     160,   165,   166,   168,   170,   172,   176,   178,   180,   182
+      28,    33,    38,    44,    48,    49,    52,    53,    55,    59,
+      61,    63,    70,    74,    77,    82,    87,    89,    91,    93,
+      95,    97,    99,   101,   103,   107,   111,   115,   119,   123,
+     127,   131,   135,   139,   143,   147,   151,   155,   158,   162,
+     164,   166,   171,   172,   174,   176,   178,   182,   184,   186,
+     188
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
@@ -1371,11 +1397,12 @@ namespace yy {
   Math_Parsing_Unit::yyrline_[] =
   {
          0,   168,   168,   173,   179,   186,   189,   193,   199,   204,
-     207,   210,   215,   220,   223,   229,   232,   236,   243,   244,
-     250,   258,   265,   269,   275,   285,   286,   287,   288,   292,
-     296,   300,   303,   307,   310,   315,   320,   325,   328,   331,
-     334,   337,   340,   343,   346,   349,   350,   356,   368,   371,
-     382,   395,   396,   400,   406,   411,   420,   423,   424,   425
+     207,   210,   213,   219,   224,   227,   233,   236,   240,   247,
+     248,   254,   262,   269,   273,   279,   289,   290,   291,   292,
+     296,   300,   304,   307,   311,   314,   319,   324,   329,   332,
+     335,   338,   341,   344,   347,   350,   353,   354,   360,   372,
+     375,   386,   399,   400,   404,   410,   415,   424,   427,   428,
+     429
   };
 
   // Print the state stack on the debug stream.
@@ -1452,7 +1479,7 @@ namespace yy {
   }
 
   const int Math_Parsing_Unit::yyeof_ = 0;
-  const int Math_Parsing_Unit::yylast_ = 207;
+  const int Math_Parsing_Unit::yylast_ = 260;
   const int Math_Parsing_Unit::yynnts_ = 22;
   const int Math_Parsing_Unit::yyempty_ = -2;
   const int Math_Parsing_Unit::yyfinal_ = 34;
@@ -1466,9 +1493,9 @@ namespace yy {
 
 } // yy
 /* Line 1141 of lalr1.cc  */
-#line 1470 "math_parsing_unit.cc"
+#line 1497 "math_parsing_unit.cc"
 /* Line 1142 of lalr1.cc  */
-#line 429 "parser.y"
+#line 433 "parser.y"
 
 
 /* The closing %% above marks the end of the Rules section and the beginning
