@@ -44,8 +44,13 @@ void Expression_Statement::clear(){
 	M_expression->clear();
 }
 
-void Expression_Statement::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
-	M_expression->set_symbol_scope(i_symbol_scope);
+void Expression_Statement::alert_symbol_scope_set(){
+	
+	M_expression->set_symbol_scope(&symbol_scope());
+}
+
+void Expression_Statement::process(){
+	M_expression->process();
 }
 
 }

@@ -23,9 +23,7 @@
 #include <ctime>
 #include <cassert>
 #include <memory>
-#include "j_composite_symbol.h"
-#include "j_number_symbol.h"
-#include "j_placeholder_symbol.h"
+
 using namespace std::placeholders;
 
 namespace jomike{

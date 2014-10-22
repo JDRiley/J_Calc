@@ -42,32 +42,15 @@
 
 /* "%code requires" blocks.  */
 /* Line 33 of lalr1.cc  */
-#line 58 "parser.y"
+#line 77 "parser/parser.y"
 
-#include "J_Calc_Parser.h"
-#include<J_UI/J_UI_String.h>
-#include "J_Symbol_Fwd_Decl.h"
-#include "../Expression_List.h"
-#include "../Call_Expression.h"
-#include "../J_Symbol_Identifier.h"
-#include "../Field_Access_Expression.h"
-#include "../Arguments.h"
-#include "../j_expression.h"
-#include "j_yy_stack.h"
-#include "../Specific_Symbol_List.h"
-#include "../J_Symbol_Scope.h"
-#include "../Custom_Routine_Symbol.h"
-#include "../Assignment_Expression.h"
-#include "../Statement_Block.h"
-#include "../Expression_Statement.h"
-#include "../If_Statement.h"
-#include "../Relational_Binary_Expression.h"
-#include "../Pre_Increment_Expression.h"
-#include "../Pre_Decrement_Expression.h"
+#include "../J_Symbol_Fwd_Decl.h"
+
+
 
 
 /* Line 33 of lalr1.cc  */
-#line 71 "math_parsing_unit.hh"
+#line 54 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -83,7 +66,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 87 "math_parsing_unit.hh"
+#line 70 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -302,7 +285,7 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 306 "math_parsing_unit.hh"
+#line 289 "math_parsing_unit.hh"
 
 
 

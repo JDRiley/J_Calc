@@ -16,17 +16,36 @@
  * file inclusions or C++ variable declarations/prototypes that are needed
  * by your code here.
  */
-//#include "Math_Lexer.h" // for yylex
-#include <J_Symbol_Fwd_Decl.h>
-
 #include "parser.h"
 #include "Math_Parser.h"
 #include "../Constant_Symbol.h"
+#include "J_Calc_Parser.h"
+#include <J_UI/J_UI_String.h>
+#include "../Expression_List.h"
+#include "../Call_Expression.h"
+#include "../J_Symbol_Identifier.h"
+#include "../Field_Access_Expression.h"
+#include "../Arguments.h"
+#include "../j_expression.h"
+#include "j_yy_stack.h"
+#include "../Specific_Symbol_List.h"
+#include "../J_Symbol_Scope.h"
+#include "../Custom_Routine_Symbol.h"
+#include "../Assignment_Expression.h"
+#include "../Statement_Block.h"
+#include "../Expression_Statement.h"
+#include "../If_Statement.h"
+#include "../Relational_Binary_Expression.h"
+#include "../Pre_Increment_Expression.h"
+#include "../Pre_Decrement_Expression.h"
+#include "../Transfer_Statement.h"
+#include "../Void_Empty_Expression.h"
 
 
 
 using namespace jomike;
 void yyerror(const char *msg); // standard error-handling routine
+
 
 j_symbol_component* jtl::g_input_line = nullptr;
 
@@ -56,24 +75,9 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 
 %code requires{
-#include "J_Calc_Parser.h"
-#include<J_UI/J_UI_String.h>
-#include "J_Symbol_Fwd_Decl.h"
-#include "../Expression_List.h"
-#include "../Call_Expression.h"
-#include "../J_Symbol_Identifier.h"
-#include "../Field_Access_Expression.h"
-#include "../Arguments.h"
-#include "../j_expression.h"
-#include "j_yy_stack.h"
-#include "../Specific_Symbol_List.h"
-#include "../J_Symbol_Scope.h"
-#include "../Custom_Routine_Symbol.h"
-#include "../Assignment_Expression.h"
-#include "../Statement_Block.h"
-#include "../Expression_Statement.h"
-#include "../If_Statement.h"
-#include "../Relational_Binary_Expression.h"
+#include "../J_Symbol_Fwd_Decl.h"
+
+
 }
 
 /* The section before the first %% is the Definitions section of the yacc
@@ -107,7 +111,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 %token							T_VOID T_BOOL T_INT T_DOUBLE T_STRING
 
-%token							T_NULL_PTR
+%token							T_NULL_PTR T_TRANSFER
 %token							T_LEFT_ARROW T_RIGHT_ARROW
 %token							T_END
 %token	<identifier>			T_IDENTIFIER
@@ -147,7 +151,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 %type	<arguments>	Expression_List Expression_List_Helper Expression_List_Wild		
 %type	<expression>		Expression Call Field_Access_Expression LValue
-%type	<expression>		Assignment_Expression Test_Expression
+%type	<expression>		Assignment_Expression Test_Expression Expression_Wild
 %type	<constant_symbol>	Constant_Expression
 %type	<declaration>		Declaration Variable_Declaration Routine_Definition
 %type	<type_syntax>		Type
@@ -193,13 +197,15 @@ Statement
 | Declaration ';' {
 	$$ = $1;
 }
+| T_TRANSFER Expression_Wild ';' {
+	$$ = new Transfer_Statement($2);
+}
 ;
 
 Test_Expression
 : '?' '(' Expression ')' {
 	$$ = $3;
 }
-
 If_Statement
 :  Test_Expression Statement_Block{
 	$$ = new If_Statement($1, $2);
@@ -214,7 +220,6 @@ If_Statement
 	$$ = new If_Statement($1, $2, $4);
 }
 ;
-
 Statement_Block
 : '{' Statement_List '}'{
 	$$ = new Statement_Block($2);
@@ -246,7 +251,8 @@ Declaration_List
 Declaration
 : Variable_Declaration {$$ = $1;}
 | Routine_Definition{ 
-	$$ = $1; 
+	$$ = $1;
+	@$ = @1;
 }
 ;
 
@@ -255,6 +261,7 @@ Routine_Definition
 	$$ = new Custom_Routine_Symbol($2, *$1, *$3, $5, $6);
 	$1.destroy();
 	$3.destroy();
+
 }
 ;
 
@@ -290,6 +297,7 @@ Type
 | T_INT{$$ = make_int_type_syntax();}
 | T_BOOL{$$ = make_bool_type_syntax();}
 | T_VOID{$$ = make_void_type_syntax(); }
+| T_STRING{$$ = make_string_type_syntax(); }
 ;
 
 Expression
@@ -323,11 +331,12 @@ Expression
 }
 | Expression '/' Expression { 
 	$$ = new Division_Expression($1, $3);
-	
-	
 }
 | T_INCREMENT LValue{
-	$$ = new Unary_Prefix_Operation(Operators::INCREMENT);
+	$$ = new Pre_Increment_Expression($2);
+}
+| T_DECREMENT LValue{
+	$$ = new Pre_Decrement_Expression($2);
 }
 | Expression '>' Expression{
 	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER);
@@ -358,6 +367,14 @@ Expression
 	$$ = new Unary_Negate_Expression($2);
 }
 ;
+
+Expression_Wild
+: /*empty*/{
+	$$ = new Void_Empty_Expression;
+}
+| Expression{
+	$$ = $1;
+}
 
 Assignment_Expression
 : LValue T_LEFT_ARROW Expression {

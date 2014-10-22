@@ -25,12 +25,12 @@ public:
 
 	~Binary_Expression();
 
-	
+	void process()override;
 
-	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope)override;
+	
 protected:
 	j_expression& left_expression()const;
-
+	void alert_symbol_scope_set()override;
 
 
 	j_expression& right_expression()const;

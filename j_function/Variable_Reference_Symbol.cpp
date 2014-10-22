@@ -1,5 +1,6 @@
 #include "Variable_Reference_Symbol.h"
-
+//
+#include "j_expression.h"
 
 namespace jomike{
 
@@ -44,6 +45,32 @@ Variable_Reference_Symbol::Variable_Reference_Symbol(
 	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression)
 	: j_declaration(i_syntax, i_identifier){
 	M_expression = i_expression;
+}
+
+Variable_Reference_Symbol::Variable_Reference_Symbol(const Variable_Reference_Symbol& irk_src)
+:j_declaration(irk_src){
+	if(irk_src.M_expression){
+		M_expression = irk_src.M_expression->get_copy();
+	}
+}
+
+Variable_Reference_Symbol::Variable_Reference_Symbol(Variable_Reference_Symbol&& irv_src)
+	:j_declaration(std::move(irv_src)){
+	if(irv_src.M_expression){
+		M_expression = irv_src.M_expression->move_copy();
+	}
+}
+
+void Variable_Reference_Symbol::process(){
+	if(M_expression){
+		M_expression->process();
+	}
+}
+
+void Variable_Reference_Symbol::alert_symbol_scope_set(){
+	if(M_expression){
+		M_expression->set_symbol_scope(&symbol_scope());
+	}
 }
 
 }

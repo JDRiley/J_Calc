@@ -15,6 +15,8 @@
 #include "J_Symbol_Error.h"
 //
 #include "Statement_Block.h"
+//
+#include "Value_Expression.h"
 using std::transform;
 
 using std::to_string;
@@ -80,14 +82,16 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 	J_Symbol_Scope_Unique_t running_scope(new J_Symbol_Scope(M_running_scope));
 
 	for(int i = 0; i < irk_args.size(); ++i){
-		j_symbol_unique_t arg_symbol(irk_args[i].make_non_referenced());
-		arg_symbol->set_name(M_arg_names[i]);
-		if(arg_symbol->return_type_syntax() != argument_types_list()[i]){
+		//j_symbol_unique_t arg_symbol(irk_args[i].make_non_referenced());
+		//arg_symbol->set_name(M_arg_names[i]);
+//		if(arg_symbol->return_type_syntax() != argument_types_list()[i]){
 
 			//arg_symbol = j_symbol_unique_t(arg_symbol->convert_to_type(argument_types_list()[i]));
 
-		}
+	//	}
 
+		j_symbol_unique_t arg_symbol(new Value_Expression(irk_args[i].get_value()));
+		arg_symbol->set_name(M_arg_names[i]);
 		running_scope->add_symbol(arg_symbol.release());
 
 	}
@@ -95,12 +99,39 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 
 	M_statement_block->set_symbol_scope(running_scope.get());
 
-	j_value return_val = M_statement_block->get_value();
+	j_value return_val;
+	M_statement_block->process();
+	try{
+		M_statement_block->get_value();
+	} catch(J_Routine_Transfer_Exception& e){
+		return_val = e.value();
+	}
+
 	if(return_type_syntax().is_void()){
 		return j_value::void_type();
 	}
 
+	if(j_value::Value_Types::UNDEFINIED == return_val.type()){
+		throw J_Symbol_Error("Function Did Not Return A Value");
+	}
 	return return_type_syntax().convert_value(return_val);
+
+}
+
+void Custom_Routine_Symbol::process(){
+
+}
+
+void Custom_Routine_Symbol::alert_symbol_scope_set(){
+
+}
+
+
+const j_value& J_Routine_Transfer_Exception::value()const{
+	return M_value;
+}
+
+J_Routine_Transfer_Exception::J_Routine_Transfer_Exception(j_value i_value): M_value(i_value){
 
 }
 

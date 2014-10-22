@@ -118,19 +118,19 @@ void j_value::binary_value_operation(
 	switch(M_type){
 	case Value_Types::LL_INTEGER:
 		binary_value_operation(
-			M_val.llint_val, i_right, &M_val.llint_val, i_func);
+			M_val.llint_val, right_val, &M_val.llint_val, i_func);
 		break;
 	case Value_Types::DOUBLE:
 		binary_value_operation(
-			M_val.dbl_val, i_right, &M_val.dbl_val, i_func);
+			M_val.dbl_val, right_val, &M_val.dbl_val, i_func);
 		break;
 	case Value_Types::BOOL:
 		binary_value_operation(
-			M_val.bool_val, i_right, &M_val.bool_val, i_func);
+			M_val.bool_val, right_val, &M_val.bool_val, i_func);
 		break;
 	case Value_Types::STRING:
 		assert(i_right.type() == Value_Types::STRING);
-		i_func(*M_val.str_val, i_right.as_string(), M_val.str_val);
+		i_func(*M_val.str_val, right_val.as_string(), M_val.str_val);
 		break;
 	default:
 		break;
@@ -524,7 +524,7 @@ string j_value::to_str()const{
 	if(Value_Types::VOID == M_type){
 		return "void";
 	}
-
+	
 	return unary_value_operation(To_String_Class());
 }
 
@@ -671,6 +671,51 @@ const j_value& j_value::void_type(){
 	static j_value void_value(Value_Types::VOID);
 	void_value.M_has_value_status = true;
 	return void_value;
+}
+
+
+class Pre_Increment_Class{
+public:
+	template<typename St>
+	St operator()(const St& irk_val)const{
+		return irk_val + 1;
+	}
+};
+
+
+j_value& j_value::operator++(){
+
+	self_manipulation_operator_numeric(Pre_Increment_Class());
+	return *this;
+}
+
+class Pre_Decrement_Class{
+public:
+	template<typename St>
+	St operator()(const St& irk_val)const{
+		return irk_val - 1;
+	}
+};
+
+j_value& j_value::operator--(){
+
+
+	self_manipulation_operator_numeric(Pre_Decrement_Class());
+	return *this;
+}
+
+template<typename Operator_Class>
+bool j_value::self_manipulation_operator_numeric(Operator_Class i_func){
+	switch(M_type){
+	case j_value::Value_Types::LL_INTEGER:
+		M_val.llint_val = i_func(M_val.llint_val);
+		return true;
+	case j_value::Value_Types::DOUBLE:
+		M_val.dbl_val = i_func(M_val.dbl_val);
+		return true;
+	default:
+		return false;
+	}
 }
 
 J_Value_Error::J_Value_Error(const char* const ik_message):J_Error(ik_message){}

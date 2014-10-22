@@ -39,6 +39,9 @@ public:
 	bool has_value()const override;
 	void clear()override;
 	j_size_t size()const;
+
+
+	
 protected:
 	void add_symbol_component(const j_symbol_component& irk_symbol_component);
 	void add_symbol_component(j_symbol_component* i_symbol_component);

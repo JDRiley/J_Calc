@@ -48,9 +48,12 @@ Statement_Block::~Statement_Block(){
 	delete M_symbol_list;
 }
 
-void Statement_Block::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
-	j_statement::set_symbol_scope(i_symbol_scope);
-	M_symbol_list->set_symbol_scope(i_symbol_scope);
+void Statement_Block::alert_symbol_scope_set(){
+	M_symbol_list->set_symbol_scope(&symbol_scope());
+}
+
+void Statement_Block::process(){
+	M_symbol_list->process();
 }
 
 }

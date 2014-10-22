@@ -7,7 +7,6 @@
 //
 #include <J_UI\J_UI_String.h>
 
-#include "Constant_Symbol_Factory.h"
 namespace jomike{
 
 //So Created to prevent including Arguments.h in this header.
@@ -49,15 +48,16 @@ public:
 
 	virtual bool is_placeholder()const;
 
+	bool has_type_syntax()const;
 
 	virtual j_symbol* make_non_referenced()const;
 
 	j_symbol(const j_symbol& irk_symbol);
 	j_symbol(j_symbol&& irr_symbol);
 
-	virtual void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
+	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
 
-	virtual void process();
+	virtual void process() = 0;
 
 	virtual const Type_Syntax& return_type_syntax()const;
 protected:
@@ -69,6 +69,9 @@ protected:
 	j_symbol* get_symbol_from_scope(const J_UI_String& irk_string)const;
 private:
 	const J_Symbol_Scope* M_symbol_scope = gk_default_symbol_scope;
+
+
+	virtual void alert_symbol_scope_set() = 0;
 
 	Arguments* M_arguments;
 	Type_Syntax* M_type = nullptr;

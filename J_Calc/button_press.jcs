@@ -1,17 +1,35 @@
+char_press []atoi[string s]->int{transfer parse_int(s);}@
+char_press []pow[dbl i_val, int i_pow]->dbl{
+	?(i_pow > 0){
+		transfer i_val*pow(i_val, --i_pow);
+	}!{
+		transfer 1;
+	}
+}@
+char_press pow(2,0)@
+char_press pow(2,1)@
+char_press pow(2,2)@
+char_press pow(2,3)@
+char_press pow(2,4)@
+char_press pow(2,5)@
+char_press pow(2,6)@
+char_press pow(2,7)@
+char_press pow(2,8)@
+char_press pow(2,9)@
+char_press atoi("123")@
 char_press 
 []max[int a, int b]->int{
-	?(a>b) a ! b;
+	?(a>b) {transfer a;} ! {transfer b;}
 }@
 char_press max(4,3)@
 char_press [int counter <-0, dbl ratio <- 1/2.0] foo[int val]->dbl{
-	counter <- counter + 1;
-	val*ratio + counter;
+	++counter;
+	transfer val*ratio + counter;
 }@
 char_press foo(1)@
 char_press foo(1)@
 char_press []bar[]->dbl{
-	g_val<- g_val + 1;
-	g_val;
+	transfer ++g_val;
 }@
 char_press bar()@
 char_press int g_val <- 0@
@@ -19,6 +37,7 @@ char_press bar()@
 char_press bar()@
 char_press 
 [dbl factor<- 40*4*12]jp[dbl rate]->dbl{
-	rate*factor;	
+	transfer rate*factor;	
 }@
+
 end

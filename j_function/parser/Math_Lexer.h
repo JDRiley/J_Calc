@@ -22,7 +22,7 @@ typedef yy::Math_Parsing_Unit::semantic_type semantic_t;
 
 #define YY_DECL		\
 	token_t\
-	Math_Lexer::yylex(semantic_t* yylval)
+	Math_Lexer::yylex(semantic_t* yylval, yy::location* i_loc)
 
 
 
@@ -34,12 +34,12 @@ struct Lexer_Location;
 class Math_Lexer : public yyFlexLexer{
 public:
 	Math_Lexer();
-	token_t yylex(semantic_t* yylval);
+	token_t yylex(semantic_t* yylval, yy::location* i_loc);
 	void init_scanner();
 	void pre_action_set_up();
 	const std::string& get_line(j_size_t i_line)const;
 private:
-	Lexer_Location M_location;
+	yy::Math_Parsing_Unit::location_type M_location;
 	yy_buffer_state* yy_current_buffer;
 
 	ex_array<std::string> M_lines;

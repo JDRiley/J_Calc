@@ -21,16 +21,11 @@ using namespace jomike;
 #else
 #define TAB_SIZE 8
 #endif
-/* Global variables
- * ----------------
- * (For shame!) But we need a few to keep track of things that are
- * preserved between calls to yylex or used outside the scanner.
- */
-static int curLineNum, curColNum;
-static ex_array<std::string> g_saved_lines;
+
+
  
 #define YY_USER_ACTION pre_action_set_up();
-
+#define MANAGE_LOC *i_loc = M_location;
 %}
 
 /* States
@@ -69,20 +64,20 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 <COPY>.*               { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
-                         g_saved_lines.push_back(yytext);
-                         curColNum = 1; yy_pop_state(); yyless(0); }
+                         M_lines.push_back(yytext);
+                         M_current_collumn = 1; yy_pop_state(); yyless(0); }
 <COPY><<EOF>>          { yy_pop_state();}
-<*>\n                  { curLineNum++; curColNum = 1;                          
-						if (YYSTATE == COPY) g_saved_lines.push_back("");
+<*>\n                  { M_current_line++; M_current_collumn = 1;                          
+						if (YYSTATE == COPY) M_lines.push_back("");
                          else yy_push_state(COPY); }
 
 [ ]+                { /* ignore all spaces */  }
-<*>[\t]                { curColNum += (TAB_SIZE - (curColNum - 1) % TAB_SIZE) % TAB_SIZE; }
+<*>[\t]                { M_current_collumn += (TAB_SIZE - (M_current_collumn - 1) % TAB_SIZE) % TAB_SIZE; }
 
  /* -------------------- Comments ----------------------------- */
 {BEG_COMMENT}          { BEGIN(COMM); }
 <COMM>{END_COMMENT}    { BEGIN(N); }
-<COMM><<EOF>>          { assert(0);
+<COMM><<EOF>>          { assert(0); 
                          return static_cast<token_t>(0); }
 <COMM>.                { /* ignore everything else that doesn't match */ }
 {SINGLE_COMMENT}       { /* skip to end of line for // comment */ }
@@ -90,36 +85,37 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
  /* --------------------- Keywords ------------------------------- */
-"int"				{ return token_t::T_INT;}
-"double"|"dbl"			{ return token_t::T_DOUBLE;      }
-"bool"				{ return token_t::T_BOOL;        }
-"string"			{ return token_t::T_STRING;      }
-"null_ptr"			{ return token_t::T_NULL_PTR;        }			
-"void"|"Void"			{ return token_t::T_VOID;}
-
-
+"int"				{MANAGE_LOC  return token_t::T_INT;		}
+"double"|"dbl"			{MANAGE_LOC  return token_t::T_DOUBLE;		}
+"bool"				{MANAGE_LOC  return token_t::T_BOOL;		}
+"string"			{MANAGE_LOC  return token_t::T_STRING;		}
+"null_ptr"			{MANAGE_LOC  return token_t::T_NULL_PTR;        }			
+"void"|"Void"			{MANAGE_LOC  return token_t::T_VOID;		}
+"transfer"|"Transfer"		{MANAGE_LOC  return token_t::T_TRANSFER;	}
 
 
  /* -------------------- Operators ----------------------------- */
-"<="                { return token_t::T_LESS_EQUAL;   }
-">="                { return token_t::T_GREATER_EQUAL;}
-"=="                { return token_t::T_EQUAL;       }
-"!="                { return token_t::T_NOT_EQUAL;    }
-"&&"                { return token_t::T_AND;         }
-"||"                { return token_t::T_OR;          }
-"<-"                { return token_t::T_LEFT_ARROW;          }
-"->"                { return token_t::T_RIGHT_ARROW;          }
-
+"<="                { MANAGE_LOC return token_t::T_LESS_EQUAL;   }
+">="                { MANAGE_LOC return token_t::T_GREATER_EQUAL;}
+"=="                { MANAGE_LOC return token_t::T_EQUAL;       }
+"!="                { MANAGE_LOC return token_t::T_NOT_EQUAL;    }
+"&&"                { MANAGE_LOC return token_t::T_AND;         }
+"||"                { MANAGE_LOC return token_t::T_OR;          }
+"<-"                { MANAGE_LOC return token_t::T_LEFT_ARROW;          }
+"->"                { MANAGE_LOC return token_t::T_RIGHT_ARROW;          }
+"++"                { MANAGE_LOC return token_t::T_INCREMENT;          }
+"--"                { MANAGE_LOC return token_t::T_DECREMENT;          }
 
 
 
 
 
 <<EOF>> {
+	MANAGE_LOC 
 	return token_t::T_END;
 }
 
-{OPERATOR}          { return static_cast<token_t>(yytext[0]);}
+{OPERATOR}          {MANAGE_LOC  return static_cast<token_t>(yytext[0]);}
     
 
 
@@ -128,7 +124,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
  /* -------------------- Constants ------------------------------ */
 "true"|"false"      {yylval->constant_symbol
 	= make_bool_constant_symbol('t' == yytext[0] ? true : false, M_location);
-	return token_t::T_BOOL_CONSTANT;
+	MANAGE_LOC return token_t::T_BOOL_CONSTANT;
 }
 
 
@@ -137,35 +133,35 @@ SINGLE_COMMENT    ("//"[^\n]*)
 	yylval->constant_symbol
 		= make_int_constant_symbol(
 		val, M_location);
-	return token_t::T_INTEGER_CONSTANT;
+	MANAGE_LOC return token_t::T_INTEGER_CONSTANT;
 }
 {HEX_INTEGER}       {int val = strtol(yytext, NULL, 16);
 	yylval->constant_symbol
 		= make_int_constant_symbol(
 		val, M_location);
-	return token_t::T_INTEGER_CONSTANT;}
+	MANAGE_LOC return token_t::T_INTEGER_CONSTANT;}
 {DOUBLE}            {j_dbl val = atof(yytext);
 	yylval->constant_symbol
 		= make_double_constant_symbol(val, M_location);
-	return token_t::T_DOUBLE_CONSTANT;}
+	MANAGE_LOC return token_t::T_DOUBLE_CONSTANT;}
 
 {STRING}            {
 	std::string string_val(yytext+1);
 	assert('"' == string_val.back());
 	string_val.pop_back();
 	yylval->constant_symbol = make_string_constant_symbol(string_val.c_str(), M_location);
-	return token_t::T_STRING_CONSTANT;
+	MANAGE_LOC return token_t::T_STRING_CONSTANT;
 }
-{BEG_STRING}        {throw J_Syntax_Error("Unterminaned String");}
+{BEG_STRING}        {MANAGE_LOC throw J_Syntax_Error("Unterminaned String");}
 
 
  /* -------------------- Identifiers --------------------------- */
 {IDENTIFIER}        {yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
-						return token_t::T_IDENTIFIER; }
+						MANAGE_LOC return token_t::T_IDENTIFIER; }
 
 
  /* -------------------- Default rule (error) -------------------- */
-.                   { std::cerr << "Unrecognized Character"; return token_t(0);}
+.                   { std::cerr << "Unrecognized Character";MANAGE_LOC  return token_t(0);}
 
 %%
 

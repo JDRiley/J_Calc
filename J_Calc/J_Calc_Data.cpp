@@ -63,6 +63,26 @@ void init_reserve_keywords(j_tree<J_UI_String>* ir_dest_set){
 	ir_dest_set->insert("least_common_multiple");
 }
 
+void J_Calc_Data::init_reserved_symbols(){
+	M_reserved_symbols["gcd"] = new LLint_Binary_Function_Symbol(greatest_common_divisor_simp
+																 , "gcd");
+	M_reserved_symbols["lcm"]
+		= new LLint_Binary_Function_Symbol(least_common_multiple
+		, "least_common_multiple");
+
+	M_reserved_symbols["is_prime"]
+		= new Unary_Function_Symbol<bool, j_llint>(is_prime, "is_prime");
+
+
+	using std::stoll;
+	M_reserved_symbols["parse_int"]
+		= new Unary_Function_Symbol<j_llint, const string&>(
+		bind(static_cast<j_llint(*)(const string&, size_t*, int)>(stoll), _1, nullptr, 10), "parse_int");
+
+
+}
+
+
 J_Calc_Data& J_Calc_Data::get_instance(){
 	static J_Calc_Data j_calc_data;
 	return j_calc_data;
@@ -181,24 +201,6 @@ void J_Calc_Data::remove_view(J_Calc_View_Shared_t i_view){
 	M_calc_views.erase(i_view);
 }
 
-void J_Calc_Data::init_reserved_symbols(){
-	M_reserved_symbols["gcd"] = new LLint_Binary_Function_Symbol(greatest_common_divisor_simp
-		, "gcd");
-	M_reserved_symbols["lcm"] 
-		= new LLint_Binary_Function_Symbol(least_common_multiple
-		, "least_common_multiple");
-
-	M_reserved_symbols["is_prime"]
-		= new Unary_Function_Symbol<bool, j_llint>(is_prime, "is_prime");
-
-
-	using std::stoll; 
-	M_reserved_symbols["parse_int"]
-		= new Unary_Function_Symbol<j_llint, const string&>(
-		bind(static_cast<j_llint(*)(const string&, size_t*, int)>(stoll), _1, nullptr, 10), "parse_int");
-
-
-}
 
 void J_Calc_Data::update(){
 

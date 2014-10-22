@@ -43,9 +43,11 @@ public:
 
 	bool has_value()const override;
 
-	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope)override;
+	void process()override;
 
 private:
+
+	void alert_symbol_scope_set()override;
 };
 
 template<typename St>
@@ -114,12 +116,31 @@ set_symbol_scope_helper(Specific_Symbol_List<St>* /*ik_symbol_list*/
 }
 
 template<typename Symbol_t>
-void jomike::Specific_Symbol_List<Symbol_t>::set_symbol_scope(
-	const J_Symbol_Scope* i_symbol_scope){
-	Symbol_Component_List::set_symbol_scope(i_symbol_scope);
-
-	set_symbol_scope_helper(this, i_symbol_scope);
+void jomike::Specific_Symbol_List<Symbol_t>::alert_symbol_scope_set(){
+	set_symbol_scope_helper(this, &symbol_scope());
 }
+
+
+template<typename St>
+typename std::enable_if<std::is_base_of<j_symbol, St>::value, void>::type
+process_helper(Specific_Symbol_List<St>* i_symbol_list){
+	for(auto f_symbol : *i_symbol_list){
+		f_symbol->process();
+	}
+}
+
+
+template<typename St>
+typename std::enable_if<!std::is_base_of<j_symbol, St>::value, void>::type
+process_helper(Specific_Symbol_List<St>* /*i_symbol_list*/){
+
+}
+
+template<typename Symbol_t>
+void jomike::Specific_Symbol_List<Symbol_t>::process(){
+	process_helper(this);
+}
+
 
 
 }

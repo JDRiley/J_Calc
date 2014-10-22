@@ -26,10 +26,12 @@ namespace jomike{
  * update our column counter.
  */
 void jomike::Math_Lexer::pre_action_set_up(){
-   M_location.first_line = M_current_line;
-   M_location.first_column = M_current_collumn;
-   M_location.last_column = M_current_collumn + yyleng - 1;
+   M_location.begin.line = M_current_line;
+   M_location.begin.column = M_current_collumn;
+   M_location.end.column = M_current_collumn + yyleng - 1;
    M_current_collumn += yyleng;
+
+   M_location.end.line = M_current_line;
 }
 
 /* Function: GetLineNumbered()

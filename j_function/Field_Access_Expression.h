@@ -25,10 +25,15 @@ public:
 	j_symbol* make_non_referenced()const override;
 
 	~Field_Access_Expression();
+
+	void process()override;
 private:
 	J_Symbol_Identifier* M_identifier;
 
 	j_value derived_get_value(const Arguments& i_args)const override;
+
+
+	void alert_symbol_scope_set()override;
 };
 
 }

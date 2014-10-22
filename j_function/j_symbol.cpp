@@ -14,6 +14,8 @@
 //
 #include "Arguments.h"
 //
+#include "Type_Factory.h"
+//
 #include <j_tree.h>
 namespace jomike{
 static int s_symbol_ids = 0;
@@ -50,6 +52,7 @@ extern const J_Symbol_Scope* gk_default_symbol_scope = default_symbol_scope();
 
 void j_symbol::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
 	M_symbol_scope = i_symbol_scope;
+	alert_symbol_scope_set();
 }
 
 j_symbol* j_symbol::get_symbol_from_scope(const J_UI_String& irk_string)const{
@@ -90,7 +93,7 @@ j_symbol::j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
 
 j_symbol::j_symbol(Symbol_Types i_symbol_type) : j_symbol_component(i_symbol_type){
 	M_name = new J_Symbol_Identifier("%Unvalued");
-	M_type = nullptr;
+	M_type = make_type_syntax(i_symbol_type);
 	M_arguments = empty_arguments().get_copy();
 }
 
@@ -102,6 +105,7 @@ j_symbol::j_symbol(const j_symbol& irk_symbol):j_symbol_component(irk_symbol){
 	M_name = irk_symbol.M_name->get_copy();
 
 	M_arguments = irk_symbol.M_arguments->get_copy();
+	M_symbol_scope = irk_symbol.M_symbol_scope;
 }
 
 j_symbol::j_symbol(j_symbol&& irr_symbol)
@@ -113,6 +117,7 @@ j_symbol::j_symbol(j_symbol&& irr_symbol)
 	M_name = irr_symbol.M_name->move_copy();
 
 	M_arguments = irr_symbol.M_arguments->move_copy();
+	M_symbol_scope = irr_symbol.M_symbol_scope;
 }
 
 
@@ -216,7 +221,11 @@ const J_Symbol_Scope& j_symbol::symbol_scope()const{
 }
 
 void j_symbol::process(){
+	get_value();
+}
 
+bool j_symbol::has_type_syntax()const{
+	return M_type;
 }
 
 const Arguments& empty_arguments(){

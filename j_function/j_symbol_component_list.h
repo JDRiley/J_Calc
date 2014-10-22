@@ -12,7 +12,6 @@ class j_symbol_component_list : public j_symbol_component{
 public:
 	j_symbol_component_list();
 
-
 	template <typename Symbol_Component_t>
 	class iterator_type;
 

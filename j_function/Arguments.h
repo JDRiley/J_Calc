@@ -57,6 +57,8 @@ public:
 
 	void swap(Arguments&);
 
+	virtual void set_symbol_scope(const J_Symbol_Scope* i_scope);
+
 	typedef J_Symbol_Component_Array<j_expression>::const_iterator const_iterator;
 	const_iterator begin()const;
 	const_iterator end()const;

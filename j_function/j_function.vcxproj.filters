@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Parser">
-      <UniqueIdentifier>{8f22d23e-c5bd-4fdb-8b91-625fc7f73ccf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\parser">
       <UniqueIdentifier>{f171c433-59f6-4e85-a327-d4c90db5c68b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\parser">
+      <UniqueIdentifier>{8f22d23e-c5bd-4fdb-8b91-625fc7f73ccf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,9 +46,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="j_unit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="j_composite_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="j_number_symbol.h">
@@ -162,23 +159,20 @@
     <ClInclude Include="Type_Bool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Unary_Operator_Expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Unary_Negate_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="parser\J_Calc_Parser.h">
-      <Filter>Header Files\Parser</Filter>
+      <Filter>Header Files\parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\j_yy_stack.h">
-      <Filter>Header Files\Parser</Filter>
+      <Filter>Header Files\parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\Lexer_Location.h">
-      <Filter>Header Files\Parser</Filter>
+      <Filter>Header Files\parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\Math_Parser.h">
-      <Filter>Header Files\Parser</Filter>
+      <Filter>Header Files\parser</Filter>
     </ClInclude>
     <ClInclude Include="J_Symbol_Scope.h">
       <Filter>Header Files</Filter>
@@ -189,7 +183,6 @@
     <ClInclude Include="Specific_Symbol_List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parser/math_parsing_unit.hh" />
     <ClInclude Include="Type_Routine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -229,6 +222,24 @@
     <ClInclude Include="Operators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pre_Increment_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pre_Decrement_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Transfer_Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Unary_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Void_Empty_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\math_parsing_unit.hh">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -247,9 +258,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="j_composite_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_placeholder_symbol.cpp">
@@ -336,9 +344,6 @@
     <ClCompile Include="Type_Bool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Unary_Operator_Expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Unary_Negate_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -399,6 +404,21 @@
     <ClCompile Include="Relational_Binary_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pre_Increment_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pre_Decrement_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transfer_Statement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Unary_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Void_Empty_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="parser\Math_Lexer.l">
@@ -413,10 +433,10 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="parser\Math_Lexer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\parser</Filter>
     </CustomBuild>
-    <CustomBuild Include="parser/parser.h">
-      <Filter>Header Files</Filter>
+    <CustomBuild Include="parser\parser.h">
+      <Filter>Header Files\parser</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

@@ -45,6 +45,7 @@ If_Statement::If_Statement(const If_Statement& irk_source):j_statement(irk_sourc
 	}
 }
 
+
 If_Statement::If_Statement(If_Statement&& irv_source):j_statement(std::move(irv_source)){
 	assert(irv_source.M_test_expression);
 	assert(irv_source.M_then_body);
@@ -55,6 +56,7 @@ If_Statement::If_Statement(If_Statement&& irv_source):j_statement(std::move(irv_
 	M_else_body = irv_source.M_else_body;
 	irv_source.M_else_body = nullptr;
 }
+
 
 If_Statement::If_Statement(
 	j_expression* i_test_expression, j_expression* i_then_expression
@@ -99,14 +101,27 @@ j_value If_Statement::derived_get_value(const Arguments& i_args)const {
 	}
 }
 
-void If_Statement::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
+
+
+
+void If_Statement::alert_symbol_scope_set(){
 	assert(M_test_expression);
 	assert(M_then_body);
 
-	M_test_expression->set_symbol_scope(i_symbol_scope);
-	M_then_body->set_symbol_scope(i_symbol_scope);
+	M_test_expression->set_symbol_scope(&symbol_scope());
+	M_then_body->set_symbol_scope(&symbol_scope());
 	if(M_else_body){
-		M_else_body->set_symbol_scope(i_symbol_scope);
+		M_else_body->set_symbol_scope(&symbol_scope());
+	}
+}
+
+void If_Statement::process(){
+	assert(M_test_expression);
+	assert(M_then_body);
+	M_test_expression->process();
+	M_then_body->process();
+	if(M_else_body){
+		M_else_body->process();
 	}
 }
 

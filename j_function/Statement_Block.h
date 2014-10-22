@@ -27,11 +27,14 @@ public:
 	void clear();
 	~Statement_Block();
 
+	void process()override;
 
-	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope)override;
+	
 private:
 	Symbol_List* M_symbol_list;
 
+
+	void alert_symbol_scope_set()override;
 	j_value derived_get_value(const Arguments& i_args)const override;
 
 	

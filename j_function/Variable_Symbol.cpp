@@ -60,6 +60,14 @@ Variable_Symbol* Variable_Symbol::move_copy(){
 	return  new Variable_Symbol(std::move(*this));
 }
 
+void Variable_Symbol::process(){
+
+}
+
+void Variable_Symbol::alert_symbol_scope_set(){
+
+}
+
 }
 
 

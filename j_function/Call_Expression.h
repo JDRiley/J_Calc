@@ -37,15 +37,18 @@ public:
 
 	const Type_Syntax& return_type_syntax()const override;
 
+	
 
 	~Call_Expression();
+
+	void process()override;
 protected:
 	j_symbol* get_symbol()const;
 private:
 	mutable j_expression* M_base_expression = nullptr;
 	J_Symbol_Identifier* M_identifier;
 	Arguments* M_args_list;
-
+	void alert_symbol_scope_set()override;
 
 	j_value derived_get_value(const Arguments& i_args)const override;
 

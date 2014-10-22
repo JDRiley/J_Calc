@@ -24,12 +24,27 @@ public:
 		return  new Binary_Function_Chain_Symbol(std::move(*this));
 	}
 
+	void process()override;
+
 protected:
 	j_value derived_get_value(const Arguments&)const override;
 private:
 	Binary_Function_t M_function;
 	J_UI_String M_name;
+
+	void alert_symbol_scope_set()override;
 };
+
+template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
+void jomike::Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::alert_symbol_scope_set(){
+
+}
+
+template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
+void jomike::Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::process(){
+
+}
+
 
 #define BINARY_FUNCTION_CHAIN_SYMBOL_NUM_DECL(num_type, name_prefix)\
 	typedef Binary_Function_Chain_Symbol<num_type(*)(num_type, num_type), num_type>\

@@ -109,6 +109,9 @@ public:
 	j_value& operator*=(const j_value&);
 	j_value& operator/=(const j_value&);
 
+	j_value& operator++();
+	j_value& operator--();
+
 	j_value operator-()const;
 
 	bool is_convertible(J_Unit)const;
@@ -162,6 +165,9 @@ private:
 		const Left_t& i_left, const j_value& i_right, Ret_t* i_destination
 		, const Operator_Class& i_func);
 	
+	
+	template<typename Operator_Class>
+	bool self_manipulation_operator_numeric(Operator_Class i_func);
 	
 
 

@@ -26,12 +26,26 @@ public:
 		return new Unary_Function_Symbol(*this);
 	}
 
+
+	void process()override;
 private:
 	std::function<Ret_t(Arg_t)> M_function;
 	J_UI_String M_name;
 
 	j_value derived_get_value(const Arguments& i_args)const override;
+
+	void alert_symbol_scope_set()override;
 };
+
+template<typename Ret_t, typename Arg_t>
+void jomike::Unary_Function_Symbol<Ret_t, Arg_t>::alert_symbol_scope_set(){
+
+}
+
+template<typename Ret_t, typename Arg_t>
+void jomike::Unary_Function_Symbol<Ret_t, Arg_t>::process(){
+
+}
 
 template<typename Ret_t, typename Arg_t>
 template<typename Func_t>

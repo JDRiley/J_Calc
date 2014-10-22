@@ -1,7 +1,8 @@
 #include "Field_Access_Expression.h"
 //
 #include "J_Symbol_Identifier.h"
-
+//
+#include "J_Symbol_Error.h"
 namespace jomike{
 
 J_FWD_DECL(J_Symbol_Identifier)
@@ -53,6 +54,23 @@ Field_Access_Expression::~Field_Access_Expression(){
 j_symbol* Field_Access_Expression::make_non_referenced()const{
 	auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
 	return symbol->get_copy();
+}
+
+void Field_Access_Expression::process(){
+	try{
+		auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
+
+		if(symbol->symbol_type() != Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+			set_type_syntax(symbol->type_syntax());
+		}
+
+	}catch(J_Symbol_Error&){
+		return;
+	}
+}
+
+void Field_Access_Expression::alert_symbol_scope_set(){
+	
 }
 
 }

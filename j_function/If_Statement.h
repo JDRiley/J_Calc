@@ -35,11 +35,15 @@ public:
 
 	~If_Statement();
 
-	//TODO: MAke this set_symbol_scope a derived function. to force implementation
-	void set_symbol_scope(const J_Symbol_Scope* i_symbol_scope);
+	void process()override;
+
+	
 private:
 	j_value derived_get_value(const Arguments& i_args)const override;
 
+	j_value M_test_value;
+
+	void alert_symbol_scope_set()override;
 
 	//Members:
 	j_expression* M_test_expression;

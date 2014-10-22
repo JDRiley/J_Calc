@@ -15,8 +15,16 @@
 namespace jomike{
 
 Constant_Symbol::Constant_Symbol(
-	Symbol_Types i_symbol_type, const Lexer_Location& /*i_loc*/):j_expression(i_symbol_type){
+	Symbol_Types i_symbol_type, const yy::location& /*i_loc*/):j_expression(i_symbol_type){
 	set_type_syntax(make_type_syntax(i_symbol_type));
+}
+
+void Constant_Symbol::process(){
+
+}
+
+void Constant_Symbol::alert_symbol_scope_set(){
+
 }
 
 
@@ -44,7 +52,7 @@ Int_Constant_Symbol* Int_Constant_Symbol::get_copy()const {
 	return new Int_Constant_Symbol(*this);
 }
 
-Int_Constant_Symbol::Int_Constant_Symbol(int i_val, const Lexer_Location& i_loc)
+Int_Constant_Symbol::Int_Constant_Symbol(int i_val, const yy::location& i_loc)
 	:Constant_Symbol(Symbol_Types::INT, i_loc){
 	M_value = i_val;
 }
@@ -56,7 +64,7 @@ J_UI_String Int_Constant_Symbol::get_display_name(){
 j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const {
 	switch(irk_type.symbol_type()){
 	case Symbol_Types::DOUBLE:{
-		auto dbl_symbol = new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), Lexer_Location());
+		auto dbl_symbol = new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), yy::location());
 		dbl_symbol->set_name(name());
 		return dbl_symbol;
 	}
@@ -68,7 +76,7 @@ j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const
 
 
 
-Bool_Constant_Symbol::Bool_Constant_Symbol(bool i_val, const Lexer_Location& i_loc)
+Bool_Constant_Symbol::Bool_Constant_Symbol(bool i_val, const yy::location& i_loc)
 :Constant_Symbol(Symbol_Types::BOOL, i_loc){
 	M_value = i_val;
 }
@@ -126,7 +134,7 @@ Dbl_Constant_Symbol* Dbl_Constant_Symbol::get_copy()const {
 	return new Dbl_Constant_Symbol(*this);
 }
 
-Dbl_Constant_Symbol::Dbl_Constant_Symbol(j_dbl i_val, const Lexer_Location& i_loc)
+Dbl_Constant_Symbol::Dbl_Constant_Symbol(j_dbl i_val, const yy::location& i_loc)
 	:Constant_Symbol(Symbol_Types::DOUBLE, i_loc){
 	M_value = i_val;
 }
@@ -159,7 +167,7 @@ String_Constant_Symbol* String_Constant_Symbol::get_copy()const {
 }
 
 String_Constant_Symbol::String_Constant_Symbol(
-	const std::string& irk_val, const Lexer_Location& i_loc)
+	const std::string& irk_val, const yy::location& i_loc)
 	:Constant_Symbol(Symbol_Types::STRING, i_loc){
 	M_value = irk_val;
 }

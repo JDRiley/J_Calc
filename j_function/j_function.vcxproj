@@ -93,6 +93,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>VS_2013;WIN32;_SCL_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -107,6 +108,7 @@
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4290;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VS_2013;WIN32;NOMINMAX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -122,6 +124,7 @@
       <DisableSpecificWarnings>4290;4512;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,6 +143,7 @@
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4290;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;NOMINMAX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -161,9 +165,9 @@
     <ClInclude Include="Division_Expression.h" />
     <ClInclude Include="Expression_List.h" />
     <ClInclude Include="Expression_Statement.h" />
+    <ClInclude Include="Void_Empty_Expression.h" />
     <ClInclude Include="Field_Access_Expression.h" />
     <ClInclude Include="If_Statement.h" />
-    <ClInclude Include="j_composite_symbol.h" />
     <ClInclude Include="j_declaration.h" />
     <ClInclude Include="j_expression.h" />
     <ClInclude Include="j_number_symbol.h" />
@@ -212,15 +216,16 @@
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
     </CustomBuild>
     <ClInclude Include="parser\Math_Parser.h" />
-    <ClInclude Include="parser/math_parsing_unit.hh" />
-    <CustomBuild Include="parser/parser.h">
+    <ClInclude Include="parser\math_parsing_unit.hh" />
+    <CustomBuild Include="parser\parser.h">
       <AdditionalInputs>parser/parser.y;</AdditionalInputs>
-      <Command>cd parser
-      win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
-      <Message>win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
+      <Command>win_bison -v -t --defines=math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Command>
+      <Message>win_bison -v -t --defines=math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Message>
       <Outputs>parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
       <LinkObjects>false</LinkObjects>
     </CustomBuild>
+    <ClInclude Include="Pre_Decrement_Expression.h" />
+    <ClInclude Include="Pre_Increment_Expression.h" />
     <ClInclude Include="Relational_Binary_Expression.h" />
     <ClInclude Include="Specific_Symbol_List.h" />
     <ClInclude Include="Statement_Block.h" />
@@ -228,6 +233,7 @@
     <ClInclude Include="Symbol_Joiner.h" />
     <ClInclude Include="Symbol_Component_List.h" />
     <ClInclude Include="Symbol_Types.h" />
+    <ClInclude Include="Transfer_Statement.h" />
     <ClInclude Include="Type_Bool.h" />
     <ClInclude Include="Type_Double.h" />
     <ClInclude Include="Type_Factory.h" />
@@ -239,7 +245,7 @@
     <ClInclude Include="Type_Void.h" />
     <ClInclude Include="Unary_Function_Symbol.h" />
     <ClInclude Include="Unary_Negate_Expression.h" />
-    <ClInclude Include="Unary_Operator_Expression.h" />
+    <ClInclude Include="Unary_Expression.h" />
     <ClInclude Include="Unit_Converter.h" />
     <ClInclude Include="Value_Expression.h" />
     <ClInclude Include="Variable_Reference_Symbol.h" />
@@ -248,16 +254,19 @@
   <ItemGroup>
     <ClCompile Include="Addition_Expression.cpp" />
     <ClCompile Include="Assignment_Expression.cpp" />
-    <ClCompile Include="Binary_Expression.cpp" />
+    <ClCompile Include="Binary_Expression.cpp">
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MinimalRebuild>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MinimalRebuild>
+    </ClCompile>
     <ClCompile Include="Call_Expression.cpp" />
     <ClCompile Include="Constant_Symbol.cpp" />
     <ClCompile Include="Constant_Symbol_Factory.cpp" />
     <ClCompile Include="Custom_Routine_Symbol.cpp" />
     <ClCompile Include="Division_Expression.cpp" />
     <ClCompile Include="Expression_Statement.cpp" />
+    <ClCompile Include="Void_Empty_Expression.cpp" />
     <ClCompile Include="Field_Access_Expression.cpp" />
     <ClCompile Include="If_Statement.cpp" />
-    <ClCompile Include="j_composite_symbol.cpp" />
     <ClCompile Include="j_declaration.cpp" />
     <ClCompile Include="j_expression.cpp" />
     <ClCompile Include="j_function.cpp" />
@@ -293,10 +302,13 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
     </ClCompile>
+    <ClCompile Include="Pre_Decrement_Expression.cpp" />
+    <ClCompile Include="Pre_Increment_Expression.cpp" />
     <ClCompile Include="Relational_Binary_Expression.cpp" />
     <ClCompile Include="Statement_Block.cpp" />
     <ClCompile Include="Subtraction_Expression.cpp" />
     <ClCompile Include="Symbol_Component_List.cpp" />
+    <ClCompile Include="Transfer_Statement.cpp" />
     <ClCompile Include="Type_Bool.cpp" />
     <ClCompile Include="Type_Double.cpp" />
     <ClCompile Include="Type_Factory.cpp" />
@@ -307,7 +319,7 @@
     <ClCompile Include="Type_Syntax.cpp" />
     <ClCompile Include="Type_Void.cpp" />
     <ClCompile Include="Unary_Negate_Expression.cpp" />
-    <ClCompile Include="Unary_Operator_Expression.cpp" />
+    <ClCompile Include="Unary_Expression.cpp" />
     <ClCompile Include="Unit_Converter.cpp" />
     <ClCompile Include="Value_Expression.cpp" />
     <ClCompile Include="Variable_Reference_Symbol.cpp" />

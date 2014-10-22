@@ -42,13 +42,18 @@ Type_Syntax* make_type_syntax(Symbol_Types i_symbol_type){
 	case Symbol_Types::STRING:
 		return new Type_String;
 	default:
-		throw J_Symbol_Error("Cannot make Type_Syntax With this Symbol Type." + to_string(__LINE__ ) +  __FILE__);
+		//throw J_Symbol_Error("Cannot make Type_Syntax With this Symbol Type." + to_string(__LINE__ ) +  __FILE__);
+		return nullptr;
 		break;
 	}
 }
 
 Type_Syntax* make_void_type_syntax(){
 	return new Type_Void;
+}
+
+Type_Syntax* make_string_type_syntax(){
+	return new Type_String;
 }
 
 }

@@ -4,6 +4,11 @@
 #ifndef YY_YY_STACK_HH_INCLUDED
 # define YY_YY_STACK_HH_INCLUDED
 
+
+#ifndef YY_YY_PARSER_STACK_HH_INCLUDED
+#define YY_YY_PARSER_STACK_HH_INCLUDED
+#endif
+
 # include <deque>
 
 

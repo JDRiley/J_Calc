@@ -36,8 +36,8 @@ int j_semantic_type::base_restrictive_ptr::Ms_restrictive_ptr_ID = 0;
 
 namespace jomike{
 
-token_t Math_Parser::lex(semantic_t* yylval){
-	return M_lexer->yylex(yylval);
+token_t Math_Parser::lex(semantic_t* yylval, yy::location* i_loc){
+	return M_lexer->yylex(yylval, i_loc);
 }
 
 j_symbol* Math_Parser::parse(const std::string& irk_string){
@@ -68,14 +68,18 @@ Math_Parser::~Math_Parser(){
 }
 
 yy::Math_Parsing_Unit::token_type yylex(
-	yy::Math_Parsing_Unit::semantic_type* yylval, jtl::Math_Parser* i_parser){
-	return i_parser->lex(yylval);
+	yy::Math_Parsing_Unit::semantic_type* yylval, yy::location* i_loc, jtl::Math_Parser* i_parser){
+	return  i_parser->lex(yylval, i_loc);
+
 }
 
 
-void yy::Math_Parsing_Unit::error(const location_type& , const std::string& irk_string){
+void yy::Math_Parsing_Unit::error(const location_type& irk_location, const std::string& irk_string){
 	std::cerr << "Error Encountered: " << irk_string << "\n";
-	throw jtl::J_Syntax_Error("[Syntax_Error]");
+	std::stringstream o_str;
+	o_str << irk_location;
+
+	throw jtl::J_Syntax_Error("[Syntax_Error] " + o_str.str());
 }
 
 //#define MEMBER_INITIALIZATION \

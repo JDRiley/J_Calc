@@ -14,7 +14,7 @@ bool j_placeholder_symbol::is_placeholder()const {
 j_placeholder_symbol::j_placeholder_symbol(j_size_t i_index)
 :j_expression(Symbol_Types::PLACEHOLDER,
 	new J_Symbol_Identifier(string("#") + std::to_string(i_index) + "_Placeholder"))
-	, M_Placeholder_index(i_index){
+	, M_placeholder_index(i_index){
 	assert(i_index >= J_SIZE_T_ZERO);
 }
 
@@ -31,7 +31,7 @@ j_value j_placeholder_symbol::derived_get_value(const Arguments&)const {
 }
 
 j_size_t j_placeholder_symbol::placeholder_index()const{
-	return M_Placeholder_index;
+	return M_placeholder_index;
 }
 
 j_placeholder_symbol* j_placeholder_symbol::get_copy()const {
@@ -44,6 +44,14 @@ j_placeholder_symbol* j_placeholder_symbol::move_copy(){
 
 jomike::J_UI_String j_placeholder_symbol::get_display_name(){
 	return name();
+}
+
+void j_placeholder_symbol::process(){
+
+}
+
+void j_placeholder_symbol::alert_symbol_scope_set(){
+
 }
 
 

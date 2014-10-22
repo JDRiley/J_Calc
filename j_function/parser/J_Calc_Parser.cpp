@@ -78,7 +78,9 @@ J_UI_String J_Calc_Math_Input_Parser::evaluate_math_input(const J_UI_Multi_Strin
 		if(j_symbol* new_symbol_raw = parser.parse(irk_string.std_str())){
 			j_symbol_unique_t new_symbol(new_symbol_raw);
 			J_UI_String return_val((J_Font_Face)nullptr);
+			new_symbol->process();
 			if(new_symbol->has_value()){
+				
 				return_val = new_symbol->get_value().to_str();
 			} else{
 				return_val = new_symbol->get_display_name();

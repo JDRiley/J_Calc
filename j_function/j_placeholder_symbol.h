@@ -19,10 +19,14 @@ public:
 	j_size_t placeholder_index()const;
 
 	J_UI_String get_display_name()override;
+
+	void process()override;
 protected:
 	j_value derived_get_value(const Arguments& i_args)const override;
 private:
-	j_size_t M_Placeholder_index;
+	j_size_t M_placeholder_index;
+
+	void alert_symbol_scope_set()override;
 };
 
 }

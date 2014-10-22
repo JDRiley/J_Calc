@@ -23,6 +23,8 @@ public:
 
 	Custom_Routine_Symbol* move_copy()override;
 
+	void process()override;
+
 	~Custom_Routine_Symbol();
 
 private:
@@ -33,6 +35,18 @@ private:
 
 	Statement_Block* M_statement_block;
 	J_Symbol_Scope* M_running_scope;
+
+	void alert_symbol_scope_set()override;
+};
+
+//Class Thrown when transfer encountered
+class J_Routine_Transfer_Exception{
+public:
+	J_Routine_Transfer_Exception(j_value i_value);
+
+	const j_value& value()const;
+private:
+	j_value M_value;
 };
 
 }
