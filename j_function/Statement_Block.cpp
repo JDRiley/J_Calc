@@ -3,6 +3,10 @@
 #include "J_Symbol_Scope.h"
 //
 #include "Specific_Symbol_List.h"
+//
+#include "J_Symbol_Scope.h"
+//
+#include "j_declaration.h"
 namespace jomike{
 
 
@@ -28,8 +32,8 @@ Statement_Block::Statement_Block(Statement_Block&& irv_source):j_statement(std::
 }
 
 j_value Statement_Block::derived_get_value(const Arguments& i_args)const {
-	J_Symbol_Scope running_scope;
-	running_scope.set_parent_scope(&symbol_scope());
+	J_Symbol_Scope running_scope(symbol_scope());
+	
 
 	M_symbol_list->set_symbol_scope(&running_scope);
 
@@ -53,7 +57,8 @@ void Statement_Block::alert_symbol_scope_set(){
 }
 
 void Statement_Block::process(){
-	M_symbol_list->process();
+	//As of now  statement block does no preperation
+	//M_symbol_list->process();
 }
 
 }

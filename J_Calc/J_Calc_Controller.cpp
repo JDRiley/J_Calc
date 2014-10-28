@@ -175,9 +175,9 @@ void J_Calc_Controller::execute(){
 	
 #ifdef _DEBUG
 	run_script("button_press.jcs");
-	//run_script("in_script2.jcs");
+	//run_script("button_press.jcs");
 #else
-	run_script("button_press.jcs");
+	run_script("loop_test.jcs");
 
 #endif
 

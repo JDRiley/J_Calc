@@ -66,6 +66,8 @@ void Field_Access_Expression::process(){
 
 	}catch(J_Symbol_Error&){
 		return;
+	} catch(J_Syntax_Error&){
+		return;
 	}
 }
 

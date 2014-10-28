@@ -1,0 +1,20 @@
+char_press []factorial[int i_val]->int{
+	?(i_val == 0){
+		transfer 1;
+	}
+
+	int result <-1;
+	for(int i<-1; i <= i_val; ++i){
+		result <- result*i;
+	}
+	transfer result;
+}@
+char_press factorial(0)@
+char_press factorial(1)@
+char_press factorial(2)@
+char_press factorial(3)@
+char_press factorial(4)@
+char_press factorial(5)@
+char_press factorial(6)@
+char_press factorial(7)@
+end

@@ -89,5 +89,8 @@
     <CustomBuild Include="button_press.jcs">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="loop_test.jcs">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

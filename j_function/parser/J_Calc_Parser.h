@@ -12,7 +12,6 @@ namespace jomike{
 
 j_symbol* get_symbol(const J_UI_String& irk_string);
 
-void add_user_symbol(j_symbol*);
 
 
 

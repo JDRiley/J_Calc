@@ -169,6 +169,8 @@
       <AdditionalLibraryDirectories>../lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32mxs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -199,6 +201,12 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">x64/Release/%(Identity)</Outputs>
     </CustomBuild>
     <None Include="giant_script.jcs" />
+    <CustomBuild Include="loop_test.jcs">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cp %(Identity)  x64/Release/%(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moving script cp %(Identity)  x64/Release/%(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">x64/Release/%(Identity)</Outputs>
+    </CustomBuild>
     <None Include="parser.output" />
     <None Include="test_script.jcs" />
     <None Include="x64\AssertHappy\in_script.jcs" />

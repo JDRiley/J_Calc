@@ -13,7 +13,7 @@ public:
 
 	Pre_Decrement_Expression* move_copy()override;
 
-
+	void process()override;
 	j_symbol* make_non_referenced()const override;
 	~Pre_Decrement_Expression();
 private:

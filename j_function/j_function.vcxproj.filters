@@ -240,6 +240,9 @@
     <ClInclude Include="parser\math_parsing_unit.hh">
       <Filter>Header Files\parser</Filter>
     </ClInclude>
+    <ClInclude Include="For_Statement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -417,6 +420,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Void_Empty_Expression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="For_Statement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

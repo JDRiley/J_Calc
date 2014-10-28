@@ -16,6 +16,7 @@
  * file inclusions or C++ variable declarations/prototypes that are needed
  * by your code here.
  */
+#include "j_yy_stack.h"
 #include "parser.h"
 #include "Math_Parser.h"
 #include "../Constant_Symbol.h"
@@ -27,7 +28,7 @@
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
-#include "j_yy_stack.h"
+
 #include "../Specific_Symbol_List.h"
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
@@ -40,7 +41,7 @@
 #include "../Pre_Decrement_Expression.h"
 #include "../Transfer_Statement.h"
 #include "../Void_Empty_Expression.h"
-
+#include "../For_Statement.h"
 
 
 using namespace jomike;
@@ -113,7 +114,7 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 %token							T_NULL_PTR T_TRANSFER
 %token							T_LEFT_ARROW T_RIGHT_ARROW
-%token							T_END
+%token							T_END T_FOR
 %token	<identifier>			T_IDENTIFIER
 %token	<constant_symbol>		T_STRING_CONSTANT
 %token	<constant_symbol>		T_INTEGER_CONSTANT
@@ -158,9 +159,10 @@ j_symbol_component* jtl::g_input_line = nullptr;
 %type	<symbol_list>		Statement_List
 %type	<declaration_list>	Declaration_List Bracketed_Declaration_List
 %type	<statement_block>	Statement_Block
-%type	<statement>			Statement Input_Line  
+%type	<statement>			Statement Input_Line  For_Statement
 %type	<if_statement>		If_Statement
 %%
+
 /* Rules
 * -----
 * All productions and actions should be placed between the start and stop
@@ -200,6 +202,10 @@ Statement
 | T_TRANSFER Expression_Wild ';' {
 	$$ = new Transfer_Statement($2);
 }
+| For_Statement{
+	$$ = $1;
+}
+
 ;
 
 Test_Expression
@@ -234,6 +240,12 @@ $$ = new Specific_Symbol_List<j_symbol>();
 	$$->add_symbol($2);
 }
 ;
+
+
+For_Statement
+: T_FOR '(' Statement  Expression ';' Expression_Wild ')' Statement_Block{
+	$$ = new For_Statement($3, $4, $6, $8);
+}
 Declaration_List
 : /*empty*/ {
 	$$ = new Specific_Symbol_List<j_declaration>;

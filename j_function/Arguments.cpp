@@ -126,7 +126,7 @@ Arguments* Arguments::get_copy()const {
 	return new Arguments(*this);
 }
 
-void Arguments::set_symbol_scope(const J_Symbol_Scope* i_scope){
+void Arguments::set_symbol_scope(J_Symbol_Scope* i_scope){
 	M_arg_symbols.apply([i_scope](j_expression* y_expression){
 		y_expression->set_symbol_scope(i_scope);
 	});

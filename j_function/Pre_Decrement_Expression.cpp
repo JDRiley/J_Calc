@@ -10,11 +10,13 @@ Pre_Decrement_Expression::Pre_Decrement_Expression(j_expression* i_expression)
 	calculate_type();
 }
 
+void Pre_Decrement_Expression::process(){
+	base_expression().set_value(--base_expression().get_value());
+}
+
 
 j_value Pre_Decrement_Expression::derived_get_value(const Arguments& i_args)const{
 	
-
-	base_expression().set_value(--base_expression().get_value());
 	
 	return base_expression().get_value(i_args);
 }

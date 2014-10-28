@@ -26,6 +26,14 @@
 #include "../Specific_Symbol_List.h"
 //
 #include "../j_statement.h"
+//
+#include "J_Symbol_Identifier.h"
+//
+#include "../J_Symbol_Scope.h"
+//
+#include "../If_Statement.h"
+//
+#include "../Statement_Block.h"
 
 using std::mem_fn; using std::bind; using std::for_each; using std::transform;
 using namespace std::placeholders;

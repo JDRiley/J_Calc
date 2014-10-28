@@ -16,6 +16,7 @@ public:
 	void destroy(Symbol_Component_t**);
 };
 
+
 template<typename Symbol_Component_t>
 Symbol_Component_t** J_Symbol_Component_Allocator<Symbol_Component_t>
 	::allocate(j_size_t i_size){

@@ -11,6 +11,7 @@
 #include "../Constant_Symbol_Factory.h"
 #include "parser.h" // for token codes, yylval
 #include "Math_Lexer.h"
+#include "../J_Symbol_Identifier.h"
 #include <ex_array.h>
 #include <iostream>
 using std::cin; using std::cout; using std::cerr;
@@ -92,6 +93,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 "null_ptr"			{MANAGE_LOC  return token_t::T_NULL_PTR;        }			
 "void"|"Void"			{MANAGE_LOC  return token_t::T_VOID;		}
 "transfer"|"Transfer"		{MANAGE_LOC  return token_t::T_TRANSFER;	}
+"for"|"For"			{MANAGE_LOC  return token_t::T_FOR;		}
 
 
  /* -------------------- Operators ----------------------------- */

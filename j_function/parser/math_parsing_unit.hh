@@ -31,43 +31,26 @@
    version 2.2 of Bison.  */
 
 /**
- ** \file math_parsing_unit.hh
+ ** \file parser/math_parsing_unit.hh
  ** Define the yy::parser class.
  */
 
 /* C++ LALR(1) parser skeleton written by Akim Demaille.  */
 
-#ifndef YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
-# define YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
+#ifndef YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED
+# define YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED
 
 /* "%code requires" blocks.  */
 /* Line 33 of lalr1.cc  */
-#line 58 "parser.y"
+#line 78 "parser/parser.y"
 
-#include "J_Calc_Parser.h"
-#include<J_UI/J_UI_String.h>
-#include "J_Symbol_Fwd_Decl.h"
-#include "../Expression_List.h"
-#include "../Call_Expression.h"
-#include "../J_Symbol_Identifier.h"
-#include "../Field_Access_Expression.h"
-#include "../Arguments.h"
-#include "../j_expression.h"
-#include "j_yy_stack.h"
-#include "../Specific_Symbol_List.h"
-#include "../J_Symbol_Scope.h"
-#include "../Custom_Routine_Symbol.h"
-#include "../Assignment_Expression.h"
-#include "../Statement_Block.h"
-#include "../Expression_Statement.h"
-#include "../If_Statement.h"
-#include "../Relational_Binary_Expression.h"
-#include "../Pre_Increment_Expression.h"
-#include "../Pre_Decrement_Expression.h"
+#include "../J_Symbol_Fwd_Decl.h"
+
+
 
 
 /* Line 33 of lalr1.cc  */
-#line 71 "math_parsing_unit.hh"
+#line 54 "parser/math_parsing_unit.hh"
 
 
 #include <string>
@@ -83,7 +66,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 87 "math_parsing_unit.hh"
+#line 70 "parser/math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -112,21 +95,22 @@ namespace yy {
      T_LEFT_ARROW = 265,
      T_RIGHT_ARROW = 266,
      T_END = 267,
-     T_IDENTIFIER = 268,
-     T_STRING_CONSTANT = 269,
-     T_INTEGER_CONSTANT = 270,
-     T_DOUBLE_CONSTANT = 271,
-     T_BOOL_CONSTANT = 272,
-     T_OR = 273,
-     T_AND = 274,
-     T_NOT_EQUAL = 275,
-     T_EQUAL = 276,
-     T_GREATER_EQUAL = 277,
-     T_LESS_EQUAL = 278,
-     T_DECREMENT = 279,
-     T_INCREMENT = 280,
-     NEGATION = 281,
-     T_DIMENSIONS = 282
+     T_FOR = 268,
+     T_IDENTIFIER = 269,
+     T_STRING_CONSTANT = 270,
+     T_INTEGER_CONSTANT = 271,
+     T_DOUBLE_CONSTANT = 272,
+     T_BOOL_CONSTANT = 273,
+     T_OR = 274,
+     T_AND = 275,
+     T_NOT_EQUAL = 276,
+     T_EQUAL = 277,
+     T_GREATER_EQUAL = 278,
+     T_LESS_EQUAL = 279,
+     T_DECREMENT = 280,
+     T_INCREMENT = 281,
+     NEGATION = 282,
+     T_DIMENSIONS = 283
    };
 
     };
@@ -302,8 +286,8 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 306 "math_parsing_unit.hh"
+#line 290 "parser/math_parsing_unit.hh"
 
 
 
-#endif /* !YY_YY_MATH_PARSING_UNIT_HH_INCLUDED  */
+#endif /* !YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED  */

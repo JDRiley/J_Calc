@@ -14,6 +14,8 @@ public:
 
 	Pre_Increment_Expression* get_copy()const override;
 	j_symbol* make_non_referenced()const override;
+
+	void process()override;
 private:
 	j_value derived_get_value(const Arguments& i_args)const override;
 };

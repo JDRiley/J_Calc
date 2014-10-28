@@ -101,7 +101,7 @@ const Symbol_t& Specific_Symbol_List<Symbol_t>::operator[](j_size_t i_index)cons
 template<typename St>
 typename std::enable_if<std::is_base_of<j_symbol, St>::value, void>::type
 set_symbol_scope_helper(
-Specific_Symbol_List<St>* ik_symbol_list, const J_Symbol_Scope* ik_scope){
+Specific_Symbol_List<St>* ik_symbol_list, J_Symbol_Scope* ik_scope){
 	for(auto f_symbol : *ik_symbol_list){
 		f_symbol->set_symbol_scope(ik_scope);
 	}

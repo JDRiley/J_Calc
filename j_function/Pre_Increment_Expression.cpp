@@ -8,8 +8,11 @@ Pre_Increment_Expression::Pre_Increment_Expression(j_expression* i_expression):U
 }
 
 j_value Pre_Increment_Expression::derived_get_value(const Arguments& i_args)const{
-	base_expression().set_value(++base_expression().get_value());
 	return base_expression().get_value(i_args);
+}
+
+void Pre_Increment_Expression::process(){
+	base_expression().set_value(++base_expression().get_value());
 }
 
 Pre_Increment_Expression* Pre_Increment_Expression::get_copy()const {

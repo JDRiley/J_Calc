@@ -6,6 +6,22 @@ char_press []pow[dbl i_val, int i_pow]->dbl{
 		transfer 1;
 	}
 }@
+char_press []pow2[dbl i_val, int i_pow]->dbl{
+	dbl return_val <- 1;
+	for(int i<- 0; i < i_pow ; ++i){
+		return_val <- return_val*i_val;
+	}
+	transfer return_val;
+}@
+char_press []dopow[dbl i_val, int i_pow]->dbl{
+	for(int i<- 0; i < 10000 ; ++i){
+		pow(i_val, i_pow);
+	}
+
+	transfer pow(i_val, i_pow);
+}@
+char_press dopow(2, 130)@
+char_press pow2(2,2)@
 char_press pow(2,0)@
 char_press pow(2,1)@
 char_press pow(2,2)@

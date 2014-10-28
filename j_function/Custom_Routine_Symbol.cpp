@@ -84,11 +84,9 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 	for(int i = 0; i < irk_args.size(); ++i){
 		//j_symbol_unique_t arg_symbol(irk_args[i].make_non_referenced());
 		//arg_symbol->set_name(M_arg_names[i]);
-//		if(arg_symbol->return_type_syntax() != argument_types_list()[i]){
-
-			//arg_symbol = j_symbol_unique_t(arg_symbol->convert_to_type(argument_types_list()[i]));
-
-	//	}
+		//if(arg_symbol->return_type_syntax() != argument_types_list()[i]){
+		//arg_symbol = j_symbol_unique_t(arg_symbol->convert_to_type(argument_types_list()[i]));
+		//}
 
 		j_symbol_unique_t arg_symbol(new Value_Expression(irk_args[i].get_value()));
 		arg_symbol->set_name(M_arg_names[i]);
@@ -100,7 +98,7 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 	M_statement_block->set_symbol_scope(running_scope.get());
 
 	j_value return_val;
-	M_statement_block->process();
+
 	try{
 		M_statement_block->get_value();
 	} catch(J_Routine_Transfer_Exception& e){

@@ -96,8 +96,10 @@ If_Statement::~If_Statement(){
 j_value If_Statement::derived_get_value(const Arguments& i_args)const {
 	if(M_test_expression->get_value().as_bool()){
 		return M_then_body->get_value(i_args);
-	} else{
+	} else if(M_else_body){
 		return M_else_body->get_value(i_args);
+	} else{
+		return j_value();
 	}
 }
 

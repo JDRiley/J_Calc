@@ -30,7 +30,7 @@ public:
 	}
 
 	void add_symbol(j_symbol* i_symbol)override{
-		add_symbol(i_symbol);
+		add_user_symbol(i_symbol);
 	}
 
 	J_Default_Symbol_Scope* get_copy()const override{
@@ -48,9 +48,9 @@ static J_Symbol_Scope* default_symbol_scope(){
 	return &default_scope;
 }
 
-extern const J_Symbol_Scope* gk_default_symbol_scope = default_symbol_scope();
+extern J_Symbol_Scope* gk_default_symbol_scope = default_symbol_scope();
 
-void j_symbol::set_symbol_scope(const J_Symbol_Scope* i_symbol_scope){
+void j_symbol::set_symbol_scope(J_Symbol_Scope* i_symbol_scope){
 	M_symbol_scope = i_symbol_scope;
 	alert_symbol_scope_set();
 }
@@ -132,6 +132,7 @@ void j_symbol::set_type_syntax(const Type_Syntax& irk_type_syntax){
 }
 
 void j_symbol::set_type_syntax(Type_Syntax* i_type_syntax){
+	delete M_type;
 	M_type = i_type_syntax;
 }
 
@@ -215,7 +216,9 @@ const Type_Syntax& j_symbol::return_type_syntax()const{
 	return *M_type;
 }
 
-const J_Symbol_Scope& j_symbol::symbol_scope()const{
+
+
+J_Symbol_Scope& j_symbol::symbol_scope()const{
 	assert(M_symbol_scope);
 	return *M_symbol_scope;
 }

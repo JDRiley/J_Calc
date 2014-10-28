@@ -5,7 +5,8 @@
 #include "Type_Syntax.h"
 //
 #include "Value_Expression.h"
-
+//
+#include "J_Symbol_Scope.h"
 namespace jomike{
 
 
@@ -61,7 +62,7 @@ Variable_Symbol* Variable_Symbol::move_copy(){
 }
 
 void Variable_Symbol::process(){
-
+	symbol_scope().add_symbol(get_copy());
 }
 
 void Variable_Symbol::alert_symbol_scope_set(){

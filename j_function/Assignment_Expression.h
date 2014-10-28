@@ -14,7 +14,7 @@ public:
 	Assignment_Expression* get_copy()const override;
 
 	Assignment_Expression* move_copy()override;
-
+	void process()override;
 	bool has_value()const override;
 private:
 

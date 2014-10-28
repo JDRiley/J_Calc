@@ -6,8 +6,8 @@ namespace jomike{
 
 
 j_value Assignment_Expression::derived_get_value(const Arguments& i_args)const {
-	left_expression().set_value(right_expression().get_value(i_args));
-	return left_expression().get_value();
+
+	return left_expression().get_value(i_args);
 }
 
 Assignment_Expression::Assignment_Expression(
@@ -26,6 +26,11 @@ Assignment_Expression* Assignment_Expression::get_copy()const {
 
 bool Assignment_Expression::has_value()const {
 	return right_expression().has_value();
+}
+
+void Assignment_Expression::process(){
+	Binary_Expression::process();
+	left_expression().set_value(right_expression().get_value());
 }
 
 }
