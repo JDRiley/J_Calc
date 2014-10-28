@@ -5,6 +5,9 @@
 #include "Statement_Block.h"
 //
 #include "J_Symbol_Scope.h"
+//
+#include <iostream>
+using std::cerr;
 namespace jomike{
 
 
@@ -114,13 +117,21 @@ j_value For_Statement::derived_get_value(const Arguments& i_args)const {
 	M_init_statement->process();
 	
 	M_test_expression->process();
+	
+	J_Modder<100> modder;
 	while(M_test_expression->get_value(i_args).as_bool()){
+	
 		
-
 		M_statement_block->process();
 		value = M_statement_block->get_value(i_args);
+		
+		if(modder.tick()){
+			cerr << "\nI Value: " << running_scope.get_symbol("i")->get_value().as_llint() << " "
+				<< value.as_double();
+		}
 		M_post_expression->process();
 		M_test_expression->process();
+
 
 	}
 	return value;
