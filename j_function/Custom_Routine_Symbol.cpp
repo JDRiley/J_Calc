@@ -117,7 +117,7 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 }
 
 void Custom_Routine_Symbol::process(){
-
+	symbol_scope().add_symbol(get_copy());
 }
 
 void Custom_Routine_Symbol::alert_symbol_scope_set(){

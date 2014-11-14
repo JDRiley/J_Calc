@@ -75,7 +75,7 @@ void Call_Expression::process(){
 
 	try{
 		auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
-		symbol->process();
+		//symbol->process();
 		set_type_syntax(symbol->return_type_syntax());
 	} catch(J_Symbol_Error&){
 

@@ -54,7 +54,7 @@
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
-
+#include "../Modulo_Expression.h"
 #include "../Specific_Symbol_List.h"
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
@@ -485,7 +485,7 @@ namespace yy {
     {
 	(yyval.statement) = (yysemantic_stack_[(2) - (1)].declaration);
 	*i_symbol_ptr = (yysemantic_stack_[(2) - (1)].declaration)->get_copy();
-	add_user_symbol((yysemantic_stack_[(2) - (1)].declaration));
+	//add_user_symbol($1);
 	return true;
 }
     break;
@@ -810,7 +810,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 347 "parser/parser.y"
     {
-	(yyval.expression) = new Pre_Increment_Expression((yysemantic_stack_[(2) - (2)].expression));
+	(yyval.expression) = new Modulo_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 }
     break;
 
@@ -818,7 +818,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 350 "parser/parser.y"
     {
-	(yyval.expression) = new Pre_Decrement_Expression((yysemantic_stack_[(2) - (2)].expression));
+	(yyval.expression) = new Pre_Increment_Expression((yysemantic_stack_[(2) - (2)].expression));
 }
     break;
 
@@ -826,7 +826,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 353 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER);
+	(yyval.expression) = new Pre_Decrement_Expression((yysemantic_stack_[(2) - (2)].expression));
 }
     break;
 
@@ -834,7 +834,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 356 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER);
 }
     break;
 
@@ -842,7 +842,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 359 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER_EQUAL);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS);
 }
     break;
 
@@ -850,7 +850,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 362 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS_EQUAL);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::GREATER_EQUAL);
 }
     break;
 
@@ -858,7 +858,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 365 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::AND);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::LESS_EQUAL);
 }
     break;
 
@@ -866,7 +866,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 368 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::OR);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::AND);
 }
     break;
 
@@ -874,7 +874,7 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 371 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::EQUAL);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::OR);
 }
     break;
 
@@ -882,29 +882,29 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 374 "parser/parser.y"
     {
-	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::NOT_EQUAL);
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::EQUAL);
 }
     break;
 
   case 52:
 /* Line 670 of lalr1.cc  */
 #line 377 "parser/parser.y"
-    {(yyval.expression) = (yysemantic_stack_[(3) - (2)].expression);  }
+    {
+	(yyval.expression) = new Relational_Binary_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression), Operators::NOT_EQUAL);
+}
     break;
 
   case 53:
 /* Line 670 of lalr1.cc  */
-#line 378 "parser/parser.y"
-    {
-	(yyval.expression) = new Unary_Negate_Expression((yysemantic_stack_[(2) - (2)].expression));
-}
+#line 380 "parser/parser.y"
+    {(yyval.expression) = (yysemantic_stack_[(3) - (2)].expression);  }
     break;
 
   case 54:
 /* Line 670 of lalr1.cc  */
-#line 384 "parser/parser.y"
+#line 381 "parser/parser.y"
     {
-	(yyval.expression) = new Void_Empty_Expression;
+	(yyval.expression) = new Unary_Negate_Expression((yysemantic_stack_[(2) - (2)].expression));
 }
     break;
 
@@ -912,37 +912,45 @@ namespace yy {
 /* Line 670 of lalr1.cc  */
 #line 387 "parser/parser.y"
     {
-	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
+	(yyval.expression) = new Void_Empty_Expression;
 }
     break;
 
   case 56:
 /* Line 670 of lalr1.cc  */
-#line 392 "parser/parser.y"
+#line 390 "parser/parser.y"
+    {
+	(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression);
+}
+    break;
+
+  case 57:
+/* Line 670 of lalr1.cc  */
+#line 395 "parser/parser.y"
     {
 	(yyval.expression) = new Assignment_Expression((yysemantic_stack_[(3) - (1)].expression), (yysemantic_stack_[(3) - (3)].expression));
 	
 }
     break;
 
-  case 57:
-/* Line 670 of lalr1.cc  */
-#line 404 "parser/parser.y"
-    {(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression); }
-    break;
-
   case 58:
 /* Line 670 of lalr1.cc  */
 #line 407 "parser/parser.y"
+    {(yyval.expression) = (yysemantic_stack_[(1) - (1)].expression); }
+    break;
+
+  case 59:
+/* Line 670 of lalr1.cc  */
+#line 410 "parser/parser.y"
     {
 	(yyval.expression) = new Field_Access_Expression((yysemantic_stack_[(1) - (1)].identifier));
 	
 }
     break;
 
-  case 59:
+  case 60:
 /* Line 670 of lalr1.cc  */
-#line 418 "parser/parser.y"
+#line 421 "parser/parser.y"
     {
 	(yyval.expression) = new Call_Expression((yysemantic_stack_[(4) - (1)].identifier), (yysemantic_stack_[(4) - (3)].arguments));
 	
@@ -950,30 +958,30 @@ namespace yy {
 }
     break;
 
-  case 60:
-/* Line 670 of lalr1.cc  */
-#line 431 "parser/parser.y"
-    {(yyval.arguments) = new Arguments;}
-    break;
-
   case 61:
 /* Line 670 of lalr1.cc  */
-#line 432 "parser/parser.y"
-    {(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);}
+#line 434 "parser/parser.y"
+    {(yyval.arguments) = new Arguments;}
     break;
 
   case 62:
 /* Line 670 of lalr1.cc  */
-#line 436 "parser/parser.y"
+#line 435 "parser/parser.y"
+    {(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);}
+    break;
+
+  case 63:
+/* Line 670 of lalr1.cc  */
+#line 439 "parser/parser.y"
     {
 	(yyval.arguments) = (yysemantic_stack_[(1) - (1)].arguments);
 	
 }
     break;
 
-  case 63:
+  case 64:
 /* Line 670 of lalr1.cc  */
-#line 442 "parser/parser.y"
+#line 445 "parser/parser.y"
     {
 	(yyval.arguments) = new Arguments;
 	(yyval.arguments)->push_back((yysemantic_stack_[(1) - (1)].expression));
@@ -981,9 +989,9 @@ namespace yy {
 }
     break;
 
-  case 64:
+  case 65:
 /* Line 670 of lalr1.cc  */
-#line 447 "parser/parser.y"
+#line 450 "parser/parser.y"
     {
 	(yyval.arguments) = (yysemantic_stack_[(3) - (1)].arguments);
 	
@@ -992,35 +1000,35 @@ namespace yy {
 }
     break;
 
-  case 65:
+  case 66:
 /* Line 670 of lalr1.cc  */
-#line 456 "parser/parser.y"
+#line 459 "parser/parser.y"
     {
 	(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);
 }
     break;
 
-  case 66:
-/* Line 670 of lalr1.cc  */
-#line 459 "parser/parser.y"
-    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
-    break;
-
   case 67:
 /* Line 670 of lalr1.cc  */
-#line 460 "parser/parser.y"
-    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);  }
+#line 462 "parser/parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);}
     break;
 
   case 68:
 /* Line 670 of lalr1.cc  */
-#line 461 "parser/parser.y"
+#line 463 "parser/parser.y"
+    {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol);  }
+    break;
+
+  case 69:
+/* Line 670 of lalr1.cc  */
+#line 464 "parser/parser.y"
     {(yyval.constant_symbol) = (yysemantic_stack_[(1) - (1)].constant_symbol); }
     break;
 
 
 /* Line 670 of lalr1.cc  */
-#line 1024 "parser/math_parsing_unit.cc"
+#line 1032 "parser/math_parsing_unit.cc"
       default:
         break;
       }
@@ -1232,23 +1240,23 @@ namespace yy {
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char Math_Parsing_Unit::yypact_ninf_ = -53;
+  const signed char Math_Parsing_Unit::yypact_ninf_ = -54;
   const short int
   Math_Parsing_Unit::yypact_[] =
   {
-       175,   -53,   -53,   -53,   -53,   -53,   -39,   -53,   -53,   -53,
-     -53,    49,    -9,    -9,     3,   -29,    49,    30,   204,    25,
-      27,   -53,    62,   -53,    72,   333,   -53,    79,   -53,   -53,
-     -53,    49,    41,   -53,   -53,   -53,   -34,   -53,    49,   230,
-     -53,   -53,    60,   345,   -53,   -53,    57,    74,   -53,    49,
-      49,    49,    49,    49,    49,    49,    49,    49,    49,    49,
-      49,    49,   359,    59,   -53,    54,   -53,     3,   242,   -53,
-      92,   -27,    49,    93,    49,    49,   254,    -1,    18,    18,
-      51,    51,    51,    51,    41,    41,   -53,   -53,   359,   -53,
-      49,   -53,   -53,    49,    61,   -53,   -53,   -53,   -53,    71,
-     267,   -53,   -53,   289,    29,   359,   359,   359,   359,    73,
-     135,   -53,   -53,   -53,    68,   -53,    49,   -53,   311,    49,
-      78,    68,   -53
+       177,   -54,   -54,   -54,   -54,   -54,   -39,   -54,   -54,   -54,
+     -54,   213,    -9,    -9,     3,   -29,   213,    37,   206,    27,
+      60,   -54,    52,   -54,    57,   328,   -54,    67,   -54,   -54,
+     -54,   213,    17,   -54,   -54,   -54,   -34,   -54,   213,    59,
+     -54,   -54,    61,   341,   -54,   -54,    68,    54,   -54,   213,
+     213,   213,   213,   213,   213,   213,   213,   213,   213,   213,
+     213,   213,   213,   355,    48,   -54,    50,   -54,     3,   237,
+     -54,    94,   -27,   213,    83,   213,   213,   367,    -1,   133,
+     133,     5,     5,     5,     5,    17,    17,   -54,   -54,   -54,
+     355,   -54,   213,   -54,   -54,   213,    62,   -54,   -54,   -54,
+     -54,    66,   262,   -54,   -54,   284,    38,   355,   355,   355,
+     355,    73,   137,   -54,   -54,   -54,    70,   -54,   213,   -54,
+     306,   213,    72,    70,   -54
   };
 
   /* YYDEFACT[S] -- default reduction number in state S.  Performed when
@@ -1257,37 +1265,37 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yydefact_[] =
   {
-         0,    32,    31,    30,    29,    33,    58,    68,    65,    66,
-      67,     0,     0,     0,    19,     0,     0,     0,     0,     0,
-       0,    23,     0,    22,     0,     0,    34,    37,    57,    35,
-      36,    60,    53,    58,    43,    42,     0,    20,     0,     0,
+         0,    32,    31,    30,    29,    33,    59,    69,    66,    67,
+      68,     0,     0,     0,    19,     0,     0,     0,     0,     0,
+       0,    23,     0,    22,     0,     0,    34,    37,    58,    35,
+      36,    61,    54,    59,    44,    43,     0,    20,     0,     0,
        1,    16,    11,     0,     4,     3,     0,    26,     2,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    63,     0,    61,    62,    25,     0,     0,    52,
-       0,     0,     0,     0,     0,     0,    49,    48,    51,    50,
-      44,    45,    46,    47,    38,    39,    40,    41,    56,    59,
-       0,    21,    10,    54,     0,    15,    17,     6,     9,     0,
-       0,    13,    12,     0,     0,    28,    27,    64,    55,     0,
-       0,     7,     5,    14,     0,     8,     0,    24,     0,    54,
-       0,     0,    18
+       0,     0,     0,    64,     0,    62,    63,    25,     0,     0,
+      53,     0,     0,     0,     0,     0,     0,    50,    49,    52,
+      51,    45,    46,    47,    48,    38,    39,    40,    41,    42,
+      57,    60,     0,    21,    10,    55,     0,    15,    17,     6,
+       9,     0,     0,    13,    12,     0,     0,    28,    27,    65,
+      56,     0,     0,     7,     5,    14,     0,     8,     0,    24,
+       0,    55,     0,     0,    18
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yypgoto_[] =
   {
-       -53,   -53,     4,   -53,     2,   -52,   -53,   -53,   -53,     1,
-     -53,    69,   -53,    13,     0,     5,   -53,    75,   -53,   -53,
-     -53,   -53,   -53,   -53
+       -54,   -54,     4,   -54,     2,   -53,   -54,   -54,   -54,     1,
+     -54,    71,   -54,    13,     0,     8,   -54,    55,   -54,   -54,
+     -54,   -54,   -54,   -54
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const signed char
   Math_Parsing_Unit::yydefgoto_[] =
   {
-        -1,    17,    96,    18,    97,    42,    70,    98,    36,    99,
-      21,    22,    23,    24,   100,   109,    26,    27,    28,    29,
-      63,    64,    65,    30
+        -1,    17,    98,    18,    99,    42,    71,   100,    36,   101,
+      21,    22,    23,    24,   102,   111,    26,    27,    28,    29,
+      64,    65,    66,    30
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1297,45 +1305,46 @@ namespace yy {
   const unsigned char
   Math_Parsing_Unit::yytable_[] =
   {
-        25,    20,    19,    31,    66,    33,     1,     2,     3,     4,
-       5,    32,    67,    38,    15,    37,    39,    41,    43,   102,
+        25,    20,    19,    31,    67,    33,     1,     2,     3,     4,
+       5,    32,    68,    38,    15,    37,    39,    41,    43,   104,
       51,    52,    53,    54,    55,    56,    57,    58,    59,    60,
-      40,    62,     1,     2,     3,     4,     5,    44,    68,    45,
-      14,    53,    54,    55,    56,    57,    58,    59,    60,    76,
-      77,    78,    79,    80,    81,    82,    83,    84,    85,    86,
-      87,    88,   117,     6,     7,     8,     9,    10,    91,   122,
-      59,    60,   103,   101,   105,   106,    46,    11,    57,    58,
-      59,    60,    12,    13,    74,    75,    47,    34,    35,    61,
-     107,    16,    71,   108,    14,     1,     2,     3,     4,     5,
-      90,    93,    89,   110,   104,    94,     6,     7,     8,     9,
-      10,   111,    41,   115,   116,    73,   118,   114,     0,   108,
-      11,   121,     0,     0,   120,    12,    13,     0,     0,    14,
-       0,     0,     0,    15,    16,     0,     0,    95,     1,     2,
-       3,     4,     5,     0,    93,     0,     0,     0,    94,     6,
-       7,     8,     9,    10,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    11,     0,     0,     0,     0,    12,    13,
-       0,     0,    14,     0,     0,     0,    15,    16,     1,     2,
-       3,     4,     5,     0,     0,     0,     0,     0,     0,     6,
-       7,     8,     9,    10,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    11,     0,     0,     0,     0,    12,    13,
-       0,     0,    14,     0,     0,     0,    15,    16,     6,     7,
-       8,     9,    10,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    11,     0,     0,     0,     0,    12,    13,     0,
-       0,     0,     0,     0,     0,     0,    16,     0,    41,    49,
-      50,    51,    52,    53,    54,    55,    56,    57,    58,    59,
-      60,    49,    50,    51,    52,    53,    54,    55,    56,    57,
-      58,    59,    60,    69,    50,    51,    52,    53,    54,    55,
-      56,    57,    58,    59,    60,    92,    49,    50,    51,    52,
-      53,    54,    55,    56,    57,    58,    59,    60,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,   112,    49,    50,
+      61,    63,    57,    58,    59,    60,    61,    40,    69,    44,
+      14,     1,     2,     3,     4,     5,    59,    60,    61,    77,
+      78,    79,    80,    81,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,   119,    75,    76,    46,    34,    35,    93,
+     124,    47,    45,   105,   103,   107,   108,    62,    49,    50,
       51,    52,    53,    54,    55,    56,    57,    58,    59,    60,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,   113,
+      61,    91,   109,    72,   106,   110,    92,     1,     2,     3,
+       4,     5,    70,    95,   112,    14,   113,    96,     6,     7,
+       8,     9,    10,   117,    41,   123,   118,    74,   120,   116,
+       0,   110,    11,     0,     0,     0,     0,    12,    13,   122,
+       0,    14,     0,     0,     0,    15,    16,     0,     0,    97,
+       1,     2,     3,     4,     5,     0,    95,     0,     0,     0,
+      96,     6,     7,     8,     9,    10,    53,    54,    55,    56,
+      57,    58,    59,    60,    61,    11,     0,     0,     0,     0,
+      12,    13,     0,     0,    14,     0,     0,     0,    15,    16,
+       1,     2,     3,     4,     5,     0,     0,     0,     0,     0,
+       0,     6,     7,     8,     9,    10,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    11,     0,     0,     0,     0,
+      12,    13,     0,     0,    14,     0,     0,     0,    15,    16,
+       6,     7,     8,     9,    10,     0,     0,     6,     7,     8,
+       9,    10,     0,     0,    11,     0,     0,     0,     0,    12,
+      13,    11,     0,     0,     0,     0,    12,    13,    16,     0,
+      41,     0,     0,     0,     0,    16,    49,    50,    51,    52,
+      53,    54,    55,    56,    57,    58,    59,    60,    61,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+      94,    49,    50,    51,    52,    53,    54,    55,    56,    57,
+      58,    59,    60,    61,     0,     0,     0,     0,     0,     0,
+       0,     0,   114,    49,    50,    51,    52,    53,    54,    55,
+      56,    57,    58,    59,    60,    61,     0,     0,     0,     0,
+       0,     0,     0,     0,   115,    49,    50,    51,    52,    53,
+      54,    55,    56,    57,    58,    59,    60,    61,     0,     0,
+      48,     0,     0,     0,     0,     0,   121,    49,    50,    51,
+      52,    53,    54,    55,    56,    57,    58,    59,    60,    61,
       49,    50,    51,    52,    53,    54,    55,    56,    57,    58,
-      59,    60,     0,     0,     0,    48,     0,     0,     0,     0,
-       0,   119,    49,    50,    51,    52,    53,    54,    55,    56,
-      57,    58,    59,    60,    49,    50,    51,    52,    53,    54,
-      55,    56,    57,    58,    59,    60,     0,    72,    49,    50,
-      51,    52,    53,    54,    55,    56,    57,    58,    59,    60
+      59,    60,    61,    73,    49,    50,    51,    52,    53,    54,
+      55,    56,    57,    58,    59,    60,    61,    50,    51,    52,
+      53,    54,    55,    56,    57,    58,    59,    60,    61
   };
 
   /* YYCHECK.  */
@@ -1343,44 +1352,45 @@ namespace yy {
   Math_Parsing_Unit::yycheck_[] =
   {
          0,     0,     0,    42,    38,    14,     3,     4,     5,     6,
-       7,    11,    46,    42,    41,    14,    16,    44,    18,    71,
+       7,    11,    46,    42,    41,    14,    16,    44,    18,    72,
       21,    22,    23,    24,    25,    26,    27,    28,    29,    30,
-       0,    31,     3,     4,     5,     6,     7,    12,    38,    12,
-      37,    23,    24,    25,    26,    27,    28,    29,    30,    49,
+      31,    31,    27,    28,    29,    30,    31,     0,    38,    12,
+      37,     3,     4,     5,     6,     7,    29,    30,    31,    49,
       50,    51,    52,    53,    54,    55,    56,    57,    58,    59,
-      60,    61,   114,    14,    15,    16,    17,    18,    67,   121,
-      29,    30,    72,    71,    74,    75,    14,    28,    27,    28,
-      29,    30,    33,    34,    10,    11,    14,    12,    13,    10,
-      90,    42,    32,    93,    37,     3,     4,     5,     6,     7,
-      46,     9,    43,    42,    11,    13,    14,    15,    16,    17,
-      18,    40,    44,    40,   110,    46,   116,   104,    -1,   119,
-      28,    43,    -1,    -1,   119,    33,    34,    -1,    -1,    37,
-      -1,    -1,    -1,    41,    42,    -1,    -1,    45,     3,     4,
-       5,     6,     7,    -1,     9,    -1,    -1,    -1,    13,    14,
-      15,    16,    17,    18,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    28,    -1,    -1,    -1,    -1,    33,    34,
-      -1,    -1,    37,    -1,    -1,    -1,    41,    42,     3,     4,
-       5,     6,     7,    -1,    -1,    -1,    -1,    -1,    -1,    14,
-      15,    16,    17,    18,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    28,    -1,    -1,    -1,    -1,    33,    34,
-      -1,    -1,    37,    -1,    -1,    -1,    41,    42,    14,    15,
-      16,    17,    18,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    28,    -1,    -1,    -1,    -1,    33,    34,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    42,    -1,    44,    19,
-      20,    21,    22,    23,    24,    25,    26,    27,    28,    29,
-      30,    19,    20,    21,    22,    23,    24,    25,    26,    27,
-      28,    29,    30,    43,    20,    21,    22,    23,    24,    25,
-      26,    27,    28,    29,    30,    43,    19,    20,    21,    22,
-      23,    24,    25,    26,    27,    28,    29,    30,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    40,    19,    20,
+      60,    61,    62,   116,    10,    11,    14,    12,    13,    68,
+     123,    14,    12,    73,    72,    75,    76,    10,    19,    20,
       21,    22,    23,    24,    25,    26,    27,    28,    29,    30,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    40,
+      31,    43,    92,    32,    11,    95,    46,     3,     4,     5,
+       6,     7,    43,     9,    42,    37,    40,    13,    14,    15,
+      16,    17,    18,    40,    44,    43,   112,    46,   118,   106,
+      -1,   121,    28,    -1,    -1,    -1,    -1,    33,    34,   121,
+      -1,    37,    -1,    -1,    -1,    41,    42,    -1,    -1,    45,
+       3,     4,     5,     6,     7,    -1,     9,    -1,    -1,    -1,
+      13,    14,    15,    16,    17,    18,    23,    24,    25,    26,
+      27,    28,    29,    30,    31,    28,    -1,    -1,    -1,    -1,
+      33,    34,    -1,    -1,    37,    -1,    -1,    -1,    41,    42,
+       3,     4,     5,     6,     7,    -1,    -1,    -1,    -1,    -1,
+      -1,    14,    15,    16,    17,    18,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    28,    -1,    -1,    -1,    -1,
+      33,    34,    -1,    -1,    37,    -1,    -1,    -1,    41,    42,
+      14,    15,    16,    17,    18,    -1,    -1,    14,    15,    16,
+      17,    18,    -1,    -1,    28,    -1,    -1,    -1,    -1,    33,
+      34,    28,    -1,    -1,    -1,    -1,    33,    34,    42,    -1,
+      44,    -1,    -1,    -1,    -1,    42,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    29,    30,    31,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
+      43,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+      28,    29,    30,    31,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    40,    19,    20,    21,    22,    23,    24,    25,
+      26,    27,    28,    29,    30,    31,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    40,    19,    20,    21,    22,    23,
+      24,    25,    26,    27,    28,    29,    30,    31,    -1,    -1,
+      12,    -1,    -1,    -1,    -1,    -1,    40,    19,    20,    21,
+      22,    23,    24,    25,    26,    27,    28,    29,    30,    31,
       19,    20,    21,    22,    23,    24,    25,    26,    27,    28,
-      29,    30,    -1,    -1,    -1,    12,    -1,    -1,    -1,    -1,
-      -1,    40,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    -1,    32,    19,    20,
-      21,    22,    23,    24,    25,    26,    27,    28,    29,    30
+      29,    30,    31,    32,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    29,    30,    31
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1394,13 +1404,13 @@ namespace yy {
       70,    42,    61,    14,    64,    64,    55,    56,    42,    61,
        0,    44,    52,    61,    12,    12,    14,    14,    12,    19,
       20,    21,    22,    23,    24,    25,    26,    27,    28,    29,
-      30,    10,    61,    67,    68,    69,    38,    46,    61,    43,
-      53,    32,    32,    58,    10,    11,    61,    61,    61,    61,
-      61,    61,    61,    61,    61,    61,    61,    61,    61,    43,
-      46,    56,    43,     9,    13,    45,    49,    51,    54,    56,
-      61,    51,    52,    61,    11,    61,    61,    61,    61,    62,
-      42,    40,    40,    40,    60,    40,    49,    52,    61,    40,
-      62,    43,    52
+      30,    31,    10,    61,    67,    68,    69,    38,    46,    61,
+      43,    53,    32,    32,    58,    10,    11,    61,    61,    61,
+      61,    61,    61,    61,    61,    61,    61,    61,    61,    61,
+      61,    43,    46,    56,    43,     9,    13,    45,    49,    51,
+      54,    56,    61,    51,    52,    61,    11,    61,    61,    61,
+      61,    62,    42,    40,    40,    40,    60,    40,    49,    52,
+      61,    40,    62,    43,    52
   };
 
 #if YYDEBUG
@@ -1426,8 +1436,8 @@ namespace yy {
       55,    55,    56,    56,    57,    58,    59,    59,    59,    60,
       60,    60,    60,    60,    61,    61,    61,    61,    61,    61,
       61,    61,    61,    61,    61,    61,    61,    61,    61,    61,
-      61,    61,    61,    61,    62,    62,    63,    64,    65,    66,
-      67,    67,    68,    69,    69,    70,    70,    70,    70
+      61,    61,    61,    61,    61,    62,    62,    63,    64,    65,
+      66,    67,    67,    68,    69,    69,    70,    70,    70,    70
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1438,9 +1448,9 @@ namespace yy {
        4,     2,     4,     4,     5,     3,     0,     2,     8,     0,
        1,     3,     1,     1,     6,     3,     2,     4,     4,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     3,     3,
-       3,     3,     2,     2,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     2,     0,     1,     3,     1,     1,     4,
-       0,     1,     1,     1,     3,     1,     1,     1,     1
+       3,     3,     3,     2,     2,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     2,     0,     1,     3,     1,     1,
+       4,     0,     1,     1,     1,     3,     1,     1,     1,     1
   };
 
 #if YYDEBUG
@@ -1484,15 +1494,15 @@ namespace yy {
       61,    -1,     6,    -1,     5,    -1,     4,    -1,     3,    -1,
        7,    -1,    63,    -1,    66,    -1,    70,    -1,    64,    -1,
       61,    27,    61,    -1,    61,    28,    61,    -1,    61,    29,
-      61,    -1,    61,    30,    61,    -1,    34,    64,    -1,    33,
-      64,    -1,    61,    23,    61,    -1,    61,    24,    61,    -1,
-      61,    25,    61,    -1,    61,    26,    61,    -1,    61,    20,
-      61,    -1,    61,    19,    61,    -1,    61,    22,    61,    -1,
-      61,    21,    61,    -1,    42,    61,    43,    -1,    28,    61,
-      -1,    -1,    61,    -1,    64,    10,    61,    -1,    65,    -1,
-      14,    -1,    14,    42,    67,    43,    -1,    -1,    68,    -1,
-      69,    -1,    61,    -1,    69,    46,    61,    -1,    16,    -1,
-      17,    -1,    18,    -1,    15,    -1
+      61,    -1,    61,    30,    61,    -1,    61,    31,    61,    -1,
+      34,    64,    -1,    33,    64,    -1,    61,    23,    61,    -1,
+      61,    24,    61,    -1,    61,    25,    61,    -1,    61,    26,
+      61,    -1,    61,    20,    61,    -1,    61,    19,    61,    -1,
+      61,    22,    61,    -1,    61,    21,    61,    -1,    42,    61,
+      43,    -1,    28,    61,    -1,    -1,    61,    -1,    64,    10,
+      61,    -1,    65,    -1,    14,    -1,    14,    42,    67,    43,
+      -1,    -1,    68,    -1,    69,    -1,    61,    -1,    69,    46,
+      61,    -1,    16,    -1,    17,    -1,    18,    -1,    15,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1504,9 +1514,9 @@ namespace yy {
       26,    31,    34,    39,    44,    50,    54,    55,    58,    67,
       68,    70,    74,    76,    78,    85,    89,    92,    97,   102,
      104,   106,   108,   110,   112,   114,   116,   118,   120,   124,
-     128,   132,   136,   139,   142,   146,   150,   154,   158,   162,
-     166,   170,   174,   178,   181,   182,   184,   188,   190,   192,
-     197,   198,   200,   202,   204,   208,   210,   212,   214
+     128,   132,   136,   140,   143,   146,   150,   154,   158,   162,
+     166,   170,   174,   178,   182,   185,   186,   188,   192,   194,
+     196,   201,   202,   204,   206,   208,   212,   214,   216,   218
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
@@ -1518,8 +1528,8 @@ namespace yy {
      253,   257,   264,   265,   272,   281,   288,   292,   298,   308,
      309,   310,   311,   312,   316,   320,   324,   327,   331,   334,
      339,   344,   347,   350,   353,   356,   359,   362,   365,   368,
-     371,   374,   377,   378,   384,   387,   392,   404,   407,   418,
-     431,   432,   436,   442,   447,   456,   459,   460,   461
+     371,   374,   377,   380,   381,   387,   390,   395,   407,   410,
+     421,   434,   435,   439,   445,   450,   459,   462,   463,   464
   };
 
   // Print the state stack on the debug stream.
@@ -1596,7 +1606,7 @@ namespace yy {
   }
 
   const int Math_Parsing_Unit::yyeof_ = 0;
-  const int Math_Parsing_Unit::yylast_ = 389;
+  const int Math_Parsing_Unit::yylast_ = 398;
   const int Math_Parsing_Unit::yynnts_ = 24;
   const int Math_Parsing_Unit::yyempty_ = -2;
   const int Math_Parsing_Unit::yyfinal_ = 40;
@@ -1610,9 +1620,9 @@ namespace yy {
 
 } // yy
 /* Line 1141 of lalr1.cc  */
-#line 1614 "parser/math_parsing_unit.cc"
+#line 1624 "parser/math_parsing_unit.cc"
 /* Line 1142 of lalr1.cc  */
-#line 465 "parser/parser.y"
+#line 468 "parser/parser.y"
 
 
 /* The closing %% above marks the end of the Rules section and the beginning

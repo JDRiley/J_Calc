@@ -28,7 +28,7 @@
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
-
+#include "../Modulo_Expression.h"
 #include "../Specific_Symbol_List.h"
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
@@ -179,7 +179,7 @@ Input_Line
 |Declaration T_END{
 	$$ = $1;
 	*i_symbol_ptr = $1->get_copy();
-	add_user_symbol($1);
+	//add_user_symbol($1);
 	return true;
 }
 | If_Statement T_END{
@@ -343,6 +343,9 @@ Expression
 }
 | Expression '/' Expression { 
 	$$ = new Division_Expression($1, $3);
+}
+| Expression '%' Expression{
+	$$ = new Modulo_Expression($1, $3);
 }
 | T_INCREMENT LValue{
 	$$ = new Pre_Increment_Expression($2);
