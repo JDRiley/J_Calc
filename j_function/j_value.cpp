@@ -634,22 +634,22 @@ void j_value::convert_to_type(Value_Types i_type){
 		throw J_Value_Error("Cannot convert j_value type when j_value has no value");
 	}
 
-	j_value temp_type(*this);
-	J_Unit old_units = temp_type.units();
+	j_value temp_val(*this);
+	J_Unit old_units = temp_val.units();
 	clear();
 
 	switch(i_type){
 	case j_value::Value_Types::LL_INTEGER:
-		(*this) = j_value(temp_type.as_llint(), old_units);
+		(*this) = j_value(temp_val.as_llint(), old_units);
 		break;
 	case j_value::Value_Types::DOUBLE:
-		(*this) = j_value(temp_type.as_double(), old_units);
+		(*this) = j_value(temp_val.as_double(), old_units);
 		break;
 	case j_value::Value_Types::BOOL:
-		(*this) = j_value(temp_type.as_bool(), old_units);
+		(*this) = j_value(temp_val.as_bool(), old_units);
 		break;
 	case j_value::Value_Types::STRING:
-		(*this) = j_value(temp_type.as_string(), old_units);
+		(*this) = j_value(temp_val.as_string(), old_units);
 		break;
 	case j_value::Value_Types::UNDEFINIED:
 	default:
