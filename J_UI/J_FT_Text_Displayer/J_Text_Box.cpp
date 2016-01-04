@@ -858,14 +858,17 @@ void J_Text_Box::scroll(int i_scroll_val){
 		return;
 	}
 
+	//-0.9 instead of -1 to allow for some overscrolling to see bottom of letters
+	const j_float MAXIMUM_OVER_FLOAT = -0.9f;
+	j_float last_y_pos = M_pen_poses.back().second;
 	if(scroll_size < 0){
 		j_float scroll_size_to_default
 			= default_pen_pos().second - M_pen_poses.front().second;
 		scroll_size = max(scroll_size, scroll_size_to_default);
-	} else if(M_pen_poses.back().second > -1.0f){
+	} else if(last_y_pos > MAXIMUM_OVER_FLOAT){ 
 		return;
 	} else{
-		scroll_size = min(scroll_size, -1.0f - M_pen_poses.back().second);
+		scroll_size = min(scroll_size, MAXIMUM_OVER_FLOAT - last_y_pos);
 	}
 	auto new_starting_pen_pos = M_pen_poses.front();
 	new_starting_pen_pos.second += scroll_size;
