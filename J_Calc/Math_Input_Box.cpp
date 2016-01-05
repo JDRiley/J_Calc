@@ -108,6 +108,9 @@ void Math_Input_Box::math_key_input_cmd(J_Text_Box_Object_Shared_t i_text_box, i
 		case J_KEY_RIGHT:
 			math_box->move_cursor(1);
 			return;
+		case J_KEY_KP_ENTER:
+			math_box->eval_and_break_line_input();
+			return;
 		default:
 			;
 		}

@@ -108,7 +108,7 @@ public:
 	j_value& operator-=(const j_value&);
 	j_value& operator*=(const j_value&);
 	j_value& operator/=(const j_value&);
-	j_value& operator%=(const j_value&);;
+	j_value& operator%=(const j_value&);
 	j_value& operator++();
 	j_value& operator--();
 

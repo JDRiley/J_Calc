@@ -174,7 +174,7 @@ void J_Calc_Controller::execute(){
 	M_main_view->open_window();
 	
 #ifdef _DEBUG
-	run_script("button_press.jcs");
+	run_script("loop_test.jcs");
 	//run_script("button_press.jcs");
 #else
 	run_script("button_press.jcs");
@@ -271,8 +271,6 @@ J_Calc_Controller::~J_Calc_Controller(){
 
 void J_Calc_Controller::clear_all(){
 	J_UI_Controller::clear_all();
-	
-
 }
 
 
