@@ -21,11 +21,13 @@ public:
 	J_UI_Multi_String(const J_UI_String&);
 
 	J_UI_Multi_String(J_UI_Multi_String&&);
+	J_UI_Multi_String(const J_UI_Multi_String&) = default;
 
 	template<typename Iter>
 	J_UI_Multi_String(Iter, Iter);
 
 	J_UI_Multi_String& operator=(J_UI_Multi_String&&);
+	J_UI_Multi_String& operator=(const J_UI_Multi_String&) = default;
 
 	void swap(J_UI_Multi_String&);
 	const Bitmap_Metrics& bitmap_metric(j_size_t i_index)const;

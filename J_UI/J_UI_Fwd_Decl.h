@@ -16,7 +16,7 @@ typedef struct FT_LibraryRec_* FT_Library;
 
 
 
-#pragma comment(lib, "J_UI"J_LIB_APPEND)
+#pragma comment(lib, "J_UI" J_LIB_APPEND)
 
 namespace jomike{
 enum class UI_Object_Types{

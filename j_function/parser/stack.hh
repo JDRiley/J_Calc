@@ -31,19 +31,19 @@
    version 2.2 of Bison.  */
 
 /**
- ** \file parser/stack.hh
+ ** \file stack.hh
  ** Define the yy::stack class.
  */
 
-#ifndef YY_YY_PARSER_STACK_HH_INCLUDED
-# define YY_YY_PARSER_STACK_HH_INCLUDED
+#ifndef YY_YY_STACK_HH_INCLUDED
+# define YY_YY_STACK_HH_INCLUDED
 
 # include <deque>
 
 
 namespace yy {
 /* Line 34 of stack.hh  */
-#line 47 "parser/stack.hh"
+#line 47 "stack.hh"
   template <class T, class S = std::deque<T> >
   class stack
   {
@@ -128,6 +128,6 @@ namespace yy {
 
 } // yy
 /* Line 116 of stack.hh  */
-#line 132 "parser/stack.hh"
+#line 132 "stack.hh"
 
-#endif /* !YY_YY_PARSER_STACK_HH_INCLUDED  */
+#endif /* !YY_YY_STACK_HH_INCLUDED  */

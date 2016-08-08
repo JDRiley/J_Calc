@@ -444,10 +444,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="parser\Math_Lexer.h">
+    <CustomBuild Include="parser\parser.h">
       <Filter>Header Files\parser</Filter>
     </CustomBuild>
-    <CustomBuild Include="parser\parser.h">
+    <CustomBuild Include="parser\Math_Lexer.h">
       <Filter>Header Files\parser</Filter>
     </CustomBuild>
   </ItemGroup>

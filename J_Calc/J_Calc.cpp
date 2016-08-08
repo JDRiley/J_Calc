@@ -12,7 +12,7 @@
 #endif //WIN32
 
 namespace jtl = jomike;
-#ifdef soijs //RELEASE_BUILD
+#ifdef RELEASE_BUILD
 
 int wWinMain(HINSTANCE , HINSTANCE , PTSTR  , int ){
 	int argc = 0;

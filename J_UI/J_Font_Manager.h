@@ -16,7 +16,7 @@
 #include <string>
 
 
-#pragma comment(lib, "freetype250MT"J_LIB_APPEND)
+#pragma comment(lib, "freetype264MT" J_LIB_APPEND)
 
 
 namespace jomike{

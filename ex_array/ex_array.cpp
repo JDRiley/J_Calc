@@ -16,7 +16,7 @@ using std::copy;using std::equal; using std::uniform_int_distribution; using std
 #include <Windows.h>
 #endif 
 
-//Container
+//ContainerJ:\Code\Tools\bin
 #include <array>
 #include <vector>
 using std::array;
@@ -38,6 +38,7 @@ template class ex_array<int>;
 class Test_Class{
 public:
 	Test_Class(int i_size):M_data(i_size, 0){}
+	Test_Class(const Test_Class&) = default;
 	Test_Class(Test_Class&& irr_source):M_data(move(irr_source.M_data)){}
 	~Test_Class(){}
 private:

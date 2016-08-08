@@ -1,6 +1,6 @@
-#line 2 "parser/Math_YY_Lex.cpp"
+#line 2 "Math_YY_Lex.cpp"
 
-#line 4 "parser/Math_YY_Lex.cpp"
+#line 4 "Math_YY_Lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -583,12 +583,12 @@ static yyconst flex_int16_t yy_rule_linenum[36] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "parser/Math_Lexer.l"
+#line 1 "Math_Lexer.l"
 /* File:  scanner.l
  * ----------------
  * Lex inupt file to generate the scanner for the compiler.
  */
-#line 9 "parser/Math_Lexer.l"
+#line 9 "Math_Lexer.l"
 
 #include "Math_Lexer.h"
 #include "../Constant_Symbol_Factory.h"
@@ -623,24 +623,17 @@ using namespace jomike;
  * -----------
  * To make our rules more readable, we establish some definitions here.
  */
-#line 627 "parser/Math_YY_Lex.cpp"
+#line 627 "Math_YY_Lex.cpp"
 
 #define INITIAL 0
 #define N 1
 #define COPY 2
 #define COMM 3
 
-#ifndef YY_NO_UNISTD_H
-/* Special case for "unistd.h", since it is non-ANSI. We include it way
- * down here because we want the user's section 1 to have been scanned first.
- * The user has a chance to override it with an option.
- */
-/* %if-c-only */
-/* %endif */
-/* %if-c++-only */
-#include <unistd.h>
-/* %endif */
-#endif
+/*windows compatibility case*/
+#include <io.h>
+#define isatty _isatty
+#define fileno _fileno
     
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *
@@ -783,11 +776,11 @@ YY_DECL
 	register int yy_act;
     
 /* %% [7.0] user's declarations go here */
-#line 63 "parser/Math_Lexer.l"
+#line 63 "Math_Lexer.l"
 
              /* BEGIN RULES SECTION */
 
-#line 791 "parser/Math_YY_Lex.cpp"
+#line 784 "Math_YY_Lex.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -902,155 +895,155 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "parser/Math_Lexer.l"
+#line 66 "Math_Lexer.l"
 { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
                          M_lines.push_back(yytext);
                          M_current_collumn = 1; yy_pop_state(); yyless(0); }
 	YY_BREAK
 case YY_STATE_EOF(COPY):
-#line 70 "parser/Math_Lexer.l"
+#line 70 "Math_Lexer.l"
 { yy_pop_state();}
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 71 "parser/Math_Lexer.l"
+#line 71 "Math_Lexer.l"
 { M_current_line++; M_current_collumn = 1;                          
 						if (YYSTATE == COPY) M_lines.push_back("");
                          else yy_push_state(COPY); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 75 "parser/Math_Lexer.l"
+#line 75 "Math_Lexer.l"
 { /* ignore all spaces */  }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 76 "parser/Math_Lexer.l"
+#line 76 "Math_Lexer.l"
 { M_current_collumn += (TAB_SIZE - (M_current_collumn - 1) % TAB_SIZE) % TAB_SIZE; }
 	YY_BREAK
 /* -------------------- Comments ----------------------------- */
 case 5:
 YY_RULE_SETUP
-#line 79 "parser/Math_Lexer.l"
+#line 79 "Math_Lexer.l"
 { BEGIN(COMM); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 80 "parser/Math_Lexer.l"
+#line 80 "Math_Lexer.l"
 { BEGIN(N); }
 	YY_BREAK
 case YY_STATE_EOF(COMM):
-#line 81 "parser/Math_Lexer.l"
+#line 81 "Math_Lexer.l"
 { assert(0); 
                          return static_cast<token_t>(0); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 83 "parser/Math_Lexer.l"
+#line 83 "Math_Lexer.l"
 { /* ignore everything else that doesn't match */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 84 "parser/Math_Lexer.l"
+#line 84 "Math_Lexer.l"
 { /* skip to end of line for // comment */ }
 	YY_BREAK
 /* --------------------- Keywords ------------------------------- */
 case 9:
 YY_RULE_SETUP
-#line 89 "parser/Math_Lexer.l"
+#line 89 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_INT;		}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 90 "parser/Math_Lexer.l"
+#line 90 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_DOUBLE;		}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 91 "parser/Math_Lexer.l"
+#line 91 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_BOOL;		}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 92 "parser/Math_Lexer.l"
+#line 92 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_STRING;		}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 93 "parser/Math_Lexer.l"
+#line 93 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_NULL_PTR;        }			
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 94 "parser/Math_Lexer.l"
+#line 94 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_VOID;		}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 95 "parser/Math_Lexer.l"
+#line 95 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_TRANSFER;	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 96 "parser/Math_Lexer.l"
+#line 96 "Math_Lexer.l"
 {MANAGE_LOC  return token_t::T_FOR;		}
 	YY_BREAK
 /* -------------------- Operators ----------------------------- */
 case 17:
 YY_RULE_SETUP
-#line 100 "parser/Math_Lexer.l"
+#line 100 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_LESS_EQUAL;   }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 101 "parser/Math_Lexer.l"
+#line 101 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_GREATER_EQUAL;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 102 "parser/Math_Lexer.l"
+#line 102 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_EQUAL;       }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 103 "parser/Math_Lexer.l"
+#line 103 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_NOT_EQUAL;    }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 104 "parser/Math_Lexer.l"
+#line 104 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_AND;         }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 105 "parser/Math_Lexer.l"
+#line 105 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_OR;          }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 106 "parser/Math_Lexer.l"
+#line 106 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_LEFT_ARROW;          }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 107 "parser/Math_Lexer.l"
+#line 107 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_RIGHT_ARROW;          }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 108 "parser/Math_Lexer.l"
+#line 108 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_INCREMENT;          }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 109 "parser/Math_Lexer.l"
+#line 109 "Math_Lexer.l"
 { MANAGE_LOC return token_t::T_DECREMENT;          }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(N):
-#line 115 "parser/Math_Lexer.l"
+#line 115 "Math_Lexer.l"
 {
 	MANAGE_LOC 
 	return token_t::T_END;
@@ -1058,13 +1051,13 @@ case YY_STATE_EOF(N):
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 120 "parser/Math_Lexer.l"
+#line 120 "Math_Lexer.l"
 {MANAGE_LOC  return static_cast<token_t>(yytext[0]);}
 	YY_BREAK
 /* -------------------- Constants ------------------------------ */
 case 28:
 YY_RULE_SETUP
-#line 127 "parser/Math_Lexer.l"
+#line 127 "Math_Lexer.l"
 {yylval->constant_symbol
 	= make_bool_constant_symbol('t' == yytext[0] ? true : false, M_location);
 	MANAGE_LOC return token_t::T_BOOL_CONSTANT;
@@ -1072,7 +1065,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 133 "parser/Math_Lexer.l"
+#line 133 "Math_Lexer.l"
 {
 	int val = strtol(yytext, NULL, 10);
 	yylval->constant_symbol
@@ -1083,7 +1076,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 140 "parser/Math_Lexer.l"
+#line 140 "Math_Lexer.l"
 {int val = strtol(yytext, NULL, 16);
 	yylval->constant_symbol
 		= make_int_constant_symbol(
@@ -1092,7 +1085,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 145 "parser/Math_Lexer.l"
+#line 145 "Math_Lexer.l"
 {j_dbl val = atof(yytext);
 	yylval->constant_symbol
 		= make_double_constant_symbol(val, M_location);
@@ -1100,7 +1093,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 150 "parser/Math_Lexer.l"
+#line 150 "Math_Lexer.l"
 {
 	std::string string_val(yytext+1);
 	assert('"' == string_val.back());
@@ -1111,28 +1104,28 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 157 "parser/Math_Lexer.l"
+#line 157 "Math_Lexer.l"
 {MANAGE_LOC throw J_Syntax_Error("Unterminaned String");}
 	YY_BREAK
 /* -------------------- Identifiers --------------------------- */
 case 34:
 YY_RULE_SETUP
-#line 161 "parser/Math_Lexer.l"
+#line 161 "Math_Lexer.l"
 {yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
 						MANAGE_LOC return token_t::T_IDENTIFIER; }
 	YY_BREAK
 /* -------------------- Default rule (error) -------------------- */
 case 35:
 YY_RULE_SETUP
-#line 166 "parser/Math_Lexer.l"
+#line 166 "Math_Lexer.l"
 { std::cerr << "Unrecognized Character";MANAGE_LOC  return token_t(0);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 168 "parser/Math_Lexer.l"
+#line 168 "Math_Lexer.l"
 ECHO;
 	YY_BREAK
-#line 1136 "parser/Math_YY_Lex.cpp"
+#line 1129 "Math_YY_Lex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2169,7 +2162,7 @@ void yyfree (void * ptr )
 
 /* %ok-for-header */
 
-#line 167 "parser/Math_Lexer.l"
+#line 167 "Math_Lexer.l"
 
 
 

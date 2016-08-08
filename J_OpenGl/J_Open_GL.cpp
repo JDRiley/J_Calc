@@ -194,7 +194,7 @@ void J_Open_GL::vertix_attribute_pointer(
 	int i_index, int i_size, GL_Types i_data_type, bool i_normalized, int i_stride, int i_offset){
 
 	glVertexAttribPointer(i_index, i_size, gl_types_array[ static_cast<int>(i_data_type)]
-						  , i_normalized, i_stride, reinterpret_cast<void*>(i_offset));
+						  , i_normalized, i_stride, reinterpret_cast<void*>(static_cast<std::ptrdiff_t>(i_offset)));
 
 	assert(!open_gl_error());
 }

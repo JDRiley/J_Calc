@@ -16,7 +16,7 @@
 #include <sstream>
 
 
-#pragma comment(lib, "J_String"J_LIB_APPEND)
+#pragma comment(lib, "J_String" J_LIB_APPEND)
 
 namespace jomike{
 

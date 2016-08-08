@@ -31,18 +31,18 @@
    version 2.2 of Bison.  */
 
 /**
- ** \file parser/math_parsing_unit.hh
+ ** \file math_parsing_unit.hh
  ** Define the yy::parser class.
  */
 
 /* C++ LALR(1) parser skeleton written by Akim Demaille.  */
 
-#ifndef YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED
-# define YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED
+#ifndef YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
+# define YY_YY_MATH_PARSING_UNIT_HH_INCLUDED
 
 /* "%code requires" blocks.  */
 /* Line 33 of lalr1.cc  */
-#line 78 "parser/parser.y"
+#line 78 "parser.y"
 
 #include "../J_Symbol_Fwd_Decl.h"
 
@@ -50,7 +50,7 @@
 
 
 /* Line 33 of lalr1.cc  */
-#line 54 "parser/math_parsing_unit.hh"
+#line 54 "math_parsing_unit.hh"
 
 
 #include <string>
@@ -66,7 +66,7 @@
 
 namespace yy {
 /* Line 33 of lalr1.cc  */
-#line 70 "parser/math_parsing_unit.hh"
+#line 70 "math_parsing_unit.hh"
 
   /// A Bison parser.
   class Math_Parsing_Unit
@@ -286,8 +286,8 @@ namespace yy {
 
 } // yy
 /* Line 33 of lalr1.cc  */
-#line 290 "parser/math_parsing_unit.hh"
+#line 290 "math_parsing_unit.hh"
 
 
 
-#endif /* !YY_YY_PARSER_MATH_PARSING_UNIT_HH_INCLUDED  */
+#endif /* !YY_YY_MATH_PARSING_UNIT_HH_INCLUDED  */

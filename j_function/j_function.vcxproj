@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,26 +26,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -166,6 +166,13 @@
     <ClInclude Include="Expression_List.h" />
     <ClInclude Include="Expression_Statement.h" />
     <ClInclude Include="Modulo_Expression.h" />
+    <CustomBuild Include="parser\Math_Lexer.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_flex -d --outfile="Math_YY_Lex.cpp" --wincompat --c++ Math_Lexer.l</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_flex -d --outfile="parser/Math_YY_Lex.cpp" --wincompat --c++ parser/Math_Lexer.l</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)Math_YY_Lex.cpp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)Math_Lexer.l</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+    </CustomBuild>
     <ClInclude Include="Void_Empty_Expression.h" />
     <ClInclude Include="Field_Access_Expression.h" />
     <ClInclude Include="If_Statement.h" />
@@ -199,24 +206,6 @@
     <ClInclude Include="parser\j_yy_stack.h" />
     <ClInclude Include="parser\Lexer_Location.h" />
     <ClInclude Include="For_Statement.h" />
-    <CustomBuild Include="parser\Math_Lexer.h">
-      <AdditionalInputs>Math_Lexer.h;Math_Lexer.l;</AdditionalInputs>
-      <Command>win_flex -d -oparser/Math_YY_Lex.cpp parser/Math_Lexer.l</Command>
-      <Message>win_flex -d -oparser/Math_YY_Lex.cpp parser/Math_Lexer.l</Message>
-      <Outputs>parser/Math_YY_Lex.cpp;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">parser/Math_YY_Lex.cpp;</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">parser/Math_Lexer.l;</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser/Math_YY_Lex.cpp;</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">parser/Math_Lexer.l;</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">parser/Math_YY_Lex.cpp;</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">parser/Math_Lexer.l;</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">parser/Math_YY_Lex.cpp;</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">parser/Math_Lexer.l;</AdditionalInputs>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-    </CustomBuild>
     <ClInclude Include="parser\Math_Parser.h" />
     <ClInclude Include="parser\math_parsing_unit.hh" />
     <CustomBuild Include="parser\parser.h">
@@ -225,10 +214,14 @@
       <Message>win_bison -v -t --defines=math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Message>
       <Outputs>parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
       <LinkObjects>false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=parser/math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=parser/math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_bison -v -t --defines=parser/math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_bison -v -t --defines=parser/math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)math_parsing_unit.cc;%(RootDir)%(Directory)math_parsing_unit.hh</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)parser.y;</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)math_parsing_unit.cc;%(RootDir)%(Directory)math_parsing_unit.hh</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)parser.y;</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="Pre_Decrement_Expression.h" />
     <ClInclude Include="Pre_Increment_Expression.h" />

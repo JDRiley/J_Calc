@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <wchar.h>
+//#include <wchar.h>
 
 #define VLD_OPT_AGGREGATE_DUPLICATES    0x0001 //   If set, aggregate duplicate leaks in the leak report.
 #define VLD_OPT_MODULE_LIST_INCLUDE     0x0002 //   If set, modules in the module list are included, all others are excluded.

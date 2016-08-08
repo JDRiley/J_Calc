@@ -5,7 +5,7 @@
 #include <J_Fwd_Decl.h>
 
 #ifdef WIN32
-#pragma comment(lib, "J_Geometry"J_LIB_APPEND)
+#pragma comment(lib, "J_Geometry" J_LIB_APPEND)
 #endif//WIN32
 
 namespace jomike{

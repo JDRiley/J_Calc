@@ -3,7 +3,7 @@
 
 #include <J_Fwd_Decl.h>
 
-#pragma comment(lib, "J_Math"J_LIB_APPEND)
+#pragma comment(lib, "J_Math" J_LIB_APPEND)
 
 namespace jomike{
 

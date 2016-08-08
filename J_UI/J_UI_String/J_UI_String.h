@@ -61,6 +61,7 @@ public:
 	J_UI_String(Iter, Iter);
 
 	J_UI_String& operator=(J_UI_String&&);
+	J_UI_String& operator=(const J_UI_String&) = default;
 
 	void swap(J_UI_String&);
 
