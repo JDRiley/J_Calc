@@ -7,8 +7,7 @@
 namespace jomike{
 class j_declaration : public j_statement{
 public:
-	j_declaration(Type_Syntax* i_type_syntax, J_Symbol_Identifier* irk_name);
-
+	using j_statement::j_statement;
 
 	j_declaration(const j_declaration& irk_src);
 	j_declaration(j_declaration&& irv_right);

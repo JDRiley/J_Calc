@@ -1,19 +1,20 @@
-#ifndef J_SYMBOL_FWD_DECL_H
-#define J_SYMBOL_FWD_DECL_H
+#ifndef J_CALC_SYMBOL_FWD_DECL_H
+#define J_CALC_SYMBOL_FWD_DECL_H
 
 #include <J_Fwd_Decl.h>
-
+//
+#include <j_symbol/J_Symbol_Fwd_Decl.h>
 
 namespace jomike{
 J_FWD_DECL(J_Symbol_Scope)
-J_FWD_DECL_LOWER(j_symbol)
-J_FWD_DECL(j_symbol)
+J_FWD_DECL_LOWER(j_calc_symbol)
+J_FWD_DECL(j_calc_symbol)
 J_FWD_DECL(j_value)
 J_FWD_DECL_LOWER(j_composite_symbol)
 J_FWD_DECL_LOWER(j_routine_symbol)
-J_FWD_DECL_LOWER(j_symbol_component)
+
 J_FWD_DECL_LOWER(j_expression)
-J_FWD_DECL(Constant_Symbol)
+J_FWD_DECL(J_Constant_Symbol)
 J_FWD_DECL(Type_Syntax)
 J_STRUCT_FWD_DECL(Lexer_Location)
 J_FWD_DECL_LOWER(j_declaration)
@@ -31,7 +32,7 @@ J_FWD_DECL(If_Statement)
 template<typename Symbol_t>
 class Specific_Symbol_List;
 
-typedef Specific_Symbol_List<j_symbol> Symbol_List;
+typedef Specific_Symbol_List<j_calc_symbol> J_Calc_Symbol_List;
 typedef Specific_Symbol_List<j_declaration> Declaration_List;
 typedef Specific_Symbol_List<Type_Syntax> Type_Syntax_List;
 
@@ -39,4 +40,4 @@ typedef j_symbol_Shared_t J_Symbol_Shared_t;
 typedef j_value_Shared_t J_Value_Shared_t;
 }
 
-#endif //J_SYMBOL_FWD_DECL_H
+#endif //J_CALC_SYMBOL_FWD_DECL_H

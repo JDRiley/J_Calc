@@ -7,13 +7,13 @@
 namespace jomike{
 class Pre_Increment_Expression : public Unary_Expression{
 public:
-	Pre_Increment_Expression(j_expression* i_expression);
+	using Unary_Expression::Unary_Expression;
 
 	Pre_Increment_Expression* move_copy()override;
 
 
 	Pre_Increment_Expression* get_copy()const override;
-	j_symbol* make_non_referenced()const override;
+	j_calc_symbol* make_non_referenced()const override;
 
 	void process()override;
 private:

@@ -1,4 +1,4 @@
-#include "j_symbol.h"
+#include "j_calc_symbol.h"
 //
 #include "Type_Syntax.h"
 //
@@ -6,7 +6,7 @@
 //
 #include "J_Symbol_Error.h"
 //
-#include "J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 //
 #include <J_UI/J_UI_String.h>
 //
@@ -18,18 +18,18 @@
 //
 #include <j_tree.h>
 namespace jomike{
-static int s_symbol_ids = 0;
 
 
-j_symbol* get_j_symbol_from_model(const J_UI_String& irk_name);
+
+j_calc_symbol* get_j_symbol_from_model(const J_UI_String& irk_name);
 
 class J_Default_Symbol_Scope : public J_Symbol_Scope{
 public:
-	j_symbol* get_symbol(const J_UI_String& irk_string)const override{
+	j_calc_symbol* get_symbol(const J_UI_String& irk_string)const override{
 		return get_j_symbol_from_model(irk_string);
 	}
 
-	void add_symbol(j_symbol* i_symbol)override{
+	void add_symbol(j_calc_symbol* i_symbol)override{
 		add_user_symbol(i_symbol);
 	}
 
@@ -50,12 +50,12 @@ static J_Symbol_Scope* default_symbol_scope(){
 
 extern J_Symbol_Scope* gk_default_symbol_scope = default_symbol_scope();
 
-void j_symbol::set_symbol_scope(J_Symbol_Scope* i_symbol_scope){
+void j_calc_symbol::set_symbol_scope(J_Symbol_Scope* i_symbol_scope){
 	M_symbol_scope = i_symbol_scope;
 	alert_symbol_scope_set();
 }
 
-j_symbol* j_symbol::get_symbol_from_scope(const J_UI_String& irk_string)const{
+j_calc_symbol* j_calc_symbol::get_symbol_from_scope(const J_UI_String& irk_string)const{
 	assert(M_symbol_scope);
 	return M_symbol_scope->get_symbol(irk_string);
 }
@@ -65,7 +65,7 @@ J_Sym_Argument_Error::J_Sym_Argument_Error(const std::string& ik_message):J_Erro
 
 
 //Destructor
-j_symbol::~j_symbol(){
+j_calc_symbol::~j_calc_symbol(){
 	delete M_type;
 	delete M_name;
 	delete M_arguments;
@@ -75,29 +75,45 @@ j_symbol::~j_symbol(){
 
 
 
-j_dbl j_symbol::value(const Arguments& i_args)const{
+j_dbl j_calc_symbol::value(const Arguments& i_args)const{
 	return get_value(i_args).as_double();
 }
 
-j_symbol* j_symbol::reduce()const{
+j_calc_symbol* j_calc_symbol::reduce()const{
 	return get_copy();
 }
 
-j_symbol::j_symbol(J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
-	:j_symbol_component(i_symbol_type){
+
+
+j_calc_symbol::j_calc_symbol(const yy::location& irk_loc
+	, J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
+	:j_calc_symbol_component(irk_loc, i_symbol_type){
 	M_name = irk_name;
 	M_arguments = empty_arguments().get_copy();
-	M_type = nullptr;
+	M_type = make_type_syntax(irk_loc, i_symbol_type);
 	assert(M_name);
+	
 }
 
-j_symbol::j_symbol(Symbol_Types i_symbol_type) : j_symbol_component(i_symbol_type){
+j_calc_symbol::j_calc_symbol(
+	const yy::location& irk_loc, Type_Syntax* i_type_syntax
+	, J_Symbol_Identifier* irk_name)
+:j_calc_symbol_component(irk_loc, i_type_syntax->symbol_type())
+	, M_type(i_type_syntax), M_name(irk_name){
+
+}
+
+
+
+j_calc_symbol::j_calc_symbol(const yy::location& irk_loc, Symbol_Types i_symbol_type)
+	: j_calc_symbol_component(irk_loc, i_symbol_type){
 	M_name = new J_Symbol_Identifier("%Unvalued");
-	M_type = make_type_syntax(i_symbol_type);
+	M_type = make_type_syntax(irk_loc, i_symbol_type);
 	M_arguments = empty_arguments().get_copy();
 }
 
-j_symbol::j_symbol(const j_symbol& irk_symbol):j_symbol_component(irk_symbol){
+j_calc_symbol::j_calc_symbol(const j_calc_symbol& irk_symbol)
+	:j_calc_symbol_component(irk_symbol){
 	if(irk_symbol.M_type){
 		M_type = irk_symbol.M_type->get_copy();
 	}
@@ -108,8 +124,10 @@ j_symbol::j_symbol(const j_symbol& irk_symbol):j_symbol_component(irk_symbol){
 	M_symbol_scope = irk_symbol.M_symbol_scope;
 }
 
-j_symbol::j_symbol(j_symbol&& irr_symbol)
-:j_symbol_component(std::move(irr_symbol)){
+
+
+j_calc_symbol::j_calc_symbol(j_calc_symbol&& irr_symbol)
+: j_calc_symbol_component(std::move(irr_symbol)){
 	if(irr_symbol.M_type){
 		M_type = irr_symbol.M_type->move_copy();
 	}
@@ -121,41 +139,41 @@ j_symbol::j_symbol(j_symbol&& irr_symbol)
 }
 
 
-Type_Syntax& j_symbol::type_syntax()const{
+Type_Syntax& j_calc_symbol::type_syntax()const{
 	assert(M_type);
 	return *M_type;
 }
 
-void j_symbol::set_type_syntax(const Type_Syntax& irk_type_syntax){
+void j_calc_symbol::set_type_syntax(const Type_Syntax& irk_type_syntax){
 	delete M_type;
 	M_type = irk_type_syntax.get_copy();
 }
 
-void j_symbol::set_type_syntax(Type_Syntax* i_type_syntax){
+void j_calc_symbol::set_type_syntax(Type_Syntax* i_type_syntax){
 	delete M_type;
 	M_type = i_type_syntax;
 }
 
 
 
-const J_UI_String& j_symbol::name()const{
+const std::string& j_calc_symbol::name()const{
 	return M_name->identifier_name();
 }
 
-void j_symbol::set_name(const J_UI_String& irk_string){
+void j_calc_symbol::set_name(const std::string& irk_string){
 	M_name->set_name(irk_string);
 }
 
 
-j_expression* j_symbol::as_expression(){
-	throw J_Symbol_Error(name().std_str() + " cannot be used as an expression!");
+j_expression* j_calc_symbol::as_expression(){
+	throw J_Symbol_Error(name() + " cannot be used as an expression!");
 }
 
-void j_symbol::set_value(j_value /*i_value*/){
+void j_calc_symbol::set_value(j_value /*i_value*/){
 	assert(!"Cannot Set Value of This type Symbol");
 }
 
-J_UI_String j_symbol::get_display_name(){
+std::string j_calc_symbol::get_display_name(){
 	return name();
 }
 
@@ -163,17 +181,17 @@ J_UI_String j_symbol::get_display_name(){
 
 
 /*void set_args(int index, Arguments)*/
-void j_symbol::set_args(const Arguments& i_args){
+void j_calc_symbol::set_args(const Arguments& i_args){
 	delete M_arguments;
 	M_arguments= i_args.get_copy();
 }
 
 /*void set_args(int index, Arguments)*/
-void j_symbol::set_args(Arguments&& i_args){
+void j_calc_symbol::set_args(Arguments&& i_args){
 	M_arguments->swap(i_args);
 }
 
-j_value j_symbol::get_value(const Arguments& i_args)const{
+j_value j_calc_symbol::get_value(const Arguments& i_args)const{
 	Arguments args(*M_arguments);
 	j_tree<j_size_t> removed_indices;
 	for(int i = 0; i < args.size(); i++){
@@ -185,7 +203,7 @@ j_value j_symbol::get_value(const Arguments& i_args)const{
 			j_size_t index = place_holder_symbol->placeholder_index();
 			removed_indices.insert(index);
 			if(index >= i_args.size()){
-				throw J_Sym_Argument_Error("Not Enough Arguments to Symbol: " + name().std_str());
+				throw J_Sym_Argument_Error("Not Enough Arguments to Symbol: " + name());
 			}
 			args.set_argument(index, i_args.arguments()[index]);
 		}
@@ -200,39 +218,42 @@ j_value j_symbol::get_value(const Arguments& i_args)const{
 	return derived_get_value(args);
 }
 
-bool j_symbol::is_placeholder()const{ return false; }
+bool j_calc_symbol::is_placeholder()const{ return false; }
 
-j_symbol* j_symbol::make_non_referenced()const{
+j_calc_symbol* j_calc_symbol::make_non_referenced()const{
 	return get_copy();
 }
 
-j_symbol* j_symbol::convert_to_type(const Type_Syntax& /*irk_type*/)const{
-	throw J_Symbol_Error("Cannot Convert type of symbol: " + name().std_str()
+j_calc_symbol* j_calc_symbol::convert_to_type(const Type_Syntax& /*irk_type*/)const{
+	throw J_Symbol_Error("Cannot Convert type of symbol: " + name()
 						 + " with type: " + type_syntax().type_name());
 }
 
-const Type_Syntax& j_symbol::return_type_syntax()const{
+const Type_Syntax& j_calc_symbol::return_type_syntax()const{
 	assert(M_type);
 	return *M_type;
 }
 
 
 
-J_Symbol_Scope& j_symbol::symbol_scope()const{
+J_Symbol_Scope& j_calc_symbol::symbol_scope()const{
 	assert(M_symbol_scope);
 	return *M_symbol_scope;
 }
 
-void j_symbol::process(){
+
+void j_calc_symbol::process(){
 	get_value();
 }
 
-bool j_symbol::has_type_syntax()const{
+bool j_calc_symbol::has_type_syntax()const{
 	return M_type;
 }
 
 const Arguments& empty_arguments(){
-	static Arguments empty_args;
+	static yy::location loc;
+	static Arguments empty_args(loc);
+
 	return empty_args;
 }
 

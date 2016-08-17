@@ -7,7 +7,7 @@
 namespace jomike{
 class Type_Void : public Type_Syntax{
 public:
-	Type_Void();
+	Type_Void(const yy::location& irk_loc);
 
 	Type_Void* get_copy()const override;
 

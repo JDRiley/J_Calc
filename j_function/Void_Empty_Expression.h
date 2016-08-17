@@ -7,7 +7,7 @@
 namespace jomike{
 class Void_Empty_Expression : public j_expression{
 public:
-	Void_Empty_Expression();
+	using j_expression::j_expression;
 
 
 	bool has_value()const override;

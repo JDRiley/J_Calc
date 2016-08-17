@@ -7,14 +7,14 @@
 namespace jomike{
 class Pre_Decrement_Expression : public Unary_Expression{
 public:
-	Pre_Decrement_Expression(j_expression* i_expression);
+	using Unary_Expression::Unary_Expression;
 
 	Pre_Decrement_Expression* get_copy()const override;
 
 	Pre_Decrement_Expression* move_copy()override;
 
 	void process()override;
-	j_symbol* make_non_referenced()const override;
+	j_calc_symbol* make_non_referenced()const override;
 	~Pre_Decrement_Expression();
 private:
 

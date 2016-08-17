@@ -7,7 +7,7 @@
 namespace jomike{
 class Type_Double : public Type_Syntax{
 public:
-	Type_Double();
+	Type_Double(const yy::location& irk_loc);
 
 	Type_Double* get_copy()const override; 
 

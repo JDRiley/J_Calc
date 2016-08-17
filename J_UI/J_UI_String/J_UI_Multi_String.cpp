@@ -563,7 +563,7 @@ const Bitmap_Metrics& J_UI_Multi_String::bitmap_metric(j_size_t i_index)const{
 	return found_pos.second->font_face()->bitmap_metric(found_pos.first->charcode());
 }
 
-Pen_Pos_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)const{
+Pen_Pos_Int_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)const{
 	int index = 0;
 	auto string_pos = begin();
 
@@ -573,7 +573,7 @@ Pen_Pos_t J_UI_Multi_String::get_string_indices(const_iterator i_pos)const{
 	}
 
 	int str_size = i_pos == end() ? 0 : safe_int_cast(index + i_pos->size());
-	return Pen_Pos_t(index, str_size);
+	return Pen_Pos_Int_t(index, str_size);
 }
 
 void J_UI_Multi_String::set_color(const J_UI_Color& irk_color){

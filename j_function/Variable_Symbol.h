@@ -7,11 +7,11 @@
 namespace jomike{
 class Variable_Symbol : public j_declaration{
 public:
-	Variable_Symbol(
-		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier);
+	Variable_Symbol(const yy::location& irk_loc
+		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier);
 
-	Variable_Symbol(
-		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression);
+	Variable_Symbol(const yy::location& irk_loc
+		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression);
 
 	Variable_Symbol* get_copy()const override;
 
@@ -23,7 +23,7 @@ public:
 
 	void set_value(j_value i_value)override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	j_expression* as_expression()override;
 

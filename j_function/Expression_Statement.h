@@ -8,6 +8,7 @@ namespace jomike{
 class Expression_Statement : public j_statement{
 public:
 
+	Expression_Statement(const yy::location& irk_loc, j_expression* i_expression);
 
 	Expression_Statement(const Expression_Statement& irk_source);
 	Expression_Statement(Expression_Statement&& irv_source);
@@ -16,7 +17,6 @@ public:
 	Expression_Statement& operator=(const Expression_Statement&) = delete;
 	Expression_Statement& operator=(Expression_Statement&&) = delete;
 
-	Expression_Statement(j_expression* i_expression);
 
 	Expression_Statement* get_copy()const override;
 

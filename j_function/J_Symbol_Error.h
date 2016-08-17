@@ -1,7 +1,7 @@
 #ifndef J_SYMBOL_ERROR_H
 #define J_SYMBOL_ERROR_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 //
 #include <J_Error.h>
 //

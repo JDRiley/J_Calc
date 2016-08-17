@@ -1,7 +1,7 @@
 #ifndef J_VALUE_H
 #define J_VALUE_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 //
 #include "j_unit.h"
 //

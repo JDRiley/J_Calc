@@ -7,17 +7,13 @@
 namespace jomike{
 class If_Statement : public j_statement{
 public:
-	If_Statement(
-		j_expression* i_test_expression, Statement_Block* i_then_body
-		, Statement_Block* i_else_body = nullptr);
+	If_Statement(const yy::location& irk_loc
+		, j_expression* i_test_expression, Statement_Block* i_then_body
+		, j_statement* i_else_body = nullptr);
 
-	If_Statement(
-		j_expression* i_test_expression, Statement_Block* i_then_body
-		, If_Statement* i_else_body);
 
-	If_Statement(
-		j_expression* i_test_expression, j_expression* i_then_expression
-		, j_expression* i_else_expression);
+
+
 	
 	//Deleting Constructors and Assignment Operators
 	If_Statement(const If_Statement& irk_source);

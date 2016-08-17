@@ -1,7 +1,7 @@
 #ifndef J_CALC_PARSER_H
 #define J_CALC_PARSER_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 //
 #include <J_Utile.h>
 //
@@ -10,7 +10,7 @@
 
 namespace jomike{
 
-j_symbol* get_symbol(const J_UI_String& irk_string);
+j_calc_symbol* get_symbol(const J_UI_String& irk_string);
 
 
 

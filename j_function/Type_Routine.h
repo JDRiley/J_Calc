@@ -3,12 +3,13 @@
 
 #include "Type_Syntax.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 
 namespace jomike{
 class Type_Routine : public Type_Syntax{
 public:
-	Type_Routine(Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types);
+	Type_Routine(
+		const yy::location& irk_loc, Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types);
 
 	Type_Routine(const Type_Routine&); 
 	Type_Routine(Type_Routine&& irv_right);
@@ -24,8 +25,8 @@ public:
 
 	const Type_Syntax& return_type()const;
 
-	J_UI_String arg_type_string()const{
-		J_UI_String arg_string = "[";
+	std::string arg_type_string()const{
+		std::string arg_string = "[";
 
 		if(M_argument_types->empty()){
 			arg_string.append("]");

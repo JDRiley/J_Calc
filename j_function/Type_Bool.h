@@ -7,7 +7,7 @@
 namespace jomike{
 class Type_Bool : public Type_Syntax{
 public:
-	Type_Bool();
+	Type_Bool(const yy::location& irk_loc);
 
 	Type_Bool* get_copy()const override;
 

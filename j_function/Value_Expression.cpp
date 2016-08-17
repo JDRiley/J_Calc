@@ -6,8 +6,8 @@ namespace jomike{
 
 
 
-Value_Expression::Value_Expression(j_value i_value)
-	: j_expression(i_value.symbol_type()),M_value(i_value) {
+Value_Expression::Value_Expression(const yy::location& irk_loc, j_value i_value)
+	: j_expression(irk_loc, i_value.symbol_type()),M_value(i_value) {
 
 }
 

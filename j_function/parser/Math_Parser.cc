@@ -11,7 +11,7 @@
 //
 #include "../Arguments.h"
 //
-#include "../Constant_Symbol.h"
+#include "../J_Constant_Symbol.h"
 //
 #include "../j_declaration.h"
 //
@@ -23,11 +23,11 @@
 //
 #include <utility>
 //
-#include "../Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "../j_statement.h"
 //
-#include "J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 //
 #include "../J_Symbol_Scope.h"
 //
@@ -48,8 +48,8 @@ token_t Math_Parser::lex(semantic_t* yylval, yy::location* i_loc){
 	return M_lexer->yylex(yylval, i_loc);
 }
 
-j_symbol* Math_Parser::parse(const std::string& irk_string){
-	j_symbol* symbol = nullptr;
+j_calc_symbol* Math_Parser::parse(const std::string& irk_string){
+	j_calc_symbol* symbol = nullptr;
 	yy::Math_Parsing_Unit parsing_unit(&symbol, this);
 
 

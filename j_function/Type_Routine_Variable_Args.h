@@ -9,8 +9,8 @@ namespace jomike{
 class Type_Routine_Variable_Args : public Type_Routine{
 public:
 
-	Type_Routine_Variable_Args(
-		Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types
+	Type_Routine_Variable_Args(const yy::location& irk_loc
+		, Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types
 		, Type_Syntax* i_variadic_type);
 
 	Type_Routine_Variable_Args(const Type_Routine_Variable_Args& irk_right);

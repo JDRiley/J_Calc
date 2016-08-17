@@ -303,7 +303,7 @@ void J_Text_Box::change_color_at_pos(int i_pos, J_UI_Color i_color){
 	auto string_it = M_multi_string.get_string_holding_index(i_pos);
 	string_it->set_color(i_color);
 
-	Pen_Pos_t indices_of_string = M_multi_string.get_string_indices(string_it);
+	Pen_Pos_Int_t indices_of_string = M_multi_string.get_string_indices(string_it);
 
 	for(int i = indices_of_string.first; i < indices_of_string.second; ++i){
 		J_Char_t char_chode = M_multi_string[i].charcode();

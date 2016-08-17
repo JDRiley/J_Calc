@@ -18,7 +18,7 @@ class Binary_Function_Chain_Symbol : public j_routine_symbol{
 public:
 	Binary_Function_Chain_Symbol(const Binary_Function_t&, const std::string&);
 	Binary_Function_Chain_Symbol* get_copy()const override;
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	Binary_Function_Chain_Symbol* move_copy()override{
 		return  new Binary_Function_Chain_Symbol(std::move(*this));
@@ -70,7 +70,7 @@ j_value Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
 		
 
 		answer = std::accumulate(irk_args.begin() + 1, irk_args.end(), answer
-			, [&](Num_t i_val, j_symbol* i_symbol){
+			, [&](Num_t i_val, j_calc_symbol* i_symbol){
 			return M_function(i_val, i_symbol->get_value().as_type<Num_t>());
 		});
 

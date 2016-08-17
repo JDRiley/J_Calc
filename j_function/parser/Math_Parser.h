@@ -1,7 +1,7 @@
 #ifndef MATH_PARSER_H
 #define MATH_PARSER_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 //
 #include <j_map.h>
 //Class just so a this pointer exists upon construction of derived classes
@@ -148,13 +148,13 @@ struct j_semantic_type : public j_base {
 
 	restrictive_ptr<jtl::J_Symbol_Identifier>	identifier;
 	restrictive_ptr<jtl::j_symbol_component>	symbol_component;
-	restrictive_ptr<jtl::Constant_Symbol>		constant_symbol;
+	restrictive_ptr<jtl::J_Constant_Symbol>		constant_symbol;
 	restrictive_ptr<jtl::j_declaration>			declaration;
 	restrictive_ptr<jtl::Type_Syntax>			type_syntax;
 	restrictive_ptr<jtl::j_expression>			expression;
 	restrictive_ptr<jtl::Arguments>				arguments;
-	restrictive_ptr<jtl::j_symbol>				symbol;
-	restrictive_ptr<jtl::Symbol_List>			symbol_list;
+	restrictive_ptr<jtl::j_calc_symbol>				symbol;
+	restrictive_ptr<jtl::J_Calc_Symbol_List>			symbol_list;
 	restrictive_ptr<jtl::J_Symbol_Scope>		symbol_scope;
 	restrictive_ptr<jtl::Declaration_List>		declaration_list;
 	restrictive_ptr<jtl::j_statement>			statement;
@@ -187,7 +187,7 @@ class Math_Parser{
 public:
 	Math_Parser();
 	token_t lex(semantic_t* yylval, yy::location* i_loc);
-	j_symbol* parse(const std::string& irk_string);
+	j_calc_symbol* parse(const std::string& irk_string);
 
 	~Math_Parser();
 private:

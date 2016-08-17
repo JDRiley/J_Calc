@@ -10,7 +10,7 @@ namespace jomike{
 
 class Unary_Negate_Expression : public Unary_Expression{
 public:
-	Unary_Negate_Expression(j_expression* i_expression);
+	using Unary_Expression::Unary_Expression;
 
 	Unary_Negate_Expression* get_copy()const override{
 		return new Unary_Negate_Expression(*this);

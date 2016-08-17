@@ -7,8 +7,8 @@
 namespace jomike{
 class For_Statement : public j_statement{
 public:
-	For_Statement(
-		j_statement* i_init_statement
+	For_Statement(const yy::location& irk_loc
+		, j_statement* i_init_statement
 		, j_expression* i_test_expression
 		, j_expression* i_post_expression
 		, Statement_Block* i_statement_block);

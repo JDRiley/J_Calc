@@ -2,7 +2,7 @@
 //
 #include <cassert>
 //
-#include "J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 //
 using std::string;
 
@@ -11,9 +11,10 @@ bool j_placeholder_symbol::is_placeholder()const {
 	return true;
 }
 
-j_placeholder_symbol::j_placeholder_symbol(j_size_t i_index)
-:j_expression(Symbol_Types::PLACEHOLDER,
-	new J_Symbol_Identifier(string("#") + std::to_string(i_index) + "_Placeholder"))
+j_placeholder_symbol::j_placeholder_symbol(const yy::location& irk_loc, j_size_t i_index)
+:j_expression(irk_loc
+	, new J_Symbol_Identifier(string("#") + std::to_string(i_index) + "_Placeholder")
+	, Symbol_Types::PLACEHOLDER)
 	, M_placeholder_index(i_index){
 	assert(i_index >= J_SIZE_T_ZERO);
 }
@@ -42,7 +43,7 @@ j_placeholder_symbol* j_placeholder_symbol::move_copy(){
 	return  new j_placeholder_symbol(std::move(*this));
 }
 
-jomike::J_UI_String j_placeholder_symbol::get_display_name(){
+std::string j_placeholder_symbol::get_display_name(){
 	return name();
 }
 

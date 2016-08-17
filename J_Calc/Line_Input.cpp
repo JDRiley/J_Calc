@@ -119,7 +119,7 @@ void Line_Input::evaluate_output(){
 	input_string.push_back(LINE_END_SYMBOL);
 
 	
-	J_UI_String output_string =  gs_parser->evaluate_math_input(input_string);
+	J_UI_String output_string(evaluate_math_input(input_string));
 	output_string.set_font_face(M_output.front().font_face());
 	M_output = output_string;
 	M_output.push_front(GK_DEFAULT_OUTPUT_STRING[0]);

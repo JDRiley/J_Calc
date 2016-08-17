@@ -7,7 +7,7 @@
 namespace jomike{
 class Addition_Expression : public Binary_Expression{
 public:
-	Addition_Expression(j_expression* i_left_expression, j_expression* i_right_expression);
+	using Binary_Expression::Binary_Expression;
 
 	Addition_Expression(const Addition_Expression&) = default;
 

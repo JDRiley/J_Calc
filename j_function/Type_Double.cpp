@@ -6,7 +6,8 @@
 namespace jomike{
 
 
-Type_Double::Type_Double():Type_Syntax("double", Symbol_Types::DOUBLE){
+Type_Double::Type_Double(const yy::location& irk_loc)
+	:Type_Syntax(irk_loc, "double", Symbol_Types::DOUBLE){
 
 }
 

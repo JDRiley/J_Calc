@@ -69,14 +69,15 @@ j_symbol_component* jtl::g_input_line = nullptr;
 %}
 %skeleton "lalr1.cc"
 %defines
-%define parser_class_name "Math_Parsing_Unit"
+%define parser_class_name {Math_Parsing_Unit}
 %parse-param{jtl::j_symbol** i_symbol_ptr}
 %parse-param{jtl::Math_Parser* i_parser}
 %lex-param{jtl::Math_Parser* i_parser}
 
 
 %code requires{
-#include "../J_Symbol_Fwd_Decl.h"
+#include "../J_Calc_Symbol_Fwd_Decl.h"
+
 
 
 }

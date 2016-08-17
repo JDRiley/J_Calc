@@ -138,7 +138,7 @@ j_uint y_pixels(j_window_t i_window, j_dbl i_y_screen);
 j_float to_x_screen(j_window_t i_window, int i_x_pixel);
 j_float to_y_screen(j_window_t i_window, int i_y_pixel);
 
-Pen_Pos_FL_t screen_coords(j_window_t i_window, Pen_Pos_t pos);
+Pen_Pos_FL_t screen_coords(j_window_t i_window, Pen_Pos_Int_t pos);
 
 void j_set_cursor_pos(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos);
 

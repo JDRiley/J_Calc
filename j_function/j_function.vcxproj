@@ -54,15 +54,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(JTLPATH)\j_common.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(JTLPATH)\j_common.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(JTLPATH)\j_common.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(JTLPATH)\j_common.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -92,7 +96,7 @@
       <DisableSpecificWarnings>4290;4512;</DisableSpecificWarnings>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>VS_2013;WIN32;_SCL_SECURE_NO_WARNINGS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -106,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4290;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>VS_2013;WIN32;NOMINMAX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -122,7 +126,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <DisableSpecificWarnings>4290;4512;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -141,7 +145,7 @@
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4290;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;NOMINMAX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
@@ -159,12 +163,14 @@
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
     <ClInclude Include="boolean_tester_array.h" />
     <ClInclude Include="Call_Expression.h" />
-    <ClInclude Include="Constant_Symbol_Factory.h" />
-    <ClInclude Include="Constant_Symbol.h" />
+    <ClInclude Include="j_calc_symbol_component.h" />
+    <ClInclude Include="J_Constant_Symbol_Factory.h" />
+    <ClInclude Include="J_Constant_Symbol.h" />
     <ClInclude Include="Custom_Routine_Symbol.h" />
     <ClInclude Include="Division_Expression.h" />
     <ClInclude Include="Expression_List.h" />
     <ClInclude Include="Expression_Statement.h" />
+    <ClInclude Include="J_Calc_Evaluater.h" />
     <ClInclude Include="Modulo_Expression.h" />
     <CustomBuild Include="parser\Math_Lexer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_flex -d --outfile="Math_YY_Lex.cpp" --wincompat --c++ Math_Lexer.l</Command>
@@ -185,15 +191,9 @@
     <ClInclude Include="j_placeholder_symbol.h" />
     <ClInclude Include="j_routine_symbol.h" />
     <ClInclude Include="j_statement.h" />
-    <ClInclude Include="j_symbol.h" />
-    <ClInclude Include="j_symbol_component.h" />
-    <ClInclude Include="J_Symbol_Component_Allocator.h" />
-    <ClInclude Include="J_Symbol_Component_Array.h" />
-    <ClInclude Include="j_symbol_containers.h" />
+    <ClInclude Include="j_calc_symbol.h" />
     <ClInclude Include="J_Symbol_Error.h" />
-    <ClInclude Include="J_Symbol_Fwd_Decl.h" />
-    <ClInclude Include="j_symbol_component_list.h" />
-    <ClInclude Include="J_Symbol_Identifier.h" />
+    <ClInclude Include="J_Calc_Symbol_Fwd_Decl.h" />
     <ClInclude Include="J_Symbol_Scope.h" />
     <ClInclude Include="j_unit.h" />
     <ClInclude Include="J_Unit_Symbol.h" />
@@ -203,34 +203,15 @@
     <ClInclude Include="Multiplication_Expression.h" />
     <ClInclude Include="Operators.h" />
     <ClInclude Include="parser\J_Calc_Parser.h" />
-    <ClInclude Include="parser\j_yy_stack.h" />
     <ClInclude Include="parser\Lexer_Location.h" />
     <ClInclude Include="For_Statement.h" />
     <ClInclude Include="parser\Math_Parser.h" />
-    <ClInclude Include="parser\math_parsing_unit.hh" />
-    <CustomBuild Include="parser\parser.h">
-      <AdditionalInputs>parser/parser.y;</AdditionalInputs>
-      <Command>win_bison -v -t --defines=math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Command>
-      <Message>win_bison -v -t --defines=math_parsing_unit.hh -oparser/math_parsing_unit.cc parser/parser.y</Message>
-      <Outputs>parser/math_parsing_unit.cc;parser/math_parsing_unit.hh</Outputs>
-      <LinkObjects>false</LinkObjects>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_bison -v -t --defines=math_parsing_unit.hh -omath_parsing_unit.cc parser.y</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)math_parsing_unit.cc;%(RootDir)%(Directory)math_parsing_unit.hh</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)parser.y;</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)math_parsing_unit.cc;%(RootDir)%(Directory)math_parsing_unit.hh</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)parser.y;</AdditionalInputs>
-    </CustomBuild>
     <ClInclude Include="Pre_Decrement_Expression.h" />
     <ClInclude Include="Pre_Increment_Expression.h" />
     <ClInclude Include="Relational_Binary_Expression.h" />
-    <ClInclude Include="Specific_Symbol_List.h" />
     <ClInclude Include="Statement_Block.h" />
     <ClInclude Include="Subtraction_Expression.h" />
     <ClInclude Include="Symbol_Joiner.h" />
-    <ClInclude Include="Symbol_Component_List.h" />
     <ClInclude Include="Symbol_Types.h" />
     <ClInclude Include="Transfer_Statement.h" />
     <ClInclude Include="Type_Bool.h" />
@@ -258,12 +239,14 @@
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MinimalRebuild>
     </ClCompile>
     <ClCompile Include="Call_Expression.cpp" />
-    <ClCompile Include="Constant_Symbol.cpp" />
-    <ClCompile Include="Constant_Symbol_Factory.cpp" />
+    <ClCompile Include="j_calc_symbol_component.cpp" />
+    <ClCompile Include="J_Constant_Symbol.cpp" />
+    <ClCompile Include="J_Constant_Symbol_Factory.cpp" />
     <ClCompile Include="Custom_Routine_Symbol.cpp" />
     <ClCompile Include="Division_Expression.cpp" />
     <ClCompile Include="Expression_Statement.cpp" />
     <ClCompile Include="For_Statement.cpp" />
+    <ClCompile Include="J_Calc_Evaluater.cpp" />
     <ClCompile Include="Modulo_Expression.cpp" />
     <ClCompile Include="Void_Empty_Expression.cpp" />
     <ClCompile Include="Field_Access_Expression.cpp" />
@@ -276,12 +259,8 @@
     <ClCompile Include="j_placeholder_symbol.cpp" />
     <ClCompile Include="j_routine_symbol.cpp" />
     <ClCompile Include="j_statement.cpp" />
-    <ClCompile Include="j_symbol.cpp" />
-    <ClCompile Include="j_symbol_array.cpp" />
-    <ClCompile Include="j_symbol_component.cpp" />
-    <ClCompile Include="j_symbol_component_list.cpp" />
+    <ClCompile Include="j_calc_symbol.cpp" />
     <ClCompile Include="J_Symbol_Error.cpp" />
-    <ClCompile Include="J_Symbol_Identifier.cpp" />
     <ClCompile Include="J_Symbol_Scope.cpp" />
     <ClCompile Include="j_unit.cpp" />
     <ClCompile Include="j_value.cpp" />
@@ -291,12 +270,6 @@
     <ClCompile Include="parser\J_Calc_Parser.cpp" />
     <ClCompile Include="parser\Math_Lexer.cpp" />
     <ClCompile Include="parser\Math_Parser.cc" />
-    <ClCompile Include="parser\math_parsing_unit.cc">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
-    </ClCompile>
     <ClCompile Include="parser\Math_YY_Lex.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
@@ -308,7 +281,6 @@
     <ClCompile Include="Relational_Binary_Expression.cpp" />
     <ClCompile Include="Statement_Block.cpp" />
     <ClCompile Include="Subtraction_Expression.cpp" />
-    <ClCompile Include="Symbol_Component_List.cpp" />
     <ClCompile Include="Transfer_Statement.cpp" />
     <ClCompile Include="Type_Bool.cpp" />
     <ClCompile Include="Type_Double.cpp" />
@@ -327,6 +299,7 @@
     <ClCompile Include="Variable_Symbol.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="j_calc_symbol_component" />
     <None Include="parser\Math_Lexer.l" />
     <None Include="parser\math_parsing_unit.output" />
     <None Include="parser\parser.y" />

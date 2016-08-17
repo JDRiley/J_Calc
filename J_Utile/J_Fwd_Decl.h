@@ -77,7 +77,7 @@ const j_float J_FLOAT_ZERO = 0;
 const j_ubyte J_UBYTE_ZERO = 0;
 const j_short J_SHORT_ZERO = 0;
 
-typedef std::pair<int,int> Pen_Pos_t;
+typedef std::pair<int,int> Pen_Pos_Int_t;
 
 typedef std::pair<j_float, j_float> Pen_Pos_FL_t;
 

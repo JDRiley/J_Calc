@@ -8,12 +8,12 @@ namespace jomike{
 class Call_Expression : public j_expression{
 public:
 
-	Call_Expression(
-		J_Symbol_Identifier* i_identifier, Arguments* i_args_list);
+	Call_Expression(const yy::location& irk_loc
+		, J_Symbol_Identifier* i_identifier, Arguments* i_args_list);
 
 
-	Call_Expression(
-		const j_expression& irk_base_expression
+	Call_Expression(const yy::location& irk_loc
+		, const j_expression& irk_base_expression
 		, J_Symbol_Identifier* i_identifier, Arguments* i_args_list);
 
 
@@ -27,7 +27,7 @@ public:
 		return  new Call_Expression(std::move(*this));
 	}
 
-	J_UI_String get_display_name()override{
+	std::string get_display_name()override{
 			return name();
 	}
 
@@ -43,7 +43,7 @@ public:
 
 	void process()override;
 protected:
-	j_symbol* get_symbol()const;
+	j_calc_symbol* get_symbol()const;
 private:
 	mutable j_expression* M_base_expression = nullptr;
 	J_Symbol_Identifier* M_identifier;

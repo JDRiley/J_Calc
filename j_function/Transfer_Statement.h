@@ -7,7 +7,7 @@
 namespace jomike{
 class Transfer_Statement : public Expression_Statement{
 public:
-	Transfer_Statement(j_expression* i_expression);
+	using Expression_Statement::Expression_Statement;
 
 	Transfer_Statement* get_copy()const override;
 

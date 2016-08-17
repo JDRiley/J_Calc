@@ -8,7 +8,8 @@ namespace jomike{
 
 class j_routine_symbol : public j_declaration{
 public:
-	j_routine_symbol(J_Symbol_Identifier* i_identifier, Type_Routine* i_routine_type);
+	j_routine_symbol(
+		const yy::location& irk_loc, Type_Routine* i_routine_type, J_Symbol_Identifier* i_identifier);
 	
 	j_routine_symbol* get_copy()const override = 0;
 	j_routine_symbol* move_copy()override = 0;
@@ -22,7 +23,7 @@ public:
 	const Type_Routine& routine_type_syntax()const;
 
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 protected:
 	const Type_Syntax_List& argument_types_list()const;
 	

@@ -7,7 +7,7 @@
 namespace jomike{
 class Value_Expression : public j_expression{
 public:
-	Value_Expression(j_value i_value);
+	Value_Expression(const yy::location& irk_loc, j_value i_value);
 
 
 

@@ -1,6 +1,6 @@
 #include "Type_Routine.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 
 namespace jomike{
 
@@ -19,8 +19,9 @@ Type_Routine* Type_Routine::get_copy()const {
 	return new Type_Routine(*this);
 }
 
-Type_Routine::Type_Routine(Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types)
-:Type_Syntax("routine", Symbol_Types::ROUTINE){
+Type_Routine::Type_Routine(const yy::location& irk_loc
+	, Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types)
+:Type_Syntax(irk_loc, "routine", Symbol_Types::ROUTINE){
 	M_return_type = i_return_type;
 	M_argument_types = i_arg_types;
 

@@ -6,9 +6,6 @@ namespace jomike{
 
 
 
-Relational_Binary_Expression::Relational_Binary_Expression(j_expression* i_left, j_expression* i_right, Operators i_operator):Binary_Expression(i_left, i_right, i_operator){
-
-}
 
 Relational_Binary_Expression::Relational_Binary_Expression(Relational_Binary_Expression&& irv_source) : Binary_Expression(std::move(irv_source)){
 

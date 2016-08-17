@@ -16,7 +16,8 @@ Expression_Statement::Expression_Statement(Expression_Statement&& irv_source)
 	M_expression = irv_source.M_expression->move_copy();
 }
 
-Expression_Statement::Expression_Statement(j_expression* i_expression){
+Expression_Statement::Expression_Statement(const yy::location& irk_loc, j_expression* i_expression)
+	:j_statement(irk_loc, i_expression->symbol_type()){
 	M_expression = i_expression;
 }
 

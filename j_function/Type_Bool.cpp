@@ -14,7 +14,8 @@ Type_Bool* Type_Bool::get_copy()const {
 	return new Type_Bool(*this);
 }
 
-Type_Bool::Type_Bool():Type_Syntax("bool", Symbol_Types::BOOL){
+Type_Bool::Type_Bool(const yy::location& irk_loc)
+	:Type_Syntax(irk_loc, "bool", Symbol_Types::BOOL){
 
 }
 

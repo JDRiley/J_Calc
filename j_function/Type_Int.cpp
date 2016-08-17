@@ -5,7 +5,8 @@ namespace jomike{
 
 
 
-Type_Int::Type_Int():Type_Syntax("int", Symbol_Types::INT){
+Type_Int::Type_Int(const yy::location& irk_loc)
+	:Type_Syntax(irk_loc, "int", Symbol_Types::INT){
 
 }
 

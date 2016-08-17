@@ -6,10 +6,7 @@ namespace jomike{
 
 
 
-Transfer_Statement::Transfer_Statement(j_expression* i_expression)
-	:Expression_Statement(i_expression){
 
-}
 
 Transfer_Statement* Transfer_Statement::move_copy(){
 	return  new Transfer_Statement(std::move(*this));

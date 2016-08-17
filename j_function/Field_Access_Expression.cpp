@@ -1,14 +1,15 @@
 #include "Field_Access_Expression.h"
 //
-#include "J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 //
 #include "J_Symbol_Error.h"
 namespace jomike{
 
 J_FWD_DECL(J_Symbol_Identifier)
 
-Field_Access_Expression::Field_Access_Expression(J_Symbol_Identifier* i_name)
-:j_expression(Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+Field_Access_Expression::Field_Access_Expression(
+	const yy::location& irk_loc, J_Symbol_Identifier* i_name)
+:j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 
 	assert(i_name);
 	M_identifier = i_name;
@@ -43,7 +44,7 @@ void Field_Access_Expression::set_value(j_value i_value){
 	get_symbol_from_scope(M_identifier->identifier_name())->set_value(i_value);
 }
 
-J_UI_String Field_Access_Expression::get_display_name(){
+std::string Field_Access_Expression::get_display_name(){
 	return get_symbol_from_scope(M_identifier->identifier_name())->get_display_name();
 }
 
@@ -51,7 +52,7 @@ Field_Access_Expression::~Field_Access_Expression(){
 	delete M_identifier;
 }
 
-j_symbol* Field_Access_Expression::make_non_referenced()const{
+j_calc_symbol* Field_Access_Expression::make_non_referenced()const{
 	auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
 	return symbol->get_copy();
 }

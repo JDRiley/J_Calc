@@ -9,9 +9,9 @@ using std::function;
 using std::bind; using std::for_each;
 namespace jomike{
 
-j_routine_symbol::j_routine_symbol(
-	J_Symbol_Identifier* i_identifier, Type_Routine* i_routine_type) 
-	: j_declaration(i_routine_type, i_identifier){
+j_routine_symbol::j_routine_symbol(const yy::location& irk_loc
+	, Type_Routine* i_routine_type, J_Symbol_Identifier* i_identifier)
+	: j_declaration(irk_loc, i_routine_type, i_identifier){
 
 }
 
@@ -39,10 +39,10 @@ const Type_Routine& j_routine_symbol::routine_type_syntax()const{
 	return *routine_type;
 }
 
-jomike::J_UI_String j_routine_symbol::get_display_name(){
-	J_UI_String return_string =  "Routine: " + name() + routine_type_syntax().arg_type_string()
+std::string j_routine_symbol::get_display_name(){
+	std::string return_string =  "Routine: " + name() + routine_type_syntax().arg_type_string()
 	+"->" + return_type_syntax().type_name();
-	return_string.set_font_face(name().font_face());
+	
 	
 
 	

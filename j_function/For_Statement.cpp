@@ -12,9 +12,10 @@ namespace jomike{
 
 
 
-For_Statement::For_Statement(
-	j_statement* i_init_statement, j_expression* i_test_expression
-	, j_expression* i_post_expression, Statement_Block* i_statement_block){
+For_Statement::For_Statement(const yy::location& irk_loc
+	, j_statement* i_init_statement, j_expression* i_test_expression
+	, j_expression* i_post_expression, Statement_Block* i_statement_block)
+	:j_statement(irk_loc){
 	M_init_statement = i_init_statement;
 	M_test_expression = i_test_expression;
 	M_post_expression = i_post_expression;
@@ -27,7 +28,7 @@ For_Statement::For_Statement(
 
 }
 
-For_Statement::For_Statement(For_Statement&& irv_src){
+For_Statement::For_Statement(For_Statement&& irv_src):j_statement(std::move(irv_src)){
 	M_init_statement = nullptr;
 	M_test_expression = nullptr;
 	M_post_expression = nullptr;
@@ -36,7 +37,7 @@ For_Statement::For_Statement(For_Statement&& irv_src){
 	swap(irv_src);
 }
 
-For_Statement::For_Statement(const For_Statement& irk_src){
+For_Statement::For_Statement(const For_Statement& irk_src):j_statement(irk_src){
 	M_init_statement = irk_src.M_init_statement->get_copy();
 	M_test_expression = irk_src.M_test_expression->get_copy();
 	M_post_expression = irk_src.M_post_expression->get_copy();

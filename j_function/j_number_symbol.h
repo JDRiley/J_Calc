@@ -8,8 +8,8 @@ namespace jomike{
 class j_number_symbol : public Variable_Symbol{
 public:
 	//Constructors
-	j_number_symbol(Dbl_t);
-	j_number_symbol(const J_UI_String&);
+	j_number_symbol(const yy::location& irk_loc, Dbl_t);
+	j_number_symbol(const yy::location& irk_loc, const std::string&);
 
 	j_number_symbol(const j_number_symbol&) = default;
 
@@ -18,7 +18,7 @@ public:
 	//Status
 	bool has_value()const override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	//Reset
 	void clear()override;

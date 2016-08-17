@@ -7,7 +7,7 @@
 namespace jomike{
 class Type_Int : public Type_Syntax{
 public:
-	Type_Int();
+	Type_Int(const yy::location& irk_loc);
 
 	Type_Int* get_copy()const override;
 

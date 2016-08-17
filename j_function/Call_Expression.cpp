@@ -1,6 +1,6 @@
 #include "Call_Expression.h"
 //
-#include "J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 //
 #include "Arguments.h"
 //
@@ -24,9 +24,9 @@ j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
 	return get_symbol()->get_value(*M_args_list);
 }
 
-Call_Expression::Call_Expression(
-	J_Symbol_Identifier* i_identifier, Arguments* i_args_list)
-	:j_expression(Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+Call_Expression::Call_Expression(const yy::location& irk_loc
+	, J_Symbol_Identifier* i_identifier, Arguments* i_args_list)
+	:j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 	M_identifier = i_identifier;
 	M_args_list = i_args_list;
 
@@ -49,7 +49,7 @@ Call_Expression::~Call_Expression(){
 	delete M_args_list;
 }
 
-j_symbol* Call_Expression::get_symbol()const{
+j_calc_symbol* Call_Expression::get_symbol()const{
 	return get_symbol_from_scope(M_identifier->identifier_name());
 }
 

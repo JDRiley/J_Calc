@@ -4,7 +4,8 @@
 namespace jomike{
 
 
-Type_Void::Type_Void():Type_Syntax("void", Symbol_Types::VOID_TYPE){
+Type_Void::Type_Void(const yy::location& irk_loc)
+	:Type_Syntax(irk_loc, "void", Symbol_Types::VOID_TYPE){
 
 }
 

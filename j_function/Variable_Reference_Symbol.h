@@ -7,11 +7,10 @@
 namespace jomike{
 class Variable_Reference_Symbol : public j_declaration{
 public:
-	Variable_Reference_Symbol(
-		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier);
 
-	Variable_Reference_Symbol(
-		Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression);
+
+	Variable_Reference_Symbol(const yy::location& irk_loc
+		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression);
 
 
 	//Deleting Constructors and Assignment Operators
@@ -24,7 +23,7 @@ public:
 
 	Variable_Reference_Symbol* get_copy()const override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	bool has_value()const override;
 

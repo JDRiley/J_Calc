@@ -6,7 +6,7 @@ namespace jomike{
 
 
 
-J_UI_String Variable_Reference_Symbol::get_display_name(){
+std::string Variable_Reference_Symbol::get_display_name(){
 	if(has_value()){
 		return get_value().to_str();
 	}
@@ -35,15 +35,11 @@ void Variable_Reference_Symbol::clear(){
 	assert(0);
 }
 
-Variable_Reference_Symbol::Variable_Reference_Symbol(
-	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier)
-	:j_declaration(i_syntax,  i_identifier){
-	assert(0);
-}
 
-Variable_Reference_Symbol::Variable_Reference_Symbol(
-	Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression)
-	: j_declaration(i_syntax, i_identifier){
+
+Variable_Reference_Symbol::Variable_Reference_Symbol(const yy::location& irk_loc
+	, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression)
+	: j_declaration(irk_loc,i_syntax, i_identifier){
 	M_expression = i_expression;
 }
 

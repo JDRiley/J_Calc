@@ -61,7 +61,7 @@ Pen_Pos_FL_t J_Cursor_Position::cursor_pos_fl()const{
 	return M_cursor_pos_fl;
 }
 
-Pen_Pos_t J_Cursor_Position::cursor_pos()const{
+Pen_Pos_Int_t J_Cursor_Position::cursor_pos()const{
 	return M_cursor_pos;
 }
 

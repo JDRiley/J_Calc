@@ -34,11 +34,11 @@ class J_Cursor_Position{
 public:
 	void set_cursor_position(j_window_t i_window, j_dbl i_x_pos, j_dbl i_y_pos);
 	Pen_Pos_FL_t cursor_pos_fl()const;
-	Pen_Pos_t cursor_pos()const;
+	Pen_Pos_Int_t cursor_pos()const;
 
 private:
 	Pen_Pos_FL_t M_cursor_pos_fl;
-	Pen_Pos_t M_cursor_pos;
+	Pen_Pos_Int_t M_cursor_pos;
 
 };
 

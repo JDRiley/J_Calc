@@ -25,7 +25,9 @@ Type_Routine_Variable_Args::Type_Routine_Variable_Args(const Type_Routine_Variab
 	M_variadic_arg_type = irk_right.M_variadic_arg_type->get_copy();
 }
 
-Type_Routine_Variable_Args::Type_Routine_Variable_Args(Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types, Type_Syntax* i_variadic_type) : Type_Routine(i_return_type, i_arg_types){
+Type_Routine_Variable_Args::Type_Routine_Variable_Args(const yy::location& irk_loc
+	, Type_Syntax* i_return_type, Type_Syntax_List* i_arg_types, Type_Syntax* i_variadic_type) 
+	: Type_Routine(irk_loc, i_return_type, i_arg_types){
 	M_variadic_arg_type = i_variadic_type;
 }
 

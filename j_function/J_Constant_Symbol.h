@@ -6,12 +6,12 @@
 #include "parser/location.hh"
 
 namespace jomike{
-class Constant_Symbol : public j_expression{
+class J_Constant_Symbol : public j_expression{
 public:
-	Constant_Symbol(Symbol_Types i_symbol_type, const yy::location& i_loc);
+	using j_expression::j_expression;
 	
-	Constant_Symbol* get_copy()const override = 0;
-	Constant_Symbol* move_copy()override = 0;
+	J_Constant_Symbol* get_copy()const override = 0;
+	J_Constant_Symbol* move_copy()override = 0;
 
 	void process()override;
 private:
@@ -20,9 +20,9 @@ private:
 };
 
 
-class Int_Constant_Symbol : public Constant_Symbol{
+class Int_Constant_Symbol : public J_Constant_Symbol{
 public:
-	Int_Constant_Symbol(int i_val, const yy::location& i_loc);
+	Int_Constant_Symbol(const yy::location& i_loc, int i_val);
 
 	Int_Constant_Symbol* get_copy()const override;
 
@@ -31,9 +31,9 @@ public:
 	void clear()override;
 	bool has_value()const override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
-	j_symbol* convert_to_type(const Type_Syntax& irk_type)const override;
+	j_calc_symbol* convert_to_type(const Type_Syntax& irk_type)const override;
 
 	void set_value(j_value i_value)override{
 		M_value = i_value.as_llint();
@@ -47,15 +47,15 @@ private:
 };
 
 
-class Bool_Constant_Symbol : public Constant_Symbol{
+class Bool_Constant_Symbol : public J_Constant_Symbol{
 public:
-	Bool_Constant_Symbol(bool i_val, const yy::location& i_loc);
+	Bool_Constant_Symbol(const yy::location& i_loc, bool i_val);
 
 	Bool_Constant_Symbol* get_copy()const override;
 
 	Bool_Constant_Symbol* move_copy()override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	void clear()override;
 	bool has_value()const override;
@@ -69,15 +69,15 @@ private:
 
 
 
-class Dbl_Constant_Symbol : public Constant_Symbol{
+class Dbl_Constant_Symbol : public J_Constant_Symbol{
 public:
-	Dbl_Constant_Symbol(j_dbl i_val, const yy::location& i_loc);
+	Dbl_Constant_Symbol(const yy::location& i_loc, j_dbl i_val);
 
 	Dbl_Constant_Symbol* get_copy()const override;
 
 	Dbl_Constant_Symbol* move_copy()override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	void clear()override;
 	bool has_value()const override;
@@ -89,15 +89,15 @@ private:
 
 };
 
-class String_Constant_Symbol : public Constant_Symbol{
+class String_Constant_Symbol : public J_Constant_Symbol{
 public:
-	String_Constant_Symbol(const std::string& irk_val, const yy::location& i_loc);
+	String_Constant_Symbol(const yy::location& i_loc, const std::string& irk_val);
 
 	String_Constant_Symbol* get_copy()const override;
 
 	String_Constant_Symbol* move_copy()override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	void clear()override;
 	bool has_value()const override;

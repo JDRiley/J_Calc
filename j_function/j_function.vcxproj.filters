@@ -16,7 +16,7 @@
     <Filter Include="Source Files\parser">
       <UniqueIdentifier>{f171c433-59f6-4e85-a327-d4c90db5c68b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\parser">
+    <Filter Include="Header Files\J_Calc_Parser">
       <UniqueIdentifier>{8f22d23e-c5bd-4fdb-8b91-625fc7f73ccf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -36,19 +36,10 @@
     <ClInclude Include="J_Unit_Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_Symbol_Fwd_Decl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="j_symbol.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="j_value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="j_unit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="j_number_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="j_placeholder_symbol.h">
@@ -70,18 +61,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="boolean_tester_array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="j_symbol_containers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="j_symbol_component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constant_Symbol_Factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Constant_Symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Variable_Reference_Symbol.h">
@@ -129,19 +108,7 @@
     <ClInclude Include="Expression_List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="j_symbol_component_list.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="J_Symbol_Component_Array.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="J_Symbol_Component_Allocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Call_Expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="J_Symbol_Identifier.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Field_Access_Expression.h">
@@ -163,24 +130,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="parser\J_Calc_Parser.h">
-      <Filter>Header Files\parser</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\j_yy_stack.h">
-      <Filter>Header Files\parser</Filter>
+      <Filter>Header Files\J_Calc_Parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\Lexer_Location.h">
-      <Filter>Header Files\parser</Filter>
+      <Filter>Header Files\J_Calc_Parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\Math_Parser.h">
-      <Filter>Header Files\parser</Filter>
+      <Filter>Header Files\J_Calc_Parser</Filter>
     </ClInclude>
     <ClInclude Include="J_Symbol_Scope.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Symbol_Component_List.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Specific_Symbol_List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Type_Routine.h">
@@ -237,13 +195,31 @@
     <ClInclude Include="Void_Empty_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="parser\math_parsing_unit.hh">
-      <Filter>Header Files\parser</Filter>
-    </ClInclude>
     <ClInclude Include="For_Statement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Modulo_Expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Calc_Symbol_Fwd_Decl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Calc_Evaluater.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_calc_symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Constant_Symbol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Constant_Symbol_Factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_calc_symbol_component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_number_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -263,9 +239,6 @@
     <ClCompile Include="j_routine_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="j_symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="j_placeholder_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -276,18 +249,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Unit_Converter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="j_symbol_array.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="j_symbol_component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Constant_Symbol_Factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Constant_Symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Variable_Reference_Symbol.cpp">
@@ -332,13 +293,7 @@
     <ClCompile Include="Value_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="j_symbol_component_list.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Call_Expression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_Symbol_Identifier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Field_Access_Expression.cpp">
@@ -367,12 +322,6 @@
     </ClCompile>
     <ClCompile Include="J_Symbol_Scope.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Symbol_Component_List.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\math_parsing_unit.cc">
-      <Filter>Source Files\parser</Filter>
     </ClCompile>
     <ClCompile Include="Type_Routine.cpp">
       <Filter>Source Files</Filter>
@@ -431,6 +380,21 @@
     <ClCompile Include="Modulo_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="J_Calc_Evaluater.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_calc_symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Constant_Symbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Constant_Symbol_Factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_calc_symbol_component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="parser\Math_Lexer.l">
@@ -442,13 +406,11 @@
     <None Include="parser\math_parsing_unit.output">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="j_calc_symbol_component" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="parser\parser.h">
-      <Filter>Header Files\parser</Filter>
-    </CustomBuild>
     <CustomBuild Include="parser\Math_Lexer.h">
-      <Filter>Header Files\parser</Filter>
+      <Filter>Header Files\J_Calc_Parser</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

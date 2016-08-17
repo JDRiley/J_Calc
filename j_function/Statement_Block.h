@@ -8,7 +8,7 @@ namespace jomike{
 class Statement_Block : public j_statement{
 public:
 
-	Statement_Block(Symbol_List* i_symbol_list);
+	Statement_Block(J_Calc_Symbol_List* i_symbol_list);
 
 	
 	Statement_Block(const Statement_Block& irk_source);
@@ -31,7 +31,7 @@ public:
 
 	
 private:
-	Symbol_List* M_symbol_list;
+	J_Calc_Symbol_List* M_symbol_list;
 
 
 	void alert_symbol_scope_set()override;

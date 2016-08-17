@@ -7,7 +7,7 @@
 namespace jomike{
 class Field_Access_Expression : public j_expression{
 public:
-	Field_Access_Expression(J_Symbol_Identifier* i_name);
+	Field_Access_Expression(const yy::location& irk_loc, J_Symbol_Identifier* i_name);
 
 
 	Field_Access_Expression(const Field_Access_Expression& irk_source);
@@ -18,11 +18,11 @@ public:
 
 	void set_value(j_value i_value)override;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	bool has_value()const;
 
-	j_symbol* make_non_referenced()const override;
+	j_calc_symbol* make_non_referenced()const override;
 
 	~Field_Access_Expression();
 

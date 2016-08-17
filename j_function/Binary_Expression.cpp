@@ -17,10 +17,10 @@ bool Binary_Expression::has_value()const {
 	return true;
 }
 
-Binary_Expression::Binary_Expression(
-	j_expression* i_left_expression, j_expression* i_right_expression
+Binary_Expression::Binary_Expression(const yy::location& irk_loc
+	, j_expression* i_left_expression, j_expression* i_right_expression
 	, Operators i_operator)
-:j_expression(i_left_expression->symbol_type()){
+:j_expression(irk_loc, i_left_expression->symbol_type()){
 	M_left_expression = i_left_expression;
 	M_right_expression = i_right_expression;
 	M_operator = i_operator;

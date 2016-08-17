@@ -6,9 +6,9 @@ namespace jomike{
 
 
 
-Type_Syntax::Type_Syntax(
-	const std::string& irk_name, Symbol_Types i_symbol_type)
-	:j_symbol_component(i_symbol_type), M_type_name(irk_name){
+Type_Syntax::Type_Syntax(const yy::location& irk_loc
+	, const std::string& irk_name, Symbol_Types i_symbol_type)
+	:j_calc_symbol_component(irk_loc, i_symbol_type), M_type_name(irk_name){
 
 }
 

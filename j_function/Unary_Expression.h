@@ -7,7 +7,7 @@
 namespace jomike{
 class Unary_Expression : public j_expression{
 public:
-	Unary_Expression(j_expression* i_expression);
+	Unary_Expression(const yy::location& irk_loc, j_expression* i_expression);
 
 	Unary_Expression(const Unary_Expression& irk_src);
 
@@ -22,13 +22,13 @@ public:
 
 	~Unary_Expression();
 
-	j_symbol* make_non_referenced()const override;
+	j_calc_symbol* make_non_referenced()const override;
 
 	
 
 	void process()override;
 protected:
-	Unary_Expression();
+	
 	j_expression& base_expression();
 
 

@@ -7,7 +7,7 @@
 namespace jomike{
 class Type_String : public Type_Syntax{
 public:
-	Type_String();
+	Type_String(const yy::location& irk_loc);
 
 	Type_String* get_copy()const override;
 

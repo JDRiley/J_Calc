@@ -5,7 +5,7 @@
 //
 #include <FlexLexer.h>
 //
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 //
 #include <J_UI/J_UI_String.h>
 //

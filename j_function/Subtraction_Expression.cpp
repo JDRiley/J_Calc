@@ -4,9 +4,9 @@
 namespace jomike{
 
 
-Subtraction_Expression::Subtraction_Expression(
-	j_expression* i_left_expression, j_expression* i_right_expression)
-	:Binary_Expression(i_left_expression, i_right_expression, Operators::MINUS){
+Subtraction_Expression::Subtraction_Expression(const yy::location& irk_loc
+	, j_expression* i_left_expression, j_expression* i_right_expression)
+	:Binary_Expression(irk_loc, i_left_expression, i_right_expression, Operators::MINUS){
 
 }
 

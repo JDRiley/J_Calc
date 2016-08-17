@@ -15,8 +15,6 @@
 using std::for_each; using std::mem_fn; using std::transform;
 
 namespace jomike{
-//Arguments Function
-Arguments::Arguments():j_symbol_component(Symbol_Types::ARGUMENTS){}
 
 
 
@@ -24,14 +22,11 @@ Arguments::Arguments():j_symbol_component(Symbol_Types::ARGUMENTS){}
 
 
 
-/*Arguments(Arguments&&)*/
-Arguments::Arguments(Arguments&& irr_src)
-:j_symbol_component(std::move(irr_src)){}
-
-Arguments::Arguments(j_size_t i_size): j_symbol_component(Symbol_Types::ARGUMENTS){
+Arguments::Arguments(const yy::location& irk_loc, j_size_t i_size)
+	: j_calc_symbol_component(irk_loc, Symbol_Types::ARGUMENTS){
 	
 	for(int i = 0; i < i_size; i++){
-		M_arg_symbols.emplace_back(j_placeholder_symbol(i));
+		M_arg_symbols.emplace_back(j_placeholder_symbol(irk_loc, i));
 	}
 }
 
@@ -43,11 +38,6 @@ Arguments::Arguments(Iter i_first, Iter i_last){
 	}
 }
 
-Arguments::Arguments(const Arguments& irk_right)
-	:j_symbol_component(irk_right)
-	, M_arg_symbols(irk_right.M_arg_symbols){
-
-}
 
 /*void swap(Arguments& ir_src)*/
 void Arguments::swap(Arguments& ir_src){M_arg_symbols.swap(ir_src.M_arg_symbols);}
@@ -67,8 +57,7 @@ Arguments& Arguments::operator=(Arguments&& rr_src){swap(rr_src); return *this;}
 Arguments::~Arguments(){}
 
 void Arguments::clear(){
-	Arguments empty_arguments;
-	swap(empty_arguments);
+	M_arg_symbols.clear();
 }
 
 /*int size()const*/

@@ -19,28 +19,28 @@ namespace jomike{
 
 
 
-Type_Syntax* make_int_type_syntax(){
-	return new Type_Int;
+Type_Syntax* make_int_type_syntax(const yy::location& irk_loc){
+	return new Type_Int(irk_loc);
 }
 
-Type_Syntax* make_double_type_syntax(){
-	return new Type_Double;
+Type_Syntax* make_double_type_syntax(const yy::location& irk_loc){
+	return new Type_Double(irk_loc);
 }
 
-Type_Syntax* make_bool_type_syntax(){
-	return new Type_Bool;
+Type_Syntax* make_bool_type_syntax(const yy::location& irk_loc){
+	return new Type_Bool(irk_loc);
 }
 
-Type_Syntax* make_type_syntax(Symbol_Types i_symbol_type){
+Type_Syntax* make_type_syntax(const yy::location& irk_loc, Symbol_Types i_symbol_type){
 	switch(i_symbol_type){
 	case Symbol_Types::INT:
-		return new Type_Int;
+		return new Type_Int(irk_loc);
 	case Symbol_Types::BOOL:
-		return new Type_Bool;
+		return new Type_Bool(irk_loc);
 	case Symbol_Types::DOUBLE:
-		return new Type_Double;
+		return new Type_Double(irk_loc);
 	case Symbol_Types::STRING:
-		return new Type_String;
+		return new Type_String(irk_loc);
 	default:
 		//throw J_Symbol_Error("Cannot make Type_Syntax With this Symbol Type." + to_string(__LINE__ ) +  __FILE__);
 		return nullptr;
@@ -48,12 +48,12 @@ Type_Syntax* make_type_syntax(Symbol_Types i_symbol_type){
 	}
 }
 
-Type_Syntax* make_void_type_syntax(){
-	return new Type_Void;
+Type_Syntax* make_void_type_syntax(const yy::location& irk_loc){
+	return new Type_Void(irk_loc);
 }
 
-Type_Syntax* make_string_type_syntax(){
-	return new Type_String;
+Type_Syntax* make_string_type_syntax(const yy::location& irk_loc){
+	return new Type_String(irk_loc);
 }
 
 }

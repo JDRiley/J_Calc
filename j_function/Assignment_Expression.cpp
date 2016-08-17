@@ -10,9 +10,9 @@ j_value Assignment_Expression::derived_get_value(const Arguments& i_args)const {
 	return left_expression().get_value(i_args);
 }
 
-Assignment_Expression::Assignment_Expression(
-	j_expression* i_left_expression, j_expression* i_right_expression)
-	:Binary_Expression(i_left_expression, i_right_expression, Operators::ASSIGN){
+Assignment_Expression::Assignment_Expression(const yy::location& irk_loc
+	, j_expression* i_left_expression, j_expression* i_right_expression)
+	:Binary_Expression(irk_loc, i_left_expression, i_right_expression, Operators::ASSIGN){
 
 }
 

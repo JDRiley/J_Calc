@@ -5,9 +5,6 @@ namespace jomike{
 
 
 
-Void_Empty_Expression::Void_Empty_Expression():j_expression(Symbol_Types::VOID_TYPE){
-
-}
 
 
 j_value Void_Empty_Expression::derived_get_value(const Arguments& )const {

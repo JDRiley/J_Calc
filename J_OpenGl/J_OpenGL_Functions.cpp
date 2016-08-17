@@ -468,7 +468,7 @@ j_float to_y_screen(j_window_t i_window, int i_y_pixel){
 	return static_cast<j_float>(2)*i_y_pixel/get_y_res(i_window);
 }
 
-Pen_Pos_FL_t screen_coords(j_window_t i_window, Pen_Pos_t i_pos){
+Pen_Pos_FL_t screen_coords(j_window_t i_window, Pen_Pos_Int_t i_pos){
 	return Pen_Pos_FL_t(convert_x_coord(i_window, i_pos.first), convert_y_coord(i_window, i_pos.second));
 }
 

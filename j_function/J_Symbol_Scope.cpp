@@ -2,9 +2,9 @@
 //
 #include "J_Symbol_Error.h"
 //
-#include "j_symbol.h"
+#include "j_calc_symbol.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "j_declaration.h"
 
@@ -31,7 +31,7 @@ J_Symbol_Scope::J_Symbol_Scope(const J_Symbol_Scope& irk_right): M_parent_scope(
 	}
 }
 
-j_symbol* J_Symbol_Scope::get_symbol(const J_UI_String& irk_string)const{
+j_calc_symbol* J_Symbol_Scope::get_symbol(const J_UI_String& irk_string)const{
 	auto symbol_pos = M_symbols.find(irk_string);
 	if(M_symbols.end() != symbol_pos){
 		return *symbol_pos;
@@ -43,17 +43,17 @@ j_symbol* J_Symbol_Scope::get_symbol(const J_UI_String& irk_string)const{
 	
 }
 
-void J_Symbol_Scope::add_symbol(j_symbol* i_symbol){
+void J_Symbol_Scope::add_symbol(j_calc_symbol* i_symbol){
 	assert(i_symbol);
 
 	if(M_symbols.count(i_symbol->name())){
-		throw J_Symbol_Error("Symbol with name " + i_symbol->name().std_str() + " already exists!");
+		throw J_Symbol_Error("Symbol with name " + i_symbol->name() + " already exists!");
 	}
 
 	M_symbols[i_symbol->name()] = i_symbol;
 }
 
-void J_Symbol_Scope::add_symbol(const j_symbol& irk_symbol){
+void J_Symbol_Scope::add_symbol(const j_calc_symbol& irk_symbol){
 	add_symbol(irk_symbol.get_copy());
 }
 

@@ -7,7 +7,8 @@
 namespace jomike{
 class Division_Expression : public Binary_Expression{
 public:
-	Division_Expression(j_expression* i_left_expression, j_expression* i_right_expression);
+	Division_Expression(const yy::location& irk_loc
+		, j_expression* i_left_expression, j_expression* i_right_expression);
 
 
 	Division_Expression* get_copy()const override;

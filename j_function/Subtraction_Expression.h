@@ -7,7 +7,8 @@
 namespace jomike{
 class Subtraction_Expression : public Binary_Expression{
 public:
-	Subtraction_Expression(j_expression* i_left_expression, j_expression* i_right_expression);
+	Subtraction_Expression(const yy::location& irk_loc
+		, j_expression* i_left_expression, j_expression* i_right_expression);
 
 	Subtraction_Expression(const Subtraction_Expression& irk_source) = default;
 

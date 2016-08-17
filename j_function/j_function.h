@@ -1,7 +1,7 @@
 #ifndef J_FUNCTION_H
 #define J_FUNCTION_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 #include <j_numeric.h>
 #include <j_physical_constants.h>
 #include "math_base.h"

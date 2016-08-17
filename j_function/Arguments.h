@@ -3,28 +3,26 @@
 
 #include <J_Fwd_Decl.h>
 //
-#include "j_symbol_component.h"
+#include <j_symbol/j_symbol.h>
 //
 #include <J_UI/J_UI_String.h>
 //
 #include "j_expression.h"
 //
-#include "J_Symbol_Component_Array.h"
+#include <j_symbol/Specific_Symbol_List.h>
 namespace jomike{
-class j_symbol;
+class j_calc_symbol;
 
 
 
 
-class Arguments : public j_symbol_component{
+class Arguments : public j_calc_symbol_component{
 public:
 	//Constructors
-	Arguments();
-	
-	Arguments(j_size_t);
 
-	Arguments(const Arguments& irk_right);
-	Arguments(Arguments&& irr_source);
+	Arguments(const yy::location& irk_loc, j_size_t i_size = J_SIZE_T_ZERO);
+
+
 
 	template<typename Iter>
 	Arguments(Iter i_first, Iter i_last);
@@ -58,6 +56,8 @@ public:
 	void swap(Arguments&);
 
 	virtual void set_symbol_scope(J_Symbol_Scope* i_scope);
+	Arguments(Arguments&&) = default;
+	Arguments(const Arguments&) = default;
 
 	typedef J_Symbol_Component_Array<j_expression>::const_iterator const_iterator;
 	const_iterator begin()const;

@@ -2,7 +2,7 @@
 //
 #include "J_Symbol_Scope.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "J_Symbol_Scope.h"
 //
@@ -19,7 +19,8 @@ Statement_Block* Statement_Block::get_copy()const {
 	return new Statement_Block(*this);
 }
 
-Statement_Block::Statement_Block(Symbol_List* i_symbol_list){
+Statement_Block::Statement_Block(J_Calc_Symbol_List* i_symbol_list)
+	:j_statement(i_symbol_list->location()){
 	M_symbol_list = i_symbol_list;
 }
 
@@ -35,13 +36,23 @@ j_value Statement_Block::derived_get_value(const Arguments& i_args)const {
 	J_Symbol_Scope running_scope(symbol_scope());
 	
 
-	M_symbol_list->set_symbol_scope(&running_scope);
+	
+	j_value de_value;
+	for(auto f_symbol : *M_symbol_list){
+		f_symbol->set_symbol_scope(&running_scope);
+		de_value = f_symbol->get_value(i_args);
+	}
 
-	return M_symbol_list->get_value(i_args);
+	return de_value;
 }
 
 bool Statement_Block::has_value()const{
-	return M_symbol_list->has_value();
+	assert(M_symbol_list);
+	if(M_symbol_list->empty()){
+		return false;
+	}
+
+	return M_symbol_list->back().has_value();
 }
 
 void Statement_Block::clear(){
@@ -53,7 +64,11 @@ Statement_Block::~Statement_Block(){
 }
 
 void Statement_Block::alert_symbol_scope_set(){
-	M_symbol_list->set_symbol_scope(&symbol_scope());
+	for(auto f_symbol : *M_symbol_list){
+		f_symbol->set_symbol_scope(&symbol_scope());
+	}
+
+	
 }
 
 void Statement_Block::process(){

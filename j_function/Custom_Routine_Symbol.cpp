@@ -1,6 +1,6 @@
 #include "Custom_Routine_Symbol.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "J_Symbol_Scope.h"
 //
@@ -17,6 +17,8 @@
 #include "Statement_Block.h"
 //
 #include "Value_Expression.h"
+//
+
 using std::transform;
 
 using std::to_string;
@@ -24,7 +26,7 @@ namespace jomike{
 
 
 static Type_Syntax_List* make_type_syntax_list(const Declaration_List& irk_list){
-	auto syntax_list = new Type_Syntax_List;
+	auto syntax_list = new Type_Syntax_List(irk_list.location());
 	for(auto declaration : irk_list){
 		syntax_list->add_symbol(declaration->type_syntax());
 	}
@@ -32,17 +34,22 @@ static Type_Syntax_List* make_type_syntax_list(const Declaration_List& irk_list)
 }
 
 
-Custom_Routine_Symbol::Custom_Routine_Symbol(
-	J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
+Custom_Routine_Symbol::Custom_Routine_Symbol(const yy::location& irk_loc
+	, J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
 	, const Declaration_List& irk_arg_declarations, Type_Syntax* i_return_type
 	, Statement_Block* i_statement_list)
-:j_routine_symbol(i_identifier, new Type_Routine(i_return_type, make_type_syntax_list(irk_arg_declarations))){
+:j_routine_symbol(irk_loc
+	, new Type_Routine(yy::location(), i_return_type, make_type_syntax_list(irk_arg_declarations))
+	, i_identifier){
 	M_statement_block = i_statement_list;
 	M_running_scope = new J_Symbol_Scope(irk_static_declarations);
 
 	M_running_scope->set_parent_scope(&symbol_scope());
 	transform(irk_arg_declarations.begin(), irk_arg_declarations.end()
 			 , back_inserter(M_arg_names), [](const j_declaration* y_decl){return y_decl->name(); });
+
+	type_syntax().set_location(
+		irk_static_declarations.location() + irk_arg_declarations.location());
 }
 
 Custom_Routine_Symbol::Custom_Routine_Symbol(const Custom_Routine_Symbol& irk_right)
@@ -75,7 +82,7 @@ Custom_Routine_Symbol* Custom_Routine_Symbol::get_copy()const{
 j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const {
 	if(irk_args.size() != M_arg_names.size()){
 		throw J_Symbol_Error(
-			"Improper number of Args to function: " + name().std_str()
+			"Improper number of Args to function: " + name()
 			+ " expected: " + to_string(M_arg_names.size()) + " args. Given: " + to_string(irk_args.size()));
 	}
 
@@ -88,7 +95,9 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 		//arg_symbol = j_symbol_unique_t(arg_symbol->convert_to_type(argument_types_list()[i]));
 		//}
 
-		j_symbol_unique_t arg_symbol(new Value_Expression(irk_args[i].get_value()));
+		j_calc_symbol_unique_t arg_symbol(new Value_Expression(
+			irk_args[i].location(), irk_args[i].get_value()));
+
 		arg_symbol->set_name(M_arg_names[i]);
 		running_scope->add_symbol(arg_symbol.release());
 

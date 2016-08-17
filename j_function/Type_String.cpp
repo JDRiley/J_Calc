@@ -5,7 +5,8 @@ namespace jomike{
 
 
 
-Type_String::Type_String():Type_Syntax("string", Symbol_Types::STRING){
+Type_String::Type_String(const yy::location& irk_loc)
+	:Type_Syntax(irk_loc, "string", Symbol_Types::STRING){
 
 }
 

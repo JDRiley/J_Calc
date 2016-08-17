@@ -1,1 +1,1 @@
-#include "../j_function/j_symbol.h"
+#include "../j_function/j_calc_symbol.h"

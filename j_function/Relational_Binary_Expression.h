@@ -7,8 +7,8 @@
 namespace jomike{
 class Relational_Binary_Expression : public Binary_Expression{
 public:
-	Relational_Binary_Expression(
-		j_expression* i_left, j_expression* i_right, Operators i_operator);
+	using Binary_Expression::Binary_Expression;
+
 
 	
 	Relational_Binary_Expression(const Relational_Binary_Expression& irk_source);

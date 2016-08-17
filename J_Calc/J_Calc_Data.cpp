@@ -21,12 +21,12 @@ using std::string; using std::accumulate;
 
 namespace jomike{
 
-void add_user_symbol(j_symbol* i_symbol){
+void add_user_symbol(j_calc_symbol* i_symbol){
 	static Instance_Pointer<J_Calc_Data> s_data;
 	return s_data->add_user_symbol(i_symbol);
 }
 
-j_symbol* get_j_symbol_from_model(const J_UI_String& irk_name){
+j_calc_symbol* get_j_symbol_from_model(const J_UI_String& irk_name){
 	static Instance_Pointer<J_Calc_Data> s_data;
 	return s_data->get_symbol(irk_name);
 }
@@ -98,7 +98,7 @@ void J_Calc_Data::attach_view(J_Calc_View_Shared_t i_new_view){
 
 
 /*void add_user_symbol(J_Symbol_Shared_t)*/
-void J_Calc_Data::add_user_symbol(j_symbol* i_symbol_ptr){
+void J_Calc_Data::add_user_symbol(j_calc_symbol* i_symbol_ptr){
 	if(M_user_symbols.count(i_symbol_ptr->name())){
 		delete i_symbol_ptr;
 		throw J_Syntax_Error("Symbol With This Name Already Exists");
@@ -115,12 +115,12 @@ bool is_reserved_symbol(const J_UI_String& irk_src){
 	return s_calc_data->is_reserved_symbol(irk_src);
 }
 
-j_symbol* get_reserved_symbol(const J_UI_String& irk_string){
+j_calc_symbol* get_reserved_symbol(const J_UI_String& irk_string){
 	
 	return s_calc_data->get_reserved_symbol(irk_string);
 }
 
-j_symbol* J_Calc_Data::get_reserved_symbol(const J_UI_String& irk_string)const{
+j_calc_symbol* J_Calc_Data::get_reserved_symbol(const J_UI_String& irk_string)const{
 	assert(is_reserved_symbol(irk_string));
 	return *M_reserved_symbols.find(irk_string);
 }
@@ -128,11 +128,11 @@ j_symbol* J_Calc_Data::get_reserved_symbol(const J_UI_String& irk_string)const{
 bool J_Calc_Data::is_reserved_symbol(const J_UI_String& irk_src)const{return M_reserved_symbols.count(irk_src);}
 bool J_Calc_Data::is_reserved_word(const J_UI_String& irk_src)const{return M_reserved_words.count(irk_src);}
 
-j_symbol* get_symbol(const J_UI_String& irk_string){
+j_calc_symbol* get_symbol(const J_UI_String& irk_string){
 	return s_calc_data->get_symbol(irk_string);
 }
 
-j_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
+j_calc_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
 	if(is_reserved_symbol(irk_string)){
 		return get_reserved_symbol(irk_string);
 	}else if(is_user_symbol(irk_string)){
@@ -144,7 +144,7 @@ j_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
 
 bool J_Calc_Data::is_user_symbol(const J_UI_String& irk_string)const{return M_user_symbols.count(irk_string);}
 
-j_symbol* J_Calc_Data::get_user_symbol(const J_UI_String& irk_string)const{
+j_calc_symbol* J_Calc_Data::get_user_symbol(const J_UI_String& irk_string)const{
 	if(!is_user_symbol(irk_string)){
 		throw J_Argument_Error("No User Symbol with that name");
 	}

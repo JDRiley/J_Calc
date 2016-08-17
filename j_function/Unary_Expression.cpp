@@ -29,14 +29,16 @@ Unary_Expression::Unary_Expression(const Unary_Expression& irk_src) : j_expressi
 	}
 }
 
-Unary_Expression::Unary_Expression(j_expression* i_expression) 
-: j_expression(i_expression->symbol_type()){
+Unary_Expression::Unary_Expression(const yy::location& irk_loc, j_expression* i_expression) 
+: j_expression(irk_loc, i_expression->symbol_type()){
 	M_expression = i_expression;
+
+
+	if(M_expression && M_expression->has_type_syntax()){
+		set_type_syntax(M_expression->type_syntax());
+	}
 }
 
-Unary_Expression::Unary_Expression():j_expression(Symbol_Types::VOID_TYPE){
-	M_expression = nullptr;
-}
 
 j_expression& Unary_Expression::base_expression()const{
 	assert(M_expression);
@@ -69,7 +71,7 @@ void Unary_Expression::process(){
 	M_expression->process();
 }
 
-j_symbol* Unary_Expression::make_non_referenced()const {
+j_calc_symbol* Unary_Expression::make_non_referenced()const {
 	return M_expression->make_non_referenced();
 }
 

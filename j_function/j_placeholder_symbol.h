@@ -14,11 +14,11 @@ public:
 	j_placeholder_symbol* move_copy()override;
 	bool has_value()const override;
 	void clear()override;
-	j_placeholder_symbol(j_size_t i_index);
+	j_placeholder_symbol(const yy::location& irk_loc, j_size_t i_index);
 	bool is_placeholder()const override;
 	j_size_t placeholder_index()const;
 
-	J_UI_String get_display_name()override;
+	std::string get_display_name()override;
 
 	void process()override;
 protected:

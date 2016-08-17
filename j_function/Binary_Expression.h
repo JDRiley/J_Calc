@@ -10,8 +10,8 @@ namespace jomike{
 
 class Binary_Expression : public j_expression{
 public:
-	Binary_Expression(
-		j_expression* i_left_expression, j_expression* i_right_expression, Operators i_operator);
+	Binary_Expression(const yy::location& irk_loc
+		, j_expression* i_left_expression, j_expression* i_right_expression, Operators i_operator);
 
 	Binary_Expression(const Binary_Expression& irk_source);
 

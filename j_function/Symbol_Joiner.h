@@ -1,7 +1,7 @@
 #ifndef SYMBOL_JOINER_H
 #define SYMBOL_JOINER_H
 
-#include "J_Symbol_Fwd_Decl.h"
+#include "J_Calc_Symbol_Fwd_Decl.h"
 
 
 namespace jomike{

@@ -4,23 +4,15 @@
 //
 #include "Statement_Block.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "Expression_Statement.h"
 namespace jomike{
 
 
-If_Statement::If_Statement(
-	j_expression* i_test_expression, Statement_Block* i_then_body
-	, Statement_Block* i_else_body /*= nullptr*/){
-	M_test_expression = i_test_expression;
-	M_then_body = i_then_body;
-	M_else_body = i_else_body;
-}
-
-If_Statement::If_Statement(
-	j_expression* i_test_expression, Statement_Block* i_then_body
-	, If_Statement* i_else_body /*= nullptr*/){
+If_Statement::If_Statement(const yy::location& irk_loc
+	, j_expression* i_test_expression, Statement_Block* i_then_body
+	, j_statement* i_else_body /*= nullptr*/): j_statement(irk_loc, Symbol_Types::IF_STATEMENT){
 	M_test_expression = i_test_expression;
 	M_then_body = i_then_body;
 	M_else_body = i_else_body;
@@ -58,14 +50,6 @@ If_Statement::If_Statement(If_Statement&& irv_source):j_statement(std::move(irv_
 }
 
 
-If_Statement::If_Statement(
-	j_expression* i_test_expression, j_expression* i_then_expression
-	, j_expression* i_else_expression){
-
-	M_test_expression = i_test_expression;
-	M_then_body = new Statement_Block(new Symbol_List({i_then_expression}));
-	M_else_body = new Expression_Statement(i_else_expression);
-}
 
 void If_Statement::clear(){
 	M_test_expression->clear();

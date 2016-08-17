@@ -1,4 +1,4 @@
-#include "Constant_Symbol.h"
+#include "J_Constant_Symbol.h"
 
 //
 #include "j_value.h"
@@ -14,16 +14,12 @@
 #include "Type_Factory.h"
 namespace jomike{
 
-Constant_Symbol::Constant_Symbol(
-	Symbol_Types i_symbol_type, const yy::location& /*i_loc*/):j_expression(i_symbol_type){
-	set_type_syntax(make_type_syntax(i_symbol_type));
-}
 
-void Constant_Symbol::process(){
+void J_Constant_Symbol::process(){
 
 }
 
-void Constant_Symbol::alert_symbol_scope_set(){
+void J_Constant_Symbol::alert_symbol_scope_set(){
 
 }
 
@@ -52,19 +48,19 @@ Int_Constant_Symbol* Int_Constant_Symbol::get_copy()const {
 	return new Int_Constant_Symbol(*this);
 }
 
-Int_Constant_Symbol::Int_Constant_Symbol(int i_val, const yy::location& i_loc)
-	:Constant_Symbol(Symbol_Types::INT, i_loc){
+Int_Constant_Symbol::Int_Constant_Symbol(const yy::location& irk_loc, int i_val)
+	:J_Constant_Symbol(irk_loc, Symbol_Types::INT){
 	M_value = i_val;
 }
 
-J_UI_String Int_Constant_Symbol::get_display_name(){
-	return derived_get_value(Arguments()).to_str();
+std::string Int_Constant_Symbol::get_display_name(){
+	return derived_get_value(empty_arguments()).to_str();
 }
 
-j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const {
+j_calc_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const {
 	switch(irk_type.symbol_type()){
 	case Symbol_Types::DOUBLE:{
-		auto dbl_symbol = new Dbl_Constant_Symbol(static_cast<j_dbl>(M_value), yy::location());
+		auto dbl_symbol = new Dbl_Constant_Symbol(location(), static_cast<j_dbl>(M_value));
 		dbl_symbol->set_name(name());
 		return dbl_symbol;
 	}
@@ -76,8 +72,8 @@ j_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)const
 
 
 
-Bool_Constant_Symbol::Bool_Constant_Symbol(bool i_val, const yy::location& i_loc)
-:Constant_Symbol(Symbol_Types::BOOL, i_loc){
+Bool_Constant_Symbol::Bool_Constant_Symbol(const yy::location& i_loc, bool i_val)
+:J_Constant_Symbol(i_loc, Symbol_Types::BOOL){
 	M_value = i_val;
 }
 
@@ -107,8 +103,8 @@ Bool_Constant_Symbol* Bool_Constant_Symbol::get_copy()const {
 	return new Bool_Constant_Symbol(*this);
 }
 
-jomike::J_UI_String Bool_Constant_Symbol::get_display_name(){
-	return derived_get_value(Arguments()).to_str();
+std::string Bool_Constant_Symbol::get_display_name(){
+	return derived_get_value(empty_arguments()).to_str();
 }
 
 
@@ -134,12 +130,12 @@ Dbl_Constant_Symbol* Dbl_Constant_Symbol::get_copy()const {
 	return new Dbl_Constant_Symbol(*this);
 }
 
-Dbl_Constant_Symbol::Dbl_Constant_Symbol(j_dbl i_val, const yy::location& i_loc)
-	:Constant_Symbol(Symbol_Types::DOUBLE, i_loc){
+Dbl_Constant_Symbol::Dbl_Constant_Symbol(const yy::location& i_loc, j_dbl i_val)
+	:J_Constant_Symbol(i_loc, Symbol_Types::DOUBLE){
 	M_value = i_val;
 }
 
-J_UI_String Dbl_Constant_Symbol::get_display_name(){
+std::string Dbl_Constant_Symbol::get_display_name(){
 	return get_value().to_str();
 }
 
@@ -167,13 +163,13 @@ String_Constant_Symbol* String_Constant_Symbol::get_copy()const {
 }
 
 String_Constant_Symbol::String_Constant_Symbol(
-	const std::string& irk_val, const yy::location& i_loc)
-	:Constant_Symbol(Symbol_Types::STRING, i_loc){
+	const yy::location& i_loc, const std::string& irk_val)
+	:J_Constant_Symbol(i_loc, Symbol_Types::STRING){
 	M_value = irk_val;
 }
 
-jomike::J_UI_String String_Constant_Symbol::get_display_name(){
-	assert(M_value == derived_get_value(Arguments()).to_str());
+std::string String_Constant_Symbol::get_display_name(){
+	assert(M_value == derived_get_value(empty_arguments()).to_str());
 	return M_value;
 }
 

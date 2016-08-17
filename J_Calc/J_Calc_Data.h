@@ -23,17 +23,17 @@ public:
 	void attach_view(J_Calc_View_Shared_t);
 
 	//Symbol Management
-	void add_user_symbol(j_symbol*);
+	void add_user_symbol(j_calc_symbol*);
 	bool is_reserved_word(const J_UI_String&)const;
 	bool is_reserved_symbol(const J_UI_String&)const;
 
 	bool is_user_symbol(const J_UI_String&)const;
-	j_symbol* get_user_symbol(const J_UI_String&)const;
+	j_calc_symbol* get_user_symbol(const J_UI_String&)const;
 	void remove_user_symbol(const J_UI_String&);
 	bool symbol_name_availability_status(const J_UI_String&);
-	j_symbol* get_symbol(const J_UI_String&)const;
+	j_calc_symbol* get_symbol(const J_UI_String&)const;
 	//Gets
-	j_symbol* get_reserved_symbol(const J_UI_String&)const;
+	j_calc_symbol* get_reserved_symbol(const J_UI_String&)const;
 	~J_Calc_Data();
 	void clear_user_data();
 	void update();
@@ -48,7 +48,7 @@ private:
 	Calc_J_View_Cont_t M_calc_views;
 
 	j_tree<J_UI_String> M_reserved_words;
-	typedef j_map<J_UI_String, j_symbol*> Symbol_Map_t;
+	typedef j_map<J_UI_String, j_calc_symbol*> Symbol_Map_t;
 	Symbol_Map_t M_reserved_symbols;
 	Symbol_Map_t M_user_symbols;
 };
