@@ -7,7 +7,7 @@
 //
 #include "J_Calc_Symbol.h"
 //
-#include "parser/Math_Parser.h"
+#include "J_Calc_Parser/J_Calc_Parser.h"
 //
 #include "J_Symbol_Error.h"
 
@@ -17,7 +17,7 @@ using std::string;
 namespace jomike{
 
 std::string evaluate_math_input(const std::string& irk_input){
-	Math_Parser parser;
+	J_Calc_Parser parser;
 	string error_string = "UNexpected Error parsing input: " + irk_input;
 
 	try{

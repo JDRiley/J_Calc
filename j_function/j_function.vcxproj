@@ -163,22 +163,22 @@
     <ClInclude Include="Binary_Function_Chain_Symbol.h" />
     <ClInclude Include="boolean_tester_array.h" />
     <ClInclude Include="Call_Expression.h" />
+    <ClInclude Include="J_Calc_Parser\J_Calc_Parser.tab.h" />
     <ClInclude Include="j_calc_symbol_component.h" />
     <ClInclude Include="J_Constant_Symbol_Factory.h" />
     <ClInclude Include="J_Constant_Symbol.h" />
     <ClInclude Include="Custom_Routine_Symbol.h" />
     <ClInclude Include="Division_Expression.h" />
-    <ClInclude Include="Expression_List.h" />
     <ClInclude Include="Expression_Statement.h" />
     <ClInclude Include="J_Calc_Evaluater.h" />
     <ClInclude Include="Modulo_Expression.h" />
-    <CustomBuild Include="parser\Math_Lexer.h">
+    <ClInclude Include="J_Calc_Parser\J_Calc_Lexer.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)" win_flex -d --outfile="Math_YY_Lex.cpp" --wincompat --c++ Math_Lexer.l</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_flex -d --outfile="parser/Math_YY_Lex.cpp" --wincompat --c++ parser/Math_Lexer.l</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)Math_YY_Lex.cpp</Outputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)Math_Lexer.l</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-    </CustomBuild>
+    </ClInclude>
     <ClInclude Include="Void_Empty_Expression.h" />
     <ClInclude Include="Field_Access_Expression.h" />
     <ClInclude Include="If_Statement.h" />
@@ -202,10 +202,8 @@
     <ClInclude Include="math_base.h" />
     <ClInclude Include="Multiplication_Expression.h" />
     <ClInclude Include="Operators.h" />
-    <ClInclude Include="parser\J_Calc_Parser.h" />
-    <ClInclude Include="parser\Lexer_Location.h" />
     <ClInclude Include="For_Statement.h" />
-    <ClInclude Include="parser\Math_Parser.h" />
+    <ClInclude Include="J_Calc_Parser\J_Calc_Parser.h" />
     <ClInclude Include="Pre_Decrement_Expression.h" />
     <ClInclude Include="Pre_Increment_Expression.h" />
     <ClInclude Include="Relational_Binary_Expression.h" />
@@ -239,6 +237,12 @@
       <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</MinimalRebuild>
     </ClCompile>
     <ClCompile Include="Call_Expression.cpp" />
+    <ClCompile Include="J_Calc_Parser\J_Calc_Parser.tab.cpp">
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4290;4996;4250;4127;</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4290;4996;4250;4127;</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4290;4996;4250;4127;</DisableSpecificWarnings>
+      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4800;4706;4290;4996;4250;4127;</DisableSpecificWarnings>
+    </ClCompile>
     <ClCompile Include="j_calc_symbol_component.cpp" />
     <ClCompile Include="J_Constant_Symbol.cpp" />
     <ClCompile Include="J_Constant_Symbol_Factory.cpp" />
@@ -248,6 +252,7 @@
     <ClCompile Include="For_Statement.cpp" />
     <ClCompile Include="J_Calc_Evaluater.cpp" />
     <ClCompile Include="Modulo_Expression.cpp" />
+    <ClCompile Include="J_Calc_Parser\J_Calc_Parser.cpp" />
     <ClCompile Include="Void_Empty_Expression.cpp" />
     <ClCompile Include="Field_Access_Expression.cpp" />
     <ClCompile Include="If_Statement.cpp" />
@@ -267,10 +272,7 @@
     <ClCompile Include="J_Value_Types.cpp" />
     <ClCompile Include="math_base.cpp" />
     <ClCompile Include="Multiplication_Expression.cpp" />
-    <ClCompile Include="parser\J_Calc_Parser.cpp" />
-    <ClCompile Include="parser\Math_Lexer.cpp" />
-    <ClCompile Include="parser\Math_Parser.cc" />
-    <ClCompile Include="parser\Math_YY_Lex.cpp">
+    <ClCompile Include="J_Calc_Parser\J_Calc_Lexer.flex.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4800;4706;4512;4290;4996;4510;4511;4250;4127;4065;4244;4702;4005;4267</DisableSpecificWarnings>
@@ -299,10 +301,45 @@
     <ClCompile Include="Variable_Symbol.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="j_calc_symbol_component" />
-    <None Include="parser\Math_Lexer.l" />
-    <None Include="parser\math_parsing_unit.output" />
-    <None Include="parser\parser.y" />
+    <CustomBuild Include="J_Calc_Parser\J_Calc_Lexer.l">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)%(Filename).flex.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)%(Filename).flex.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename).flex.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_flex -d --outfile="%(RelativeDir)%(Filename).flex.cpp" --wincompat --c++ --prefix="jc" --yyclass="%(Filename)" %(Identity)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RelativeDir)%(Filename).flex.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+    <None Include="J_Calc_Parser\math_parsing_unit.output" />
+    <CustomBuild Include="J_Calc_Parser\J_Calc_Parser.y">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RelativeDir)%(Filename).tab.h;%(RelativeDir)%(Filename).tab.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RelativeDir)%(Filename).tab.h;%(RelativeDir)%(Filename).tab.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename).tab.h;%(RelativeDir)%(Filename).tab.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">start /B /WAIT /D "%(RootDir)%(Directory)../" win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">win_bison -v -t --location --defines=%(RelativeDir)%(Filename).tab.h -o%(RelativeDir)%(Filename).tab.cpp %(RelativeDir)%(Filename).y</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RelativeDir)%(Filename).tab.h;%(RelativeDir)%(Filename).tab.cpp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

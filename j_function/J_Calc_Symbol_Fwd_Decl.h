@@ -5,7 +5,12 @@
 //
 #include <j_symbol/J_Symbol_Fwd_Decl.h>
 
+#define YY_YY_J_CALC_PARSER_STACK_HH_INCLUDED
+#define YY_YY_J_CALC_PARSER_LOCATION_HH_INCLUDED
+
 namespace jomike{
+J_FWD_DECL(J_Calc_Parser)
+J_FWD_DECL(J_Calc_Lexer)
 J_FWD_DECL(J_Symbol_Scope)
 J_FWD_DECL_LOWER(j_calc_symbol)
 J_FWD_DECL(j_calc_symbol)

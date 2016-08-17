@@ -16,20 +16,19 @@
  * file inclusions or C++ variable declarations/prototypes that are needed
  * by your code here.
  */
-#include "j_yy_stack.h"
-#include "parser.h"
-#include "Math_Parser.h"
-#include "../Constant_Symbol.h"
+
+
 #include "J_Calc_Parser.h"
-#include <J_UI/J_UI_String.h>
-#include "../Expression_List.h"
+
+#include "../J_Constant_Symbol.h"
 #include "../Call_Expression.h"
-#include "../J_Symbol_Identifier.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
 #include "../j_expression.h"
 #include "../Modulo_Expression.h"
-#include "../Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
+#include "../j_declaration.h"
 #include "../J_Symbol_Scope.h"
 #include "../Custom_Routine_Symbol.h"
 #include "../Assignment_Expression.h"
@@ -42,13 +41,20 @@
 #include "../Transfer_Statement.h"
 #include "../Void_Empty_Expression.h"
 #include "../For_Statement.h"
-
+#include "../Variable_Symbol.h"
+#include "../Variable_Reference_Symbol.h"
+#include "../Unary_Negate_Expression.h"
+#include "../Subtraction_Expression.h"
+#include "../Multiplication_Expression.h"
+#include "../Addition_Expression.h"
+#include "../Division_Expression.h"
+#include "../Type_Factory.h"
 
 using namespace jomike;
 void yyerror(const char *msg); // standard error-handling routine
 
 
-j_symbol_component* jtl::g_input_line = nullptr;
+
 
 //template<typename... Args>
 //void delete_tokens(Args... i_ptrs){
@@ -69,10 +75,10 @@ j_symbol_component* jtl::g_input_line = nullptr;
 %}
 %skeleton "lalr1.cc"
 %defines
-%define parser_class_name {Math_Parsing_Unit}
-%parse-param{jtl::j_symbol** i_symbol_ptr}
-%parse-param{jtl::Math_Parser* i_parser}
-%lex-param{jtl::Math_Parser* i_parser}
+%define parser_class_name {J_Calc_Parsing_Unit}
+%parse-param{jtl::j_calc_symbol** i_symbol_ptr}
+%parse-param{jtl::J_Calc_Parser* i_parser}
+%lex-param{jtl::J_Calc_Parser* i_parser}
 
 
 %code requires{
@@ -173,8 +179,8 @@ j_symbol_component* jtl::g_input_line = nullptr;
 
 Input_Line
 : Expression T_END {
-	$$ = new Expression_Statement($1->get_copy());
-	*i_symbol_ptr = $1;
+	$$ = new Expression_Statement(@$, $1->get_copy());
+	*i_symbol_ptr = $$;
 	return true;
 }
 |Declaration T_END{
@@ -191,7 +197,7 @@ Input_Line
 ;
 Statement
 : Expression ';' {
-	$$ = new Expression_Statement($1);
+	$$ = new Expression_Statement(@$, $1);
 }
 | If_Statement{
 	$$ = $1;
@@ -201,7 +207,7 @@ Statement
 	$$ = $1;
 }
 | T_TRANSFER Expression_Wild ';' {
-	$$ = new Transfer_Statement($2);
+	$$ = new Transfer_Statement(@$, $2);
 }
 | For_Statement{
 	$$ = $1;
@@ -215,16 +221,20 @@ Test_Expression
 }
 If_Statement
 :  Test_Expression Statement_Block{
-	$$ = new If_Statement($1, $2);
+	$$ = new If_Statement(@$, $1, $2);
 }
 | Test_Expression Statement_Block '!' Statement_Block{
-	$$ = new If_Statement($1, $2, $4);
+	$$ = new If_Statement(@$, $1, $2, $4);
 }
 | Test_Expression Statement_Block '!' If_Statement{
-	$$ = new If_Statement($1, $2, $4);
+	$$ = new If_Statement(@$, $1, $2, $4);
 }
 | Test_Expression Expression '!' Expression ';'{
-	$$ = new If_Statement($1, $2, $4);
+	J_Calc_Symbol_List* expr_list = new J_Calc_Symbol_List(@2);
+	expr_list->add_symbol($2);
+
+	Statement_Block* state_block = new Statement_Block(expr_list);
+	$$ = new If_Statement(@$, $1, state_block, new Expression_Statement(@4 + @5, $4));
 }
 ;
 Statement_Block
@@ -234,25 +244,26 @@ Statement_Block
 ;
 Statement_List
 : /*empty*/ {
-$$ = new Specific_Symbol_List<j_symbol>();
+$$ = new Specific_Symbol_List<j_calc_symbol>(@$);
 }
 | Statement_List Statement {
 	$$ = $1;
 	$$->add_symbol($2);
+	$$->set_location(@$);
 }
 ;
 
 
 For_Statement
 : T_FOR '(' Statement  Expression ';' Expression_Wild ')' Statement_Block{
-	$$ = new For_Statement($3, $4, $6, $8);
+	$$ = new For_Statement(@$, $3, $4, $6, $8);
 }
 Declaration_List
 : /*empty*/ {
-	$$ = new Specific_Symbol_List<j_declaration>;
+	$$ = new Specific_Symbol_List<j_declaration>(@$);
 }
 |Declaration {
-	$$ = new Specific_Symbol_List<j_declaration>();
+	$$ = new Specific_Symbol_List<j_declaration>(@$);
 	$$->add_symbol($1);
 }
 | Declaration_List ',' Declaration{
@@ -264,16 +275,16 @@ Declaration_List
 Declaration
 : Variable_Declaration {$$ = $1;}
 | Routine_Definition{ 
-	$$ = $1;
-	@$ = @1;
+	//$$ = $1;
+	//@$ = @1;
 }
 ;
 
 Routine_Definition
 : Bracketed_Declaration_List T_IDENTIFIER Bracketed_Declaration_List T_RIGHT_ARROW Type Statement_Block{
-	$$ = new Custom_Routine_Symbol($2, *$1, *$3, $5, $6);
-	$1.destroy();
-	$3.destroy();
+	$$ = new Custom_Routine_Symbol(@$, $2, *$1, *$3, $5, $6);
+	//$1.destroy();
+	//$3.destroy();
 
 }
 ;
@@ -286,18 +297,18 @@ Bracketed_Declaration_List
 ;
 
 Variable_Declaration
-: Type T_IDENTIFIER{$$ =  new Variable_Symbol($1, $2);
+: Type T_IDENTIFIER{$$ =  new Variable_Symbol(@$, $1, $2);
 	
 	
 }
 | Type T_IDENTIFIER T_RIGHT_ARROW Expression {
-	$$ = new Variable_Reference_Symbol($1, $2, $4); 
+	$$ = new Variable_Reference_Symbol(@$, $1, $2, $4); 
 	
 	
 	
 }
 | Type T_IDENTIFIER T_LEFT_ARROW Expression {
-	$$ = new Variable_Symbol($1, $2, *$4);
+	$$ = new Variable_Symbol(@$, $1, $2, *$4);
 	
 	
 	$4.destroy();
@@ -306,11 +317,11 @@ Variable_Declaration
 ;
 
 Type 
-: T_DOUBLE{$$ = make_double_type_syntax();}
-| T_INT{$$ = make_int_type_syntax();}
-| T_BOOL{$$ = make_bool_type_syntax();}
-| T_VOID{$$ = make_void_type_syntax(); }
-| T_STRING{$$ = make_string_type_syntax(); }
+: T_DOUBLE{$$ = make_double_type_syntax(@$);}
+| T_INT{$$ = make_int_type_syntax(@$);}
+| T_BOOL{$$ = make_bool_type_syntax(@$);}
+| T_VOID{$$ = make_void_type_syntax(@$); }
+| T_STRING{$$ = make_string_type_syntax(@$); }
 ;
 
 Expression
@@ -330,63 +341,63 @@ Expression
 	
 }
 | Expression '+' Expression { 
-	$$ = new Addition_Expression($1, $3);
+	$$ = new Addition_Expression(@$, $1, $3);
 }
 | Expression '-' Expression { 
-	$$ = new Subtraction_Expression($1, $3);
+	$$ = new Subtraction_Expression(@$, $1, $3);
 	
 	
 }
 | Expression '*' Expression { 
-	$$ = new Multiplication_Expression($1, $3);
+	$$ = new Multiplication_Expression(@$, $1, $3);
 	
 	
 }
 | Expression '/' Expression { 
-	$$ = new Division_Expression($1, $3);
+	$$ = new Division_Expression(@$, $1, $3);
 }
 | Expression '%' Expression{
-	$$ = new Modulo_Expression($1, $3);
+	$$ = new Modulo_Expression(@$, $1, $3);
 }
 | T_INCREMENT LValue{
-	$$ = new Pre_Increment_Expression($2);
+	$$ = new Pre_Increment_Expression(@$, $2);
 }
 | T_DECREMENT LValue{
-	$$ = new Pre_Decrement_Expression($2);
+	$$ = new Pre_Decrement_Expression(@$, $2);
 }
 | Expression '>' Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::GREATER);
 }
 | Expression '<' Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::LESS);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::LESS);
 }
 | Expression T_GREATER_EQUAL Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::GREATER_EQUAL);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::GREATER_EQUAL);
 }
 | Expression T_LESS_EQUAL Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::LESS_EQUAL);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::LESS_EQUAL);
 }
 | Expression  T_AND Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::AND);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::AND);
 }
 | Expression T_OR Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::OR);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::OR);
 }
 | Expression T_EQUAL Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::EQUAL);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::EQUAL);
 }
 | Expression T_NOT_EQUAL Expression{
-	$$ = new Relational_Binary_Expression($1, $3, Operators::NOT_EQUAL);
+	$$ = new Relational_Binary_Expression(@$, $1, $3, Operators::NOT_EQUAL);
 }
 | '(' Expression ')' {$$ = $2;  }
 | '-' Expression{
-	$$ = new Unary_Negate_Expression($2);
+	$$ = new Unary_Negate_Expression(@$, $2);
 }
 ;
 
 Expression_Wild
 : /*empty*/{
-	$$ = new Void_Empty_Expression;
+	$$ = new Void_Empty_Expression(@$);
 }
 | Expression{
 	$$ = $1;
@@ -394,7 +405,7 @@ Expression_Wild
 
 Assignment_Expression
 : LValue T_LEFT_ARROW Expression {
-	$$ = new Assignment_Expression($1, $3);
+	$$ = new Assignment_Expression(@$, $1, $3);
 	
 }
 ;
@@ -402,49 +413,51 @@ Assignment_Expression
 
 LValue
 : /*Expression '[' Expression ']' {
-	$$ = new Array_Access_Expression(*$1, *$3, @$);
+	$$ = new Array_Access_Expression(@$, *$1, *$3, @$);
 	delete_tokens($1, $3);
 }
 | */Field_Access_Expression {$$ = $1; }
 ;
 Field_Access_Expression
 : T_IDENTIFIER {
-	$$ = new Field_Access_Expression($1);
+	$$ = new Field_Access_Expression(@$, $1);
 	
 }
 /*| Expression T_BACKSLASH T_Identifier {
-	$$ = new Field_Access_Expression($1, *$3);
+	$$ = new Field_Access_Expression(@$, $1, *$3);
 	delete_tokens($3);
 }*/
 ;
 
 Call
 : T_IDENTIFIER '(' Expression_List_Wild ')' {
-	$$ = new Call_Expression($1, $3);
+	$$ = new Call_Expression(@$, $1, $3);
 	
 	
 }
 //| Expression T_BACKSLASH T_IDENTIFIER '(' Expression_List_Wild ')' {
-//	$$ = new Call_Expression(*$1, $3, $5);
+//	$$ = new Call_Expression(@$, *$1, $3, $5);
 //	delete_tokens($1, $5);
 //	delete $3;
 //}
 ;
 
 Expression_List_Wild
-:	/*empty*/ {$$ = new Arguments;}
-| Expression_List {$$ = $1;}
+:	/*empty*/ {$$ = new Arguments(@$);}
+| Expression_List {
+	//$$ = $1;
+}
 ;
 
 Expression_List
 : Expression_List_Helper {
-	$$ = $1;
+	//$$ = $1;
 	
 }
 ;
 Expression_List_Helper
 : Expression {
-	$$ = new Arguments;
+	$$ = new Arguments(@$);
 	$$->push_back($1);
 	
 }

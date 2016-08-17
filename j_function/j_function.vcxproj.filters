@@ -13,11 +13,11 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\parser">
-      <UniqueIdentifier>{f171c433-59f6-4e85-a327-d4c90db5c68b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\J_Calc_Parser">
       <UniqueIdentifier>{8f22d23e-c5bd-4fdb-8b91-625fc7f73ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\J_Calc_Parser">
+      <UniqueIdentifier>{f171c433-59f6-4e85-a327-d4c90db5c68b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +105,6 @@
     <ClInclude Include="Value_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Expression_List.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Call_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -128,15 +125,6 @@
     </ClInclude>
     <ClInclude Include="Unary_Negate_Expression.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\J_Calc_Parser.h">
-      <Filter>Header Files\J_Calc_Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\Lexer_Location.h">
-      <Filter>Header Files\J_Calc_Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="parser\Math_Parser.h">
-      <Filter>Header Files\J_Calc_Parser</Filter>
     </ClInclude>
     <ClInclude Include="J_Symbol_Scope.h">
       <Filter>Header Files</Filter>
@@ -221,6 +209,12 @@
     </ClInclude>
     <ClInclude Include="j_number_symbol.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Calc_Parser\J_Calc_Parser.h">
+      <Filter>Header Files\J_Calc_Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="J_Calc_Parser\J_Calc_Parser.tab.h">
+      <Filter>Header Files\J_Calc_Parser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -308,18 +302,6 @@
     <ClCompile Include="Unary_Negate_Expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="parser\J_Calc_Parser.cpp">
-      <Filter>Source Files\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\Math_Lexer.cpp">
-      <Filter>Source Files\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\Math_Parser.cc">
-      <Filter>Source Files\parser</Filter>
-    </ClCompile>
-    <ClCompile Include="parser\Math_YY_Lex.cpp">
-      <Filter>Source Files\parser</Filter>
-    </ClCompile>
     <ClCompile Include="J_Symbol_Scope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -395,21 +377,29 @@
     <ClCompile Include="j_calc_symbol_component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="J_Calc_Parser\J_Calc_Lexer.flex.cpp">
+      <Filter>Source Files\J_Calc_Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Calc_Parser\J_Calc_Parser.cpp">
+      <Filter>Source Files\J_Calc_Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="J_Calc_Parser\J_Calc_Parser.tab.cpp">
+      <Filter>Source Files\J_Calc_Parser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="parser\Math_Lexer.l">
+    <None Include="J_Calc_Parser\math_parsing_unit.output">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="parser\parser.y">
-      <Filter>Source Files\parser</Filter>
+    <None Include="J_Calc_Parser\J_Calc_Parser.y">
+      <Filter>Source Files\J_Calc_Parser</Filter>
     </None>
-    <None Include="parser\math_parsing_unit.output">
-      <Filter>Resource Files</Filter>
+    <None Include="J_Calc_Parser\J_Calc_Lexer.l">
+      <Filter>Source Files\J_Calc_Parser</Filter>
     </None>
-    <None Include="j_calc_symbol_component" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="parser\Math_Lexer.h">
+    <CustomBuild Include="J_Calc_Parser\J_Calc_Lexer.h">
       <Filter>Header Files\J_Calc_Parser</Filter>
     </CustomBuild>
   </ItemGroup>

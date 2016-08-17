@@ -7,7 +7,8 @@
 namespace jomike{
 class Addition_Expression : public Binary_Expression{
 public:
-	using Binary_Expression::Binary_Expression;
+	Addition_Expression(const yy::location& irk_loc
+		, j_expression* i_left_expression, j_expression* i_right_expression);
 
 	Addition_Expression(const Addition_Expression&) = default;
 

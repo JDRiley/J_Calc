@@ -7,11 +7,11 @@
 
 %{
 
-#include "Math_Lexer.h"
-#include "../Constant_Symbol_Factory.h"
-#include "parser.h" // for token codes, yylval
-#include "Math_Lexer.h"
-#include "../J_Symbol_Identifier.h"
+#include "J_Calc_Lexer.h"
+
+#include "../J_Constant_Symbol_Factory.h"
+#include "../J_Symbol_Error.h"
+#include <j_symbol/J_Symbol_Identifier.h>
 #include <ex_array.h>
 #include <iostream>
 using std::cin; using std::cout; using std::cerr;
@@ -113,6 +113,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
 <<EOF>> {
+	(void)i_parser;
 	MANAGE_LOC 
 	return token_t::T_END;
 }
@@ -158,7 +159,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 
 
  /* -------------------- Identifiers --------------------------- */
-{IDENTIFIER}        {yylval->identifier = new J_Symbol_Identifier(J_UI_String(yytext));
+{IDENTIFIER}        {yylval->identifier = new J_Symbol_Identifier(yytext);
 						MANAGE_LOC return token_t::T_IDENTIFIER; }
 
 
@@ -168,7 +169,7 @@ SINGLE_COMMENT    ("//"[^\n]*)
 %%
 
 
-void jomike::Math_Lexer::init_scanner(){
+void jomike::J_Calc_Lexer::init_scanner(){
     yy_flex_debug = false;
     BEGIN(N);
     yy_push_state(COPY); // copy first line at start

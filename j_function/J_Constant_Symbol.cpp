@@ -8,8 +8,7 @@
 #include "Type_Syntax.h"
 //
 #include "J_Symbol_Error.h"
-//
-#include "parser/Lexer_Location.h"
+
 //
 #include "Type_Factory.h"
 namespace jomike{

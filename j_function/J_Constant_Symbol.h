@@ -2,8 +2,7 @@
 #define CONSTANT_SYMBOL_H
 
 #include "j_expression.h"
-//
-#include "parser/location.hh"
+
 
 namespace jomike{
 class J_Constant_Symbol : public j_expression{
