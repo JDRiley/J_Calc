@@ -78,5 +78,27 @@ bool from_string<bool>(const std::string& irk_str){
 
 
 
+template<>
+int from_wstring<int>(const std::wstring& irk_str){
+	return std::stoi(irk_str);
+}
+
+template<>
+j_dbl from_wstring<j_dbl>(const std::wstring& irk_str){
+	return std::stod(irk_str);
+}
+
+template<>
+j_llint from_wstring<j_llint>(const std::wstring& irk_str){
+	return std::stoll(irk_str);
+}
+
+template<>
+bool from_wstring<bool>(const std::wstring& irk_str){
+	return !irk_str.empty();
+}
+
+
+
 
 }

@@ -10,7 +10,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "J_Calc", "J_Calc.vcxproj", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "J_UI", "..\J_UI\J_UI.vcxproj", "{83A7B9AC-A015-4378-93E0-F7ECE4159C45}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "j_function", "..\j_function\j_function.vcxproj", "{FD2AA34F-67C4-4AEC-806C-01F6080C1C65}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "j_calc_symbol", "..\j_calc_symbol\j_calc_symbol.vcxproj", "{FD2AA34F-67C4-4AEC-806C-01F6080C1C65}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "J_OpenGL", "..\J_OpenGl\J_OpenGL.vcxproj", "{509B1A88-C150-47E0-8FE5-C2E5F6F4F57A}"
 EndProject

@@ -1,1 +1,0 @@
-#include "../j_function/math_base.h"

@@ -1,1 +1,0 @@
-#include "../j_function/j_calc_symbol.h"

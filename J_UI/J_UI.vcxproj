@@ -200,7 +200,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <PreprocessorDefinitions>VS_2013;WIN32;VS_2013;WIN32;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -214,7 +214,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <PreprocessorDefinitions>VS_2013;WIN32;WIN32;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -232,7 +232,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>OEMRESOURCE;VS_2013;WIN32;VS_2013;_DEBUG;_USRDLL;WIN64;_WIN32_WINNT=0x0502;WIN64;_DEBUG;_CONSOLE;_WIN64_WINNT=0x0600;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;UNICODE;_UNICODE;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -249,7 +249,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <PreprocessorDefinitions>VS_2013;WIN32;_DEBUG;_USRDLL;WIN64;_WIN32_WINNT=0x0502;WIN64;_DEBUG;_CONSOLE;_WIN64_WINNT=0x0600;EX_ARRAY_DEBUG;NOMINMAX;GLEW_MX;GLEW_STATIC;UNICODE;_UNICODE;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -263,7 +263,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;WIN32;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -281,7 +281,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;VS_2013;WIN32;WIN32;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -299,7 +299,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
       <PreprocessorDefinitions>VS_2013;WIN32;WIN32;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -320,7 +320,7 @@
       <PreprocessorDefinitions>OEMRESOURCE;NDEBUG;VS_2013;WIN32;VS_2013;NOMINMAX;WIN32;GLEW_STATIC;GLEW_MX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -339,7 +339,7 @@
       <PreprocessorDefinitions>OEMRESOURCE;NDEBUG;VS_2013;WIN32;VS_2013;NOMINMAX;WIN32;GLEW_STATIC;GLEW_MX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -358,7 +358,7 @@
       <PreprocessorDefinitions>VS_2013;WIN32;VS_2013;NOMINMAX;WIN32;GLEW_STATIC;GLEW_MX;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4800;4706;4512;4290;4996;4510;4511;4250;</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(JTLPATH)\include;..\include\;$(FT_INCLUDE_DIR);</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>

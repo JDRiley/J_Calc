@@ -26,7 +26,7 @@ void add_user_symbol(j_calc_symbol* i_symbol){
 	return s_data->add_user_symbol(i_symbol);
 }
 
-j_calc_symbol* get_j_symbol_from_model(const J_UI_String& irk_name){
+jomike::j_calc_symbol* get_j_symbol_from_model(const j_string_t& irk_name){
 	static Instance_Pointer<J_Calc_Data> s_data;
 	return s_data->get_symbol(irk_name);
 }
