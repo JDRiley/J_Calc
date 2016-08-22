@@ -33,7 +33,7 @@ jomike::j_calc_symbol* get_j_symbol_from_model(const j_string_t& irk_name){
 
 
 
-static void init_reserve_keywords(j_tree<J_UI_String>*);
+static void init_reserve_keywords(j_tree<jc_string_t>*);
 
 
 J_Calc_Data::J_Calc_Data(){
@@ -41,43 +41,43 @@ J_Calc_Data::J_Calc_Data(){
 	init_reserved_symbols();
 }
 
-void init_reserve_keywords(j_tree<J_UI_String>* ir_dest_set){
+void init_reserve_keywords(j_tree<jc_string_t>* ir_dest_set){
 	ir_dest_set->clear();
-	auto add_keyword = [ir_dest_set](const char* y_name){
+	auto add_keyword = [ir_dest_set](const jc_string_t::value_type* y_name){
 		ir_dest_set->insert(y_name);
 	};
 
-	ir_dest_set->insert("Dbl");
-	ir_dest_set->insert("dbl");
-	ir_dest_set->insert("int");
-	ir_dest_set->insert("Alias");
-	ir_dest_set->insert("J_Calc");
-	ir_dest_set->insert("Int");
-	ir_dest_set->insert("Routine");
-	ir_dest_set->insert("gcd");
-	ir_dest_set->insert("lcm");
-	add_keyword("is_print");
-	add_keyword("does_divide");
-	add_keyword("parse_int");
+	ir_dest_set->insert(L"Dbl");
+	ir_dest_set->insert(L"dbl");
+	ir_dest_set->insert(L"int");
+	ir_dest_set->insert(L"Alias");
+	ir_dest_set->insert(L"J_Calc");
+	ir_dest_set->insert(L"Int");
+	ir_dest_set->insert(L"Routine");
+	ir_dest_set->insert(L"gcd");
+	ir_dest_set->insert(L"lcm");
+	add_keyword(L"is_print");
+	add_keyword(L"does_divide");
+	add_keyword(L"parse_int");
 
-	ir_dest_set->insert("least_common_multiple");
+	ir_dest_set->insert(L"least_common_multiple");
 }
 
 void J_Calc_Data::init_reserved_symbols(){
-	M_reserved_symbols["gcd"] = new LLint_Binary_Function_Symbol(greatest_common_divisor_simp
-																 , "gcd");
-	M_reserved_symbols["lcm"]
-		= new LLint_Binary_Function_Symbol(least_common_multiple
-		, "least_common_multiple");
-
-	M_reserved_symbols["is_prime"]
-		= new Unary_Function_Symbol<bool, j_llint>(is_prime, "is_prime");
+	M_reserved_symbols[L"gcd"] = new LLint_Binary_Function_Symbol(yy::location(), greatest_common_divisor_simp
+																 , L"gcd");
+	M_reserved_symbols[L"lcm"]
+		= new LLint_Binary_Function_Symbol(yy::location(), least_common_multiple
+		, L"least_common_multiple");
+	
+	M_reserved_symbols[L"is_prime"]
+		= new Unary_Function_Symbol<bool, j_llint>(yy::location(), is_prime, L"is_prime");
 
 
 	using std::stoll;
-	M_reserved_symbols["parse_int"]
-		= new Unary_Function_Symbol<j_llint, const string&>(
-		bind(static_cast<j_llint(*)(const string&, size_t*, int)>(stoll), _1, nullptr, 10), "parse_int");
+	M_reserved_symbols[L"parse_int"]
+		= new Unary_Function_Symbol<j_llint, const jc_string_t&>(yy::location()
+		, bind(static_cast<j_llint(*)(const jc_string_t&, size_t*, int)>(stoll), _1, nullptr, 10), L"parse_int");
 
 
 }
@@ -92,7 +92,7 @@ void J_Calc_Data::attach_view(J_Calc_View_Shared_t i_new_view){
 	bool inserted = M_calc_views.insert(i_new_view).second;
 
 	if(!inserted){
-		throw J_Argument_Error("View Already A Member of J_Calc_Data");
+		throw J_Argument_Error(L"View Already A Member of J_Calc_Data");
 	}
 }
 
@@ -101,7 +101,7 @@ void J_Calc_Data::attach_view(J_Calc_View_Shared_t i_new_view){
 void J_Calc_Data::add_user_symbol(j_calc_symbol* i_symbol_ptr){
 	if(M_user_symbols.count(i_symbol_ptr->name())){
 		delete i_symbol_ptr;
-		throw J_Syntax_Error("Symbol With This Name Already Exists");
+		throw J_Syntax_Error<jc_string_t::value_type>(L"Symbol With This Name Already Exists");
 	}
 	M_user_symbols[i_symbol_ptr->name()] = i_symbol_ptr;
 
@@ -110,51 +110,52 @@ void J_Calc_Data::add_user_symbol(j_calc_symbol* i_symbol_ptr){
 
 
 static Instance_Pointer<J_Calc_Data> s_calc_data;
-bool is_reserved_symbol(const J_UI_String& irk_src){
+
+bool is_reserved_symbol(const jc_string_t& irk_src){
 	
 	return s_calc_data->is_reserved_symbol(irk_src);
 }
 
-j_calc_symbol* get_reserved_symbol(const J_UI_String& irk_string){
+j_calc_symbol* get_reserved_symbol(const jc_string_t& irk_string){
 	
 	return s_calc_data->get_reserved_symbol(irk_string);
 }
 
-j_calc_symbol* J_Calc_Data::get_reserved_symbol(const J_UI_String& irk_string)const{
+jomike::j_calc_symbol* J_Calc_Data::get_reserved_symbol(const jc_string_t& irk_string)const{
 	assert(is_reserved_symbol(irk_string));
 	return *M_reserved_symbols.find(irk_string);
 }
 
-bool J_Calc_Data::is_reserved_symbol(const J_UI_String& irk_src)const{return M_reserved_symbols.count(irk_src);}
-bool J_Calc_Data::is_reserved_word(const J_UI_String& irk_src)const{return M_reserved_words.count(irk_src);}
+bool J_Calc_Data::is_reserved_symbol(const jc_string_t& irk_string)const{return M_reserved_symbols.count(irk_string);}
+bool J_Calc_Data::is_reserved_word(const jc_string_t& irk_string)const{return M_reserved_words.count(irk_string);}
 
-j_calc_symbol* get_symbol(const J_UI_String& irk_string){
+j_calc_symbol* get_symbol(const jc_string_t& irk_string){
 	return s_calc_data->get_symbol(irk_string);
 }
 
-j_calc_symbol* J_Calc_Data::get_symbol(const J_UI_String& irk_string)const{
+jomike::j_calc_symbol* J_Calc_Data::get_symbol(const jc_string_t& irk_string)const{
 	if(is_reserved_symbol(irk_string)){
 		return get_reserved_symbol(irk_string);
 	}else if(is_user_symbol(irk_string)){
 		return get_user_symbol(irk_string);
 	}else{
-		throw J_Syntax_Error("Symbol: " + irk_string.std_str() + " is undefined!");
+		throw J_Syntax_Error<jc_string_t::value_type>(L"Symbol: " + irk_string + L" is undefined!");
 	}
 }
 
-bool J_Calc_Data::is_user_symbol(const J_UI_String& irk_string)const{return M_user_symbols.count(irk_string);}
+bool J_Calc_Data::is_user_symbol(const jc_string_t& irk_string)const{return M_user_symbols.count(irk_string);}
 
-j_calc_symbol* J_Calc_Data::get_user_symbol(const J_UI_String& irk_string)const{
+jomike::j_calc_symbol* J_Calc_Data::get_user_symbol(const jc_string_t& irk_string)const{
 	if(!is_user_symbol(irk_string)){
-		throw J_Argument_Error("No User Symbol with that name");
+		throw J_Argument_Error(L"No User Symbol with that name");
 	}
 
 	return *M_user_symbols.find(irk_string);
 }
 
-void J_Calc_Data::remove_user_symbol(const J_UI_String& irk_string){
+void J_Calc_Data::remove_user_symbol(const jc_string_t& irk_string){
 	if(!is_user_symbol(irk_string)){
-		throw J_Argument_Error("No User Symbol with that name to remove");
+		throw J_Argument_Error(L"No User Symbol with that name to remove");
 	}
 
 	auto symbol_pos = M_user_symbols.find(irk_string);
@@ -164,7 +165,7 @@ void J_Calc_Data::remove_user_symbol(const J_UI_String& irk_string){
 }
 
 /*bool symbol_name_availability_status(const J_UI_String&)*/
-bool J_Calc_Data::symbol_name_availability_status(const J_UI_String& irk_string){
+bool J_Calc_Data::symbol_name_availability_status(const jc_string_t& irk_string){
 	if(is_reserved_word(irk_string)){
 		return false;
 	}

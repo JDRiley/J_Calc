@@ -11,9 +11,10 @@
 namespace jomike{
 
 
-class J_Calc_View : public J_View{
+class J_Calc_View : public J_UI::J_View{
 public:
 	J_Calc_View(int i_width, int i_height, const char* i_title = "A J_Calc_View Object!"
+									, J_UI::Contexts_Handler::Window_Flags = J_UI::Contexts_Handler::DEFAULT_WINDOW
 									, j_monitor_t i_monitor = nullptr
 									, j_window_t i_share_window = nullptr);
 	~J_Calc_View(){}

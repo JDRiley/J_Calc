@@ -13,7 +13,7 @@
 namespace jomike{
 J_FWD_DECL(J_Calc_Parser)
 J_FWD_DECL(J_Calc_Lexer)
-J_FWD_DECL(String_Constant_Symbol)
+
 }
 
 
@@ -41,7 +41,7 @@ struct J_Calc_Semantic : public j_base {
 	template<typename St>
 	using restrictive_ptr_t = jtl::restrictive_ptr<St, J_Calc_Semantic>;
 
-	restrictive_ptr_t<jtl::J_Symbol_Identifier>	identifier;
+	restrictive_ptr_t<jtl::J_Symbol_Identifier<jtl::jc_string_t>>	identifier;
 	restrictive_ptr_t<jtl::j_symbol_component>	symbol_component;
 	restrictive_ptr_t<jtl::J_Constant_Symbol>		constant_symbol;
 	restrictive_ptr_t<jtl::j_declaration>			declaration;

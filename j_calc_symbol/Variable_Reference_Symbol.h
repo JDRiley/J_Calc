@@ -10,7 +10,7 @@ public:
 
 
 	Variable_Reference_Symbol(const yy::location& irk_loc
-		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression);
+		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, j_expression* i_expression);
 
 
 	//Deleting Constructors and Assignment Operators

@@ -5,7 +5,7 @@
 //
 #include <j_type.h>
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include <cstdlib>
 //
@@ -428,7 +428,7 @@ template<typename Ret_t>
 Ret_t j_value::cast_to()const{
 
 	if(!M_has_value_status){
-		throw J_Symbol_Error(L"Value uninitialized");
+		throw JC_Symbol_Error(L"Value uninitialized");
 	}
 	switch(M_type){
 	case j_value::Value_Types::LL_INTEGER:

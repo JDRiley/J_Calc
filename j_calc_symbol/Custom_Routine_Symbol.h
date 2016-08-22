@@ -9,7 +9,7 @@ namespace jomike{
 class Custom_Routine_Symbol : public j_routine_symbol{
 public:
 	Custom_Routine_Symbol(const yy::location& irk_loc
-		, J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
+		, J_Symbol_Identifier<jc_string_t>* i_identifier, const Declaration_List& irk_static_declarations
 		, const Declaration_List& irk_arg_declarations, Type_Syntax* i_return_type
 		, Statement_Block* i_statement_block);
 

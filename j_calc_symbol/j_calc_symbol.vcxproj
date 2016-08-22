@@ -193,7 +193,7 @@
     <ClInclude Include="j_routine_symbol.h" />
     <ClInclude Include="j_statement.h" />
     <ClInclude Include="j_calc_symbol.h" />
-    <ClInclude Include="J_Symbol_Error.h" />
+    <ClInclude Include="JC_Symbol_Error.h" />
     <ClInclude Include="J_Calc_Symbol_Fwd_Decl.h" />
     <ClInclude Include="J_Symbol_Scope.h" />
     <ClInclude Include="j_unit.h" />
@@ -266,7 +266,7 @@
     <ClCompile Include="j_routine_symbol.cpp" />
     <ClCompile Include="j_statement.cpp" />
     <ClCompile Include="j_calc_symbol.cpp" />
-    <ClCompile Include="J_Symbol_Error.cpp" />
+    <ClCompile Include="JC_Symbol_Error.cpp" />
     <ClCompile Include="J_Symbol_Scope.cpp" />
     <ClCompile Include="j_unit.cpp" />
     <ClCompile Include="j_value.cpp" />

@@ -1,5 +1,5 @@
-#ifndef CONSTANT_SYMBOL_H
-#define CONSTANT_SYMBOL_H
+#ifndef J_CONSTANT_SYMBOL_H
+#define J_CONSTANT_SYMBOL_H
 
 #include "j_expression.h"
 
@@ -88,13 +88,13 @@ private:
 
 };
 
-class String_Constant_Symbol : public J_Constant_Symbol{
+class jcs_string_constant : public J_Constant_Symbol{
 public:
-	String_Constant_Symbol(const yy::location& i_loc, const jc_string_t& irk_val);
+	jcs_string_constant(const yy::location& i_loc, const jc_string_t& irk_val);
 
-	String_Constant_Symbol* get_copy()const override;
+	jcs_string_constant* get_copy()const override;
 
-	String_Constant_Symbol* move_copy()override;
+	jcs_string_constant* move_copy()override;
 
 	jc_string_t get_display_name()override;
 
@@ -110,6 +110,6 @@ private:
 
 }
 
-#endif //CONSTANT_SYMBOL_H
+#endif //J_CONSTANT_SYMBOL_H
 
 

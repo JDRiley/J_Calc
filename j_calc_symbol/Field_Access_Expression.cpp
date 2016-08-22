@@ -2,13 +2,13 @@
 //
 #include <j_symbol/J_Symbol_Identifier.h>
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 namespace jomike{
 
-J_FWD_DECL(J_Symbol_Identifier)
+
 
 Field_Access_Expression::Field_Access_Expression(
-	const yy::location& irk_loc, J_Symbol_Identifier* i_name)
+	const yy::location& irk_loc, J_Symbol_Identifier<jc_string_t>* i_name)
 :j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 
 	assert(i_name);
@@ -65,9 +65,9 @@ void Field_Access_Expression::process(){
 			set_type_syntax(symbol->type_syntax());
 		}
 
-	}catch(J_Symbol_Error&){
+	}catch(JC_Symbol_Error&){
 		return;
-	} catch(J_Syntax_Error&){
+	} catch(J_Syntax_Error<jc_string_t::value_type>&){
 		return;
 	}
 }

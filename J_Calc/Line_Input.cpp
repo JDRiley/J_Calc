@@ -2,7 +2,7 @@
 //
 #include "J_Calc_Error.h"
 //
-#include <J_Calc_Parser.h>
+#include <J_Calc_Evaluater.h>
 //
 #include <J_Utile.h>
 //
@@ -12,8 +12,10 @@
 
 #include <iostream>
 using std::cerr;
-
+using std::wcerr;
 #endif
+
+using namespace J_UI;
 namespace jomike{
 extern const char* const GK_DEFAULT_OUTPUT_STRING = "{}";
 extern const j_size_t DEFAULT_OUTPUT_STRING_SIZE 
@@ -21,7 +23,7 @@ extern const j_size_t DEFAULT_OUTPUT_STRING_SIZE
 
 J_FWD_DECL(Line_Input)
 
-static Instance_Pointer<J_Calc_Math_Input_Parser> gs_parser;
+
 
 const char LINE_END_SYMBOL = ' ';
 
@@ -64,7 +66,7 @@ bool Line_Input::insert_char(j_size_t i_pos, J_UI_Char i_ui_char){
 /*void delete_char_ex(int pos, j_ulint charcode, int font_index)*/
 void Line_Input::delete_char(j_size_t i_pos){
 	if(read_only_status(i_pos)){
-		throw J_Syntax_Error("Cannot input char in this location");
+		throw J_Syntax_Error<jc_string_t::value_type>(L"Cannot input char in this location");
 	}
 	M_input.erase(i_pos);
 }
@@ -105,7 +107,7 @@ void Line_Input::evaluate_output(){
 
 
 #if _DEBUG	
-	cerr << "\nInput_Str:" << M_input;
+	wcerr << L"\nInput_Str:" << M_input;
 #endif //_DEBUGS
 	J_UI_Multi_String input_string(M_input);
 //	gs_parser->convert_to_proper_math_input(&input_string);
@@ -119,7 +121,9 @@ void Line_Input::evaluate_output(){
 	input_string.push_back(LINE_END_SYMBOL);
 
 	
-	J_UI_String output_string(evaluate_math_input(input_string));
+	jc_string_t output_str(evaluate_math_input(input_string.std_str()));
+	J_UI_String output_string(output_str.c_str());
+
 	output_string.set_font_face(M_output.front().font_face());
 	M_output = output_string;
 	M_output.push_front(GK_DEFAULT_OUTPUT_STRING[0]);

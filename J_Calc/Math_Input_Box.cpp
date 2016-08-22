@@ -9,6 +9,8 @@
 #include <algorithm>
 //
 #include <functional>
+//
+#include <J_UI/J_System_Signals.h>
 using std::bind; using std::is_sorted; using std::less; using std::lower_bound; using std::mem_fn;
 using namespace std::placeholders; using std::dynamic_pointer_cast;
 
@@ -16,7 +18,8 @@ using namespace std::placeholders; using std::dynamic_pointer_cast;
 #include <cassert>
 //
 #include <vector>
-
+using namespace J_UI;
+using J_UI::Char_Press_Signal;
 namespace jomike{
 
 
@@ -29,15 +32,86 @@ extern const J_UI_Color G_DEFAULT_OUTPUT_COLOR = J_Color::White;
 //Constructors--------------------------------------------------
 Math_Input_Box::Math_Input_Box(const J_Rectangle& irk_rectangle
 	, const J_UI_Multi_String& irk_string, J_Font_Face i_font_face)
-	:J_Text_Box(irk_rectangle, irk_string)
+	:J_Text_Box(irk_string, irk_rectangle)
 	, M_line_inputs(1, Line_Input(0, irk_string, i_font_face, G_DEFAULT_OUTPUT_COLOR)){
 	insert_string(multi_string().begin() + 1, J_UI_String(GK_DEFAULT_OUTPUT_STRING, i_font_face, G_DEFAULT_OUTPUT_COLOR));
 	
 	set_key_input_command(math_key_input_cmd);
 	set_char_input_command(math_box_char_input_cmd);
+
+
+	link_signal(view_char_press_signal(), &Math_Input_Box::char_press_signal_receiver);
+	link_signal(view_key_press_signal(), &Math_Input_Box::key_press_signal_receiver);
+
 }
 
 
+void Math_Input_Box::key_press_signal_receiver(J_UI::Key_Press_Signal* i_signal){
+	
+	int action = i_signal->action();
+	int modifiers = i_signal->modifiers();
+	int charcode = i_signal->key();
+	int scancode = i_signal->scancode();
+
+
+	if((J_PRESS != action) && (J_REPEAT != action)){
+		return;
+	}
+
+	j_size_t cursor_pos = get_cursor_pos();
+
+
+
+	assert(cursor_pos >= 0);
+
+	auto line_input_pos = get_line_pos_at_pos(cursor_pos);
+
+	if(modifiers & J_MOD_CONTROL){
+		switch(charcode){
+		case J_KEY_I:
+			//insert_integration_subroutine(cursor_pos);
+			break;
+		default:
+			;
+		}
+	} else if(modifiers & J_MOD_SHIFT){
+		switch(charcode){
+		case J_KEY_ENTER:
+			eval_and_break_line_input();
+			return;
+		default:
+			;
+		}
+	} else{
+		switch(charcode){
+		case J_KEY_BACKSPACE:
+			key_backspace();
+			return;
+		case J_KEY_ENTER:
+			insert_char('\n');
+			return;
+		case J_KEY_TAB:
+			insert_char('\t');
+			return;
+		case J_KEY_DELETE:
+			key_delete();
+			return;
+		case J_KEY_LEFT:
+			move_cursor(-1);
+			return;
+		case J_KEY_RIGHT:
+			move_cursor(1);
+			return;
+		case J_KEY_KP_ENTER:
+			eval_and_break_line_input();
+			return;
+		default:
+			;
+		}
+	}
+
+	standard_text_box_input_parser(this, charcode, scancode, action, modifiers);
+}
 
 /*void insert_line_input(const Line_Input&)*/
 void Math_Input_Box::insert_line_input(const Line_Input& irk_line_input){
@@ -57,9 +131,9 @@ void Math_Input_Box::insert_line_input(const Line_Input& irk_line_input){
 	}
 }
 
-void Math_Input_Box::math_key_input_cmd(J_Text_Box_Object_Shared_t i_text_box, int i_charcode
+void Math_Input_Box::math_key_input_cmd(J_Text_Box_Object* i_text_box, int i_charcode
 	, int i_scancode, int i_action, int i_modifiers){
-	auto math_box = dynamic_pointer_cast<Math_Input_Box>(i_text_box);
+	auto math_box = safe_dynamic_cast<J_Text_Box_Object, Math_Input_Box>(i_text_box);
 
 	if((J_PRESS != i_action ) && (J_REPEAT != i_action)){
 		return;
@@ -179,10 +253,19 @@ void Math_Input_Box::key_delete(){
 
 }
 
+void Math_Input_Box::char_press_signal_receiver(Char_Press_Signal* i_signal){
+	if(is_read_only_status(get_cursor_pos())){
+		return;
+	}
+
+	insert_char(i_signal->get_char());
+	//insert_char('A');
+}
+
 /*void char_input_cmd(j_window_t, j_ulint)*/
-void Math_Input_Box::math_box_char_input_cmd(J_Text_Box_Object_Shared_t i_math_box
+void Math_Input_Box::math_box_char_input_cmd(J_Text_Box_Object* i_math_box
 	, int i_charcode){
-	auto math_box = dynamic_pointer_cast<Math_Input_Box>(i_math_box);
+	auto math_box = safe_dynamic_cast<J_Text_Box_Object,Math_Input_Box>(i_math_box);
 
 	if(math_box->is_read_only_status(math_box->get_cursor_pos())){
 		return;
@@ -351,7 +434,7 @@ bool Math_Input_Box::insert_char(J_UI_Char i_char){
 	
 	if(!J_Text_Box::insert_char(i_char)){
 		assert("Could Not Insert Character into textbox from Math text box");
-		throw J_Error("Could Not Insert Character into textbox from Math text box");
+		throw J_Error<jc_string_t::value_type>(L"Could Not Insert Character into textbox from Math text box");
 	}
 	
 	return true;

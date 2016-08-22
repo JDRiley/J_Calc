@@ -8,10 +8,10 @@ namespace jomike{
 class Variable_Symbol : public j_declaration{
 public:
 	Variable_Symbol(const yy::location& irk_loc
-		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier);
+		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier);
 
 	Variable_Symbol(const yy::location& irk_loc
-		, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression);
+		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_expression& i_expression);
 
 	Variable_Symbol* get_copy()const override;
 

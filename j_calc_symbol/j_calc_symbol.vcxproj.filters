@@ -99,9 +99,6 @@
     <ClInclude Include="Type_Double.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_Symbol_Error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Value_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     <ClInclude Include="J_Calc_Parser\J_Calc_Lexer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JC_Symbol_Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j_function.cpp">
@@ -282,9 +282,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="j_declaration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="J_Symbol_Error.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Value_Expression.cpp">
@@ -388,6 +385,9 @@
     </ClCompile>
     <ClCompile Include="J_Calc_Parser\J_Calc_Parser.tab.cpp">
       <Filter>Source Files\J_Calc_Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="JC_Symbol_Error.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

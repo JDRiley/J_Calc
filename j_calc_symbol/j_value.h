@@ -198,7 +198,7 @@ private:
 
 j_dbl unit_conversion(const j_value&, J_Unit);
 
-class J_Value_Error : public J_Error{
+class J_Value_Error : public J_Error<wchar_t>{
 public:
 	J_Value_Error(const jc_string_t& ik_message = jc_string_t(L"No Value in symbol"));
 private:

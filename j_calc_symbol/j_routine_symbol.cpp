@@ -1,6 +1,6 @@
 #include "j_routine_symbol.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include "Type_Routine.h"
 
@@ -10,7 +10,7 @@ using std::bind; using std::for_each;
 namespace jomike{
 
 j_routine_symbol::j_routine_symbol(const yy::location& irk_loc
-	, Type_Routine* i_routine_type, J_Symbol_Identifier* i_identifier)
+	, Type_Routine* i_routine_type, J_Symbol_Identifier<jc_string_t>* i_identifier)
 	: j_declaration(irk_loc, i_routine_type, i_identifier){
 
 }

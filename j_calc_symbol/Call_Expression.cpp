@@ -4,7 +4,7 @@
 //
 #include "Arguments.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include <cassert>
 namespace jomike{
@@ -25,7 +25,7 @@ j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
 }
 
 Call_Expression::Call_Expression(const yy::location& irk_loc
-	, J_Symbol_Identifier* i_identifier, Arguments* i_args_list)
+	, J_Symbol_Identifier<jc_string_t>* i_identifier, Arguments* i_args_list)
 	:j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 	M_identifier = i_identifier;
 	M_args_list = i_args_list;
@@ -77,7 +77,7 @@ void Call_Expression::process(){
 		auto symbol = get_symbol_from_scope(M_identifier->identifier_name());
 		//symbol->process();
 		set_type_syntax(symbol->return_type_syntax());
-	} catch(J_Symbol_Error&){
+	} catch(JC_Symbol_Error&){
 
 	}
 }

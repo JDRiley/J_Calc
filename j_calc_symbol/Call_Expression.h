@@ -9,12 +9,12 @@ class Call_Expression : public j_expression{
 public:
 
 	Call_Expression(const yy::location& irk_loc
-		, J_Symbol_Identifier* i_identifier, Arguments* i_args_list);
+		, J_Symbol_Identifier<jc_string_t>* i_identifier, Arguments* i_args_list);
 
 
 	Call_Expression(const yy::location& irk_loc
 		, const j_expression& irk_base_expression
-		, J_Symbol_Identifier* i_identifier, Arguments* i_args_list);
+		, J_Symbol_Identifier<jc_string_t>* i_identifier, Arguments* i_args_list);
 
 
 
@@ -46,7 +46,7 @@ protected:
 	j_calc_symbol* get_symbol()const;
 private:
 	mutable j_expression* M_base_expression = nullptr;
-	J_Symbol_Identifier* M_identifier;
+	J_Symbol_Identifier<jc_string_t>* M_identifier;
 	Arguments* M_args_list;
 	void alert_symbol_scope_set()override;
 

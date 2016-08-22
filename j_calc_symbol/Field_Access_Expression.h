@@ -7,7 +7,7 @@
 namespace jomike{
 class Field_Access_Expression : public j_expression{
 public:
-	Field_Access_Expression(const yy::location& irk_loc, J_Symbol_Identifier* i_name);
+	Field_Access_Expression(const yy::location& irk_loc, J_Symbol_Identifier<jc_string_t>* i_name);
 
 
 	Field_Access_Expression(const Field_Access_Expression& irk_source);
@@ -28,7 +28,7 @@ public:
 
 	void process()override;
 private:
-	J_Symbol_Identifier* M_identifier;
+	J_Symbol_Identifier<jc_string_t>* M_identifier;
 
 	j_value derived_get_value(const Arguments& i_args)const override;
 

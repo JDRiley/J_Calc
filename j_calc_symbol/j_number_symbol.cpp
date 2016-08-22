@@ -2,7 +2,7 @@
 //
 #include "Type_Factory.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include <j_symbol/J_Symbol_Identifier.h>
 //
@@ -15,13 +15,13 @@ namespace jomike{
 
 //Constructors
 j_number_symbol::j_number_symbol(const yy::location& irk_loc, Dbl_t i_val)
-: Variable_Symbol(irk_loc, make_double_type_syntax(irk_loc), new J_Symbol_Identifier(L"#unnamed"))
+: Variable_Symbol(irk_loc, make_double_type_syntax(irk_loc), new J_Symbol_Identifier<jc_string_t>(L"#unnamed"))
 ,M_value_status(true)
 	, M_value(j_value(i_val, J_Unit())){
 }
 
 j_number_symbol::j_number_symbol(const yy::location& irk_loc, const jc_string_t& irk_string)
-	: Variable_Symbol(irk_loc, make_double_type_syntax(irk_loc), new J_Symbol_Identifier(irk_string))
+	: Variable_Symbol(irk_loc, make_double_type_syntax(irk_loc), new J_Symbol_Identifier<jc_string_t>(irk_string))
 	, M_value_status(false){}
 
 j_number_symbol* j_number_symbol::get_copy()const{ return new j_number_symbol(*this); }
@@ -35,7 +35,7 @@ j_value j_number_symbol::derived_get_value(const Arguments& irk_args)const{
 	}
 
 	if(irk_args.size()){
-		throw J_Sym_Argument_Error(L"Too many arguments passed in");
+		throw JC_Sym_Argument_Error(L"Too many arguments passed in");
 	}
 	return j_value(M_value, J_Unit());
 }

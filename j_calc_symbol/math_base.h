@@ -15,7 +15,7 @@
 namespace jtl = jomike;
 
 
-#pragma comment(lib, "j_function" J_LIB_APPEND)
+
 
 namespace jomike{
 typedef double_arr_t Dbl_data_t;

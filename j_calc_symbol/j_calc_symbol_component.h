@@ -5,6 +5,11 @@
 //
 #include "Symbol_Types.h"
 
+#ifdef WIN32
+#pragma comment(lib, "j_calc_symbol" J_LIB_APPEND)
+#endif
+
+
 namespace jomike{
 class j_calc_symbol_component : public j_symbol{
 public:

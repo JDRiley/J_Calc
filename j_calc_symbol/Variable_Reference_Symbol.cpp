@@ -38,7 +38,7 @@ void Variable_Reference_Symbol::clear(){
 
 
 Variable_Reference_Symbol::Variable_Reference_Symbol(const yy::location& irk_loc
-	, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, j_expression* i_expression)
+	, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, j_expression* i_expression)
 	: j_declaration(irk_loc,i_syntax, i_identifier){
 	M_expression = i_expression;
 }

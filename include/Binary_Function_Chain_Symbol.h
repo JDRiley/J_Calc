@@ -1,1 +1,1 @@
-#include "../j_function/Binary_Function_Chain_Symbol.h"
+#include "../j_calc_symbol/Binary_Function_Chain_Symbol.h"

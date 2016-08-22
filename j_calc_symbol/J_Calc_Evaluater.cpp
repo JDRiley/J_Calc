@@ -9,7 +9,7 @@
 //
 #include "J_Calc_Parser/J_Calc_Parser.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 
 
 
@@ -36,16 +36,16 @@ jc_string_t evaluate_math_input(const jc_string_t& irk_input){
 		} else{
 			return error_string;
 		}
-	} catch(J_Syntax_Error& er_error){
+	} catch(J_Syntax_Error<jc_string_t::value_type>& er_error){
 		er_error.print();
 		return er_error.message();
 	} catch(J_Value_Error& er_error){
 		er_error.print();
 		return er_error.message();
-	} catch(J_Sym_Argument_Error& er_error){
+	} catch(JC_Sym_Argument_Error& er_error){
 		er_error.print();
 		return er_error.message();
-	} catch(J_Symbol_Error& er_error){
+	} catch(JC_Symbol_Error& er_error){
 		er_error.print();
 		return er_error.message();
 	}

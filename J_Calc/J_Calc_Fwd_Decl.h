@@ -15,6 +15,7 @@ J_FWD_DECL(Math_Input_Box)
 
 J_FWD_DECL(Line_Input)
 
+typedef std::wstring jc_string_t;
 
 
 

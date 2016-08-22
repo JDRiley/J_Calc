@@ -12,7 +12,7 @@
 //
 #include <algorithm>
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include "Statement_Block.h"
 //
@@ -35,7 +35,7 @@ static Type_Syntax_List* make_type_syntax_list(const Declaration_List& irk_list)
 
 
 Custom_Routine_Symbol::Custom_Routine_Symbol(const yy::location& irk_loc
-	, J_Symbol_Identifier* i_identifier, const Declaration_List& irk_static_declarations
+	, J_Symbol_Identifier<jc_string_t>* i_identifier, const Declaration_List& irk_static_declarations
 	, const Declaration_List& irk_arg_declarations, Type_Syntax* i_return_type
 	, Statement_Block* i_statement_list)
 :j_routine_symbol(irk_loc
@@ -81,7 +81,7 @@ Custom_Routine_Symbol* Custom_Routine_Symbol::get_copy()const{
 
 j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const {
 	if(irk_args.size() != M_arg_names.size()){
-		throw J_Symbol_Error(
+		throw JC_Symbol_Error(
 			L"Improper number of Args to function: " + name()
 			+ L" expected: " + to_wstring(M_arg_names.size()) + L" args. Given: " + to_wstring(irk_args.size()));
 	}
@@ -119,7 +119,7 @@ j_value Custom_Routine_Symbol::derived_get_value(const Arguments& irk_args)const
 	}
 
 	if(j_value::Value_Types::UNDEFINIED == return_val.type()){
-		throw J_Symbol_Error(L"Function Did Not Return A Value");
+		throw JC_Symbol_Error(L"Function Did Not Return A Value");
 	}
 	return return_type_syntax().convert_value(return_val);
 

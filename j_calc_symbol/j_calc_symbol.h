@@ -23,11 +23,11 @@ void add_user_symbol(j_calc_symbol*);
 class j_calc_symbol : public j_calc_symbol_component{
 public:
 	j_calc_symbol(
-		const yy::location& irk_loc, J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type);
+		const yy::location& irk_loc, J_Symbol_Identifier<jc_string_t>* irk_name, Symbol_Types i_symbol_type);
 	
 	j_calc_symbol(
 		const yy::location& irk_loc, Type_Syntax* i_type_syntax
-		, J_Symbol_Identifier* irk_name);
+		, J_Symbol_Identifier<jc_string_t>* irk_name);
 
 	
 	j_calc_symbol(
@@ -97,7 +97,7 @@ private:
 
 	Arguments* M_arguments;
 	Type_Syntax* M_type = nullptr;
-	J_Symbol_Identifier* M_name;
+	J_Symbol_Identifier<jc_string_t>* M_name;
 };
 
 

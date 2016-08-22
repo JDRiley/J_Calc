@@ -4,7 +4,7 @@
 //
 #include "J_Symbol_Scope.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include <j_symbol/J_Symbol_Identifier.h>
 
@@ -60,7 +60,7 @@ j_calc_symbol* j_calc_symbol::get_symbol_from_scope(const jc_string_t& irk_strin
 }
 
 
-J_Sym_Argument_Error::J_Sym_Argument_Error(const jc_string_t& ik_message):J_Error(ik_message){}
+JC_Sym_Argument_Error::JC_Sym_Argument_Error(const jc_string_t& ik_message):J_Error(ik_message){}
 
 
 //Destructor
@@ -85,7 +85,7 @@ j_calc_symbol* j_calc_symbol::reduce()const{
 
 
 j_calc_symbol::j_calc_symbol(const yy::location& irk_loc
-	, J_Symbol_Identifier* irk_name, Symbol_Types i_symbol_type)
+	, J_Symbol_Identifier<jc_string_t>* irk_name, Symbol_Types i_symbol_type)
 	:j_calc_symbol_component(irk_loc, i_symbol_type){
 	M_name = irk_name;
 	M_arguments = empty_arguments().get_copy();
@@ -96,17 +96,17 @@ j_calc_symbol::j_calc_symbol(const yy::location& irk_loc
 
 j_calc_symbol::j_calc_symbol(
 	const yy::location& irk_loc, Type_Syntax* i_type_syntax
-	, J_Symbol_Identifier* irk_name)
+	, J_Symbol_Identifier<jc_string_t>* irk_name)
 :j_calc_symbol_component(irk_loc, i_type_syntax->symbol_type())
 	, M_type(i_type_syntax), M_name(irk_name){
-
+	M_arguments = empty_arguments().get_copy();
 }
 
 
 
 j_calc_symbol::j_calc_symbol(const yy::location& irk_loc, Symbol_Types i_symbol_type)
 	: j_calc_symbol_component(irk_loc, i_symbol_type){
-	M_name = new J_Symbol_Identifier(L"%Unvalued");
+	M_name = new J_Symbol_Identifier<jc_string_t>(L"%Unvalued");
 	M_type = make_type_syntax(irk_loc, i_symbol_type);
 	M_arguments = empty_arguments().get_copy();
 }
@@ -165,7 +165,7 @@ void j_calc_symbol::set_name(const jc_string_t& irk_string){
 
 
 j_expression* j_calc_symbol::as_expression(){
-	throw J_Symbol_Error(name() + L" cannot be used as an expression!");
+	throw JC_Symbol_Error(name() + L" cannot be used as an expression!");
 }
 
 void j_calc_symbol::set_value(j_value /*i_value*/){
@@ -202,7 +202,7 @@ j_value j_calc_symbol::get_value(const Arguments& i_args)const{
 			j_size_t index = place_holder_symbol->placeholder_index();
 			removed_indices.insert(index);
 			if(index >= i_args.size()){
-				throw J_Sym_Argument_Error(L"Not Enough Arguments to Symbol: " + name());
+				throw JC_Sym_Argument_Error(L"Not Enough Arguments to Symbol: " + name());
 			}
 			args.set_argument(index, i_args.arguments()[index]);
 		}
@@ -224,7 +224,7 @@ j_calc_symbol* j_calc_symbol::make_non_referenced()const{
 }
 
 j_calc_symbol* j_calc_symbol::convert_to_type(const Type_Syntax& /*irk_type*/)const{
-	throw J_Symbol_Error(L"Cannot Convert type of symbol: " + name()
+	throw JC_Symbol_Error(L"Cannot Convert type of symbol: " + name()
 						 + L" with type: " + type_syntax().type_name());
 }
 

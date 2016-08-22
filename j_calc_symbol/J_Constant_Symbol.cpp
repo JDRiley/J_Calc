@@ -7,7 +7,7 @@
 //
 #include "Type_Syntax.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 
 //
 #include "Type_Factory.h"
@@ -64,7 +64,7 @@ j_calc_symbol* Int_Constant_Symbol::convert_to_type(const Type_Syntax& irk_type)
 		return dbl_symbol;
 	}
 	default:
-		throw J_Symbol_Error(L"Cannot Convert Int Constant to Type: " + irk_type.type_name() + L" implicitly.");
+		throw JC_Symbol_Error(L"Cannot Convert Int Constant to Type: " + irk_type.type_name() + L" implicitly.");
 	}
 }
 
@@ -139,35 +139,35 @@ jc_string_t Dbl_Constant_Symbol::get_display_name(){
 }
 
 
-j_value String_Constant_Symbol::derived_get_value(const Arguments& i_args)const {
+j_value jcs_string_constant::derived_get_value(const Arguments& i_args)const {
 	assert(i_args.empty());
 	(void)i_args;
 	return j_value(M_value, M_unit);
 }
 
-bool String_Constant_Symbol::has_value()const {
+bool jcs_string_constant::has_value()const {
 	return true;
 }
 
-void String_Constant_Symbol::clear(){
+void jcs_string_constant::clear(){
 	M_value.clear();
 }
 
-String_Constant_Symbol* String_Constant_Symbol::move_copy(){
-	return  new String_Constant_Symbol(std::move(*this));
+jcs_string_constant* jcs_string_constant::move_copy(){
+	return  new jcs_string_constant(std::move(*this));
 }
 
-String_Constant_Symbol* String_Constant_Symbol::get_copy()const {
-	return new String_Constant_Symbol(*this);
+jcs_string_constant* jcs_string_constant::get_copy()const {
+	return new jcs_string_constant(*this);
 }
 
-String_Constant_Symbol::String_Constant_Symbol(
+jcs_string_constant::jcs_string_constant(
 	const yy::location& i_loc, const jc_string_t& irk_val)
 	:J_Constant_Symbol(i_loc, Symbol_Types::STRING){
 	M_value = irk_val;
 }
 
-jc_string_t String_Constant_Symbol::get_display_name(){
+jc_string_t jcs_string_constant::get_display_name(){
 	assert(M_value == derived_get_value(empty_arguments()).to_str());
 	return M_value;
 }

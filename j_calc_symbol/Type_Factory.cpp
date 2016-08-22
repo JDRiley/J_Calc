@@ -10,7 +10,7 @@
 //
 #include "Type_Void.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include <string>
 

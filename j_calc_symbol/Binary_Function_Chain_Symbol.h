@@ -8,7 +8,7 @@
 //
 #include "Type_Routine_Variable_Args.h"
 //
-#include "Specific_Symbol_List.h"
+#include <j_symbol/Specific_Symbol_List.h>
 //
 #include "Type_Factory.h"
 namespace jomike{
@@ -16,7 +16,7 @@ namespace jomike{
 template<typename Binary_Function_t, typename Num_t = j_dbl>
 class Binary_Function_Chain_Symbol : public j_routine_symbol{
 public:
-	Binary_Function_Chain_Symbol(const Binary_Function_t&, const jc_string_t&);
+	Binary_Function_Chain_Symbol(const yy::location& irk_loc, const Binary_Function_t&, const jc_string_t&);
 	Binary_Function_Chain_Symbol* get_copy()const override;
 	jc_string_t get_display_name()override;
 
@@ -30,7 +30,7 @@ protected:
 	j_value derived_get_value(const Arguments&)const override;
 private:
 	Binary_Function_t M_function;
-	J_UI_String M_name;
+	jc_string_t M_name;
 
 	void alert_symbol_scope_set()override;
 };
@@ -87,20 +87,22 @@ Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>*
 
 
 template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
-J_UI_String Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::get_display_name(){
+jc_string_t Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>::get_display_name(){
 	return M_name;
 }
 
 
 template<typename Binary_Function_t, typename Num_t /*= j_dbl*/>
 Binary_Function_Chain_Symbol<Binary_Function_t, Num_t>
-	::Binary_Function_Chain_Symbol(const Binary_Function_t& irk_function
+	::Binary_Function_Chain_Symbol(const yy::location& irk_loc
+		, const Binary_Function_t& irk_function
 	, const jc_string_t& irk_name)
-	: j_routine_symbol(new J_Symbol_Identifier(irk_name)
-	, new Type_Routine_Variable_Args(make_type_syntax(CPP_To_Symbol_Type<Num_t>::type())
-	, new Type_Syntax_List, make_type_syntax(CPP_To_Symbol_Type<Num_t>::type())))
+	: j_routine_symbol(irk_loc
+	, new Type_Routine_Variable_Args(irk_loc, make_type_syntax(irk_loc, CPP_To_Symbol_Type<Num_t>::type())	
+		, new Type_Syntax_List(irk_loc), make_type_syntax(irk_loc, CPP_To_Symbol_Type<Num_t>::type()))
+	, new J_Symbol_Identifier<jc_string_t>(irk_name))
 	, M_function(irk_function), M_name(irk_name){
-		set_args(Arguments(2));
+		set_args(Arguments(irk_loc,2));
 	}
 
 

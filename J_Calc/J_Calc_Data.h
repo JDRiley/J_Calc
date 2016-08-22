@@ -5,7 +5,7 @@
 //
 #include <J_UI\J_UI_String.h>
 //
-#include <J_Symbol_Fwd_Decl.h>
+#include <J_Calc_Symbol_Fwd_Decl.h>
 //Containers
 #include <j_tree.h>
 //
@@ -24,16 +24,16 @@ public:
 
 	//Symbol Management
 	void add_user_symbol(j_calc_symbol*);
-	bool is_reserved_word(const J_UI_String&)const;
-	bool is_reserved_symbol(const J_UI_String&)const;
+	bool is_reserved_word(const jc_string_t&)const;
+	bool is_reserved_symbol(const jc_string_t&)const;
 
-	bool is_user_symbol(const J_UI_String&)const;
-	j_calc_symbol* get_user_symbol(const J_UI_String&)const;
-	void remove_user_symbol(const J_UI_String&);
-	bool symbol_name_availability_status(const J_UI_String&);
-	j_calc_symbol* get_symbol(const J_UI_String&)const;
+	bool is_user_symbol(const jc_string_t&)const;
+	j_calc_symbol* get_user_symbol(const jc_string_t&)const;
+	void remove_user_symbol(const jc_string_t&);
+	bool symbol_name_availability_status(const jc_string_t&);
+	j_calc_symbol* get_symbol(const jc_string_t&)const;
 	//Gets
-	j_calc_symbol* get_reserved_symbol(const J_UI_String&)const;
+	j_calc_symbol* get_reserved_symbol(const jc_string_t&)const;
 	~J_Calc_Data();
 	void clear_user_data();
 	void update();
@@ -47,8 +47,8 @@ private:
 	void clear_reserved();
 	Calc_J_View_Cont_t M_calc_views;
 
-	j_tree<J_UI_String> M_reserved_words;
-	typedef j_map<J_UI_String, j_calc_symbol*> Symbol_Map_t;
+	j_tree<jc_string_t> M_reserved_words;
+	typedef j_map<jc_string_t, j_calc_symbol*> Symbol_Map_t;
 	Symbol_Map_t M_reserved_symbols;
 	Symbol_Map_t M_user_symbols;
 };

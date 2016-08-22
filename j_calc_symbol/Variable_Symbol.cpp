@@ -27,13 +27,13 @@ j_value Variable_Symbol::derived_get_value(const Arguments& )const{
 }
 
 Variable_Symbol::Variable_Symbol(
-	const yy::location& irk_loc, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier)
+	const yy::location& irk_loc, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier)
 	:j_declaration(irk_loc, i_syntax, i_identifier){
 	
 }
 
 Variable_Symbol::Variable_Symbol(const yy::location& irk_loc
-	, Type_Syntax* i_syntax, J_Symbol_Identifier* i_identifier, const j_expression& i_expression)
+	, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_expression& i_expression)
 	:j_declaration(irk_loc, i_syntax, i_identifier){
 	if(!i_expression.has_value()){
 		throw J_Value_Error(L"Cannot Declare variable and assign it to expression with no value");

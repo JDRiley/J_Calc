@@ -7,13 +7,13 @@ namespace jomike{
 
 extern const char* const GK_DEFAULT_OUTPUT_STRING;
 extern const j_size_t DEFAULT_OUTPUT_STRING_SIZE;
-extern const J_UI_Color G_DEFAULT_OUTPUT_COLOR;
+extern const J_UI::J_UI_Color G_DEFAULT_OUTPUT_COLOR;
 class Line_Input{
 public:
 	//Constructors
 	Line_Input(
-		j_size_t, const J_UI_Multi_String&,  J_Font_Face i_output_font_face
-		, const J_UI_Color& irk_output_color = G_DEFAULT_OUTPUT_COLOR);
+		j_size_t, const J_UI::J_UI_Multi_String&,  J_UI::J_Font_Face i_output_font_face
+		, const J_UI::J_UI_Color& irk_output_color = G_DEFAULT_OUTPUT_COLOR);
 
 	Line_Input make_empty_from(j_size_t i_pos)const;
 
@@ -25,11 +25,11 @@ public:
 	j_size_t output_start_pos()const;
 	
 	j_size_t size()const;
-	const J_UI_Multi_String& input_str()const;
+	const J_UI::J_UI_Multi_String& input_str()const;
 
-	void set_input_str(const J_UI_Multi_String&);
+	void set_input_str(const J_UI::J_UI_Multi_String&);
 
-	const J_UI_Multi_String& output_str()const;
+	const J_UI::J_UI_Multi_String& output_str()const;
 
 	bool output_status()const;
 
@@ -43,7 +43,7 @@ public:
 	/*
 		Throws J_Syntax_Error if a problem occurs in insertion
 	*/
-	bool insert_char(j_size_t pos, J_UI_Char);
+	bool insert_char(j_size_t pos, J_UI::J_UI_Char);
 	void delete_char(j_size_t pos);
 	//Actions
 	void evaluate_output();
@@ -55,8 +55,8 @@ public:
 	bool is_inside_input(j_size_t pos);
 private:
 	j_size_t M_start_pos;
-	J_UI_Multi_String M_input;
-	J_UI_Multi_String M_output;
+	J_UI::J_UI_Multi_String M_input;
+	J_UI::J_UI_Multi_String M_output;
 };
 
 

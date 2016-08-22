@@ -20,18 +20,20 @@ int wWinMain(HINSTANCE , HINSTANCE , PTSTR  , int ){
 #else
 int main(int argc, char** argv){
 #endif
+	(void)argc;
+	(void)argv;
 
 	if(jtl::j_true){
 		//return 0;
 	}
 	jtl::Instance_Pointer<jtl::J_Calc_Controller> controller;
 	try{
-	controller->init(argc, argv);
+		controller->construct_ui();
 	controller->execute();
-	}catch(jtl::J_Error& error){
+	}catch(jtl::J_Error<jtl::jc_string_t::value_type>& error){
 		error.print();
 #ifdef WIN32
-  		MessageBoxA(0,error.message(), "Error", MB_OK);
+  		MessageBoxW(0,error.message().c_str(), L"Error", MB_OK);
 #endif
 		return 1;
 	}

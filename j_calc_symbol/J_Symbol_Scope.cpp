@@ -1,6 +1,6 @@
 #include "J_Symbol_Scope.h"
 //
-#include "J_Symbol_Error.h"
+#include "JC_Symbol_Error.h"
 //
 #include "j_calc_symbol.h"
 //
@@ -38,7 +38,7 @@ jomike::j_calc_symbol* J_Symbol_Scope::get_symbol(const jc_string_t& irk_string)
 	} else if(M_parent_scope){
 		return M_parent_scope->get_symbol(irk_string);
 	}else{
-		throw J_Symbol_Error(L"Symbol With Name: " + irk_string + L" does not exists!");
+		throw JC_Symbol_Error(L"Symbol With Name: " + irk_string + L" does not exists!");
 	}
 	
 }
@@ -47,7 +47,7 @@ void J_Symbol_Scope::add_symbol(j_calc_symbol* i_symbol){
 	assert(i_symbol);
 
 	if(M_symbols.count(i_symbol->name())){
-		throw J_Symbol_Error(L"Symbol with name " + i_symbol->name() + L" already exists!");
+		throw JC_Symbol_Error(L"Symbol with name " + i_symbol->name() + L" already exists!");
 	}
 
 	M_symbols[i_symbol->name()] = i_symbol;

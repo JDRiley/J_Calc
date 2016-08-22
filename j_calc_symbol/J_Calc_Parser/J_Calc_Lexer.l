@@ -10,12 +10,13 @@
 #include "J_Calc_Lexer.h"
 
 #include "../J_Constant_Symbol_Factory.h"
-#include "../J_Symbol_Error.h"
+#include "../JC_Symbol_Error.h"
 #include <j_symbol/J_Symbol_Identifier.h>
 #include <ex_array.h>
 #include <iostream>
+#include <J_String.h>
 using std::cin; using std::cout; using std::cerr;
-#error //TODO: Convert all the inputs to be UTF-8 compliant
+using std::to_wstring;
 using namespace jomike;
 #ifdef WIN32
 #define TAB_SIZE 8
@@ -60,13 +61,81 @@ BEG_COMMENT       ("/*")
 END_COMMENT       ("*/")
 SINGLE_COMMENT    ("//"[^\n]*)
 
+/*
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+
+A
+B
+C
+D
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+Y
+Z
+
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+*/
+
+
 %%
              /* BEGIN RULES SECTION */
 
 <COPY>.*               { //char curLine[512];
                          //strncpy(curLine, yytext, sizeof(curLine));
-                         M_lines.emplace_back(reinterpret_cast<jc_string_t::value_type*>(yytext)
-						 , reinterpret_cast<jc_string_t::value_type*>(yytext + yyleng));
+                         M_lines.emplace_back(to_wstring(yytext));
                          M_current_collumn = 1; yy_pop_state(); yyless(0); }
 <COPY><<EOF>>          { yy_pop_state();}
 <*>\n                  { M_current_line++; M_current_collumn = 1;                          
@@ -150,23 +219,19 @@ SINGLE_COMMENT    ("//"[^\n]*)
 	MANAGE_LOC return token_t::T_DOUBLE_CONSTANT;}
 
 {STRING}            {
-	jc_string_t string_val(reinterpret_cast<jc_string_t::value_type*>(yytext+2)
-		, reinterpret_cast<jc_string_t::value_type*>(yytext+yyleng));
+	jc_string_t string_val = to_wstring(yytext+1);
 	assert(L'"' == string_val.back());
 	string_val.pop_back();
 	yylval->constant_symbol = make_string_constant_symbol(string_val.c_str(), M_location);
 	MANAGE_LOC return token_t::T_STRING_CONSTANT;
 }
-{BEG_STRING}        {MANAGE_LOC throw J_Syntax_Error(L"Unterminaned String");}
+{BEG_STRING}        {MANAGE_LOC throw J_Syntax_Error<jc_string_t::value_type>(L"Unterminaned String");}
 
 
  /* -------------------- Identifiers --------------------------- */
 {IDENTIFIER}        {
-					auto start_pos 
-					= reinterpret_cast<js_string_t::value_type*>(yytext);
-					auto end_pos
-						= reinterpret_cast<js_string_t::value_type*>(yytext + yyleng);
-					yylval->identifier = new J_Symbol_Identifier(js_string_t(start_pos, end_pos));
+					
+					yylval->identifier = new J_Symbol_Identifier<jc_string_t>(to_wstring(yytext));
 						MANAGE_LOC return token_t::T_IDENTIFIER; }
 
 

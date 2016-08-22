@@ -58,11 +58,19 @@ j_calc_symbol* J_Calc_Parser::parse(const jc_string_t& irk_string){
 	
 	//parsing_unit.set_debug_level(1);
 
-	const char* begin_str_data = reinterpret_cast<const char*>(&irk_string[0]);
-	const char* end_str_data = reinterpret_cast<const char*>(&*irk_string.end());
-	//converting to a byte array
+	//const char* begin_str_data = reinterpret_cast<const char*>(irk_string.data());
+	//const char* end_str_data = reinterpret_cast<const char*>(irk_string.data() + irk_string.size());
+	
+	const wchar_t* begin_str_data = reinterpret_cast<const wchar_t*>(irk_string.data());
+	const wchar_t* end_str_data = reinterpret_cast<const wchar_t*>(irk_string.data() + irk_string.size());
 
-	stringstream str_stream(std::string(begin_str_data, end_str_data));
+	std::string byte_str;// (begin_str_data, end_str_data);
+	while(begin_str_data != end_str_data){
+		byte_str.push_back(safe_char_cast(*begin_str_data++));
+	}
+
+	//converting to a byte array
+	stringstream str_stream(byte_str);
 	M_lexer->yyrestart(&str_stream);
 
 	parsing_unit.parse();
@@ -108,7 +116,7 @@ void yy::J_Calc_Parsing_Unit::error(const location_type& irk_location, const std
 		std::wcerr << L"\n" << i_parser->get_line(i);
 	}
 
-	throw jtl::J_Syntax_Error(L"[Syntax_Error] " + o_str.str());
+	throw jtl::J_Syntax_Error<jtl::jc_string_t::value_type>(L"[Syntax_Error] " + o_str.str());
 }
 
 
