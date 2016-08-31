@@ -128,7 +128,7 @@ void J_Calc_Controller::construct_ui(){
 
 	J_Horizontal_Layout* horizontal_layout
 		= new J_Horizontal_Layout;
-	layout->insert(horizontal_layout, layout->count(), Alignment::LEFT, Alignment::BOTTOM);
+	layout->insert(horizontal_layout, layout->count(), Alignment::LEFT, Alignment::BOTTOM, 0.0f);
 
 	J_Button* cursor_pos_box =
 		new J_Button(J_UI_String("Cursor Box", M_log_font_face, J_WHITE));
@@ -158,8 +158,8 @@ void J_Calc_Controller::construct_ui(){
 		auto width_manip = setw(8);
 		o_str.precision(3);
 		o_str << std::fixed;
-		o_str << '\t' << cursor_pos->cursor_pos_pixels().first
-			<< " : " << cursor_pos->cursor_pos_pixels().second;
+		o_str << '\t' << cursor_pos->screen_pos().first
+			<< " : " << cursor_pos->screen_pos().second;
 
 		auto font_face = cursor_pos_box->get_string().front().font_face();
 		auto color = cursor_pos_box->get_string().front().color();
@@ -244,7 +244,10 @@ void J_Calc_Controller::construct_ui(){
 
 	update_fps_text_box->add_update_callback(update_fps_updater);
 
+	horizontal_layout->calculate_size_restraints();
 
+
+	J_UI_Size_Constraints size_contraints = horizontal_layout->size_constraints();
 	assert(!open_gl_error());
 }
 
@@ -254,7 +257,7 @@ void J_Calc_Controller::initialize_font_faces(){
 	M_log_font_face
 		= s_font_manager->get_font_face("times_italic", 20);
 	M_input_font_face
-		= s_font_manager->get_font_face("consolas", 14);
+		= s_font_manager->get_font_face("consola", 14);
 }
 
 void J_Calc_Controller::execute(){
