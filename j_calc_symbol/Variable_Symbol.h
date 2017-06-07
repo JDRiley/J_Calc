@@ -11,7 +11,7 @@ public:
 		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier);
 
 	Variable_Symbol(const yy::location& irk_loc
-		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_expression& i_expression);
+		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_calc_expression& i_expression);
 
 	Variable_Symbol* get_copy()const override;
 
@@ -25,7 +25,7 @@ public:
 
 	jc_string_t get_display_name()override;
 
-	j_expression* as_expression()override;
+	j_calc_expression* as_expression()override;
 
 
 	void process()override;

@@ -8,13 +8,13 @@
 
 namespace jomike{
 	
-J_Constant_Symbol* make_bool_constant_symbol(bool i_val, const yy::location& i_loc);
+jc_constant_symbol* make_bool_constant_symbol(bool i_val, const yy::location& i_loc);
 
-J_Constant_Symbol* make_int_constant_symbol(int i_val, const yy::location& i_loc);
+jc_constant_symbol* make_int_constant_symbol(int i_val, const yy::location& i_loc);
 
-J_Constant_Symbol* make_double_constant_symbol(j_dbl i_val, const yy::location& i_loc);
+jc_constant_symbol* make_double_constant_symbol(j_dbl i_val, const yy::location& i_loc);
 
-J_Constant_Symbol* make_string_constant_symbol(
+jc_constant_symbol* make_string_constant_symbol(
 	const jc_string_t& irk_string, const yy::location& i_loc);
 }
 

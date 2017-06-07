@@ -9,8 +9,8 @@ class For_Statement : public j_statement{
 public:
 	For_Statement(const yy::location& irk_loc
 		, j_statement* i_init_statement
-		, j_expression* i_test_expression
-		, j_expression* i_post_expression
+		, j_calc_expression* i_test_expression
+		, j_calc_expression* i_post_expression
 		, Statement_Block* i_statement_block);
 
 
@@ -36,8 +36,8 @@ public:
 	~For_Statement();
 private:
 	j_statement* M_init_statement;
-	j_expression* M_test_expression;
-	j_expression* M_post_expression;
+	j_calc_expression* M_test_expression;
+	j_calc_expression* M_post_expression;
 	Statement_Block* M_statement_block;
 
 	

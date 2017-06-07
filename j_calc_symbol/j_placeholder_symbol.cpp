@@ -12,7 +12,7 @@ bool j_placeholder_symbol::is_placeholder()const {
 }
 
 j_placeholder_symbol::j_placeholder_symbol(const yy::location& irk_loc, j_size_t i_index)
-:j_expression(irk_loc
+:j_calc_expression(irk_loc
 	, new J_Symbol_Identifier<jc_string_t>(L"#" + std::to_wstring(i_index) + L"_Placeholder")
 	, Symbol_Types::PLACEHOLDER)
 	, M_placeholder_index(i_index){

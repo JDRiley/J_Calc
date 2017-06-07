@@ -8,7 +8,7 @@ namespace jomike{
 class If_Statement : public j_statement{
 public:
 	If_Statement(const yy::location& irk_loc
-		, j_expression* i_test_expression, Statement_Block* i_then_body
+		, j_calc_expression* i_test_expression, Statement_Block* i_then_body
 		, j_statement* i_else_body = nullptr);
 
 
@@ -42,7 +42,7 @@ private:
 	void alert_symbol_scope_set()override;
 
 	//Members:
-	j_expression* M_test_expression;
+	j_calc_expression* M_test_expression;
 	Statement_Block* M_then_body;
 	j_statement* M_else_body = nullptr;
 };

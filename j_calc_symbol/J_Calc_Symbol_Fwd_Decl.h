@@ -21,8 +21,10 @@ J_FWD_DECL(j_value)
 J_FWD_DECL_LOWER(j_composite_symbol)
 J_FWD_DECL_LOWER(j_routine_symbol)
 
-J_FWD_DECL_LOWER(j_expression)
-J_FWD_DECL(J_Constant_Symbol)
+J_FWD_DECL_TEMPLATE(j_constant_expression, typename Value_t)
+
+J_FWD_DECL_LOWER(j_calc_expression)
+
 J_FWD_DECL(Type_Syntax)
 J_STRUCT_FWD_DECL(Lexer_Location)
 J_FWD_DECL_LOWER(j_declaration)
@@ -37,6 +39,12 @@ J_FWD_DECL(Math_Lexer)
 J_FWD_DECL(Statement_Block)
 J_FWD_DECL(j_statement)
 J_FWD_DECL(If_Statement)
+
+//template<typename Value_t>
+//using jc_constant_symbol = Constant_Symbol<j_constant_expression<Value_t>>;
+
+
+J_FWD_DECL_LOWER(jc_constant_symbol)
 template<typename Symbol_t>
 class Specific_Symbol_List;
 

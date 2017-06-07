@@ -1,11 +1,11 @@
 #ifndef VALUE_EXPRESSION_H
 #define VALUE_EXPRESSION_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
-class Value_Expression : public j_expression{
+class Value_Expression : public j_calc_expression{
 public:
 	Value_Expression(const yy::location& irk_loc, j_value i_value);
 

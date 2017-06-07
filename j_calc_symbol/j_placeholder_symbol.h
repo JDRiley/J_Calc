@@ -1,13 +1,13 @@
 #ifndef J_PLACEHOLDER_SYMBOL_H
 #define J_PLACEHOLDER_SYMBOL_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
 
 
-class j_placeholder_symbol : public j_expression{
+class j_placeholder_symbol : public j_calc_expression{
 public:
 	j_placeholder_symbol* get_copy()const override;
 

@@ -164,7 +164,7 @@ void j_calc_symbol::set_name(const jc_string_t& irk_string){
 }
 
 
-j_expression* j_calc_symbol::as_expression(){
+j_calc_expression* j_calc_symbol::as_expression(){
 	throw JC_Symbol_Error(name() + L" cannot be used as an expression!");
 }
 

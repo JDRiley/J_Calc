@@ -26,7 +26,7 @@ j_value Call_Expression::derived_get_value(const Arguments& i_args)const {
 
 Call_Expression::Call_Expression(const yy::location& irk_loc
 	, J_Symbol_Identifier<jc_string_t>* i_identifier, Arguments* i_args_list)
-	:j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+	:j_calc_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 	M_identifier = i_identifier;
 	M_args_list = i_args_list;
 
@@ -34,7 +34,7 @@ Call_Expression::Call_Expression(const yy::location& irk_loc
 }
 
 Call_Expression::Call_Expression(const Call_Expression& irk_source)
-:j_expression(irk_source){
+:j_calc_expression(irk_source){
 	if(irk_source.M_base_expression){
 		M_base_expression = irk_source.M_base_expression->get_copy();
 	}

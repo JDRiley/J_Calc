@@ -5,7 +5,7 @@ namespace jomike{
 
 
 Multiplication_Expression::Multiplication_Expression(const yy::location& irk_loc
-	, j_expression* i_left_expression, j_expression* i_right_expression)
+	, j_calc_expression* i_left_expression, j_calc_expression* i_right_expression)
 	:Binary_Expression(irk_loc, i_left_expression, i_right_expression, Operators::MULTIPLY){}
 
 bool Multiplication_Expression::has_value()const {

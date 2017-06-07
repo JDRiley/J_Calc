@@ -8,7 +8,7 @@ namespace jomike{
 class Expression_Statement : public j_statement{
 public:
 
-	Expression_Statement(const yy::location& irk_loc, j_expression* i_expression);
+	Expression_Statement(const yy::location& irk_loc, j_calc_expression* i_expression);
 
 	Expression_Statement(const Expression_Statement& irk_source);
 	Expression_Statement(Expression_Statement&& irv_source);
@@ -38,7 +38,7 @@ private:
 	void alert_symbol_scope_set()override;
 
 
-	j_expression* M_expression;
+	j_calc_expression* M_expression;
 };
 
 }

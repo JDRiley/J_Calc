@@ -35,9 +35,8 @@ j_size_t Line_Input::size()const{return M_input.size() + M_output.size();}
 
 //Constructors
 Line_Input::Line_Input(
-	j_size_t i_start_pos, const J_UI_Multi_String& irk_input
-	, J_Font_Face i_font_face, const J_UI_Color& irk_color)
-	:M_start_pos(i_start_pos), M_input(irk_input), M_output(J_UI_String(GK_DEFAULT_OUTPUT_STRING,  i_font_face, irk_color)){}
+	j_size_t i_start_pos, const J_UI_Multi_String& irk_input)
+	:M_start_pos(i_start_pos), M_input(irk_input), M_output(GK_DEFAULT_OUTPUT_STRING){}
 
 /*int start_pos()const*/
 j_size_t Line_Input::start_pos()const{return M_start_pos;}
@@ -79,7 +78,7 @@ void Line_Input::set_input_str(const J_UI_Multi_String& irk_string){
 }
 
 /*void clear_output()*/
-void Line_Input::clear_output(){M_output = J_UI_String(GK_DEFAULT_OUTPUT_STRING, M_output.front().font_face(), M_output.front().color());}
+void Line_Input::clear_output(){M_output = J_UI_String(GK_DEFAULT_OUTPUT_STRING, M_output.front().font_face());}
 /*int output_start_pos()const;*/
 j_size_t Line_Input::output_start_pos()const{return M_start_pos + M_input.size();}
 
@@ -154,8 +153,7 @@ void Line_Input::decrement_pos(j_size_t i_dec_size){
 }
 
 jomike::Line_Input Line_Input::make_empty_from(j_size_t i_pos)const{
-	return Line_Input(i_pos, M_input.front()
-					  , M_output.front().font_face(), M_output.front().color());
+	return Line_Input(i_pos, M_input.front());
 }
 
 

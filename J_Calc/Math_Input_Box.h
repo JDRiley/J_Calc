@@ -20,9 +20,7 @@ extern const char LINE_END_SYMBOL;
 class Math_Input_Box : public J_UI::J_Text_Box{
 public:
 	//Constructors 
-	Math_Input_Box(const J_Rectangle& irk_rec
-		, const J_UI::J_UI_Multi_String& irk_input_string
-		, J_UI::J_Font_Face i_output_font_face);
+	Math_Input_Box(const J_UI::J_UI_Multi_String& irk_input_string);
 
 	bool insert_char(J_UI::J_UI_Char);
 

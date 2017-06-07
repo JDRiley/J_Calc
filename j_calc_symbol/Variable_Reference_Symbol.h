@@ -10,7 +10,7 @@ public:
 
 
 	Variable_Reference_Symbol(const yy::location& irk_loc
-		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, j_expression* i_expression);
+		, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, j_calc_expression* i_expression);
 
 
 	//Deleting Constructors and Assignment Operators
@@ -32,7 +32,7 @@ public:
 
 	void process()override;
 private:
-	j_expression* M_expression = nullptr;
+	j_calc_expression* M_expression = nullptr;
 	j_value derived_get_value(const Arguments& i_args)const override;
 
 	void alert_symbol_scope_set()override;

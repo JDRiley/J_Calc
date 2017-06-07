@@ -77,7 +77,7 @@ Dbl_data_t j_function::function_param_calc_threaded(const Data_t& irk_data)const
 	memset(params_parts, 0, NUMBER_OF_THREADS*MAX_PARAMS*sizeof(Dbl_t));
 
 	for(int i=0; i <NUMBER_OF_THREADS; i++){
-		results[i] = async(&j_function::partial_param_calc,this, params_parts[i],
+		results[i] = std::async(&j_function::partial_param_calc,this, params_parts[i],
 			irk_data, intervals[i], intervals[i+1]);
 	}
 

@@ -23,7 +23,8 @@
 #include <ctime>
 #include <cassert>
 #include <memory>
-
+//
+#include <Data_File.h>
 using namespace std::placeholders;
 
 namespace jomike{
@@ -33,7 +34,7 @@ static Dbl_t gk_high = g_default_pair.second;
 typedef ex_array<dbl_pair> Bounds_Cont_t;
 
 
-typedef Data_File Data_t;
+typedef Data_File<j_dbl> Data_t;
 
 class j_function{
 public:
@@ -273,8 +274,8 @@ public:
 	//Construction
 	j_conv* get_copy()const override final;
 	j_conv(const j_conv&);
-	j_conv(const j_function&, const Data_File&);
-	j_conv(const j_function&, const Data_File&, Dbl_t step_size);
+	j_conv(const j_function&, const Data_t&);
+	j_conv(const j_function&, const Data_t&, Dbl_t step_size);
 
 	//Evals
 	Dbl_t eval(Dbl_t)const override final;
@@ -284,12 +285,12 @@ public:
 	}
 	void function_param_calc(Dbl_t*, Dbl_t, Dbl_t)const override final;
 	//Altering Functions
-	void attach_impulse_data(const Data_File&);
+	void attach_impulse_data(const Data_t&);
 
 	//Special
 	const Data_t& get_data()const{return M_impulse;}
 private:
-	Data_File M_impulse;
+	Data_t M_impulse;
 	Dbl_t M_step_size;
 	Dbl_t single_slice(j_function*, Dbl_t, int)const;
 	Dbl_t single_param_slice(Dbl_t, Dbl_t, int, int)const;

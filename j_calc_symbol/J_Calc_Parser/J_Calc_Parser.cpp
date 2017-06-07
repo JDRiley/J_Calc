@@ -13,7 +13,7 @@
 //
 #include "../Type_Syntax.h"
 //
-#include "../j_expression.h"
+#include "../j_calc_expression.h"
 //
 #include "../Arguments.h"
 //
@@ -34,7 +34,8 @@
 #include <functional>
 //
 #include <utility>
-
+//
+#include "../j_constant_expression.h"
 
 
 using std::mem_fn; using std::bind; using std::for_each; using std::transform;

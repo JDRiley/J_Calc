@@ -1,7 +1,7 @@
 //
 #include <j_symbol/restrictive_ptr.h>
 //
-#include "../J_Constant_Symbol.h"
+#include <j_symbol/Constant_Symbol.h>
 //
 #include <j_symbol/Specific_Symbol_List.h>
 //

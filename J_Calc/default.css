@@ -1,0 +1,16 @@
+#object {
+    background-color : red;
+}
+
+
+#textbox {
+    color : cyan;
+    background-color : black;
+    outline-color : cyan;
+}
+
+#button:hover {
+    color : yellow;
+    background-color : blue;
+    outline-color : yellow;
+}

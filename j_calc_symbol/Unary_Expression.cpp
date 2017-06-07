@@ -13,7 +13,7 @@ bool Unary_Expression::has_value()const {
 	return M_expression->has_value();
 }
 
-Unary_Expression::Unary_Expression(Unary_Expression&& irv_right): j_expression(std::move(irv_right)){
+Unary_Expression::Unary_Expression(Unary_Expression&& irv_right): j_calc_expression(std::move(irv_right)){
 	if(irv_right.M_expression){
 		M_expression = irv_right.M_expression->move_copy();
 	} else{
@@ -21,7 +21,7 @@ Unary_Expression::Unary_Expression(Unary_Expression&& irv_right): j_expression(s
 	}
 }
 
-Unary_Expression::Unary_Expression(const Unary_Expression& irk_src) : j_expression(irk_src){
+Unary_Expression::Unary_Expression(const Unary_Expression& irk_src) : j_calc_expression(irk_src){
 	if(irk_src.M_expression){
 		M_expression = irk_src.M_expression->get_copy();
 	} else{
@@ -29,8 +29,8 @@ Unary_Expression::Unary_Expression(const Unary_Expression& irk_src) : j_expressi
 	}
 }
 
-Unary_Expression::Unary_Expression(const yy::location& irk_loc, j_expression* i_expression) 
-: j_expression(irk_loc, i_expression->symbol_type()){
+Unary_Expression::Unary_Expression(const yy::location& irk_loc, j_calc_expression* i_expression) 
+: j_calc_expression(irk_loc, i_expression->symbol_type()){
 	M_expression = i_expression;
 
 
@@ -40,12 +40,12 @@ Unary_Expression::Unary_Expression(const yy::location& irk_loc, j_expression* i_
 }
 
 
-j_expression& Unary_Expression::base_expression()const{
+j_calc_expression& Unary_Expression::base_expression()const{
 	assert(M_expression);
 	return *M_expression;
 }
 
-j_expression& Unary_Expression::base_expression(){
+j_calc_expression& Unary_Expression::base_expression(){
 	assert(M_expression);
 	return *M_expression;
 }

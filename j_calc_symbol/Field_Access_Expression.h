@@ -1,11 +1,11 @@
 #ifndef FIELD_ACCESS_EXPRESSION_H
 #define FIELD_ACCESS_EXPRESSION_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
-class Field_Access_Expression : public j_expression{
+class Field_Access_Expression : public j_calc_expression{
 public:
 	Field_Access_Expression(const yy::location& irk_loc, J_Symbol_Identifier<jc_string_t>* i_name);
 

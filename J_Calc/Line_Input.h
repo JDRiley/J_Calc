@@ -12,8 +12,7 @@ class Line_Input{
 public:
 	//Constructors
 	Line_Input(
-		j_size_t, const J_UI::J_UI_Multi_String&,  J_UI::J_Font_Face i_output_font_face
-		, const J_UI::J_UI_Color& irk_output_color = G_DEFAULT_OUTPUT_COLOR);
+		j_size_t, const J_UI::J_UI_Multi_String&);
 
 	Line_Input make_empty_from(j_size_t i_pos)const;
 

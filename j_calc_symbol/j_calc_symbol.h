@@ -51,7 +51,7 @@ public:
 	virtual void set_args(const Arguments&);
 	virtual void set_args(Arguments&&);
 	virtual ~j_calc_symbol();
-	virtual j_expression* as_expression();
+	virtual j_calc_expression* as_expression();
 	Type_Syntax& type_syntax()const;
 	void set_type_syntax(const Type_Syntax& irk_type_syntax);
 	void set_type_syntax(Type_Syntax* i_type_syntax);

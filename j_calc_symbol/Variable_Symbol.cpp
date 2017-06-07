@@ -1,6 +1,6 @@
 #include "Variable_Symbol.h"
 //
-#include "j_expression.h"
+#include "j_calc_expression.h"
 //
 #include "Type_Syntax.h"
 //
@@ -33,7 +33,7 @@ Variable_Symbol::Variable_Symbol(
 }
 
 Variable_Symbol::Variable_Symbol(const yy::location& irk_loc
-	, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_expression& i_expression)
+	, Type_Syntax* i_syntax, J_Symbol_Identifier<jc_string_t>* i_identifier, const j_calc_expression& i_expression)
 	:j_declaration(irk_loc, i_syntax, i_identifier){
 	if(!i_expression.has_value()){
 		throw J_Value_Error(L"Cannot Declare variable and assign it to expression with no value");
@@ -46,7 +46,7 @@ bool Variable_Symbol::has_value()const {
 	return M_value.value_status();
 }
 
-j_expression* Variable_Symbol::as_expression(){
+j_calc_expression* Variable_Symbol::as_expression(){
 	return new Value_Expression(location(), M_value);
 }
 

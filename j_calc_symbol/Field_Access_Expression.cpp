@@ -9,13 +9,13 @@ namespace jomike{
 
 Field_Access_Expression::Field_Access_Expression(
 	const yy::location& irk_loc, J_Symbol_Identifier<jc_string_t>* i_name)
-:j_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
+:j_calc_expression(irk_loc, Symbol_Types::EXPRESSION_TYPE_UNINITIALIZED){
 
 	assert(i_name);
 	M_identifier = i_name;
 }
 
-Field_Access_Expression::Field_Access_Expression(const Field_Access_Expression& irk_source) : j_expression(irk_source){
+Field_Access_Expression::Field_Access_Expression(const Field_Access_Expression& irk_source) : j_calc_expression(irk_source){
 	M_identifier = irk_source.M_identifier->get_copy();
 }
 

@@ -19,13 +19,12 @@
 
 
 #include "J_Calc_Parser.h"
-
-#include "../J_Constant_Symbol.h"
+#include "../j_constant_expression.h"
+#include <j_symbol/Constant_Symbol.h>
 #include "../Call_Expression.h"
 #include <j_symbol/J_Symbol_Identifier.h>
 #include "../Field_Access_Expression.h"
 #include "../Arguments.h"
-#include "../j_expression.h"
 #include "../Modulo_Expression.h"
 #include <j_symbol/Specific_Symbol_List.h>
 #include "../j_declaration.h"
@@ -127,6 +126,7 @@ void yyerror(const char *msg); // standard error-handling routine
 %token	<constant_symbol>		T_INTEGER_CONSTANT
 %token	<constant_symbol>		T_DOUBLE_CONSTANT
 %token	<constant_symbol>		T_BOOL_CONSTANT
+
 
 //Operator Precedence
 %right T_LEFT_ARROW
@@ -334,6 +334,7 @@ Expression
 	
 }
 | Constant_Expression{
+	//TODO: reintroduce j_calc constant symbols so they derive from j_calc_expressions
 	$$ = $1; 
 }
 | LValue {

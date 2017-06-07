@@ -43,10 +43,10 @@ struct J_Calc_Semantic : public j_base {
 
 	restrictive_ptr_t<jtl::J_Symbol_Identifier<jtl::jc_string_t>>	identifier;
 	restrictive_ptr_t<jtl::j_symbol_component>	symbol_component;
-	restrictive_ptr_t<jtl::J_Constant_Symbol>		constant_symbol;
+	restrictive_ptr_t<jtl::jc_constant_symbol>		constant_symbol;
 	restrictive_ptr_t<jtl::j_declaration>			declaration;
 	restrictive_ptr_t<jtl::Type_Syntax>			type_syntax;
-	restrictive_ptr_t<jtl::j_expression>			expression;
+	restrictive_ptr_t<jtl::j_calc_expression>			expression;
 	restrictive_ptr_t<jtl::Arguments>				arguments;
 	restrictive_ptr_t<jtl::j_calc_symbol>			calc_symbol;
 	restrictive_ptr_t<jtl::J_Calc_Symbol_List>	symbol_list;

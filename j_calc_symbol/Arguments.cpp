@@ -2,7 +2,7 @@
 //
 #include "j_function.h"
 //
-#include "j_expression.h"
+#include "j_calc_expression.h"
 //Algorithm
 #include <algorithm>
 //
@@ -64,17 +64,17 @@ void Arguments::clear(){
 j_size_t Arguments::size()const{return M_arg_symbols.size();}
 
 /*void push_back(const j_symbol*)*/
-void Arguments::push_back(const j_expression& i_sym){
+void Arguments::push_back(const j_calc_expression& i_sym){
 	M_arg_symbols.emplace_back(i_sym);
 }
 
-void Arguments::push_back(j_expression* i_symbol){
+void Arguments::push_back(j_calc_expression* i_symbol){
 	M_arg_symbols.emplace_back(i_symbol);
 	delete i_symbol;
 }
 
 /*void set_argument(int index, const j_symbol*)*/
-void Arguments::set_argument(j_size_t i_index, const j_expression* i_symbol_ptr){
+void Arguments::set_argument(j_size_t i_index, const j_calc_expression* i_symbol_ptr){
 	assert(i_index < size());
 
 	delete M_arg_symbols[i_index];
@@ -83,16 +83,16 @@ void Arguments::set_argument(j_size_t i_index, const j_expression* i_symbol_ptr)
 }
 
 /*j_symbol** arguments()*/
-j_expression* const* Arguments::arguments(){return M_arg_symbols.data();}
+j_calc_expression* const* Arguments::arguments(){return M_arg_symbols.data();}
 
 /*const j_symbol* const* arguments()const*/
-const j_expression* const* Arguments::arguments()const{return &M_arg_symbols[0];}
+const j_calc_expression* const* Arguments::arguments()const{return &M_arg_symbols[0];}
 
 /*const j_symbol& operator[](j_size_t i_index)*/
-j_expression& Arguments::operator[](j_size_t i_index){return *M_arg_symbols[i_index];}
+j_calc_expression& Arguments::operator[](j_size_t i_index){return *M_arg_symbols[i_index];}
 
 /*const j_symbol& operator[](j_size_t i_index)const*/
-const j_expression& Arguments::operator[](j_size_t i_index)const{return *M_arg_symbols[i_index];}
+const j_calc_expression& Arguments::operator[](j_size_t i_index)const{return *M_arg_symbols[i_index];}
 
 bool Arguments::empty()const{
 	return M_arg_symbols.empty();
@@ -116,7 +116,7 @@ Arguments* Arguments::get_copy()const {
 }
 
 void Arguments::set_symbol_scope(J_Symbol_Scope* i_scope){
-	M_arg_symbols.apply([i_scope](j_expression* y_expression){
+	M_arg_symbols.apply([i_scope](j_calc_expression* y_expression){
 		y_expression->set_symbol_scope(i_scope);
 	});
 }

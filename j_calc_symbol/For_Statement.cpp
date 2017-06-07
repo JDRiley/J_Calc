@@ -1,6 +1,6 @@
 #include "For_Statement.h"
 //
-#include "j_expression.h"
+#include "j_calc_expression.h"
 //
 #include "Statement_Block.h"
 //
@@ -15,8 +15,8 @@ namespace jomike{
 
 
 For_Statement::For_Statement(const yy::location& irk_loc
-	, j_statement* i_init_statement, j_expression* i_test_expression
-	, j_expression* i_post_expression, Statement_Block* i_statement_block)
+	, j_statement* i_init_statement, j_calc_expression* i_test_expression
+	, j_calc_expression* i_post_expression, Statement_Block* i_statement_block)
 	:j_statement(irk_loc){
 	M_init_statement = i_init_statement;
 	M_test_expression = i_test_expression;

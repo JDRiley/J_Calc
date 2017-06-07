@@ -102,14 +102,13 @@ void J_Calc_Controller::construct_ui(){
 
 	new_view->make_active_context();
 	Math_Input_Box* main_text_box_ptr =
-		new Math_Input_Box(J_Rectangle<j_float>(-0.95f, -0.70f, 1.90f, 1.50f)
-			, J_UI_String(M_input_font_face, J_CYAN), M_input_font_face);
+		new Math_Input_Box(J_UI_String(M_input_font_face, J_CYAN));
 
 
 	J_UI::J_Vertical_Layout* layout = new J_UI::J_Vertical_Layout;
 	new_view->set_layout(layout);
 
-	layout->insert(main_text_box_ptr, layout->count(), Alignment::LEFT, Alignment::TOP);
+	layout->insert(main_text_box_ptr, layout->count(), Alignment::LEFT, Alignment::TOP,90.0f);
 
 
 
@@ -128,14 +127,18 @@ void J_Calc_Controller::construct_ui(){
 
 	J_Horizontal_Layout* horizontal_layout
 		= new J_Horizontal_Layout;
-	layout->insert(horizontal_layout, layout->count(), Alignment::LEFT, Alignment::BOTTOM, 0.0f);
+	layout->insert(horizontal_layout, layout->count(), Alignment::LEFT, Alignment::BOTTOM, 1.0f);
 
-	J_Button* cursor_pos_box =
-		new J_Button(J_UI_String("Cursor Box", M_log_font_face, J_WHITE));
+	J_Text_Box* cursor_pos_box =
+		new J_Text_Box(J_UI_String("Cursor Box", M_log_font_face, J_WHITE));
 			
 
+	auto old_size_constraint = cursor_pos_box->size_constraints();
+	cursor_pos_box->set_size_constraints({old_size_constraint.width_constraint(), J_UI::Dimensional_Constraint(32,32)});
 	horizontal_layout->insert(cursor_pos_box, horizontal_layout->count(), Alignment::LEFT, Alignment::BOTTOM);
 
+	
+	
 	cursor_pos_box->set_outline_and_fill_visibility_status(true);
 	cursor_pos_box->set_colors(J_CLEAR, J_BLACK, J_CYAN);
 
@@ -162,8 +165,8 @@ void J_Calc_Controller::construct_ui(){
 			<< " : " << cursor_pos->screen_pos().second;
 
 		auto font_face = cursor_pos_box->get_string().front().font_face();
-		auto color = cursor_pos_box->get_string().front().color();
-		cursor_pos_box->set_string(J_UI_String(o_str.str().c_str(), font_face, color));
+	
+		cursor_pos_box->set_string(J_UI_String(o_str.str().c_str(), font_face));
 		//std::cout << "\n" << o_str.str() << std::endl;
 	};
 
@@ -205,8 +208,8 @@ void J_Calc_Controller::construct_ui(){
 		o_str << "Draw FPS: " << s_controller->fps();
 
 		auto font_face = draw_fps_text_box->get_string().front().font_face();
-		auto color = draw_fps_text_box->get_string().front().color();
-		draw_fps_text_box->set_string(J_UI_String(o_str.str().c_str(), font_face, color));
+
+		draw_fps_text_box->set_string(J_UI_String(o_str.str().c_str(), font_face));
 	
 	};
 
@@ -236,8 +239,8 @@ void J_Calc_Controller::construct_ui(){
 		o_str << "FPS: " << s_j_ui->fps();
 
 		auto font_face = update_fps_text_box->get_string().front().font_face();
-		auto color = update_fps_text_box->get_string().front().color();
-		update_fps_text_box->set_string(J_UI_String(o_str.str(), font_face, color));
+
+		update_fps_text_box->set_string(J_UI_String(o_str.str(), font_face));
 	};
 
 
@@ -249,6 +252,8 @@ void J_Calc_Controller::construct_ui(){
 
 	J_UI_Size_Constraints size_contraints = horizontal_layout->size_constraints();
 	assert(!open_gl_error());
+
+	layout->apply_style_sheet();
 }
 
 void J_Calc_Controller::initialize_font_faces(){

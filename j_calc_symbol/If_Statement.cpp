@@ -1,6 +1,6 @@
 #include "If_Statement.h"
 //
-#include "j_expression.h"
+#include "j_calc_expression.h"
 //
 #include "Statement_Block.h"
 //
@@ -11,7 +11,7 @@ namespace jomike{
 
 
 If_Statement::If_Statement(const yy::location& irk_loc
-	, j_expression* i_test_expression, Statement_Block* i_then_body
+	, j_calc_expression* i_test_expression, Statement_Block* i_then_body
 	, j_statement* i_else_body /*= nullptr*/): j_statement(irk_loc, Symbol_Types::IF_STATEMENT){
 	M_test_expression = i_test_expression;
 	M_then_body = i_then_body;

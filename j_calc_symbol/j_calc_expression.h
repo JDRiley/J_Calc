@@ -8,13 +8,13 @@ namespace jomike{
 
 
 
-class j_expression : public j_calc_symbol{
+class j_calc_expression : public j_calc_symbol{
 public:
 	using j_calc_symbol::j_calc_symbol;
 	
-	j_expression* move_copy()override = 0;
+	j_calc_expression* move_copy()override = 0;
 
-	j_expression* get_copy()const override = 0;
+	j_calc_expression* get_copy()const override = 0;
 
 
 	void clear(){
@@ -22,13 +22,13 @@ public:
 	}
 	
 
-	j_expression* as_expression();
+	j_calc_expression* as_expression();
 	jc_string_t get_display_name()override;
 
 
-	~j_expression();
+	~j_calc_expression();
 protected:
-	j_expression(const j_expression&) = default;
+	j_calc_expression(const j_calc_expression&) = default;
 
 
 };

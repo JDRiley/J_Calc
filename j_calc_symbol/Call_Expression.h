@@ -1,11 +1,11 @@
 #ifndef CALL_EXPRESSION_H
 #define CALL_EXPRESSION_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
-class Call_Expression : public j_expression{
+class Call_Expression : public j_calc_expression{
 public:
 
 	Call_Expression(const yy::location& irk_loc
@@ -13,7 +13,7 @@ public:
 
 
 	Call_Expression(const yy::location& irk_loc
-		, const j_expression& irk_base_expression
+		, const j_calc_expression& irk_base_expression
 		, J_Symbol_Identifier<jc_string_t>* i_identifier, Arguments* i_args_list);
 
 
@@ -45,7 +45,7 @@ public:
 protected:
 	j_calc_symbol* get_symbol()const;
 private:
-	mutable j_expression* M_base_expression = nullptr;
+	mutable j_calc_expression* M_base_expression = nullptr;
 	J_Symbol_Identifier<jc_string_t>* M_identifier;
 	Arguments* M_args_list;
 	void alert_symbol_scope_set()override;

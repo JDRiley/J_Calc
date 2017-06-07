@@ -1,13 +1,13 @@
 #ifndef EXPRESSION_WILD_H
 #define EXPRESSION_WILD_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
-class Void_Empty_Expression : public j_expression{
+class Void_Empty_Expression : public j_calc_expression{
 public:
-	using j_expression::j_expression;
+	using j_calc_expression::j_calc_expression;
 
 
 	bool has_value()const override;

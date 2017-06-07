@@ -75,9 +75,6 @@
     <ClInclude Include="Type_Syntax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="j_expression.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Addition_Expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -195,9 +192,6 @@
     <ClInclude Include="j_calc_symbol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="J_Constant_Symbol.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="J_Constant_Symbol_Factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -217,6 +211,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JC_Symbol_Error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_constant_expression.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="j_calc_expression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -252,9 +252,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Variable_Symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="j_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Addition_Expression.cpp">
@@ -368,9 +365,6 @@
     <ClCompile Include="j_calc_symbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="J_Constant_Symbol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="J_Constant_Symbol_Factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -387,6 +381,9 @@
       <Filter>Source Files\J_Calc_Parser</Filter>
     </ClCompile>
     <ClCompile Include="JC_Symbol_Error.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="j_calc_expression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

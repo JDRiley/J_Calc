@@ -1,13 +1,13 @@
 #ifndef UNARY_OPERATOR_EXPRESSION_H
 #define UNARY_OPERATOR_EXPRESSION_H
 
-#include "j_expression.h"
+#include "j_calc_expression.h"
 
 
 namespace jomike{
-class Unary_Expression : public j_expression{
+class Unary_Expression : public j_calc_expression{
 public:
-	Unary_Expression(const yy::location& irk_loc, j_expression* i_expression);
+	Unary_Expression(const yy::location& irk_loc, j_calc_expression* i_expression);
 
 	Unary_Expression(const Unary_Expression& irk_src);
 
@@ -29,17 +29,17 @@ public:
 	void process()override;
 protected:
 	
-	j_expression& base_expression();
+	j_calc_expression& base_expression();
 
 
 	bool has_expression()const;
-	j_expression& base_expression()const;
+	j_calc_expression& base_expression()const;
 
 	void calculate_type();
 	void alert_symbol_scope_set()override;
 private:
 
-	j_expression* M_expression;
+	j_calc_expression* M_expression;
 
 };
 

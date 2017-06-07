@@ -8,7 +8,7 @@ namespace jomike{
 class Assignment_Expression : public Binary_Expression{
 public:
 	Assignment_Expression(const yy::location& irk_loc
-		, j_expression* i_left_expression, j_expression* i_right_expression);
+		, j_calc_expression* i_left_expression, j_calc_expression* i_right_expression);
 
 	Assignment_Expression(const Assignment_Expression&) = default;
 
