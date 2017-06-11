@@ -1,4 +1,5 @@
 char_press []atoi[string s]->int{transfer parse_int(s);}@
+char_press atoi("123")@
 char_press []pow[dbl i_val, int i_pow]->dbl{
 	?(i_pow > 0){
 		transfer i_val*pow(i_val, --i_pow);
@@ -32,7 +33,6 @@ char_press pow(2,6)@
 char_press pow(2,7)@
 char_press pow(2,8)@
 char_press pow(2,9)@
-char_press atoi("123")@
 char_press 
 []max[int a, int b]->int{
 	?(a>b) {transfer a;} ! {transfer b;}

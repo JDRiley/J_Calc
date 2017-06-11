@@ -44,6 +44,18 @@ Call_Expression::Call_Expression(const Call_Expression& irk_source)
 	M_args_list = irk_source.M_args_list->get_copy();
 }
 
+Call_Expression::Call_Expression(Call_Expression&& irk_source)
+	:j_calc_expression(std::move(irk_source)){
+	if(irk_source.M_base_expression){
+		M_base_expression = irk_source.M_base_expression->move_copy();
+	}
+
+	M_identifier = irk_source.M_identifier->move_copy();
+//#error //TODO: figure out why string value of 123 is being empty
+	M_args_list = irk_source.M_args_list->move_copy();
+}
+
+
 Call_Expression::~Call_Expression(){
 	delete M_identifier;
 	delete M_args_list;

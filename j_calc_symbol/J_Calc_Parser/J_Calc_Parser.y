@@ -258,6 +258,8 @@ For_Statement
 : T_FOR '(' Statement  Expression ';' Expression_Wild ')' Statement_Block{
 	$$ = new For_Statement(@$, $3, $4, $6, $8);
 }
+;
+
 Declaration_List
 : /*empty*/ {
 	$$ = new Specific_Symbol_List<j_declaration>(@$);

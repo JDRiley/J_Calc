@@ -500,7 +500,7 @@ Dbl_t j_value::as_double()const{
 	return cast_to<j_dbl>();
 }
 
-
+#pragma warning(disable : 4702)
 template<class Operator_Class>
 typename Operator_Class::return_type j_value::unary_value_operation(Operator_Class i_class)const{
 	switch(M_type){
@@ -517,7 +517,7 @@ typename Operator_Class::return_type j_value::unary_value_operation(Operator_Cla
 		return i_class(0);
 	}
 }
-
+#pragma warning(default : 4702)
 
 class To_String_Class{
 public:
@@ -684,6 +684,8 @@ j_value& j_value::operator=(const j_value& irv_val){
 }
 
 j_value& j_value::operator=(j_value&& irv_val){
+	M_type = Value_Types::LL_INTEGER;
+	M_has_value_status = false;
 	swap(irv_val);
 	return *this;
 }

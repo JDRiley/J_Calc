@@ -164,7 +164,7 @@ void J_Calc_Controller::construct_ui(){
 		o_str << '\t' << cursor_pos->screen_pos().first
 			<< " : " << cursor_pos->screen_pos().second;
 
-		auto font_face = cursor_pos_box->get_string().front().font_face();
+		auto font_face = cursor_pos_box->get_string().font_face();
 	
 		cursor_pos_box->set_string(J_UI_String(o_str.str().c_str(), font_face));
 		//std::cout << "\n" << o_str.str() << std::endl;
@@ -207,7 +207,7 @@ void J_Calc_Controller::construct_ui(){
 		o_str << std::fixed;
 		o_str << "Draw FPS: " << s_controller->fps();
 
-		auto font_face = draw_fps_text_box->get_string().front().font_face();
+		auto font_face = draw_fps_text_box->get_string().font_face();
 
 		draw_fps_text_box->set_string(J_UI_String(o_str.str().c_str(), font_face));
 	
@@ -238,7 +238,7 @@ void J_Calc_Controller::construct_ui(){
 		o_str << std::fixed;
 		o_str << "FPS: " << s_j_ui->fps();
 
-		auto font_face = update_fps_text_box->get_string().front().font_face();
+		auto font_face = update_fps_text_box->get_string().font_face();
 
 		update_fps_text_box->set_string(J_UI_String(o_str.str(), font_face));
 	};
@@ -270,7 +270,7 @@ void J_Calc_Controller::execute(){
 	
 #ifdef _DEBUG
 	//run_script("loop_test.jcs");
-	//run_script("button_press.jcs");
+	run_script("button_press.jcs");
 #else
 	run_script("button_press.jcs");
 #endif

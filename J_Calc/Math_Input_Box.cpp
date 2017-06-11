@@ -30,15 +30,14 @@ extern const char LINE_END_SYMBOL = ';';
 extern const J_UI_Color G_DEFAULT_OUTPUT_COLOR = J_Color::White;
 
 //Constructors--------------------------------------------------
-Math_Input_Box::Math_Input_Box(const J_UI_Multi_String& irk_string)
-	:J_Text_Box(irk_string)
-	, M_line_inputs(1, Line_Input(0, irk_string)){
-	insert_string(multi_string().begin() + 1, J_UI_String(GK_DEFAULT_OUTPUT_STRING, irk_string.front().font_face() ));
+Math_Input_Box::Math_Input_Box(const J_UI::J_UI_String& irk_input_string) :J_Text_Box(irk_input_string)
+	, M_line_inputs(1, Line_Input(0, irk_input_string)){
+	insert_string(J_UI_String(GK_DEFAULT_OUTPUT_STRING, irk_input_string.font_face() ));
 	
 	set_key_input_command(math_key_input_cmd);
 	set_char_input_command(math_box_char_input_cmd);
 
-
+	
 	link_signal(view_char_press_signal(), &Math_Input_Box::char_press_signal_receiver);
 	link_signal(view_key_press_signal(), &Math_Input_Box::key_press_signal_receiver);
 
@@ -303,7 +302,7 @@ void Math_Input_Box::eval_and_break_line_input(){
 	}
 	assert(!line_input_pos->read_only_status(pos));
 
-	J_UI_Multi_String new_input_string(line_input_pos->input_str().substr(pos));
+	J_UI_String new_input_string(line_input_pos->input_str().substr(pos));
 
 	assert(pos <= line_input_pos->input_str().size());
 

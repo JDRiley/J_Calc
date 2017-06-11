@@ -34,7 +34,13 @@ public:
 	bool has_value()const override;
 
 	Call_Expression(const Call_Expression& irk_source);
+	Call_Expression(Call_Expression&& irk_source);
 
+
+	//Deleting Constructors and Assignment Operators
+
+	Call_Expression& operator=(const Call_Expression&) = delete;
+	Call_Expression& operator=(Call_Expression&&) = delete;
 	const Type_Syntax& return_type_syntax()const override;
 
 	

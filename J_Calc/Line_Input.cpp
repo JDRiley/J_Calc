@@ -15,7 +15,9 @@ using std::cerr;
 using std::wcerr;
 #endif
 
-using namespace J_UI;
+using J_UI::J_UI_String;
+using J_UI::J_UI_Char;
+
 namespace jomike{
 extern const char* const GK_DEFAULT_OUTPUT_STRING = "{}";
 extern const j_size_t DEFAULT_OUTPUT_STRING_SIZE 
@@ -35,7 +37,7 @@ j_size_t Line_Input::size()const{return M_input.size() + M_output.size();}
 
 //Constructors
 Line_Input::Line_Input(
-	j_size_t i_start_pos, const J_UI_Multi_String& irk_input)
+	j_size_t i_start_pos, const J_UI_String& irk_input)
 	:M_start_pos(i_start_pos), M_input(irk_input), M_output(GK_DEFAULT_OUTPUT_STRING){}
 
 /*int start_pos()const*/
@@ -73,17 +75,17 @@ void Line_Input::delete_char(j_size_t i_pos){
 bool Line_Input::output_status()const{assert(M_output.size() > 1); return !(M_output.size() == 2);}
 
 /*void input_str(const J_UI_String&, const ex_array<int>&)*/
-void Line_Input::set_input_str(const J_UI_Multi_String& irk_string){
+void Line_Input::set_input_str(const J_UI_String& irk_string){
 	M_input	= irk_string;
 }
 
 /*void clear_output()*/
-void Line_Input::clear_output(){M_output = J_UI_String(GK_DEFAULT_OUTPUT_STRING, M_output.front().font_face());}
+void Line_Input::clear_output(){M_output = J_UI_String(GK_DEFAULT_OUTPUT_STRING, M_input.font_face());}
 /*int output_start_pos()const;*/
 j_size_t Line_Input::output_start_pos()const{return M_start_pos + M_input.size();}
 
 /*const J_UI_String& output_str()const*/
-const J_UI_Multi_String& Line_Input::output_str()const{return M_output;}
+const J_UI_String& Line_Input::output_str()const{return M_output;}
 
 /*bool read_only_status(int)*/
 bool Line_Input::read_only_status(j_size_t i_pos)const{
@@ -98,7 +100,7 @@ bool Line_Input::is_inside_input(j_size_t i_pos){
 }
 
 /*const J_UI_String& input_str()const*/
-const J_UI_Multi_String& Line_Input::input_str()const{return M_input;}
+const J_UI_String& Line_Input::input_str()const{return M_input;}
 
 /*void evaluate_output()*/
 void Line_Input::evaluate_output(){
@@ -108,7 +110,7 @@ void Line_Input::evaluate_output(){
 #if _DEBUG	
 	wcerr << L"\nInput_Str:" << M_input;
 #endif //_DEBUGS
-	J_UI_Multi_String input_string(M_input);
+	J_UI_String input_string(M_input);
 //	gs_parser->convert_to_proper_math_input(&input_string);
 
 	if(M_input.empty()){
@@ -123,11 +125,12 @@ void Line_Input::evaluate_output(){
 	jc_string_t output_str(evaluate_math_input(input_string.std_str()));
 	J_UI_String output_string(output_str.c_str());
 
-	output_string.set_font_face(M_output.front().font_face());
+	output_string.set_font_face(M_output.font_face());
 	M_output = output_string;
 	M_output.push_front(GK_DEFAULT_OUTPUT_STRING[0]);
 	M_output.push_back(GK_DEFAULT_OUTPUT_STRING[1]);
-	M_output.set_color(J_WHITE);
+	
+	//M_output.set_color(J_WHITE);
 }
 
 /*void advance_whitespace()*/
@@ -153,7 +156,7 @@ void Line_Input::decrement_pos(j_size_t i_dec_size){
 }
 
 jomike::Line_Input Line_Input::make_empty_from(j_size_t i_pos)const{
-	return Line_Input(i_pos, M_input.front());
+	return Line_Input(i_pos, M_input);
 }
 
 

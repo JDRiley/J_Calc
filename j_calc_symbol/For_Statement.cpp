@@ -31,12 +31,12 @@ For_Statement::For_Statement(const yy::location& irk_loc
 }
 
 For_Statement::For_Statement(For_Statement&& irv_src):j_statement(std::move(irv_src)){
-	M_init_statement = nullptr;
-	M_test_expression = nullptr;
-	M_post_expression = nullptr;
-	M_statement_block = nullptr;
-
-	swap(irv_src);
+	M_init_statement = irv_src.M_init_statement->move_copy();
+	M_test_expression = irv_src.M_test_expression->move_copy();
+	M_post_expression = irv_src.M_post_expression->move_copy();
+	M_statement_block = irv_src.M_statement_block->move_copy();
+	assert(this != &irv_src);
+	//swap(irv_src);
 }
 
 For_Statement::For_Statement(const For_Statement& irk_src):j_statement(irk_src){
@@ -106,7 +106,7 @@ j_value For_Statement::derived_get_value(const Arguments& i_args)const {
 	
 	J_Symbol_Scope running_scope;
 	running_scope.set_parent_scope(&symbol_scope());
-
+	assert(M_init_statement);
 	M_init_statement->set_symbol_scope(&running_scope);
 	M_test_expression->set_symbol_scope(&running_scope);
 	M_post_expression->set_symbol_scope(&running_scope);

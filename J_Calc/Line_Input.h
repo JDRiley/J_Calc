@@ -1,7 +1,7 @@
 #ifndef LINE_INPUT_H
 #define LINE_INPUT_H
 
-#include <J_UI/J_UI_Multi_String.h>
+#include <J_UI/J_UI_String.h>
 
 namespace jomike{
 
@@ -12,7 +12,7 @@ class Line_Input{
 public:
 	//Constructors
 	Line_Input(
-		j_size_t, const J_UI::J_UI_Multi_String&);
+		j_size_t, const J_UI::J_UI_String&);
 
 	Line_Input make_empty_from(j_size_t i_pos)const;
 
@@ -24,11 +24,11 @@ public:
 	j_size_t output_start_pos()const;
 	
 	j_size_t size()const;
-	const J_UI::J_UI_Multi_String& input_str()const;
+	const J_UI::J_UI_String& input_str()const;
 
-	void set_input_str(const J_UI::J_UI_Multi_String&);
+	void set_input_str(const J_UI::J_UI_String&);
 
-	const J_UI::J_UI_Multi_String& output_str()const;
+	const J_UI::J_UI_String& output_str()const;
 
 	bool output_status()const;
 
@@ -54,8 +54,8 @@ public:
 	bool is_inside_input(j_size_t pos);
 private:
 	j_size_t M_start_pos;
-	J_UI::J_UI_Multi_String M_input;
-	J_UI::J_UI_Multi_String M_output;
+	J_UI::J_UI_String M_input;
+	J_UI::J_UI_String M_output;
 };
 
 
