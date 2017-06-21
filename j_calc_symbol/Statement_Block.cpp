@@ -40,6 +40,8 @@ j_value Statement_Block::derived_get_value(const Arguments& i_args)const {
 	j_value de_value;
 	for(auto f_symbol : *M_symbol_list){
 		f_symbol->set_symbol_scope(&running_scope);
+		//maybe make new versions of this symbol
+		f_symbol->process();
 		de_value = f_symbol->get_value(i_args);
 	}
 

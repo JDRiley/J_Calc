@@ -277,8 +277,8 @@ Declaration_List
 Declaration
 : Variable_Declaration {$$ = $1;}
 | Routine_Definition{ 
-	//$$ = $1;
-	//@$ = @1;
+	$$ = $1;
+	@$ = @1;
 }
 ;
 

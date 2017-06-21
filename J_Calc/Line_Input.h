@@ -61,8 +61,8 @@ private:
 
 class Line_Cursor_Comp{
 public:
-	bool operator()(const Line_Input& i_left, int i_pos)const;
-	bool operator()(int i_pos, const Line_Input& i_right)const;
+	bool operator()(const Line_Input& i_left, j_size_t i_pos)const;
+	bool operator()(j_size_t i_pos, const Line_Input& i_right)const;
 };
 
 

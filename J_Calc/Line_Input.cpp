@@ -160,10 +160,10 @@ jomike::Line_Input Line_Input::make_empty_from(j_size_t i_pos)const{
 }
 
 
-bool Line_Cursor_Comp::operator()(const Line_Input& i_left, int i_pos)const{
+bool Line_Cursor_Comp::operator()(const Line_Input& i_left, j_size_t i_pos)const{
 	return i_left.start_pos() < i_pos;
 }
-bool Line_Cursor_Comp::operator()(int i_pos, const Line_Input& i_right)const{
+bool Line_Cursor_Comp::operator()(j_size_t i_pos, const Line_Input& i_right)const{
 	return i_pos < i_right.start_pos();
 }
 

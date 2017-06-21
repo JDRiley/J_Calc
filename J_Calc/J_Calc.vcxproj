@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B9C5C74-AE07-4545-AE05-F3064467EA37}</ProjectGuid>
+    <ProjectGuid>{3AE9B0FC-2EBA-4D26-8F3E-CA6F91E42281}</ProjectGuid>
     <RootNamespace>J_Calc</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -27,26 +27,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -118,7 +118,7 @@
       <AdditionalIncludeDirectories>$(JTLPATH)\include;$(JUIPATH)\include;..\include\;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(JUIPATH)/build/lib;$(JDEVLIB);%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32mxsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -167,8 +167,6 @@
       <AdditionalLibraryDirectories>$(JUIPATH)/build/lib;$(JDEVLIB);%(AdditionalLibraryDirectories);</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32mxs.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
-      <StackReserveSize>
-      </StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -180,6 +178,7 @@
     <ClInclude Include="J_Calc_View.h" />
     <ClInclude Include="Line_Input.h" />
     <ClInclude Include="Math_Input_Box.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="J_Calc.cpp" />
@@ -213,6 +212,46 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\JTL\JoMike_Template_Library\JoMike_Template_Library.vcxproj">
+      <Project>{8ffd7086-fb28-4de6-965e-171c972aea6d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\JTL\J_Math\J_Math.vcxproj">
+      <Project>{8cc5eb1b-b965-45a8-b603-a8f928c935d2}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\JTL\J_String\J_String.vcxproj">
+      <Project>{b2f27391-72a1-4963-946a-6a07f3fdcec5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\JTL\j_symbol\j_symbol.vcxproj">
+      <Project>{d06835d3-6906-4fd0-b8ba-0f8eb1f9f1b6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\JTL\J_Utile\J_Utile.vcxproj">
+      <Project>{baba7121-7075-4fdf-9439-4a9f3b63ca47}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\J_UI\glfw-3.2\src\glfw.vcxproj">
+      <Project>{94b7c1b1-8cb6-32ad-928b-5e3c751e1445}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\J_UI\J_OpenGl\J_OpenGL.vcxproj">
+      <Project>{3a5bb36d-3769-4dae-b78c-af6b1b7288df}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\J_UI\J_UI\J_UI.vcxproj">
+      <Project>{7c6d2ddd-a123-479b-b50e-646d5cef28b8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\J_UI\J_UI_Object\J_UI_Object.vcxproj">
+      <Project>{0b761598-8876-4101-b5be-1314a019a34d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\j_calc_symbol\j_calc_symbol.vcxproj">
+      <Project>{fd2aa34f-67c4-4aec-806c-01f6080c1c65}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="J_Calc.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon.ico" />
+    <Image Include="icon1.ico" />
+    <Image Include="icon2.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
